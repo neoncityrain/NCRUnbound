@@ -118,7 +118,7 @@ namespace TheUnbound
 
 
 
-                if (self.player.flipDirection < 0)
+                if (self.player.flipDirection > 0)
                 {
                     // if facing the players left... probably
 
@@ -126,7 +126,7 @@ namespace TheUnbound
                     //          ((1f to 1.3f at the rate of the player aerobic value) * (value for breathing)) *
                     //          (1f - (0.3 to 0.5 at the rate of hips to body position drawn, inversed) + rotation of the body + value)
                     // this took way longer than youd believe
-
+                    //I can tell. dw.
 
                     sLeaser.sprites[sLeaser.sprites.Length - 1].x = vector.x - camPos.x - (self.player.sleepCurlUp * 4f) - 3f + (circlesrota / 2f);
                     sLeaser.sprites[sLeaser.sprites.Length - 1].y = vector.y - camPos.y + ((self.player.sleepCurlUp) * 4f)
