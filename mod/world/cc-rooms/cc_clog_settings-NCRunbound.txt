@@ -1,0 +1,14 @@
+Template: CC_SettingsTemplate_Gutter
+DangerType: Rain
+RainIntensity: 0
+RumbleIntensity: 0
+WaveSpeed: 0.5
+WaveLength: 1
+WaveAmplitude: 0
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Effects: SilenceWater-1-267-70, 
+PlacedObjects: DevToken><428.9349><266.076><-40~-71~0~0~0~~~0~0~0~1~0~0~0~1~0~0~0~1~0~0~0~1~0~0~0~1, 
+AmbientSounds: SPOT><SO_WAT-OpenFlow.ogg><840.3209><378.187><0.2391304><1><800.3209><138.187><-184.3553><20.64465><0><0.2739132, SPOT><SO_WAT-MoreDrips.ogg><846.3469><262.6287><0.4456522><0.823913><510.3469><710.6287><-30.35535><-367.3553><0><1, 
+Triggers: Spot<tA>event<tB>MusicEvent<eA>songName<eB>icefoxofcamelot- fallen_god_beta<eA>vol<eB>0.3543476<eA>prio<eB>0.5<eA>mxThrt<eB>1<eA>loop<eB>0<eA>droneTol<eB>0<eA>rooms<eB>-1<eA>rest<eB>5<eA>fadeIn<eB>0<eA>oneSongPerCycle<eB>0<eA>stopAtDeath<eB>0<eA>stopAtGate<eB>0<tA>multiUse<tB>0<tA>toCycle<tB>-1<tA>fromCycle<tB>0<tA>delay<tB>0<tA>panPos<tB>1035.302<tB>479.5273<tA>fireChance<tB>1<tA>entrance<tB>0<tA>karma<tB>0<tA>slugcats<tB><tA>pos<tB>524.3019<tB>518.5273<tA>handlePos<tB>-353.3553<tB>9.644653, 
+FadePalette: 21, 0.6956522

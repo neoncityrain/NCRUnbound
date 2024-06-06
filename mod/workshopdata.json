@@ -1,0 +1,18 @@
+{
+  "Title": "The Unbound",
+  "Description": "Just another Slugcat.\r\nFor best results, use Dress My Cat to set Unbound to... well... Unbound and set colours to default.\r\nUses Miimows Thicker Legs Sprites.",
+  "ID": "NCR.theunbound",
+  "Version": "0.0.1",
+  "TargetGameVersion": "v1.9.06",
+  "Requirements": "slime-cubed.slugbase",
+  "RequirementNames": "SlugBase",
+  "Authors": "NeonCityRain",
+  "Visibility": "Hidden",
+  "Tags": [
+    "Accessibility",
+    "Custom Slugcat"
+  ],
+  "WorkshopID": 2954557668,
+  "UploadFilesOnly": false,
+  "UploadThumbnail": false
+}

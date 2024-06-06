@@ -1,0 +1,9 @@
+﻿{
+	"id": "NCR.theunbound",
+	"name": "The Unbound",
+	"version": "0.0.1",
+	"authors": "NeonCityRain",
+	"description": "Just another Slugcat.",
+	"requirements": [ "slime-cubed.slugbase" ],
+	"requirements_names": [ "SlugBase" ]
+}
