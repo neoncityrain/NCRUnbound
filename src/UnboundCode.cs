@@ -44,56 +44,37 @@ namespace TheUnbound
             On.PlayerGraphics.AddToContainer += PlayerGraphics_AddToContainer;
         }
 
-        private void PlayerGraphics_AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
-        {
-            
-            if (self.player.GetCat().IsUnbound)
-            {
-                sLeaser.RemoveAllSpritesFromContainer();
-                if (newContatiner == null)
-                {
-                    newContatiner = rCam.ReturnFContainer("Midground");
-                }
-                for (int i = 0; i < sLeaser.sprites.Length; i++)
-                {
-                    if (ModManager.MSC && i == self.gownIndex)
-                    {
-                        newContatiner = rCam.ReturnFContainer("Items");
-                        newContatiner.AddChild(sLeaser.sprites[i]);
-                    }
-                    else if (ModManager.MSC)
-                    {
-                        if (i == sLeaser.sprites.Length - 1 || i == sLeaser.sprites.Length - 2)
-                        {
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 1]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 2]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 3]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 4]);
-                        }
-                        else if ((i <= 6 || i >= 9) && i <= 9)
-                        {
-                            newContatiner.AddChild(sLeaser.sprites[i]);
-                        }
-                        else
-                        {
-                            rCam.ReturnFContainer("Foreground").AddChild(sLeaser.sprites[i]);
-                        }
-                    }
-                    else if ((i > 6 && i < 9) || i > 9)
-                    {
-                        rCam.ReturnFContainer("Foreground").AddChild(sLeaser.sprites[i]);
-                    }
-                    else
-                    {
-                        newContatiner.AddChild(sLeaser.sprites[i]);
-                    }
-                }
-            }
-            else
-            {
-                orig(self, sLeaser, rCam, newContatiner);
-            }
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private void PlayerGraphics_DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
@@ -109,13 +90,8 @@ namespace TheUnbound
                 // where is ymir when i need them i cannot do math stuff for the life of me
                 //initiating animation variables used in body sprites
 
-                
+
                 float circlesrota = sLeaser.sprites[sLeaser.sprites.Length - 1].rotation;
-                if (circlesrota < 90)
-                {
-                    circlesrota = sLeaser.sprites[sLeaser.sprites.Length - 1].rotation - 90f;
-                }
-                circlesrota = circlesrota / 10f;
                 // rotation value
 
                 sLeaser.sprites[sLeaser.sprites.Length - 1].scaleX = 0.23f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, num) * num2, 0.15f, self.player.sleepCurlUp);
@@ -151,7 +127,7 @@ namespace TheUnbound
                     //          (1f - (0.3 to 0.5 at the rate of hips to body position drawn, inversed) + rotation of the body + value)
                     // this took way longer than youd believe
 
-                    
+
                     sLeaser.sprites[sLeaser.sprites.Length - 1].x = vector.x - camPos.x - (self.player.sleepCurlUp * 4f) - 3f + (circlesrota / 2f);
                     sLeaser.sprites[sLeaser.sprites.Length - 1].y = vector.y - camPos.y + ((self.player.sleepCurlUp) * 4f)
                         + Mathf.Lerp(1f, 1.3f, self.player.aerobicLevel) * num * (1f - num2) - (circlesrota * 2f) - 10f;
@@ -205,9 +181,7 @@ namespace TheUnbound
 
 
 
-
-
-
+                // the below works fine for now
                 if (self.player.GetCat().UnbCyanjumpCountdown == 0)
                 {
                     if (PlayerGraphics.customColors != null)
@@ -234,7 +208,7 @@ namespace TheUnbound
                     {
                         sLeaser.sprites[sLeaser.sprites.Length - 1].color = PlayerGraphics.CustomColorSafety(0);
                         sLeaser.sprites[sLeaser.sprites.Length - 2].color = PlayerGraphics.CustomColorSafety(0);
-                        
+
                         sLeaser.sprites[sLeaser.sprites.Length - 3].color = PlayerGraphics.CustomColorSafety(0);
                         sLeaser.sprites[sLeaser.sprites.Length - 4].color = PlayerGraphics.CustomColorSafety(0);
                     }
@@ -246,12 +220,87 @@ namespace TheUnbound
                         sLeaser.sprites[sLeaser.sprites.Length - 3].color = new Color(0.81f, 0.8f, 0.8f, 1f);
                         sLeaser.sprites[sLeaser.sprites.Length - 4].color = new Color(0.81f, 0.8f, 0.8f, 1f);
                     }
-                    }
+                }
 
-                
-                
-            }            
+
+
+            }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private void PlayerGraphics_AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
+        {
+            
+            if (self.player.GetCat().IsUnbound)
+            {
+                sLeaser.RemoveAllSpritesFromContainer();
+                if (newContatiner == null)
+                {
+                    newContatiner = rCam.ReturnFContainer("Midground");
+                }
+                for (int i = 0; i < sLeaser.sprites.Length; i++)
+                {
+                    if (ModManager.MSC && i == self.gownIndex)
+                    {
+                        newContatiner = rCam.ReturnFContainer("Items");
+                        newContatiner.AddChild(sLeaser.sprites[i]);
+                    }
+                    else if (ModManager.MSC)
+                    {
+                        if (i == sLeaser.sprites.Length - 1 || i == sLeaser.sprites.Length - 2)
+                        {
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 1]);
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 2]);
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 3]);
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 4]);
+                        }
+                        else if ((i <= 6 || i >= 9) && i <= 9)
+                        {
+                            newContatiner.AddChild(sLeaser.sprites[i]);
+                        }
+                        else
+                        {
+                            rCam.ReturnFContainer("Foreground").AddChild(sLeaser.sprites[i]);
+                        }
+                    }
+                    else if ((i > 6 && i < 9) || i > 9)
+                    {
+                        rCam.ReturnFContainer("Foreground").AddChild(sLeaser.sprites[i]);
+                    }
+                    else
+                    {
+                        newContatiner.AddChild(sLeaser.sprites[i]);
+                    }
+                }
+            }
+            else
+            {
+                orig(self, sLeaser, rCam, newContatiner);
+            }
+        }
+
+        
 
         private void PlayerGraphics_InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
