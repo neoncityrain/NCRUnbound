@@ -1,18 +1,18 @@
 {
-  "Title": "The Unbound",
-  "Description": "Just another Slugcat.\r\nFor best results, use Dress My Cat to set Unbound to... well... Unbound and set colours to default.\r\nUses Miimows Thicker Legs Sprites.",
+  "Title": "The Unbound Slugcat",
+  "Description": "A slugcat originally uploaded for 1.9.06 and released for it, updated.\r\nHe can chain walljumps, double jump by pressing the jump key, and has a semi-variable long jump.\r\nNote that his colours may not work properly when using Jolly Co-op to change his colours.\r\n\r\nI am not taking criticism; I made this for fun. Thank you.",
   "ID": "NCR.theunbound",
-  "Version": "0.0.1",
-  "TargetGameVersion": "v1.9.06",
+  "Version": "",
+  "TargetGameVersion": "v1.9.15.3",
   "Requirements": "slime-cubed.slugbase",
   "RequirementNames": "SlugBase",
   "Authors": "NeonCityRain",
-  "Visibility": "Hidden",
+  "Visibility": "Public",
   "Tags": [
-    "Accessibility",
+    "Campaigns",
     "Custom Slugcat"
   ],
-  "WorkshopID": 2954557668,
+  "WorkshopID": 3262661679,
   "UploadFilesOnly": false,
   "UploadThumbnail": false
 }

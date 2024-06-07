@@ -28,7 +28,7 @@
 		"select_menu_scene": "unbselect",
 		"select_menu_scene_ascended": "unbghost",
 		"sleep_scene": "unbsleep",
-		"world_state": ["NCRunbound", "Spear", "Red"],
+		"world_state": ["NCRunbound", "Red"],
 		"cycle_length_min": 8,
 		"cycle_length_max": 15,
 		"start_room": [ "CC_S06" ],

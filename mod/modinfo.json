@@ -1,9 +1,10 @@
 ﻿{
 	"id": "NCR.theunbound",
-	"name": "The Unbound",
+	"name": "The Unbound Slugcat",
 	"version": "0.0.1",
 	"authors": "NeonCityRain",
-	"description": "Just another Slugcat.",
+	"description": "Just another slugcat mod. This is a re-upload of a mod from last year.",
 	"requirements": [ "slime-cubed.slugbase" ],
-	"requirements_names": [ "SlugBase" ]
+	"requirements_names": [ "SlugBase" ],
+	"tags" : ["Campaigns", "Custom Slugcat"]
 }

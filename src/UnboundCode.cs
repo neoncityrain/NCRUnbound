@@ -45,7 +45,41 @@ namespace TheUnbound
             // cyan spots REALLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 
             On.GhostWorldPresence.SpawnGhost += GhostWorldPresence_SpawnGhost;
-            // fixing being unable to encounter echos
+            // fixes being unable to encounter echos under 5 karma, since unbound has a max of 3 initially
+
+            On.SSOracleBehavior.PebblesConversation.AddEvents += PebblesConversation_AddEvents;
+        }
+
+        private void PebblesConversation_AddEvents(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
+        {
+            if (self.id == Conversation.ID.Pebbles_White && self.owner.player.GetCat().IsUnbound)
+            {
+                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 10));
+
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("A little animal, on the floor of my chamber. I think I know what you are looking for."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("You're stuck in a cycle, a repeating pattern. You want a way out."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Know that this does not make you special - every living thing shares that same frustration.<LINE>From the microbes in the processing strata to me, who am, if you excuse me, godlike in comparison."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("The good news first. In a way, I am what you are searching for. Me and my kind have as our<LINE>purpose to solve that very oscillating claustrophobia in the chests of you and countless others.<LINE>A strange charity - you the unknowing recipient, I the reluctant gift. The noble benefactors?<LINE>Gone."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("The bad news is that no definitive solution has been found. And every moment the equipment erodes to a new state of decay.<LINE>I can't help you collectively, or individually. I can't even help myself."), 0));
+                
+                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
+
+                self.events.Add(new Conversation.TextEvent(self, 0, ".  .  .", 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("That is quite the vile expression from such a little beast. Perhaps you do not share in the idiocy of your kind?"), 0));
+
+                if (self.owner.oracle.room.game.IsStorySession &&
+                    self.owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.memoryArraysFrolicked)
+                {
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Yet you still find the time to put your grubby appendages all across my memory arrays. So, I suppose, such is only the wistful musing of a superior being."), 0));
+                }
+
+                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
+
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Find the old path. Go to the west past the Farm Arrays, and then down into the earth<LINE>where the land fissures, as deep as you can reach, where the ancients built their temples and danced their silly rituals."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, "Best of luck to you, distraught one. There is nothing more I can do.", 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I must resume my work."), 0));
+            }
+            else orig(self);
         }
 
         private bool GhostWorldPresence_SpawnGhost(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)
@@ -54,8 +88,9 @@ namespace TheUnbound
                 !(ModManager.Expedition && Custom.rainWorld.ExpeditionMode && Custom.rainWorld.progression.currentSaveState.cycleNumber == 0)
                 && !Custom.rainWorld.safariMode && karmaCap < 4)
             {
-                return karma >= karmaCap;
                 // unbound under karma cap 5, allowing echos anyway
+                return karma >= karmaCap;
+                // ASSUMING theyre at max karma out of their possible karma.
             }
             else return orig(ghostID, karma, karmaCap, ghostPreviouslyEncountered, playingAsRed);
         }
@@ -486,7 +521,7 @@ namespace TheUnbound
                 if (self.GetCat().UnbChainjumps > 1)
                 {
                     // only triggers if unbchainjumps is greater than 1, preventing a chainjump from triggering when bouncing off a wall normally
-                    self.GetCat().UnbCyanjumpCountdown = 10;
+                    self.GetCat().UnbCyanjumpCountdown += 10;
 
 
                     self.room.PlaySound(SoundID.Cyan_Lizard_Small_Jump, self.mainBodyChunk);
@@ -535,6 +570,9 @@ namespace TheUnbound
                     System.Random rd = new System.Random();
                     int rand_num = rd.Next(1, 6);
                     // gets a random value from 1 to 6. this should include 1 and 6
+
+                    self.GetCat().UnbCyanjumpCountdown += 1;
+                    // regardless, locks cyanjump for 1 frame
 
                     if (rand_num < 3)
                     {
@@ -666,6 +704,10 @@ namespace TheUnbound
             {
                 self.GetCat().IsUnbound = true;
                 
+                if (self.room.game.IsStorySession && !self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+                {
+                    self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = true;
+                }
             }
         }
 
