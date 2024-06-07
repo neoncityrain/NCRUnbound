@@ -50,12 +50,22 @@ public class UnbJumplight : CosmeticSprite
             sLeaser.sprites[i].y = vector.y - camPos.y;
         }
         float num2 = Mathf.Lerp(20f + 10f * this.intensity, 40f + 30f * this.intensity, num) + Mathf.Lerp(50f, 90f, this.intensity) * Mathf.Sin(Mathf.Pow(num, 2f) * 3.1415927f);
-        sLeaser.sprites[0].color = new Color(0.8f, 0.1f, 0.1f);
         sLeaser.sprites[0].scale = num2 * 2f / 8f;
         sLeaser.sprites[0].alpha = Mathf.Pow(Mathf.InverseLerp(0f, 0.5f, num), 0.5f);
-        sLeaser.sprites[1].color = new Color(0.6f, 0.1f, 0.1f);
         sLeaser.sprites[1].scale = num2 / 8f;
         sLeaser.sprites[1].alpha = Mathf.Pow(num, 2f) * (0.4f + 0.4f * this.intensity);
+
+        if (PlayerGraphics.customColors != null)
+        {
+            sLeaser.sprites[0].color = PlayerGraphics.CustomColorSafety(2);
+            sLeaser.sprites[1].color = PlayerGraphics.CustomColorSafety(2);
+
+        }
+        else
+        {
+            sLeaser.sprites[0].color = new Color(0.8f, 0.1f, 0.1f);
+            sLeaser.sprites[1].color = new Color(0.6f, 0.1f, 0.1f);
+        }
         sLeaser.sprites[2].scale = num2 * Mathf.Lerp(0.4f, 0.8f, UnityEngine.Random.value) / 8f;
         sLeaser.sprites[2].alpha = Mathf.Pow(Mathf.InverseLerp(0.25f, 1f, num), 3f) * this.intensity;
         base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
