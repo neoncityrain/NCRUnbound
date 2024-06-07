@@ -1,5 +1,8 @@
 ﻿using System;
+using IL.JollyCoop.JollyMenu;
+using JollyCoop;
 using UnityEngine;
+using RWCustom;
 
 // Token: 0x020003BE RID: 958
 public class UnbJumplight : CosmeticSprite
@@ -55,7 +58,14 @@ public class UnbJumplight : CosmeticSprite
         sLeaser.sprites[1].scale = num2 / 8f;
         sLeaser.sprites[1].alpha = Mathf.Pow(num, 2f) * (0.4f + 0.4f * this.intensity);
 
-        if (PlayerGraphics.customColors != null)
+        
+        if (ModManager.JollyCoop && Custom.rainWorld.progression.PlayingAsSlugcat.value == "NCRunbound")
+        {
+            // yea idk what to have it do here lmao
+            sLeaser.sprites[0].color = Color.gray;
+            sLeaser.sprites[1].color = Color.black;
+        }
+        else if (PlayerGraphics.customColors != null && !ModManager.JollyCoop)
         {
             sLeaser.sprites[0].color = PlayerGraphics.CustomColorSafety(2);
             sLeaser.sprites[1].color = PlayerGraphics.CustomColorSafety(2);

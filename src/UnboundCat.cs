@@ -17,11 +17,13 @@ namespace UnboundCat
             public bool CanCyanjump;
             public int UnbChainjumps;
             public int UnbCyanjumpCountdown;
+            public int unbPlayerNumber;
 
             public UnboundCat(){
                 UnbChainjumps = 0;
                 UnbCyanjumpCountdown = 0;
                 CanCyanjump = false;
+                unbPlayerNumber = -1;
             }
         }
 
