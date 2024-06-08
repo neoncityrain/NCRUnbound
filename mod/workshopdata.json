@@ -1,8 +1,8 @@
 {
   "Title": "The Unbound Slugcat",
-  "Description": "A slugcat originally uploaded for 1.9.06 and released for it, updated.\r\nHe can chain walljumps, double jump by pressing the jump key, and has a semi-variable long jump.\r\nNote that his colours may not work properly when using Jolly Co-op to change his colours.\r\n\r\nI am not taking criticism; I made this for fun. Thank you.",
+  "Description": "\u0022I was never supposed to be here.\u0022\r\n\r\n[url=https://discord.gg/H5ZXffpe]My modding server[/url]. Please consider joining if you enjoy what I make.\r\n\r\n\r\n\r\nA custom slugcat originally uploaded for 1.9.06 and released for it, updated.\r\n\r\nHe can chain walljumps, double jump by pressing the jump key, and has a semi-variable long jump.\r\nWhen using Jolly Co-op, the colour of their boost is silver; when on singleplayer, it will be your custom colour.\r\nTheir boost does not stun, but does make sound.\r\nNo ending (yet) and minor changes to Pebbles and Moon dialogue that will be altered in the future.\r\n\r\nI am not taking criticism; I made this for fun. Thank you.\r\n\r\n\r\n\r\nGithub: https://github.com/neoncityrain/NCRUnbound\r\nCredit to Ice Fox of Camelot / Pix for the music in the files and to Agriocnemis / Ymir for helping code and keeping me from spontaneously combusting over math\r\nSpecial thanks also goes to Scuglat, who encouraged me to revisit this mod.",
   "ID": "NCR.theunbound",
-  "Version": "",
+  "Version": "2.0.2",
   "TargetGameVersion": "v1.9.15.3",
   "Requirements": "slime-cubed.slugbase",
   "RequirementNames": "SlugBase",
@@ -13,6 +13,6 @@
     "Custom Slugcat"
   ],
   "WorkshopID": 3262661679,
-  "UploadFilesOnly": false,
+  "UploadFilesOnly": true,
   "UploadThumbnail": false
 }

@@ -55,30 +55,23 @@ namespace TheUnbound
             On.SLOracleBehaviorHasMark.MoonConversation.PearlIntro += MoonConversation_PearlIntro;
             // oracle chats
 
+            On.Player.CanBeSwallowed += Player_CanBeSwallowed;
+            // cannot swallow or spit up items
         }
 
-        private void Player_UpdateAnimation(On.Player.orig_UpdateAnimation orig, Player self)
+        private bool Player_CanBeSwallowed(On.Player.orig_CanBeSwallowed orig, Player self, PhysicalObject testObj)
         {
-            orig(self);
             if (self.GetCat().IsUnbound)
             {
-                if (!self.submerged && !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
-                    (self.grasps[0].grabbed as JetFish).Consious) && self.waterFriction >= 0.1f)
-                {
-                    self.waterFriction -= 0.1f;
-                }
-                else if (self.submerged && self.waterFriction >= 0.05f &&
-                    !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
-                    (self.grasps[0].grabbed as JetFish).Consious))
-                {
-                    self.waterFriction -= 0.05f;
-                }
+                return false;
             }
+            else return orig(self, testObj);
         }
 
         private void MoonConversation_PearlIntro(On.SLOracleBehaviorHasMark.MoonConversation.orig_PearlIntro orig, SLOracleBehaviorHasMark.MoonConversation self)
         {
-            if (self.myBehavior.player.GetCat().IsUnbound)
+            // the dialogue for moon when given a pearl, triggered prior to actually reading it
+            if (self.myBehavior.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 if (self.myBehavior.isRepeatedDiscussion)
                 {
@@ -182,7 +175,7 @@ namespace TheUnbound
 
         private void MoonConversation_AddEvents(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig, SLOracleBehaviorHasMark.MoonConversation self)
         {
-            if (self.myBehavior.player.GetCat().IsUnbound)
+            if (self.myBehavior.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.colorMode = true;
                 Debug.Log(new string[]
@@ -792,7 +785,7 @@ namespace TheUnbound
 
         private void PebblesConversation_AddEvents(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
         {
-            if (self.id == Conversation.ID.Pebbles_White && self.owner.player.GetCat().IsUnbound)
+            if (self.id == Conversation.ID.Pebbles_White && self.owner.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.colorMode = true;
 
@@ -825,6 +818,24 @@ namespace TheUnbound
             else orig(self);
         }
 
+        private void Player_UpdateAnimation(On.Player.orig_UpdateAnimation orig, Player self)
+        {
+            orig(self);
+            if (self.GetCat().IsUnbound)
+            {
+                if (!self.submerged && !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
+                    (self.grasps[0].grabbed as JetFish).Consious) && self.waterFriction >= 0.1f)
+                {
+                    self.waterFriction -= 0.1f;
+                }
+                else if (self.submerged && self.waterFriction >= 0.05f &&
+                    !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
+                    (self.grasps[0].grabbed as JetFish).Consious))
+                {
+                    self.waterFriction -= 0.05f;
+                }
+            }
+        }
 
         private bool GhostWorldPresence_SpawnGhost(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)
         {
@@ -1303,12 +1314,9 @@ namespace TheUnbound
         private void ouuuhejumpin(On.Player.orig_MovementUpdate orig, Player self, bool eu)
         {
             orig(self, eu);
-            
+
             if (self.GetCat().IsUnbound)
             {
-
-
-
                 if (self.simulateHoldJumpButton == 0 && self.GetCat().PlayingSound)
                 {
                     // this checks if sound is playing so it doesnt made the worst sound known to god
@@ -1377,7 +1385,7 @@ namespace TheUnbound
 
 
 
-                
+
 
 
                 if ((self.GetCat().UnbCyanjumpCountdown == 0 && self.canJump == 0 &&
@@ -1459,17 +1467,12 @@ namespace TheUnbound
             if (self.slugcatStats.name.value == "NCRunbound")
             {
                 self.GetCat().IsUnbound = true;
-
-                if (ModManager.JollyCoop && self.IsJollyPlayer && self.GetCat().unbPlayerNumber != -1)
-                {
-                    self.playerState.playerNumber = self.GetCat().unbPlayerNumber;
-                    // records the player number
-                }
-
-                if (self.room.game.IsStorySession && !self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
-                {
-                    self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = true;
-                }
+            }
+            if (self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.IsStorySession &&
+                !self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+            {
+                self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = true;
+                Debug.Log("Reviving Moon for Unbound's savestate");
             }
         }
 

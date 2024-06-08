@@ -79,6 +79,7 @@
 		"food_max": 7,
 		"auto_grab_batflies": false,
 		"the_mark": true,
+		"the_glow": true,
 
 		"alignments": {
 			"Lizards": { "like": -0.9 },
