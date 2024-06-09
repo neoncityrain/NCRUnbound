@@ -197,28 +197,8 @@ namespace TheUnbound
                 });
                 if (self.id == Conversation.ID.MoonFirstPostMarkConversation)
                 {
-                    switch (Mathf.Clamp(self.State.neuronsLeft, 0, 5))
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            self.events.Add(new Conversation.TextEvent(self, 40, "BSM: ...", 10));
-                            return;
-                        case 2:
-                            self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: Get... get away... beast.... thing."), 10));
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: Please... thiss all I have left."), 10));
-                            return;
-                        case 3:
-                            self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: You!"), 10));
-                            self.events.Add(new Conversation.TextEvent(self, 60, self.Translate("BSM: ...you ate... me. Please go away. I won't speak... to you.<LINE>I... CAN'T speak to you... because... you ate...me..."), 0));
-                            return;
-                        case 4:
-                            self.LoadEventsFromFile(35);
-                            self.LoadEventsFromFile(37);
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: I'm still angry at you, but it is good to have someone to talk to after all this time.<LINE>The scavengers aren't exactly good listeners. They do bring me things though, occasionally..."), 0));
-                            return;
-                        case 5:
-                            self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Ah. Hello. You can understand me, can't you?"), 0));
+                    // moon will always have 5 neurons at this point
+                    self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Ah. Hello. You can understand me, can't you?"), 0));
                             self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: What are you? You appear familiar, yet if I had my memories I would know..."), 0));
                             self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: You must be very brave to have made it all the way here. But I'm sorry to say your journey here is in vain."), 5));
                             self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: As you can see, I have nothing for you. Not even my memories."), 0));
@@ -226,10 +206,7 @@ namespace TheUnbound
                             self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: I see you don't have the gift of communication.<LINE>And yet, you watch me when I speak, as if you understand..."), 0));
                             self.events.Add(new Conversation.TextEvent(self, 15, self.Translate("BSM: Where did you come from, little creature?"), 5));
                             self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: Well, it is good to have someone to talk to after all this time!<LINE>The scavengers aren't exactly good listeners. They do bring me things though, occasionally..."), 0));
-                            return;
-                        default:
-                            return;
-                    }
+                    
                 }
                 else if (self.id == Conversation.ID.MoonSecondPostMarkConversation)
                 {
@@ -444,6 +421,8 @@ namespace TheUnbound
                         self.LoadEventsFromFile(self.GetARandomChatLog(true));
                         return;
                     }
+
+
                     if (self.id == Conversation.ID.Moon_Pearl_LF_west)
                     {
                         self.PearlIntro();
@@ -461,7 +440,7 @@ namespace TheUnbound
                         self.PearlIntro();
 
                         self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: It's a Small Plate, a little text of spiritual guidance.<LINE>It's written by a monk called Four Cabinets, Eleven Hatchets.<LINE>It's old, several ages before the Void Fluid revolution."), 10));
-                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("Like most writing from this time it’s quite shrouded in analogies, but the subject is how to shed<LINE>one of the five natural urges which tie a creature to life. Namely number four, gluttony."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: Like most writing from this time it’s quite shrouded in analogies, but the subject is how to shed<LINE>one of the five natural urges which tie a creature to life. Namely number four, gluttony."), 10));
                         self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: It is basically an instruction on how to starve yourself<LINE>on herbal tea and gravel, but disguised as a poem."), 10));
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: I wonder if you know it already?"), 10));
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: No offense intended! You don't appear very<LINE>entertained by this pearl."), 10));
@@ -491,7 +470,8 @@ namespace TheUnbound
                         self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Seventeen Axes, Fifteen Spoked Wheel nobly decided to ascend in the beginning of  1514.008, after graciously donating all (ALL!) earthly<LINE>possessions to the local Iterator project (Unparalleled Innocence), and left these memories to be cherished by the carnal plane."), 10));
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: The assorted memories and qualia include:"), 10));
                         self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Watching dust suspended in a ray of sun (Old age).<LINE>Eating a very tasty meal (Young child)...\""), 10));
-                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Come now, you can't be falling asleep already! I wasn't planning to actually read it all."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Come now, you can't be falling asleep already? I wasn't planning to actually read it all."), 10));
+                        // above slightly off
 
                         return;
                     }
@@ -505,7 +485,7 @@ namespace TheUnbound
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: It says that only the limp body of the jellyfish cannot be captured in the net.<LINE>So we should try to be like the jellyfish, because the jellyfish doesn't try."), 10));
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: This was an eternal dilemma to them - they were burdened by great ambition,<LINE>yet deeply convinced that striving in itself was an unforgivable vice.<LINE>They tried very hard to be effortless. Perhaps that's what we were to them,<LINE>someone to delegate that unrestrained effort to."), 10));
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: I know I have tried very hard."), 10));
-                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Forgive me if I am wrong, but you look as if you have, too."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Forgive me if I am wrong, but you appear as if you have as well."), 10));
 
                         return;
                     }
@@ -514,9 +494,9 @@ namespace TheUnbound
                         self.PearlIntro();
 
                         self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: It's the blueprint for a Void Fluid filtration system.<LINE>Do you know what Void Fluid is?"), 0));
-                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: You are one of the most expressive of your kind that I have met. I can tell the answer without further prompting."), 5));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: You are one of the most expressive of your kind that I have met.<LINE>I can tell the answer without further prompting."), 5));
                         self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Not many creatures are as knowledgeable as you. They know of the cycle we are a part of, but<LINE>rarely have the capacity to communicate with ancient technology in order to escape."), 5));
-                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Still, to know of Void Fluid but be here..."), 20));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Still, to know of Void Fluid yet be here..."), 20));
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Ah, never mind. Rambling to myself, now."), 0));
 
                         return;
@@ -536,7 +516,7 @@ namespace TheUnbound
                         self.PearlIntro();
 
                         self.LoadEventsFromFile(17);
-                        // standardized
+                        // standardized, not edited
 
                         return;
                     }
@@ -757,18 +737,18 @@ namespace TheUnbound
                                 self.PearlIntro();
 
                                 self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: This one is an old conversation between Five Pebbles and a friend of his. I'll read it to you."), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: \"1591.290 - PRIVATE<LINE>Five Pebbles, Seven Red Suns"), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: Can I tell you something? Lately..."), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: I'm tired of trying and trying. And angry that they left us here.<LINE>The anger makes me even less inclined to solve their puzzle for them. Why do we do this?"), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: Yes, I'll spell this out - not because you're stupid or naive...<LINE>Also, not saying that you're not ~"), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: Please, I'm coming to you for guidance."), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: Sorry, very sorry. I kid. Fact is, of course we are all aware of the evident<LINE>futility of this Big Task. It's not said out loud but if you were better at reading<LINE>between the lines there's nowhere you wouldn't see it. We're all frustrated."), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: So why do we continue? We assemble work groups, we ponder,<LINE>we iterate and try. Some of us die. It's not fair."), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: Because there's not any options. What else CAN we do? You're stuck in your can, and at any<LINE>moment you have no more than two alternatives: Do nothing, or work like you're supposed to."), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: An analogy. You have a maze, and you have a handful of bugs. You put the bugs in the maze, and you leave.<LINE>Given infinite time, one of the bugs WILL find a way out, if they just erratically try and try.<LINE>This is why they called us Iterators."), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: But we do die of old age."), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: Even more incentive! You know that nothing ever truly dies though, around and around it goes.<LINE>Granted, our tools and resources get worse over time - but that is theoretically unproblematic,<LINE>because in time even a miniscule chance will strike a positive.<LINE>All the same to them, they're not around anymore!"), 0));
-                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: I struggle to accept being a bug.\""), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("\"1591.290 - PRIVATE<LINE>Five Pebbles, Seven Red Suns"), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("FP: Can I tell you something? Lately..."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("FP: I'm tired of trying and trying. And angry that they left us here.<LINE>The anger makes me even less inclined to solve their puzzle for them. Why do we do this?"), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("SRS: Yes, I'll spell this out - not because you're stupid or naive...<LINE>Also, not saying that you're not ~"), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("FP: Please, I'm coming to you for guidance."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("SRS: Sorry, very sorry. I kid. Fact is, of course we are all aware of the evident<LINE>futility of this Big Task. It's not said out loud but if you were better at reading<LINE>between the lines there's nowhere you wouldn't see it. We're all frustrated."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("FP: So why do we continue? We assemble work groups, we ponder,<LINE>we iterate and try. Some of us die. It's not fair."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("SRS: Because there's not any options. What else CAN we do? You're stuck in your can, and at any<LINE>moment you have no more than two alternatives: Do nothing, or work like you're supposed to."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("SRS: An analogy. You have a maze, and you have a handful of bugs. You put the bugs in the maze, and you leave.<LINE>Given infinite time, one of the bugs WILL find a way out, if they just erratically try and try.<LINE>This is why they called us Iterators."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("FP: But we do die of old age."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("SRS: Even more incentive! You know that nothing ever truly dies though, around and around it goes.<LINE>Granted, our tools and resources get worse over time - but that is theoretically unproblematic,<LINE>because in time even a miniscule chance will strike a positive.<LINE>All the same to them, they're not around anymore!"), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("FP: I struggle to accept being a bug.\""), 0));
                                 self.events.Add(new Conversation.TextEvent(self, 20, "BSM: . . .", 0));
                                 self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: <CapPlayerName>, is there something wrong?"), 0));
 
