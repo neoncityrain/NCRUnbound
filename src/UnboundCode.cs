@@ -55,8 +55,20 @@ namespace TheUnbound
             On.SLOracleBehaviorHasMark.MoonConversation.PearlIntro += MoonConversation_PearlIntro;
             // oracle chats
 
+            On.Player.Grabability += Player_Grabability;
+            // prevents taking neurons from moon
+
             On.Player.CanBeSwallowed += Player_CanBeSwallowed;
             // cannot swallow or spit up items
+        }
+
+        private Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        {
+            if (self.GetCat().IsUnbound && (obj is SLOracleSwarmer))
+            {
+                return Player.ObjectGrabability.CantGrab;
+            }
+            return orig(self, obj);
         }
 
         private bool Player_CanBeSwallowed(On.Player.orig_CanBeSwallowed orig, Player self, PhysicalObject testObj)
@@ -206,14 +218,14 @@ namespace TheUnbound
                             self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: I'm still angry at you, but it is good to have someone to talk to after all this time.<LINE>The scavengers aren't exactly good listeners. They do bring me things though, occasionally..."), 0));
                             return;
                         case 5:
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: Ah. Hello. You can understand me, can't you?"), 0));
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: What are you? You appear familiar, yet I had my memories I would know..."), 0));
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: You must be very brave to have made it all the way here. But I'm sorry to say your journey here is in vain."), 5));
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: As you can see, I have nothing for you. Not even my memories."), 0));
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: Or did I say that already?"), 5));
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: I see you don't have the gift of communication.<LINE>And yet, you watch me when I speak as if you understand..."), 0));
+                            self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Ah. Hello. You can understand me, can't you?"), 0));
+                            self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: What are you? You appear familiar, yet if I had my memories I would know..."), 0));
+                            self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: You must be very brave to have made it all the way here. But I'm sorry to say your journey here is in vain."), 5));
+                            self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: As you can see, I have nothing for you. Not even my memories."), 0));
+                            self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Or did I say that already?"), 5));
+                            self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: I see you don't have the gift of communication.<LINE>And yet, you watch me when I speak, as if you understand..."), 0));
                             self.events.Add(new Conversation.TextEvent(self, 15, self.Translate("BSM: Where did you come from, little creature?"), 5));
-                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("BSM: Well, it is good to have someone to talk to after all this time!<LINE>The scavengers aren't exactly good listeners. They do bring me things though, occasionally..."), 0));
+                            self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: Well, it is good to have someone to talk to after all this time!<LINE>The scavengers aren't exactly good listeners. They do bring me things though, occasionally..."), 0));
                             return;
                         default:
                             return;
@@ -340,7 +352,7 @@ namespace TheUnbound
                                     {
                                         Debug.Log(new string[]
                                         {
-                                            "Moon recieved first neuron from Unbound. Has neurons:",
+                                            "Moon recieved first neuron from Unbound game. Has neurons:",
                                             self.State.neuronsLeft.ToString()
                                         });
                                         if (self.State.neuronsLeft == 5)
@@ -350,6 +362,7 @@ namespace TheUnbound
                                         else
                                         {
                                             self.LoadEventsFromFile(19);
+                                            // standardized, fine to keep
                                         }
                                     }
                                     else if (self.State.neuronGiveConversationCounter == 1)
@@ -409,7 +422,14 @@ namespace TheUnbound
                     if (self.id == Conversation.ID.Moon_Pearl_CC)
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(7);
+
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: This information is illegal. Someone probably tried to send it by<LINE>a pearl somehow rather than risking being overheard on broadcast."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: The problem with breaking taboos is that the barriers are encoded<LINE>into every cell of our organic parts. And there are other taboos<LINE>strictly regulating our ability to rewrite our own genome."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: So what you need is to somehow create a small sample of living organic matter<LINE>which can procreate and act on the rest of your organic matter to re-write its genome.<LINE>The re-write has to be very specific, overriding the specific taboo you want to<LINE>circumvent but do nothing else."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, "BSM: ...", 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, "BSM: There is something about your eyes that gives me the impression that you understand<LINE>more than I've given you credit for.", 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, "BSM: I can't stop you if you were to do so, but I must request you don't give this pearl<LINE>to just anyone.", 10));
+
                         return;
                     }
                     if (!ModManager.MSC && self.id == Conversation.ID.Moon_Pearl_SI_west)
@@ -427,55 +447,110 @@ namespace TheUnbound
                     if (self.id == Conversation.ID.Moon_Pearl_LF_west)
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(10);
+
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: This one is just plain text. I will read it to you."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: \"On regards of the (by spiritual splendor eternally graced) people of the Congregation of Never Dwindling Righteousness,<LINE>we Wish to congratulate (o so thankfully) this Facility on its Loyal and Relished services, and to Offer our Hopes and<LINE>Aspirations that the Fruitful and Mutually Satisfactory Cooperation may continue, for as long as the Stars stay fixed on their<LINE>Celestial Spheres and/or the Cooperation continues to be Fruitful and Mutually Satisfactory.\""), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: \"It is with Honor I, Eight Suns-Countless Leaves, of the House of Six Wagons, Count of no living blocks, Counselor of 2, Duke of 1,<LINE>Humble Secretary of the Congregation of Never Dwindling Righteousness, write this to You.\""), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Oh, are you tired already, <PlayerName>?"), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: Well, you would be esctatic to know this pearl goes on for quite a while, and quite in the same way~"), 10));
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_LF_bottom)
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(11);
+
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: It's a Small Plate, a little text of spiritual guidance.<LINE>It's written by a monk called Four Cabinets, Eleven Hatchets.<LINE>It's old, several ages before the Void Fluid revolution."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("Like most writing from this time it’s quite shrouded in analogies, but the subject is how to shed<LINE>one of the five natural urges which tie a creature to life. Namely number four, gluttony."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: It is basically an instruction on how to starve yourself<LINE>on herbal tea and gravel, but disguised as a poem."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: I wonder if you know it already?"), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: No offense intended! You don't appear very<LINE>entertained by this pearl."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: I suppose, in the life of a little beast, gluttony is a difficult thing to achieve,<LINE>and only shows in the most successful of your kind..."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Yet our creators learned to fear such a thing. It really makes you think."), 10));
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_HI)
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(12);
+
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: It's a production record of a mask factory, for what seems to be its last time in service.<LINE>Have you seen a bone mask, <PlayerName>?"), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: In ancient times the masks were actually about showing spiritual persuasion - covering the<LINE>face as a way to symbolically abate the self. Then of course, that was quite subverted as<LINE>excessively ornate and lavish masks became an expression of identity. Some public persons<LINE>did have problems with narrow doorways."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: Now, you make a face, and I must assure you, it was as ridiculous as it sounds.<LINE>One couldn't publically say so, of course, but that doesn't negate the humor of the situation."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: Originally monks in a temple would make the masks using bone plaster, and when the production was automated it would<LINE>generally remain on the same site. So that the old stones could... radiate the material with holiness, I suppose."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: This is from one such facility called Side House, which was here on Pebble's grounds. In the iterator projects many<LINE>old industrial-religious sites like this were remodeled and incorporated. I think this one was made to provide pellets<LINE>of holy ash to Pebbles, but knowing him he probably hasn't used much of it!"), 10));
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_SH)
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(13);
+                        
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: Oh this one is interesting. You must have found it in the memory crypts?<LINE>It has some plain text, I can read it out to you."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: \"In this vessel is the living memories of Seventeen Axes, Fifteen Spoked Wheel, of the House of Braids,<LINE>Count of 8 living blocks, Counselor of 16, Grand Master of the Twelfth Pillar of Community,<LINE>High Commander of opinion group Winged Opinions, of pure Braid heritage, voted Local Champion in the<LINE>speaking tournament of 1511.090, Mother, Father and Spouse, Spiritual Explorer and honorary member of<LINE>the Congregation of Balanced Ambiguity. Artist, Warrior, and Fashion Legend."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Seventeen Axes, Fifteen Spoked Wheel nobly decided to ascend in the beginning of  1514.008, after graciously donating all (ALL!) earthly<LINE>possessions to the local Iterator project (Unparalleled Innocence), and left these memories to be cherished by the carnal plane."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: The assorted memories and qualia include:"), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Watching dust suspended in a ray of sun (Old age).<LINE>Eating a very tasty meal (Young child)...\""), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Come now, you can't be falling asleep already! I wasn't planning to actually read it all."), 10));
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_DS)
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(14);
+
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: It's an old text. The verses are familiar to me, but I don't remember by whom they were written.<LINE>The language is very old and intricate."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: The first verse starts by drawing a comparison between the world and a tangled rug.<LINE>It says that the world is an unfortunate mess. Like a knot, the nature of its existence<LINE>is the fact that the parts are locking each other, none able to spring free."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Then as it goes on the world becomes a furry animal hide, I suppose... because now us living<LINE>beings are like insects crawling in the fur. And then it's a fishing net, because the more we<LINE>struggle and squirm, the more entangled we become."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: It says that only the limp body of the jellyfish cannot be captured in the net.<LINE>So we should try to be like the jellyfish, because the jellyfish doesn't try."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: This was an eternal dilemma to them - they were burdened by great ambition,<LINE>yet deeply convinced that striving in itself was an unforgivable vice.<LINE>They tried very hard to be effortless. Perhaps that's what we were to them,<LINE>someone to delegate that unrestrained effort to."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: I know I have tried very hard."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Forgive me if I am wrong, but you look as if you have, too."), 10));
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_SB_filtration)
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(15);
+
+                        self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: It's the blueprint for a Void Fluid filtration system.<LINE>Do you know what Void Fluid is?"), 0));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: You are one of the most expressive of your kind that I have met. I can tell the answer without further prompting."), 5));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Not many creatures are as knowledgeable as you. They know of the cycle we are a part of, but<LINE>rarely have the capacity to communicate with ancient technology in order to escape."), 5));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Still, to know of Void Fluid but be here..."), 20));
+                        self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Ah, never mind. Rambling to myself, now."), 0));
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_GW)
                     {
                         self.PearlIntro();
+
                         self.LoadEventsFromFile(16);
+                        // this one DOES have the actual file, since its primarily just adding colour and consistancy.
+                        // self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: "), 0)); < for copy-pasting
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_SL_bridge)
                     {
                         self.PearlIntro();
+
                         self.LoadEventsFromFile(17);
+                        // standardized
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_SL_moon)
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(18);
+
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Interesting... This one is written by me."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: It's about an iterator called Sliver of Straw. I don't remember when I wrote it...<LINE>Do you know Sliver of Straw? She's quite legendary among us."), 30));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Hm..."), 0));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Not to anthropomorphize, but your body language suggests you understand completely."), 20));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: You are quite knowledgable for a little creature, if that is the case. How interesting!<LINE>Were any of my systems online, I would be capable of finding out more..."), 40));
+                        self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: I suppose I will skip the explainations regarding who Sliver of Straw is...<LINE>This is an essay, in which I make the case that maybe she should be allowed to rest in peace now."), 10));
+
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_SU)
@@ -680,7 +755,23 @@ namespace TheUnbound
                             if (self.id == Conversation.ID.Moon_Pearl_SI_west)
                             {
                                 self.PearlIntro();
-                                self.LoadEventsFromFile(20);
+
+                                self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: This one is an old conversation between Five Pebbles and a friend of his. I'll read it to you."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: \"1591.290 - PRIVATE<LINE>Five Pebbles, Seven Red Suns"), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: Can I tell you something? Lately..."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: I'm tired of trying and trying. And angry that they left us here.<LINE>The anger makes me even less inclined to solve their puzzle for them. Why do we do this?"), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: Yes, I'll spell this out - not because you're stupid or naive...<LINE>Also, not saying that you're not ~"), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: Please, I'm coming to you for guidance."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: Sorry, very sorry. I kid. Fact is, of course we are all aware of the evident<LINE>futility of this Big Task. It's not said out loud but if you were better at reading<LINE>between the lines there's nowhere you wouldn't see it. We're all frustrated."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: So why do we continue? We assemble work groups, we ponder,<LINE>we iterate and try. Some of us die. It's not fair."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: Because there's not any options. What else CAN we do? You're stuck in your can, and at any<LINE>moment you have no more than two alternatives: Do nothing, or work like you're supposed to."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: An analogy. You have a maze, and you have a handful of bugs. You put the bugs in the maze, and you leave.<LINE>Given infinite time, one of the bugs WILL find a way out, if they just erratically try and try.<LINE>This is why they called us Iterators."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: But we do die of old age."), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: SRS: Even more incentive! You know that nothing ever truly dies though, around and around it goes.<LINE>Granted, our tools and resources get worse over time - but that is theoretically unproblematic,<LINE>because in time even a miniscule chance will strike a positive.<LINE>All the same to them, they're not around anymore!"), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: FP: I struggle to accept being a bug.\""), 0));
+                                self.events.Add(new Conversation.TextEvent(self, 20, "BSM: . . .", 0));
+                                self.events.Add(new Conversation.TextEvent(self, 30, self.Translate("BSM: <CapPlayerName>, is there something wrong?"), 0));
+
                                 return;
                             }
                             if (self.id == Conversation.ID.Moon_Pearl_SI_top)
