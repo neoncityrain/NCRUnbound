@@ -11,6 +11,7 @@ using JollyCoop;
 using System.Diagnostics.Eventing.Reader;
 using MonoMod.RuntimeDetour;
 using System.Reflection;
+using OverseerHolograms;
 
 namespace TheUnbound
 {
@@ -77,6 +78,171 @@ namespace TheUnbound
             On.OverseerGraphics.InitiateSprites -= OverseerGraphics_RemoveSprites;
             On.CoralBrain.Mycelium.UpdateColor += Mycelium_UpdateColor;
             On.OverseerGraphics.ColorOfSegment += OverseerGraphics_ColorOfSegment;
+            On.Overseer.TryAddHologram += Overseer_TryAddHologram;
+            On.OverseerAbstractAI.RoomAllowed += OverseerAbstractAI_RoomAllowed;
+            //ktboverseer things
+
+            On.RoomSpecificScript.SU_A43SuperJumpOnly.Update += SU_A43SuperJumpOnly_Update;
+            On.RoomSpecificScript.SU_C04StartUp.Update += SU_C04StartUp_Update;
+            On.RoomSpecificScript.SU_A23FirstCycleMessage.Update += SU_A23FirstCycleMessage_Update;
+            On.RoomSpecificScript.SL_C12JetFish.Update += SL_C12JetFish_Update;
+            On.RoomSpecificTextMessage.Update += RoomSpecificTextMessage_Update;
+            // no tutorials, destroy them immediately
+        }
+
+        private void RoomSpecificTextMessage_Update(On.RoomSpecificTextMessage.orig_Update orig, RoomSpecificTextMessage self, bool eu)
+        {
+            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            {
+                self.Destroy();
+            }
+            else
+            {
+                orig(self, eu);
+            }
+        }
+
+        private void SL_C12JetFish_Update(On.RoomSpecificScript.SL_C12JetFish.orig_Update orig, RoomSpecificScript.SL_C12JetFish self, bool eu)
+        {
+            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            {
+                self.Destroy();
+            }
+            else
+            {
+                orig(self, eu);
+            }
+        }
+
+        private void SU_A23FirstCycleMessage_Update(On.RoomSpecificScript.SU_A23FirstCycleMessage.orig_Update orig, RoomSpecificScript.SU_A23FirstCycleMessage self, bool eu)
+        {
+            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            {
+                self.Destroy();
+            }
+            else
+            {
+                orig(self, eu);
+            }
+        }
+
+        private void SU_C04StartUp_Update(On.RoomSpecificScript.SU_C04StartUp.orig_Update orig, RoomSpecificScript.SU_C04StartUp self, bool eu)
+        {
+            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            {
+                self.Destroy();
+            }
+            else
+            {
+                orig(self, eu);
+            }
+        }
+
+        private void SU_A43SuperJumpOnly_Update(On.RoomSpecificScript.SU_A43SuperJumpOnly.orig_Update orig, RoomSpecificScript.SU_A43SuperJumpOnly self, bool eu)
+        {
+            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            {
+                self.Destroy();
+            }
+            else
+            {
+                orig(self, eu);
+            }
+        }
+
+        private bool OverseerAbstractAI_RoomAllowed(On.OverseerAbstractAI.orig_RoomAllowed orig, OverseerAbstractAI self, int room)
+        {
+            if (self.world.game.session.characterStats.name.value == "NCRunbound" && self.playerGuide)
+            {
+                if (room < self.world.firstRoomIndex || room >= self.world.firstRoomIndex + self.world.NumberOfRooms)
+                {
+                    return false;
+                }
+                for (int i = 0; i < OverseerAbstractAI.tutorialRooms.Length; i++)
+                {
+                    if (self.world.GetAbstractRoom(room).name == OverseerAbstractAI.tutorialRooms[i])
+                    {
+                        return true;
+                    }
+                }
+                return (self.world.region.name == "MS" ||
+                    // can always show up in MS
+                    !(self.world.GetAbstractRoom(room).AttractionForCreature(self.parent.creatureTemplate.type) ==
+                    AbstractRoom.CreatureRoomAttraction.Forbidden) &&
+                    // if the room is not forbidden
+                    !self.world.GetAbstractRoom(room).scavengerOutpost && !self.world.GetAbstractRoom(room).scavengerTrader) ||
+                    // if the room is not a scav outpost / scav trader
+                    self.world.GetAbstractRoom(room).shelter;
+                    // or if the room IS a shelter (enabling the guide to come inside the shelter with the player)
+            }
+            return orig(self, room);
+        }
+
+        private void Overseer_TryAddHologram(On.Overseer.orig_TryAddHologram orig, Overseer self, OverseerHolograms.OverseerHologram.Message message, Creature communicateWith, float importance)
+        {
+            if (self.room.game.session.characterStats.name.value == "NCRunbound" && self.PlayerGuide)
+            {
+                if (self.dead)
+                {
+                    return;
+                }
+                // dont show holograms if dead
+                if (self.room != null)
+                {
+                    if (self.room.abstractRoom.name == "SS_AI")
+                    {
+                        return;
+                    }
+                    // dont show holograms in pebbles' chamber. this is initially only for MSC- should not trigger for UB either
+                }
+                if (self.hologram != null)
+                {
+                    if (self.hologram.message == message)
+                    {
+                        return;
+                    }
+                    if (self.hologram.importance >= importance && importance != 3.4028235E+38f)
+                    {
+                        return;
+                    }
+                    self.hologram.stillRelevant = false;
+                    self.hologram = null;
+                    // removes unnecessary holograms
+                }
+                if (self.room == null)
+                {
+                    return;
+                    // dont show holograms if not in a room
+                }
+                // ordinarily the tutorial holograms are here. this mod goes with the assumption that the player knows how to play,
+                // so those are removed
+                if (message == OverseerHologram.Message.Bats)
+                {
+                    self.hologram = new OverseerHologram.BatPointer(self, message, communicateWith, importance);
+                }
+                else if (message == OverseerHologram.Message.Shelter)
+                {
+                    self.hologram = new OverseerHologram.ShelterPointer(self, message, communicateWith, importance);
+                }
+                else if (message == OverseerHologram.Message.DangerousCreature)
+                {
+                    self.hologram = new OverseerHologram.CreaturePointer(self, message, communicateWith, importance);
+                }
+                else if (message == OverseerHologram.Message.FoodObject)
+                {
+                    self.hologram = new OverseerHologram.FoodPointer(self, message, communicateWith, importance);
+                }
+                else
+                {
+                    return;
+                    // return if it doesnt fit the above (i.e., if its a tutorial or progression direction)
+                }
+                self.room.AddObject(self.hologram);
+            }
+            else
+            {
+                orig(self, message, communicateWith, importance);
+            }
         }
 
         private void Mycelium_UpdateColor(On.CoralBrain.Mycelium.orig_UpdateColor orig, CoralBrain.Mycelium self, Color newColor, float gradientStart, int spr, RoomCamera.SpriteLeaser sLeaser)
@@ -117,7 +283,8 @@ namespace TheUnbound
         private void OverseerGraphics_InitiateSprites(On.OverseerGraphics.orig_InitiateSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
-            if (self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
+            if (self.owner != null && 
+                self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
                 sLeaser.sprites[self.PupilSprite].color = new Color(0.2f, 0.56f, 0.478f, 0.5f);
                 
@@ -130,7 +297,8 @@ namespace TheUnbound
 
         private Color OverseerGraphics_ColorOfSegment(On.OverseerGraphics.orig_ColorOfSegment orig, OverseerGraphics self, float f, float timeStacker)
         {
-            if (self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
+            if (self.owner != null &&
+                self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
                 return Color.Lerp(Color.Lerp(Custom.RGB2RGBA((self.MainColor + new Color(0.3f, 0.86f, 0.67f) +
                     self.earthColor * 8f) / 10f, 0.5f), Color.Lerp(self.MainColor, Color.Lerp(self.NeutralColor,
@@ -147,7 +315,8 @@ namespace TheUnbound
         private void OverseerGraphics_DrawSprites(On.OverseerGraphics.orig_DrawSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
-            if (self.owner.room.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
+            if (self.owner != null && 
+                self.owner.room.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
                 sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0.2f, 0.56f, 0.47f), 0.5f);
             }
@@ -166,7 +335,8 @@ namespace TheUnbound
 
         public Color OverseerGraphics_MainColor_get(Plugin.orig_OverseerMainColor orig, global::OverseerGraphics self)
         {
-            if (self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
+            if (self.owner != null && self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" &&
+                self.overseer.PlayerGuide)
             {
                 return new Color(0.29f, 0.59f, 0.87f);
             }
@@ -201,6 +371,10 @@ namespace TheUnbound
             }
             else return orig(self, testObj);
         }
+
+
+
+
 
 
 
@@ -1078,11 +1252,11 @@ namespace TheUnbound
             if (self.GetCat().IsUnbound)
             {
                 if (!self.submerged && !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
-                    (self.grasps[0].grabbed as JetFish).Consious) && self.waterFriction >= 0.1f)
+                    (self.grasps[0].grabbed as JetFish).Consious) && self.waterFriction >= 0.5f)
                 {
                     self.waterFriction -= 0.1f;
                 }
-                else if (self.submerged && self.waterFriction >= 0.05f &&
+                else if (self.submerged && self.waterFriction >= 0.1f &&
                     !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
                     (self.grasps[0].grabbed as JetFish).Consious))
                 {
@@ -1737,7 +1911,7 @@ namespace TheUnbound
                 {
                     (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
                     self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = true;
-                    Debug.Log("Reviving Moon for Unbound's savestate. This SHOULD trigger regardless of the cat being actively played and only once!");
+                    Debug.Log("Reviving Moon for Unbound's savestate and influencing PlayerGuide settings. This SHOULD trigger regardless of the cat being actively played and only once!");
                 }
                 
             }

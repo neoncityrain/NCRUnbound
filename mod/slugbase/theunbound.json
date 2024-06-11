@@ -31,15 +31,13 @@
 		"world_state": ["NCRunbound", "Red"],
 		"cycle_length_min": 8,
 		"cycle_length_max": 15,
-		"start_room": [ "CC_S06", "CC_S06r" ],
+		"start_room": [ "MS_FARSIDE", "SL_A06" ],
 		
 		"diet": {
 			"base": "White",
 			"corpses": 0.5,
 			"overrides": {
 				"SSOracleSwarmer": 7,
-				"SLOracleSwarmer": 7,
-				"NSHOracleSwarmer": 7,
 				
 				"RedCentipede": 4,
 				
@@ -64,7 +62,8 @@
 				"LillyPuck": -1,
 				"BubbleFruit": -1,
 				"SeedCob": -1,
-				"Seed": -1
+				"Seed": -1,
+				"WaterNut": -1
 				}
 			},
 
