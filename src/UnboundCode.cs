@@ -8,10 +8,12 @@ using MoreSlugcats;
 using UnboundCat;
 using Expedition;
 using JollyCoop;
-using System.Diagnostics.Eventing.Reader;
 using MonoMod.RuntimeDetour;
 using System.Reflection;
 using OverseerHolograms;
+using UnboundMS;
+using Smoke;
+using DevInterface;
 
 namespace TheUnbound
 {
@@ -315,22 +317,20 @@ namespace TheUnbound
         private void OverseerGraphics_DrawSprites(On.OverseerGraphics.orig_DrawSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
-            if (self.owner != null && 
+            if (self.owner.room != null && self.overseer != null &&
                 self.owner.room.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
                 sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0.2f, 0.56f, 0.47f), 0.5f);
             }
-            else
+            else if (self.owner.room != null && self.overseer != null)
             {
                 sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0f, 0f, 1f), 0.5f);
-                Color lhs = self.ColorOfSegment(self.myceliaStuckAt, timeStacker);
             }
         }
 
         private void Overseer_DrawspritesRemove(On.OverseerGraphics.orig_DrawSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0f, 0f, 1f), 0.5f);
-
         }
 
         public Color OverseerGraphics_MainColor_get(Plugin.orig_OverseerMainColor orig, global::OverseerGraphics self)
@@ -1252,11 +1252,11 @@ namespace TheUnbound
             if (self.GetCat().IsUnbound)
             {
                 if (!self.submerged && !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
-                    (self.grasps[0].grabbed as JetFish).Consious) && self.waterFriction >= 0.5f)
+                    (self.grasps[0].grabbed as JetFish).Consious) && self.waterFriction >= 0.7f)
                 {
                     self.waterFriction -= 0.1f;
                 }
-                else if (self.submerged && self.waterFriction >= 0.1f &&
+                else if (self.submerged && self.waterFriction >= 0.7f &&
                     !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
                     (self.grasps[0].grabbed as JetFish).Consious))
                 {
@@ -1336,7 +1336,7 @@ namespace TheUnbound
                 sLeaser.sprites[sLeaser.sprites.Length - 8].rotation = hipsrotato;
                 //d internal circle 2
 
-
+                
                 //      (body to hips position) - (camera position) - (player sleep counter * 4f) +
                 //          ((1f to 1.3f at the rate of the player aerobic value) * (value for breathing)) *
                 //          (1f - (0.3 to 0.5 at the rate of hips to body position drawn, inversed) + rotation of the body + value)
@@ -1618,7 +1618,7 @@ namespace TheUnbound
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, self.mainBodyChunk);
                     }
-                    self.room.AddObject(new UnbJumplight(self.firstChunk.pos, 0.4f));
+                    self.room.AddObject(new UnbJumplight(self.firstChunk.pos, 0.4f, self));
                     self.room.AddObject(new Spark(self.firstChunk.pos, Custom.RNV(), Color.red, null, 4, 8));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
                     // fun effects!
@@ -1719,7 +1719,7 @@ namespace TheUnbound
 
 
                     self.room.PlaySound(SoundID.Cyan_Lizard_Small_Jump, self.mainBodyChunk);
-                    self.room.AddObject(new UnbJumplight(self.firstChunk.pos, 0.4f));
+                    self.room.AddObject(new UnbJumplight(self.firstChunk.pos, 0.4f, self));
                     self.room.AddObject(new Spark(self.firstChunk.pos, Custom.RNV(), Color.red, null, 4, 8));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
                     // grants a cyan-like distortion effect and sparks
@@ -1788,7 +1788,7 @@ namespace TheUnbound
                     self.GetCat().PlayingSound = true;
                     // so that the game doesnt make the worst noise ever
 
-                    self.room.AddObject(new UnbJumplight(self.firstChunk.pos, 0.4f));
+                    self.room.AddObject(new UnbJumplight(self.firstChunk.pos, 0.4f, self));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
                     self.room.AddObject(new Spark(self.firstChunk.pos, Custom.RNV(), Color.red, null, 4, 8));
                     // red cyanliz effect
@@ -1818,8 +1818,8 @@ namespace TheUnbound
 
                 if ((self.GetCat().UnbCyanjumpCountdown == 0 && self.canJump == 0 &&
                     // countdown has hit or become less than zero, cannot normally jump
-                    self.Consious && !self.dead &&
-                    // is awake and not dead
+                    self.Consious && !self.dead && self.canWallJump == 0 && self.jumpStun == 0 &&
+                    // is awake, not dead, cannot wall jump, not jumpstunned
                     !self.submerged && self.goIntoCorridorClimb <= 0 &&
                     // is not underwater and not climbing through a pipe
                     self.animation != Player.AnimationIndex.VineGrab &&
@@ -1905,10 +1905,20 @@ namespace TheUnbound
             {
                 self.GetCat().IsUnbound = true;
             }
-            if (self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.IsStorySession)
+            if (self.room.game.session.characterStats.name.value == "NCRunbound" && (self.room.game.IsStorySession ||
+                 self.room.game.session is StoryGameSession))
             {
                 if (!self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
                 {
+                    if (world.region.name == "MS")
+                    {
+                        Debug.Log("MS start detected, triggering intro");
+                        self.room.AddObject(new UnboundIntro(self.room));
+                    }
+                    else if (world.region.name == "SL")
+                    {
+                        Debug.Log("SL start detected");
+                    }
                     (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
                     self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = true;
                     Debug.Log("Reviving Moon for Unbound's savestate and influencing PlayerGuide settings. This SHOULD trigger regardless of the cat being actively played and only once!");

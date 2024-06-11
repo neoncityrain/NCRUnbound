@@ -7,16 +7,17 @@ using RWCustom;
 // Token: 0x020003BE RID: 958
 public class UnbJumplight : CosmeticSprite
 {
-
+    public Player player;
     // for all intents and purposes, this is a cyan lizard boost but red.
 
-    public UnbJumplight(Vector2 pos, float intensity)
+    public UnbJumplight(Vector2 pos, float intensity, Player player)
     {
         this.life = 1f;
         this.lastLife = 1f;
         this.pos = pos;
         this.lastPos = pos;
         this.lifeTime = Mathf.Lerp(4f, 22f, Mathf.Pow(intensity, 2f));
+        this.player = player;
     }
 
     public override void Update(bool eu)
@@ -59,11 +60,10 @@ public class UnbJumplight : CosmeticSprite
         sLeaser.sprites[1].alpha = Mathf.Pow(num, 2f) * (0.4f + 0.4f * this.intensity);
 
         
-        if (ModManager.JollyCoop && Custom.rainWorld.progression.PlayingAsSlugcat.value == "NCRunbound")
+        if (ModManager.JollyCoop)
         {
-            // yea idk what to have it do here lmao
-            sLeaser.sprites[0].color = Color.gray;
-            sLeaser.sprites[1].color = Color.black;
+            sLeaser.sprites[0].color = PlayerGraphics.JollyColor(player.playerState.playerNumber, 2);
+            sLeaser.sprites[1].color = PlayerGraphics.JollyColor(player.playerState.playerNumber, 2);
         }
         else if (PlayerGraphics.customColors != null && !ModManager.JollyCoop)
         {
