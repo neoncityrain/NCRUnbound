@@ -1,0 +1,12 @@
+Template: MS_SettingsTemplate_Artery
+DangerType: Flood
+RainIntensity: 1
+WaveSpeed: 0.5816281
+WaveLength: 0.959186
+WaveAmplitude: 1.098756E-05
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Effects: Fog-0-18-77, LightBurn-0.6630435-285-18, BrokenZeroG-0.5108696-270-79, Moth-0.2391304-275-138, WaterFluxMaxLevel-0.5050725-257-196, WaterFluxMinLevel-0.4717275-260-247, WaterFluxFrequency-1-26-131, WaterDepth-0-25.73126-207.7778, 
+PlacedObjects: SSLightRod><1160.247><424.2928><299.3205~67~0.1516133~0~393.913~0.1955898, LightFixture><1097.45><46.99023><RedLight~17.32051~-10~0, LightFixture><31.32758><250.8157><RedLight~17.32051~-10~69, LightFixture><2434.442><124.306><RedLight~17.32051~-10~56, LightFixture><2067.049><640.3552><RedLight~43.3205~-33~0, LightFixture><3518.051><94.22139><RedLight~17.32051~-10~0, LightFixture><362.1027><461.5351><RedLight~17.32051~-10~0, LightFixture><709.5639><291.5732><RedLight~17.32051~-10~61, LightFixture><2030.579><403.3517><RedLight~-145.7032~136.9897~0, LightFixture><1544.51><310.1698><RedLight~17.32051~-10~0, LightFixture><3022.566><376.1887><RedLight~57.32051~-265~0, LightFixture><3865.803><423.5343><RedLight~28.32056~-311~0, LightFixture><3612.193><644.5524><RedLight~17.32051~-10~0, LightFixture><4345.616><267.8718><RedLight~54.3205~-123~0, LightFixture><4899.197><256.9717><RedLight~17.32051~-10~60, LightFixture><4439.839><584.0223><RedLight~-295.0097~-27.06671~0, 
+AmbientSounds: OMNI><AM_WIN-NiceWnd.ogg><35.06439><245.5745><0.3586957><1, OMNI><AM_IND-SuperStructure.ogg><38.10968><393.5828><0.2717391><0.9413043, 
+FadePalette: 27, 0.3586957, 0.3369565, 0.3478261, 0.3369565, 0.3152174

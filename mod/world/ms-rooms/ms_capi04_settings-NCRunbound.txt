@@ -1,0 +1,12 @@
+Template: MS_SettingsTemplate_Artery
+DangerType: FloodAndRain
+WaveSpeed: 0.7636658
+WaveLength: 0.8681671
+WaveAmplitude: 7.117059E-05
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.05434782
+Effects: Fog-0-15-74, LightBurn-0.173913-299-330, BrokenZeroG-0.3586957-277-15, WaterFluxMinLevel-0.1005322-266-193, WaterFluxMaxLevel-0.7525363-272-78, WaterFluxFrequency-1-272-137, WaterDepth-0-3.676041-114.6222, 
+PlacedObjects: LightFixture><1813.887><196.9232><RedLight~17.32051~-10~0, LightFixture><1413.259><479.7707><RedLight~17.32051~-10~0, LightFixture><776.9832><599.568><RedLight~17.32051~-10~60, LightFixture><827.8529><115.5604><RedLight~17.32051~-10~0, LightFixture><207.7611><163.1596><RedLight~-294.2983~98.79999~0, LightFixture><2786.65><421.5601><RedLight~17.32051~-10~0, LightFixture><2222.652><339.6848><RedLight~17.32051~-10~0, 
+AmbientSounds: OMNI><AM_WIN-NiceWnd.ogg><35.06439><245.5745><0.3586957><1, OMNI><AM_IND-SuperStructure.ogg><35.30029><391.4892><0.2173913><0.8826087, 
+FadePalette: 27, 0.2173913, 0.2065217, 0.2065217

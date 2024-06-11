@@ -90,6 +90,25 @@ namespace TheUnbound
             On.RoomSpecificScript.SL_C12JetFish.Update += SL_C12JetFish_Update;
             On.RoomSpecificTextMessage.Update += RoomSpecificTextMessage_Update;
             // no tutorials, destroy them immediately
+
+            On.RegionGate.customKarmaGateRequirements += RegionGate_customKarmaGateRequirements;
+        }
+
+        private void RegionGate_customKarmaGateRequirements(On.RegionGate.orig_customKarmaGateRequirements orig, RegionGate self)
+        {
+            if (self.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                if (self.room.abstractRoom.name == "GATE_SL_MS")
+                {
+                    int num2;
+                    if (int.TryParse(self.karmaRequirements[1].value, out num2))
+                    {
+                        self.karmaRequirements[1] = RegionGate.GateRequirement.OneKarma;
+                    }
+                }
+            }
+            orig(self);
+
         }
 
         private void RoomSpecificTextMessage_Update(On.RoomSpecificTextMessage.orig_Update orig, RoomSpecificTextMessage self, bool eu)

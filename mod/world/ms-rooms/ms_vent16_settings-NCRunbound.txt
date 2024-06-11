@@ -1,0 +1,8 @@
+Template: MS_SettingsTemplate_Vents
+RumbleIntensity: 0.7717391
+Clouds: 1
+EffectColorB: 5
+Effects: Darkness-0.75-283-23, BrokenZeroG-0.4456522-282-86, ElectricDeath-0.4347826-30-30, WaterFluxMinLevel-0.173913-20-20, WaterFluxMaxLevel-0.173913-40-40, 
+PlacedObjects: LightFixture><499.6891><46.44049><RedSubmersible~17.32051~-10~0, LightFixture><1550.933><106.1684><RedSubmersible~17.32051~-10~0, LightFixture><242.9443><212.2974><RedSubmersible~17.32051~-10~0, LightFixture><2829.378><417.6534><RedSubmersible~17.32051~-10~0, LightFixture><2673.07><615.4134><RedSubmersible~17.32051~-10~22, LightFixture><2158.101><667.6331><RedSubmersible~-136.6795~-105~0, LightFixture><2373.115><187.6477><RedSubmersible~17.32051~-10~0, 
+AmbientSounds: SPOT><SO_WAT-OpenFlow.ogg><811.6971><606.9659><0.5108696><0.8434783><1250.697><475.9659><-902.3553><-194.3553><0><0.5673915, SPOT><SO_WAT-Splashes.ogg><810.2067><491.9453><0.4130435><1.097826><1428.207><436.9453><-697.3553><-405.3553><0><0.8173915, SPOT><AM_WIN-SubWnd.ogg><823.7719><380.4488><0.4347826><1><1513.772><534.4488><-914.3553><-289.3553><0><1, 
+FadePalette: 35, 0.2826087, 0.2934783, 0.2826087
