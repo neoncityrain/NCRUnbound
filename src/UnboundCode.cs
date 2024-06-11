@@ -6,7 +6,11 @@ using static SlugBase.Features.FeatureTypes;
 using RWCustom;
 using MoreSlugcats;
 using UnboundCat;
+using Expedition;
 using JollyCoop;
+using System.Diagnostics.Eventing.Reader;
+using MonoMod.RuntimeDetour;
+using System.Reflection;
 
 namespace TheUnbound
 {
@@ -14,7 +18,7 @@ namespace TheUnbound
     class Plugin : BaseUnityPlugin
     {
         private const string MOD_ID = "NCR.theunbound";
-
+        public delegate Color orig_OverseerMainColor(global::OverseerGraphics self);
 
         public void OnEnable()
         {
@@ -60,13 +64,131 @@ namespace TheUnbound
 
             On.Player.CanBeSwallowed += Player_CanBeSwallowed;
             // cannot swallow or spit up items
+
+
+            Hook ktbmain = new Hook(typeof(global::OverseerGraphics).GetProperty("MainColor", BindingFlags.Instance |
+                BindingFlags.Public).GetGetMethod(), new Func<orig_OverseerMainColor,
+                OverseerGraphics, Color>(this.OverseerGraphics_MainColor_get));
+            // 0.29f, 0.39f, 0.47f is the main colour, 0.2f, 0.56f, 0.47f is the tendril colour, 0.13f, 0.15f, 0.18f is the eye colour
+            // adjust as needed to look not like shit
+            On.OverseerGraphics.DrawSprites += OverseerGraphics_DrawSprites;
+            On.OverseerGraphics.DrawSprites -= Overseer_DrawspritesRemove;
+            On.OverseerGraphics.InitiateSprites += OverseerGraphics_InitiateSprites;
+            On.OverseerGraphics.InitiateSprites -= OverseerGraphics_RemoveSprites;
+            On.CoralBrain.Mycelium.UpdateColor += Mycelium_UpdateColor;
+            On.OverseerGraphics.ColorOfSegment += OverseerGraphics_ColorOfSegment;
         }
 
-        private Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        private void Mycelium_UpdateColor(On.CoralBrain.Mycelium.orig_UpdateColor orig, CoralBrain.Mycelium self, Color newColor, float gradientStart, int spr, RoomCamera.SpriteLeaser sLeaser)
         {
-            if (self.GetCat().IsUnbound && (obj is SLOracleSwarmer))
+            if (self.owner.OwnerRoom.game.session.characterStats.name.value == "NCRunbound")
             {
-                return Player.ObjectGrabability.CantGrab;
+                if (self.owner is OverseerGraphics && (self.owner as OverseerGraphics).overseer.PlayerGuide)
+                {
+                    self.color = newColor;
+                    for (int i = 0; i < (sLeaser.sprites[spr] as TriangleMesh).verticeColors.Length; i++)
+                    {
+                        float value = (float)i / (float)((sLeaser.sprites[spr] as TriangleMesh).verticeColors.Length - 1);
+                        (sLeaser.sprites[spr] as TriangleMesh).verticeColors[i] = Color.Lerp(self.color,
+                            Custom.HSL2RGB(0.4888889f, 0.5f, 0.2f), Mathf.InverseLerp(gradientStart, 1f, value));
+                    }
+                    for (int j = 1; j < 3; j++)
+                    {
+                        (sLeaser.sprites[spr] as TriangleMesh).verticeColors[(sLeaser.sprites[spr] as TriangleMesh).verticeColors.Length - j] =
+                            new Color(0.2f, 0.76f, 0.57f);
+                    }
+                }
+                else
+                {
+                    orig(self, newColor, gradientStart, spr, sLeaser);
+                }
+            }
+            else
+            {
+                orig(self, newColor, gradientStart, spr, sLeaser);
+            }
+        }
+
+        private void OverseerGraphics_RemoveSprites(On.OverseerGraphics.orig_InitiateSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        {
+            sLeaser.sprites[self.PupilSprite].color = new Color(0f, 0f, 0f, 0.5f);
+        }
+
+        private void OverseerGraphics_InitiateSprites(On.OverseerGraphics.orig_InitiateSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        {
+            orig(self, sLeaser, rCam);
+            if (self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
+            {
+                sLeaser.sprites[self.PupilSprite].color = new Color(0.2f, 0.56f, 0.478f, 0.5f);
+                
+            }
+            else
+            {
+                sLeaser.sprites[self.PupilSprite].color = new Color(0f, 0f, 0f, 0.5f);
+            }
+        }
+
+        private Color OverseerGraphics_ColorOfSegment(On.OverseerGraphics.orig_ColorOfSegment orig, OverseerGraphics self, float f, float timeStacker)
+        {
+            if (self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
+            {
+                return Color.Lerp(Color.Lerp(Custom.RGB2RGBA((self.MainColor + new Color(0.3f, 0.86f, 0.67f) +
+                    self.earthColor * 8f) / 10f, 0.5f), Color.Lerp(self.MainColor, Color.Lerp(self.NeutralColor,
+                    self.earthColor, Mathf.Pow(f, 2f)), 0.5f),
+                    self.ExtensionOfSegment(f, timeStacker)), Custom.RGB2RGBA(self.MainColor, 0f),
+                    Mathf.Lerp(self.overseer.lastDying, self.overseer.dying, timeStacker));
+            }
+            else
+            {
+                return orig(self, f, timeStacker);
+            }
+        }
+
+        private void OverseerGraphics_DrawSprites(On.OverseerGraphics.orig_DrawSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+        {
+            orig(self, sLeaser, rCam, timeStacker, camPos);
+            if (self.owner.room.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
+            {
+                sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0.2f, 0.56f, 0.47f), 0.5f);
+            }
+            else
+            {
+                sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0f, 0f, 1f), 0.5f);
+                Color lhs = self.ColorOfSegment(self.myceliaStuckAt, timeStacker);
+            }
+        }
+
+        private void Overseer_DrawspritesRemove(On.OverseerGraphics.orig_DrawSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+        {
+            sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0f, 0f, 1f), 0.5f);
+
+        }
+
+        public Color OverseerGraphics_MainColor_get(Plugin.orig_OverseerMainColor orig, global::OverseerGraphics self)
+        {
+            if (self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
+            {
+                return new Color(0.29f, 0.59f, 0.87f);
+            }
+            else
+            {
+                return orig(self);
+            }
+        }
+
+
+            private Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        {
+            if (self.GetCat().IsUnbound)
+            {
+                if (obj is SLOracleSwarmer)
+                {
+                    return Player.ObjectGrabability.CantGrab;
+                }
+                if (obj is Leech || obj is Spider)
+                {
+                    return Player.ObjectGrabability.OneHand;
+                }
             }
             return orig(self, obj);
         }
@@ -79,6 +201,11 @@ namespace TheUnbound
             }
             else return orig(self, testObj);
         }
+
+
+
+
+
 
         private void MoonConversation_PearlIntro(On.SLOracleBehaviorHasMark.MoonConversation.orig_PearlIntro orig, SLOracleBehaviorHasMark.MoonConversation self)
         {
@@ -498,7 +625,7 @@ namespace TheUnbound
                         self.events.Add(new Conversation.TextEvent(self, 20, self.Translate("BSM: Not many creatures are as knowledgeable as you. They know of the cycle we are a part of, but<LINE>rarely have the capacity to communicate with ancient technology in order to escape."), 5));
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Still, to know of Void Fluid yet be here..."), 20));
                         self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("BSM: Ah, never mind. Rambling to myself, now."), 0));
-
+                        
                         return;
                     }
                     if (self.id == Conversation.ID.Moon_Pearl_GW)
@@ -854,6 +981,62 @@ namespace TheUnbound
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private void PebblesConversation_AddEvents(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
         {
             if (self.id == Conversation.ID.Pebbles_White && self.owner.player.room.game.session.characterStats.name.value == "NCRunbound")
@@ -1083,14 +1266,14 @@ namespace TheUnbound
                     else
                     {
                         sLeaser.sprites[sLeaser.sprites.Length - 1].color = new Color(0.59f, 0.14f, 0.14f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 2].color = new Color(0.81f, 0.8f, 0.8f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 2].color = new Color(0.89f, 0.79f, 0.6f, 1f);
                         sLeaser.sprites[sLeaser.sprites.Length - 3].color = new Color(0.59f, 0.14f, 0.14f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 4].color = new Color(0.81f, 0.8f, 0.8f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 4].color = new Color(0.89f, 0.79f, 0.6f, 1f);
 
                         sLeaser.sprites[sLeaser.sprites.Length - 5].color = new Color(0.59f, 0.14f, 0.14f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 6].color = new Color(0.81f, 0.8f, 0.8f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 6].color = new Color(0.89f, 0.79f, 0.6f, 1f);
                         sLeaser.sprites[sLeaser.sprites.Length - 7].color = new Color(0.59f, 0.14f, 0.14f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 8].color = new Color(0.81f, 0.8f, 0.8f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 8].color = new Color(0.89f, 0.79f, 0.6f, 1f);
                     }
                 }
                 else
@@ -1122,15 +1305,15 @@ namespace TheUnbound
                     else
                     {
                         
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.81f, 0.8f, 0.8f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
-                        sLeaser.sprites[sLeaser.sprites.Length - 2].color = new Color(0.81f, 0.8f, 0.8f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 3].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.81f, 0.8f, 0.8f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
-                        sLeaser.sprites[sLeaser.sprites.Length - 4].color = new Color(0.81f, 0.8f, 0.8f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 1].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[sLeaser.sprites.Length - 2].color = new Color(0.89f, 0.79f, 0.6f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 3].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[sLeaser.sprites.Length - 4].color = new Color(0.89f, 0.79f, 0.6f, 1f);
 
-                        sLeaser.sprites[sLeaser.sprites.Length - 5].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.81f, 0.8f, 0.8f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
-                        sLeaser.sprites[sLeaser.sprites.Length - 6].color = new Color(0.81f, 0.8f, 0.8f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 7].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.81f, 0.8f, 0.8f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
-                        sLeaser.sprites[sLeaser.sprites.Length - 8].color = new Color(0.81f, 0.8f, 0.8f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 5].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[sLeaser.sprites.Length - 6].color = new Color(0.89f, 0.79f, 0.6f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 7].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[sLeaser.sprites.Length - 8].color = new Color(0.89f, 0.79f, 0.6f, 1f);
                     }
                 }
 
@@ -1471,11 +1654,18 @@ namespace TheUnbound
                     self.bodyMode != Player.BodyModeIndex.WallClimb &&
                     self.animation != Player.AnimationIndex.LedgeCrawl &&
                     self.animation != Player.AnimationIndex.BellySlide &&
-                    self.animation != Player.AnimationIndex.HangFromBeam &&
                     self.animation != Player.AnimationIndex.SurfaceSwim &&
                     self.bodyMode != Player.BodyModeIndex.Swimming &&
                     self.animation != Player.AnimationIndex.DeepSwim &&
-                    self.animation != Player.AnimationIndex.AntlerClimb)
+                    self.animation != Player.AnimationIndex.AntlerClimb &&
+
+                    self.animation != Player.AnimationIndex.HangFromBeam &&
+                    self.animation != Player.AnimationIndex.HangUnderVerticalBeam &&
+                    self.animation != Player.AnimationIndex.BeamTip &&
+                    self.animation != Player.AnimationIndex.ClimbOnBeam &&
+                    self.animation != Player.AnimationIndex.GetUpOnBeam &&
+                    self.animation != Player.AnimationIndex.GetUpToBeamTip &&
+                    self.animation != Player.AnimationIndex.StandOnBeam)
 
                     ||
 
@@ -1520,11 +1710,13 @@ namespace TheUnbound
                 int rand_num = rd.Next(1, 3);
                 if (rand_num == 1)
                 {
+                    Debug.Log("Congrats! Stowaway awoken (because life is a fucking nightmare)");
                     return true;
                     // if random number is 1, awaken stowaway
                 }
                 else
                 {
+                    Debug.Log("Stowaway remains asleep....... for now");
                     return orig(self, cycle);
                     // if the random number isnt 1, refer to the original code
                 }
@@ -1539,11 +1731,15 @@ namespace TheUnbound
             {
                 self.GetCat().IsUnbound = true;
             }
-            if (self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.IsStorySession &&
-                !self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+            if (self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.IsStorySession)
             {
-                self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = true;
-                Debug.Log("Reviving Moon for Unbound's savestate");
+                if (!self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+                {
+                    (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
+                    self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = true;
+                    Debug.Log("Reviving Moon for Unbound's savestate. This SHOULD trigger regardless of the cat being actively played and only once!");
+                }
+                
             }
         }
 

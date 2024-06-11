@@ -23,7 +23,7 @@
 		"maul_damage": 3,
 		"karma": 0,
 		"karma_cap": 2,
-		"guide_overseer": 3,
+		"guide_overseer": 1,
 
 		"select_menu_scene": "unbselect",
 		"select_menu_scene_ascended": "unbghost",
