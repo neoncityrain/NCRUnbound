@@ -13,9 +13,8 @@ namespace UnboundMS
         {
         int unboundstarttimer;
 
-        public UnboundIntro(Room room)
+        public UnboundIntro()
         {
-            this.room = room;
         }
 
         public void CameraSetup()
@@ -26,6 +25,14 @@ namespace UnboundMS
         public override void Update(bool eu)
         {
             base.Update(eu);
+
+            this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.BigEel, false);
+            this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Leech, false);
+            this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.SeaLeech, false);
+            this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", MoreSlugcatsEnums.CreatureTemplateType.JungleLeech, false);
+            this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Vulture, false);
+            this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.KingVulture, false);
+
             if (room.game.AllPlayersRealized)
             {
                 
@@ -35,7 +42,6 @@ namespace UnboundMS
                     {
                         (this.room.game.Players[i].realizedCreature as Player).bodyChunks[j].HardSetPosition(this.room.MiddleOfTile(142, 72));
                         (this.room.game.Players[i].realizedCreature as Player).standing = false;
-                        (this.room.game.Players[i].realizedCreature as Player).flipDirection = 0;
                     }
                 }
 
@@ -43,14 +49,8 @@ namespace UnboundMS
                 if (unboundstarttimer == 0)
                 {
                     CameraSetup();
-
-                    this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.BigEel, false);
-                    this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Leech, false);
-                    this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.SeaLeech, false);
-                    this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Vulture, false);
-                    this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.KingVulture, false);
                 }
-                if (unboundstarttimer < 400)
+                if (unboundstarttimer < 300)
                 {
                     this.unboundstarttimer++;
                     for (int i = 0; i < this.room.game.Players.Count; i++)
@@ -60,16 +60,12 @@ namespace UnboundMS
                     }
                 }
 
-                if (unboundstarttimer == 400)
+                if (unboundstarttimer == 300)
                 {
                     for (int i = 0; i < this.room.game.Players.Count; i++)
                     {
                         (this.room.game.Players[i].realizedCreature as Player).stun = 0;
                     }
-
-                    this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.BigEel, true);
-                    this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Leech, true);
-                    this.room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.SeaLeech, true);
 
                     Debug.Log("Start of game initiated, yippee!");
                     Destroy();

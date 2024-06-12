@@ -14,14 +14,20 @@ namespace UnboundCat
             // Define your variables to store here!
             public bool IsUnbound;
             public bool PlayingSound;
-            public bool CanCyanjump;
+            public bool didLongjump;
+
+            public bool CanCyanjump1;
+            public bool CanCyanjump2;
+
             public int UnbChainjumps;
             public int UnbCyanjumpCountdown;
 
             public UnboundCat(){
                 UnbChainjumps = 0;
                 UnbCyanjumpCountdown = 0;
-                CanCyanjump = false;
+                CanCyanjump1 = false;
+                CanCyanjump2 = false;
+                didLongjump = false;
             }
         }
 

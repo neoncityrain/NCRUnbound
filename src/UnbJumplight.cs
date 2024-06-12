@@ -8,15 +8,18 @@ using RWCustom;
 public class UnbJumplight : CosmeticSprite
 {
     public Player player;
-    // for all intents and purposes, this is a cyan lizard boost but red.
+    public float life;
+    public float lastLife;
+    public float lifeTime;
+    public float intensity;
 
     public UnbJumplight(Vector2 pos, float intensity, Player player)
     {
-        this.life = 1f;
-        this.lastLife = 1f;
+        life = 1f;
+        lastLife = 1f;
         this.pos = pos;
-        this.lastPos = pos;
-        this.lifeTime = Mathf.Lerp(4f, 22f, Mathf.Pow(intensity, 2f));
+        lastPos = pos;
+        lifeTime = Mathf.Lerp(4f, 22f, Mathf.Pow(intensity, 2f));
         this.player = player;
     }
 
@@ -96,9 +99,4 @@ public class UnbJumplight : CosmeticSprite
             newContatiner.AddChild(fsprite);
         }
     }
-
-    public float life;
-    public float lastLife;
-    public float lifeTime;
-    public float intensity;
 }
