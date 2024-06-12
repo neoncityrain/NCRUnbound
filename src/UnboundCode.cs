@@ -106,29 +106,21 @@ namespace TheUnbound
         {
             orig(self, className, colorTint);
 
-            MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-NCRunboundlayer2", new Vector2(100f, 100f) / 2f, true, true);
-            MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-NCRunboundlayer3", new Vector2(100f, 100f) / 2f, true, true);
-            MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-NCRunboundlayer4", new Vector2(100f, 100f) / 2f, true, true);
+            MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
+            MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
+            MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer4", new Vector2(100f, 100f) / 2f, true, true);
 
-            if (className.value == "NCRunbound" && self.portraitTint)
-            {
-                portrait2.sprite.color = self.faceTintColor;
-                portrait3.sprite.color = self.uniqueTintColor;
-                portrait4.sprite.color = self.bodyTintColor;
+            portrait2.sprite.color = self.faceTintColor;
+            portrait3.sprite.color = self.uniqueTintColor;
+            portrait4.sprite.color = self.bodyTintColor;
 
-                self.subObjects.Add(portrait2);
-                self.subObjects.Add(portrait3);
-                self.subObjects.Add(portrait4);
-            }
+            self.subObjects.Add(portrait2);
+            self.subObjects.Add(portrait3);
+            self.subObjects.Add(portrait4);
 
-
-            if ((className.value != "NCRunbound" || (className.value == "NCRunbound" && !self.portraitTint))
-                && self.subObjects.Contains(portrait2))
-            {
-                self.RemoveSubObject(portrait2);
-                self.RemoveSubObject(portrait3);
-                self.RemoveSubObject(portrait4);
-            }
+            portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+            portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+            portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
         }
 
         private void RegionGate_customKarmaGateRequirements(On.RegionGate.orig_customKarmaGateRequirements orig, RegionGate self)
