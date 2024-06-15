@@ -1,0 +1,24 @@
+SL_EDGE02 : 3-Dropbug-2, 5-Snail-{PreCycle}-2, 6-Snail-{PreCycle}-3, 3-Snail-2-{PreCycle}, 9-Yellow-3, 8-Yellow-2
+SL_LMBRIDGE02 : 2-Cyan-1, 5-White-1
+
+SL_LMTOWER01 : 5-Eggbug
+SL_LMTOWER02 : 2-Cyan-2, 3-CicadaB-3, 4-CicadaA-3
+SL_LMTOWER03 : 6-Snail-3, 3-Eggbug
+SL_LMTOWER04 : 3-CicadaB-4, 4-CicadaA-2, 4-Eel-{PreCycle}
+SL_LMTOWER05 : 4-Tentacle Plant, 7-Snail-2
+SL_LMTOWER07 : 3-Blue-{Mean:0.4}
+SL_LMTOWER08 : 6-White, 8-Dropbug
+SL_LMTOWER11 : 2-Eggbug, 3-CicadaA-2
+SL_LMTOWER13 : 10-Blue, 3-CicadaB-2, 6-CicadaA-3
+
+SL_LMB02 : 4-Tentacle Plant, 3-SeaLeech-3
+SL_B04 : 4-CicadaB-4, 5-CicadaA-2
+
+SL_E01 : 4-Jetfish-2, 5-Aquacenti-{PreCycle}
+
+
+
+
+
+
+LINEAGE : SL_LMB04 : 3 : NONE-0.05, White-0.2, Red-0

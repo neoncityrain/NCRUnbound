@@ -24,7 +24,6 @@ namespace TheUnbound
         private const string MOD_ID = "NCR.theunbound";
         public delegate Color orig_OverseerMainColor(global::OverseerGraphics self);
         public UnbJumpsmoke smoke;
-        public bool resetSpritesIfNotUnbound;
 
 
 
@@ -98,30 +97,32 @@ namespace TheUnbound
             On.RegionGate.customKarmaGateRequirements += RegionGate_customKarmaGateRequirements;
             // allows for exiting MS
 
-            On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += JollyPlayerSelector_SetPortraitImage_Name_Color;
-            // wow thats a mouthful lol. dynamic jolly pfp images
+            // On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += JollyPlayerSelector_SetPortraitImage_Name_Color;
+            // wow thats a mouthful lol. dynamic jolly pfp images. currently disabled due to coding issues
         }
 
-        private void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
-        {
-            orig(self, className, colorTint);
+      //  private void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
+       // {
+            //orig(self, className, colorTint);
 
-            MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
-            MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
-            MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer4", new Vector2(100f, 100f) / 2f, true, true);
+           // MenuIllustration portrait1 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer1", new Vector2(100f, 100f) / 2f, true, true);
+            //MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
+            //MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
+           // MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer4", new Vector2(100f, 100f) / 2f, true, true);
 
-            portrait2.sprite.color = self.faceTintColor;
-            portrait3.sprite.color = self.uniqueTintColor;
-            portrait4.sprite.color = self.bodyTintColor;
+           // portrait2.sprite.color = self.faceTintColor;
+           // portrait3.sprite.color = self.uniqueTintColor;
+           // portrait4.sprite.color = self.bodyTintColor;
 
-            self.subObjects.Add(portrait2);
-            self.subObjects.Add(portrait3);
-            self.subObjects.Add(portrait4);
+           // self.subObjects.Add(portrait1);
+           // self.subObjects.Add(portrait2);
+           // self.subObjects.Add(portrait3);
+           // self.subObjects.Add(portrait4);
 
-            portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-            portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-            portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-        }
+           // portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+          //  portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+           // portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+       // }
 
         private void RegionGate_customKarmaGateRequirements(On.RegionGate.orig_customKarmaGateRequirements orig, RegionGate self)
         {
@@ -498,8 +499,6 @@ namespace TheUnbound
                 sLeaser.sprites[10].RemoveFromContainer();
                 sLeaser.sprites[11].RemoveFromContainer();
                 // removes the mark and the marks glow
-
-
 
                 float breathaltered = 0.5f + 0.5f * Mathf.Sin(Mathf.Lerp(self.lastBreath, self.breath, timeStacker) * 3.1415927f * 2f);
                 Vector2 vector = Vector2.Lerp(self.drawPositions[0, 1], self.drawPositions[0, 0], timeStacker);
@@ -1178,10 +1177,6 @@ namespace TheUnbound
                     self.GetCat().CanCyanjump1 = false;
                     self.GetCat().CanCyanjump2 = false;
                 }
-
-
-
-                
             }
         }
 
@@ -1228,7 +1223,15 @@ namespace TheUnbound
             if (self.room.game.session.characterStats.name.value == "NCRunbound" && (self.room.game.IsStorySession ||
                  self.room.game.session is StoryGameSession))
             {
-                if (!self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+                if (self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+                {
+                    Debug.Log("Old save detected, fixing game");
+                    self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = false;
+                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
+                    // re-kills moon. sorry women.
+                }
+                if (!self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon)
                 {
                     if (world.region.name == "MS")
                     {
@@ -1240,8 +1243,8 @@ namespace TheUnbound
                         Debug.Log("SL start detected");
                     }
                     (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
-                    self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = true;
-                    Debug.Log("Reviving Moon for Unbound's savestate and influencing PlayerGuide settings. This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
+                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+                    Debug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
                 }
                 
             }

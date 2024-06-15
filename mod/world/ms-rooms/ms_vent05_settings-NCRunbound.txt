@@ -1,0 +1,6 @@
+Template: MS_SettingsTemplate_Vents
+RumbleIntensity: 0.2934783
+Clouds: 1
+Effects: ElectricDeath-0.4130435-25-125, Brightness-0.01546644-20-20, 
+PlacedObjects: LightFixture><810.0717><155.6867><RedLight~17.32051~-10~0, LightFixture><12.86053><565.3567><RedLight~17.32051~-10~0, 
+FadePalette: 8, 0.3043478

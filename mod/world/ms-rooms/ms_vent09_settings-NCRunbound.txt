@@ -1,0 +1,7 @@
+Template: MS_SettingsTemplate_Vents
+RumbleIntensity: 0.02173913
+EffectColorA: 21
+EffectColorB: 3
+Effects: WaterDepth-1-282-16, Bloom-0.7173913-286-70, ElectricDeath-0.01086957-283-129, WaterFluxMinLevel-0-20-20, WaterFluxMaxLevel-0-30-30, 
+PlacedObjects: LightSource><972.6627><347.0461><0.1522972~EffectColor2~560~411~-225~-215.3975~0~0~None~0~0, LightSource><393.6296><946.9009><0.1630435~EffectColor2~511~-253~-212.8752~234.5754~0~0~None~0~0, LightSource><964.5933><1352.834><0.1314671~EffectColor2~-550~456~-292~-126.3975~0~0~None~0~0, CentipedeAttractor><928.8001><509.4955><2~131, CentipedeAttractor><688.8905><1665.682><12~174, GlowWeed><675.2488><1729.3><0~0~2~3, GlowWeed><563.0529><1890.534><0~0~2~3, 
+FadePalette: 5, 0.4347826, 0.3478261, 0.3043478

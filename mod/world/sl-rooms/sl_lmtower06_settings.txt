@@ -1,0 +1,11 @@
+Template: SL_SettingsTemplate_Sewer
+WaveSpeed: 0.4998254
+WaveLength: 0.9977725
+WaveAmplitude: 0.04985005
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.6413044
+Palette: 10
+Effects: Fog-0-20-20, WaterFluxMaxLevel-0.1082654-30-30, WaterFluxMinLevel-0.08506576-40-40, 
+AmbientSounds: SPOT><AM_WIN-SubWnd.ogg><730.8548><487.6125><0.2826087><1><-115.1452><186.6125><56.64466><-198.3553><0><0.3717393, SPOT><AM_WIN-SubWnd.ogg><731.1999><487.7438><0.2826087><1><870.2><502.7438><-123.3553><-145.3553><0><0.3717393, 
+FadePalette: 35, 0.4573822

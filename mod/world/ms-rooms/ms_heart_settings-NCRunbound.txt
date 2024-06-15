@@ -1,0 +1,11 @@
+Template: MS_SettingsTemplate_Artery
+DangerType: Flood
+RumbleIntensity: 0.2065217
+Clouds: 0.1413043
+RandomItemDensity: 0.06521739
+EffectColorB: 11
+Effects: ElectricDeath-0.6300042-311-84, BrokenZeroG-1-27-21, WaterFluxMinLevel-0.2087975-40-40, WaterFluxMaxLevel-0.2010643-308.2594-32.93333, GreenSparks-0.05413271-229.3271-135.3778, BkgOnlyLightning-0.2474641-312.6073-139.6889, WaterDepth-0-8.775009-104.0889, ZeroGSpecks-0.06959915-38.61667-69.2, Fog-0.05413271-50-50, Darkness-0.1469315-60-60, 
+PlacedObjects: LightSource><767.9265><2538.563><0.1956522~EffectColor1~-912~392~-581.0396~258.5608~0~0~None~0~0, GravityDisruptor><792.8988><2512.097><, LightSource><2259.428><2533.37><0.1847826~EffectColor1~1020~558~50~86.60254~0~0~None~0~0, GravityDisruptor><2228.659><2510.855><, LightSource><783.4486><1298.998><0.1946511~EffectColor1~1212~610~-275~-137.3975~0~0~None~0~0, LightSource><2245.281><1300.079><0.2173913~EffectColor1~-1209~712~99~-321.3975~0~0~None~0~0, LightFixture><1347.137><688.6366><RedLight~17.32051~-10~0, LightFixture><1691.821><357.5689><RedLight~17.32051~-10~0, LightSource><1522.099><439.2098><0.1847826~EffectColor1~1272~761~108~98.60254~0~0~None~0~0, LightFixture><1322.329><902.3828><RedLight~17.32051~-10~60, LightFixture><1730.442><897.5569><RedLight~17.32051~-10~38, LightFixture><1343.684><3002.416><RedLight~-121.6795~-142~19, LightFixture><1697.575><3004.258><RedLight~-75.6795~-154~99, MSArteryPush><1536.977><439.1981><0~314, 
+FadePalette: 27, 0.08695652, 0.1847826, 0.1847826, 0.1847826, 0.1847826, 0.1956522, 0.1956522, 0.2065217, 0.1956522, 0.2065217, 0.1956522
+RoomSpecificScriptActive: ON
+WetTerrain: OFF

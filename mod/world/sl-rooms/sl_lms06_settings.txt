@@ -1,0 +1,4 @@
+Template: SL_SettingsTemplate_Sewer
+Palette: 35
+PlacedObjects: BrokenShelterWaterLevel><371.8264><418.1506><, 
+FadePalette: 6, 0.173913

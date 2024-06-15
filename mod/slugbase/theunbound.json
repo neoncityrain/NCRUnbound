@@ -19,7 +19,7 @@
 		],
 		
 		"can_maul": true,
-		"maul_blacklist": [ "SlugNPC" ],
+		"maul_blacklist": [ "SlugNPC", "CyanLizard" ],
 		"maul_damage": 3,
 		"karma": 0,
 		"karma_cap": 2,
@@ -28,9 +28,10 @@
 		"select_menu_scene": "unbselect",
 		"select_menu_scene_ascended": "unbghost",
 		"sleep_scene": "unbsleep",
-		"world_state": ["NCRunbound", "Red"],
-		"cycle_length_min": 8,
-		"cycle_length_max": 15,
+		"title_card": "introroll-unbound",
+		"world_state": ["NCRunbound", "NCRflicker", "Red", "Artificer" ],
+		"cycle_length_min": 7,
+		"cycle_length_max": 14,
 		"start_room": [ "MS_FARSIDE", "SL_A06" ],
 		
 		"diet": {
@@ -77,8 +78,8 @@
 		"food_min": 6,
 		"food_max": 7,
 		"auto_grab_batflies": false,
-		"the_mark": true,
 		"the_glow": true,
+		"the_mark": true,
 
 		"alignments": {
 			"Lizards": { "like": -0.9 },

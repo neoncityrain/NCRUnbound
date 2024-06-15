@@ -1,0 +1,16 @@
+Template: NONE
+DangerType: Flood
+CeilingDrips: 0
+WaveSpeed: 0.2975538
+WaveLength: 0.8987769
+WaveAmplitude: 5.325217E-13
+SecondWaveLength: 1
+SecondWaveAmplitude: 0.0001
+Clouds: 0.7065217
+BkgDroneVolume: 0
+Palette: 35
+Effects: WaterDepth-0.1304348-14-125, SilenceWater-1-12-63, 
+PlacedObjects: NoSpearStickZone><473.1508><249.3814><9~287, 
+AmbientSounds: OMNI><waterGurgleLOOP1.wav><99.68927><529.6906><0.5><1, 
+FadePalette: 11, 0.1725431
+WetTerrain: OFF

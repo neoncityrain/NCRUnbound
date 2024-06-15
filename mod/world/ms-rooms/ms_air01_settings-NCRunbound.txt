@@ -1,0 +1,10 @@
+Template: MS_SettingsTemplate_Vents
+WaveSpeed: 0.255197
+WaveLength: 0.3426743
+WaveAmplitude: 0.02319999
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Effects: ElectricDeath-0.5-283-19, BrokenZeroG-0.4130435-275-81, WaterFluxMaxLevel-0.3479961-30-30, WaterFluxMinLevel-0.3557291-236.3625-136, 
+PlacedObjects: LightFixture><72.30992><324.2781><RedLight~17.32051~-10~0, LightFixture><538.4337><466.4387><RedLight~17.32051~-10~29, 
+AmbientSounds: SPOT><SO_WAT-Splashes.ogg><801.6984><487.1932><0.3804348><1><433.717><345.1617><-504.3553><-275.3553><0><0.4478262, SPOT><SO_WAT-OpenFlow.ogg><801.425><602.6854><0.4130435><1><496.4338><359.7094><-158.3553><-325.3553><0><0.3608697, 
+FadePalette: 10, 0.6521739
