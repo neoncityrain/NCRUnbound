@@ -11,8 +11,7 @@ using JollyCoop;
 using MonoMod.RuntimeDetour;
 using System.Reflection;
 using OverseerHolograms;
-using UnboundMS;
-using UnboundJumpsmoke;
+using Unbound;
 using Menu;
 using CoralBrain;
 using System.IO;
@@ -25,6 +24,7 @@ namespace TheUnbound
         private const string MOD_ID = "NCR.theunbound";
         public delegate Color orig_OverseerMainColor(global::OverseerGraphics self);
         public UnbJumpsmoke smoke;
+        public static CreatureTemplate.Type GreenLizard = new CreatureTemplate.Type("GardenLizard", true);
 
 
 
@@ -101,68 +101,7 @@ namespace TheUnbound
             // On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += JollyPlayerSelector_SetPortraitImage_Name_Color;
             // wow thats a mouthful lol. dynamic jolly pfp images. currently disabled due to coding issues
 
-            On.Region.GetProperRegionAcronym += Region_GetProperRegionAcronym;
-        }
 
-        private string Region_GetProperRegionAcronym(On.Region.orig_GetProperRegionAcronym orig, SlugcatStats.Name character, string baseAcronym)
-        {
-            if (character.value == "NCRunbound" && character != null)
-            {
-                string text = baseAcronym;
-                if (text == "UX")
-                {
-                    text = "UW";
-                }
-                else if (text == "SX")
-                {
-                    text = "SS";
-                }
-                if (text == "DM")
-                {
-                    text = "MS";
-                }
-                string[] array = AssetManager.ListDirectory("World", true, false);
-                for (int i = 0; i < array.Length; i++)
-                {
-                    string path = AssetManager.ResolveFilePath(string.Concat(new string[]
-                    {
-                "World",
-                Path.DirectorySeparatorChar.ToString(),
-                Path.GetFileName(array[i]),
-                Path.DirectorySeparatorChar.ToString(),
-                "equivalences.txt"
-                    }));
-                    if (File.Exists(path))
-                    {
-                        string[] array2 = File.ReadAllText(path).Trim().Split(new char[]
-                        {
-                    ','
-                        });
-                        for (int j = 0; j < array2.Length; j++)
-                        {
-                            string text2 = null;
-                            string a = array2[j];
-                            if (array2[j].Contains("-"))
-                            {
-                                a = array2[j].Split(new char[]
-                                {
-                            '-'
-                                })[0];
-                                text2 = array2[j].Split(new char[]
-                                {
-                            '-'
-                                })[1];
-                            }
-                            if (a == baseAcronym && (text2 == null || character.value.ToLower() == text2.ToLower()))
-                            {
-                                text = Path.GetFileName(array[i]).ToUpper();
-                            }
-                        }
-                    }
-                }
-                return text;
-            }
-            else return orig(character, baseAcronym);
         }
 
         //  private void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)

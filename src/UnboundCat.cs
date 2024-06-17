@@ -5,7 +5,7 @@ using BepInEx;
 using UnityEngine;
 
 
-namespace UnboundCat
+namespace Unbound
 {
     public static class UnboundCWT
     {

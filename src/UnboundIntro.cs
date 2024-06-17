@@ -7,7 +7,7 @@ using MoreSlugcats;
 using RWCustom;
 using UnityEngine;
 
-namespace UnboundMS
+namespace Unbound
 {
     internal class UnboundIntro : UpdatableAndDeletable
         {

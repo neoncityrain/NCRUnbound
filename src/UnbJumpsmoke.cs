@@ -7,7 +7,7 @@ using RWCustom;
 using Smoke;
 using UnityEngine;
 
-namespace UnboundJumpsmoke
+namespace Unbound
 {
     public class UnbJumpsmoke : SmokeSystem
     {
