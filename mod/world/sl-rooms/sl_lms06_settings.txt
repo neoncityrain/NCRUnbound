@@ -1,4 +1,5 @@
 Template: SL_SettingsTemplate_Sewer
+Clouds: 0.703725
 Palette: 35
-PlacedObjects: BrokenShelterWaterLevel><371.8264><418.1506><, 
+PlacedObjects: BrokenShelterWaterLevel><327.092><303.4568><, 
 FadePalette: 6, 0.173913

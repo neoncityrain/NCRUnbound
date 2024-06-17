@@ -1,0 +1,6 @@
+Template: MS_SettingsTemplate_Vents
+RumbleIntensity: 0.3478261
+Effects: ElectricDeath-0.8043478-283-20, WaterFluxMaxLevel-0.2391304-242-76, WaterFluxMinLevel-0.2391304-244-146, 
+PlacedObjects: LightFixture><704.6492><536.9227><RedLight~17.32051~-10~0, LightFixture><54.82062><333.9371><RedLight~17.32051~-10~0, DangleFruit><369.8806><366.9104><0~0~2~3, DangleFruit><305.1744><295.8479><0~0~2~3, 
+AmbientSounds: SPOT><AM_WIN-HowlingWnd.ogg><801.7472><608.3><0.1521739><1><481.7472><418.3><-221.3553><-187.3553><0><0.1978262, SPOT><SO_WAT-OpenFlow.ogg><736.4497><488.4886><0.5><1><327.4497><359.4886><-276.3553><-263.3553><0><0.2086958, SPOT><SO_WAT-Splashes.ogg><741.553><378.7154><0.5><1><320.553><264.7154><-200.3553><-147.3553><0><0.4804349, 
+FadePalette: 35, 0.3695652

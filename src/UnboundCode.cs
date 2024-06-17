@@ -15,6 +15,7 @@ using UnboundMS;
 using UnboundJumpsmoke;
 using Menu;
 using CoralBrain;
+using System.IO;
 
 namespace TheUnbound
 {
@@ -99,30 +100,93 @@ namespace TheUnbound
 
             // On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += JollyPlayerSelector_SetPortraitImage_Name_Color;
             // wow thats a mouthful lol. dynamic jolly pfp images. currently disabled due to coding issues
+
+            On.Region.GetProperRegionAcronym += Region_GetProperRegionAcronym;
         }
 
-      //  private void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
-       // {
-            //orig(self, className, colorTint);
+        private string Region_GetProperRegionAcronym(On.Region.orig_GetProperRegionAcronym orig, SlugcatStats.Name character, string baseAcronym)
+        {
+            if (character.value == "NCRunbound" && character != null)
+            {
+                string text = baseAcronym;
+                if (text == "UX")
+                {
+                    text = "UW";
+                }
+                else if (text == "SX")
+                {
+                    text = "SS";
+                }
+                if (text == "DM")
+                {
+                    text = "MS";
+                }
+                string[] array = AssetManager.ListDirectory("World", true, false);
+                for (int i = 0; i < array.Length; i++)
+                {
+                    string path = AssetManager.ResolveFilePath(string.Concat(new string[]
+                    {
+                "World",
+                Path.DirectorySeparatorChar.ToString(),
+                Path.GetFileName(array[i]),
+                Path.DirectorySeparatorChar.ToString(),
+                "equivalences.txt"
+                    }));
+                    if (File.Exists(path))
+                    {
+                        string[] array2 = File.ReadAllText(path).Trim().Split(new char[]
+                        {
+                    ','
+                        });
+                        for (int j = 0; j < array2.Length; j++)
+                        {
+                            string text2 = null;
+                            string a = array2[j];
+                            if (array2[j].Contains("-"))
+                            {
+                                a = array2[j].Split(new char[]
+                                {
+                            '-'
+                                })[0];
+                                text2 = array2[j].Split(new char[]
+                                {
+                            '-'
+                                })[1];
+                            }
+                            if (a == baseAcronym && (text2 == null || character.value.ToLower() == text2.ToLower()))
+                            {
+                                text = Path.GetFileName(array[i]).ToUpper();
+                            }
+                        }
+                    }
+                }
+                return text;
+            }
+            else return orig(character, baseAcronym);
+        }
 
-           // MenuIllustration portrait1 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer1", new Vector2(100f, 100f) / 2f, true, true);
-            //MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
-            //MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
-           // MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer4", new Vector2(100f, 100f) / 2f, true, true);
+        //  private void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
+        // {
+        //orig(self, className, colorTint);
 
-           // portrait2.sprite.color = self.faceTintColor;
-           // portrait3.sprite.color = self.uniqueTintColor;
-           // portrait4.sprite.color = self.bodyTintColor;
+        // MenuIllustration portrait1 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer1", new Vector2(100f, 100f) / 2f, true, true);
+        //MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
+        //MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
+        // MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer4", new Vector2(100f, 100f) / 2f, true, true);
 
-           // self.subObjects.Add(portrait1);
-           // self.subObjects.Add(portrait2);
-           // self.subObjects.Add(portrait3);
-           // self.subObjects.Add(portrait4);
+        // portrait2.sprite.color = self.faceTintColor;
+        // portrait3.sprite.color = self.uniqueTintColor;
+        // portrait4.sprite.color = self.bodyTintColor;
 
-           // portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-          //  portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-           // portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-       // }
+        // self.subObjects.Add(portrait1);
+        // self.subObjects.Add(portrait2);
+        // self.subObjects.Add(portrait3);
+        // self.subObjects.Add(portrait4);
+
+        // portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+        //  portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+        // portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+        // }
 
         private void RegionGate_customKarmaGateRequirements(On.RegionGate.orig_customKarmaGateRequirements orig, RegionGate self)
         {

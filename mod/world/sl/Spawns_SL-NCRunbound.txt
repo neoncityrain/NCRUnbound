@@ -1,24 +1,107 @@
+// named dp rooms  --------------------------------------
 SL_EDGE02 : 3-Dropbug-2, 5-Snail-{PreCycle}-2, 6-Snail-{PreCycle}-3, 3-Snail-2-{PreCycle}, 9-Yellow-3, 8-Yellow-2
-SL_LMBRIDGE02 : 2-Cyan-1, 5-White-1
+//----- combines hunter + arti into one terrible mess
+SL_LMBRIDGE02 : 2-White-1, 5-Cyan-1
+//----- ok so the cyan is actually a blue, but i like to think it moves to edge02 after the bridge falls
+SL_TUNNELA : 8-Eel-{PreCycle}
+//----- this eel is gone by hunters campain
+SL_ECNIUS03 : 2-Snail, 3-Snail
+//----- standard
 
+// towers  --------------------------------------
 SL_LMTOWER01 : 5-Eggbug
-SL_LMTOWER02 : 2-Cyan-2, 3-CicadaB-3, 4-CicadaA-3
-SL_LMTOWER03 : 6-Snail-3, 3-Eggbug
-SL_LMTOWER04 : 3-CicadaB-4, 4-CicadaA-2, 4-Eel-{PreCycle}
-SL_LMTOWER05 : 4-Tentacle Plant, 7-Snail-2
-SL_LMTOWER07 : 3-Blue-{Mean:0.4}
+//----- eggbug
+SL_LMTOWER02 : 2-Cyan-1, 3-CicadaB-3, 4-CicadaA-3
+//----- only one cyan to balance out bridge02 having one
+SL_LMTOWER03 : 6-Snail-3, 3-Blue
+//----- added a blue. maybe the bridge02 blue. who knows
+SL_LMTOWER04 : 3-CicadaB-3, 4-CicadaA-1, 4-Eel-{PreCycle}
+//----- squidcadas start to move to B04
+SL_LMTOWER05 : 4-Tentacle Plant, 7-Snail-3
+//----- one more snail for the road
+SL_LMTOWER07 : 3-Blue-{Mean:0.6}
+//----- turned the mean number up for good measure. idk WHY its a mean one but w/e women stay winning
 SL_LMTOWER08 : 6-White, 8-Dropbug
+//----- normal tower08 spawns
 SL_LMTOWER11 : 2-Eggbug, 3-CicadaA-2
-SL_LMTOWER13 : 10-Blue, 3-CicadaB-2, 6-CicadaA-3
-
-SL_LMB02 : 4-Tentacle Plant, 3-SeaLeech-3
-SL_B04 : 4-CicadaB-4, 5-CicadaA-2
-
-SL_E01 : 4-Jetfish-2, 5-Aquacenti-{PreCycle}
+//----- why are there so many eggbugs here?
+SL_LMTOWER13 : 10-Blue, 3-CicadaB-1, 6-CicadaA-2
+//----- fewer squidcadas again
 
 
+// alpha order of the [cameras][number] rooms (AKA, vanilla)
+// a --------------------------------------
+SL_LMA02 : 4-Salamander
+//----- tentacle plant dies out, salamander moves to its normal spawn spot in hunter. leeches dont yet show up due to relatively low water lvls
+SL_A03 : 2-Snail-2, 3-Snail-3
+//----- i hate these stupid snails
+SL_A10 : 3-Sea Leech-6
+//----- nasty room. unfortunately this is the same as normal
+// b --------------------------------------
+SL_B01 : 3-Eel-{PreCycle}
+//----- eel appears
+SL_LMB02 : 4-Tentacle Plant, 3-SeaLeech-3, 2-Eel-{PreCycle}
+//----- eel and leeches start to appear
+SL_LMB04 : 4-CicadaB-2, 5-CicadaA-1
+//----- squidcadas start to appear
+// c --------------------------------------
+SL_C02 : 5-Salamander, 6-Salamander, 5-Eel-{PreCycle}, 4-CicadaB-1, 4-CicadaA-2, 7-Snail-1
+//----- snails and cicadas start to vanish
+SL_LMC03 : 3-Jetfish
+SL_C04 : 3-Sea Leech-4
+//----- leeches start appearing
+SL_C05 : 3-Jet Fish
+//----- jetfish starts to appear in more than only precycle
+SL_C06 : 4-Jet Fish
+//----- only one jetfish. water level is too low for the other
+SL_C11 : 2-Sea Leech-4, 3-Sea Leech-3, 4-Tentacle Plant, 5-Tentacle Plant
+// yuri <3
+SL_C15 : 2-TubeWorm-2
+// has a couple grapple worms so the player can actually escape
+// d --------------------------------------
+SL_D01 : 6-Jet Fish, 6-Sea Leech-2, 4-Sea Leech-4, 5-Jet Fish
+//----- sea leeches start to disappear
+SL_D03 : 6-Jet Fish, 5-Jet Fish, 5-Jet Fish-{PreCycle}
+//----- one extra precycle jetfish
+SL_D04 : 3-Mimic-{24}, 5-Salamander, 5-Sea Leech-6, 5-Leech-2, 6-Jet Fish, 7-Sea Leech-6, 7-Leech-4, 7-Aquacenti-{PreCycle}
+//----- one pole plant from artificer remains. some leeches become sea, some are still regular leeches
+SL_D05 : 7-Snail, 8-Snail-2, 4-Jetfish
+//----- goes to subter. just an extra snail
+SL_D06 : 5-Salamander, 6-Salamander, 7-Salamander, 8-Tentacle Plant, 9-Aquacenti-{PreCycle}
+//----- same as hunter. looks good
+// e --------------------------------------
+SL_E01 : 4-Jetfish-2
+// aquacenti from hunter has not appeared yet
+SL_E02 : 5-Jet Fish, 6-Sea Leech-3, 7-Sea Leech-2, 8-Sea Leech-4
+//----- only one jetfish, fewer leeches
+// f --------------------------------------
+SL_F01 : 4-Salamander, 7-Leech-2, 7-Sea Leech-2, 6-Jet Fish, 6-Tentacle Plant-{PreCycle}, 3-Mimic-{13}, 2-Snail-2
+//----- awkward mix of spawns
+SL_F02 : 16-Garbage Worm-3, 4-CicadaB, 5-Leech-9, 6-Eel-{PreCycle}, 7-Jet Fish, 8-Jet Fish
+//----- fewer garbage worms, leeches instead of tentacle plants, one (1) cicada, eel instead of aquacenti. moved positions around too
+// h --------------------------------------
+SL_H02 : 5-Salamander, 7-Jet Fish, 8-Jet Fish, 3-Tentacle Plant, 9-Sea Leech-6
+//----- ex-sideswamp-based. fewer leeches, fewer jetfish, one jetfish spawn is a salamander, no centi
+SL_H03 : 7-Sea Leech-3, 7-Jet Fish, 6-Tentacle Plant, 5-Tentacle Plant
+//----- less jetfish, less leeches, more tentacle plants
 
 
 
+// offscreen and lineages  --------------------------------------
+OFFSCREEN : 0-Vulture-3, 0-KingVulture-2, 0-Leviathan-3, 0-Scavenger-3
+//----- fewer scavengers spawn, as this is post-arti
 
-LINEAGE : SL_LMB04 : 3 : NONE-0.05, White-0.2, Red-0
+LINEAGE : LM_C10 : 2 : Daddy-1, Bro-0
+//----- 100% chance to reflect spear and artificer having a daddy and hunter having a brother
+LINEAGE : SL_LMB04 : 2 : White-0.5, Cyan-0
+//----- standard hunter
+LINEAGE : SL_LMB04 : 3 : White-0.7, Cyan-0.1, Red-0
+//----- arti has a lineage to red, hunter does not. this melds both
+LINEAGE : SL_D01 : 4 : NONE-0.15, Eel-0
+//----- replaces an aquacenti with an eel, as arti has one. in precycle sure but still
+LINEAGE : SL_D02 : 5 : NONE-0.1, Aquacenti-0
+//----- :((((
+LINEAGE : SL_D05 : 5 : NONE-0.05, Salamander-0
+//----- standard
+LINEAGE : SL_D05 : 6 : NONE-0.02, Salamander-0
+//----- standard

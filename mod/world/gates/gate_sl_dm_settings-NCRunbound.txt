@@ -1,0 +1,19 @@
+Template: NONE
+DangerType: Flood
+CeilingDrips: 0.6109261
+RainIntensity: 1
+RumbleIntensity: 1
+WaveSpeed: 0.5
+WaveLength: 1
+WaveAmplitude: 0
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 1
+Grime: 0.1086956
+BkgDroneVolume: 0
+Palette: 45
+EffectColorA: 12
+Effects: WaterDepth-0.0720107-22-79, BrokenZeroG-0.09279881-20-20, WaterFluxMaxLevel-0.2165308-271.1844-63.42222, WaterFluxMinLevel-0.2165308-244.9-131.0222, Fog-0.6263927-30-30, 
+PlacedObjects: NoSpearStickZone><474.3><252.4997><-232~132, ExitSymbolShelter><229.5756><104.8148><, LightFixture><244.6796><377.9025><RedLight~17.32051~-10~96, WallSteamer><365.0042><116.6616><0.7114258~24.62222, WallSteamer><444.6343><120.4212><0~31.02222, 
+AmbientSounds: OMNI><AM_IND-SuperStructure.ogg><687.6773><452.5458><0.1747735><0.7456522, OMNI><SO_WAT-LilDrips.ogg><470.3357><647.136><0.09658017><1, 
+FadePalette: 35, 0.3984377

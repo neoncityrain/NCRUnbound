@@ -4,7 +4,7 @@
 	"version": "2.0.1",
 	"authors": "NeonCityRain",
 	"description": "Just another slugcat mod. This is a re-upload of a mod from last year.",
-	"requirements": [ "slime-cubed.slugbase", "crs" ],
-	"requirements_names": [ "SlugBase", "CRS" ],
+	"requirements": [ "slime-cubed.slugbase" ],
+	"requirements_names": [ "SlugBase" ],
 	"tags" : [ "Campaigns", "Custom Slugcat" ]
 }

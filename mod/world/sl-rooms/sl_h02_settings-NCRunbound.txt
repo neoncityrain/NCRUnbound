@@ -1,5 +1,12 @@
+DangerType: FloodAndRain
+WaveSpeed: 0.5217391
+WaveLength: 0.9347826
+WaveAmplitude: 0.1521739
+SecondWaveLength: 0.5144925
+SecondWaveAmplitude: 0.3478261
 BkgDroneVolume: 0.2769565
 Palette: 35
+Effects: WaterFluxMaxLevel-0.6521739-381-86, WaterFluxMinLevel-0.6521739-342-132, 
 PlacedObjects: JellyFish><-165.1204><1076.34><-2~236~3~5, JellyFish><-70.44995><1081.754><-81~139~2~3, JellyFish><3900.657><1088.125><46~136~2~3, JellyFish><3739.158><1109.07><0~0~2~3, JellyFish><2250.447><1050.714><-308~360~2~3, JellyFish><2602.921><1081.853><-317~308~1~3, JellyFish><2450.447><1025.286><106~365~3~5, JellyFish><1341.063><1095.31><0~0~2~3, InsectGroup><553.3425><1205.627><-95~111~-436~-138~RockFlea~0.5, InsectGroup><778.9068><1195.927><74~107~-103~-151~RockFlea~0.6413041, 
 AmbientSounds: OMNI><AM_WAT-Sea01.ogg><654.1245><638.5935><0.423913><1, 
-FadePalette: 9, 0, 0.03866627, 0.06959915, 0.1159986, 0, 0, 0.2112092, 0
+FadePalette: 9, 0, 0.0604054, 0.1022078, 0.1377378, 0, 0, 0.1568613, 0

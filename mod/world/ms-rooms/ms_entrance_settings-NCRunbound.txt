@@ -1,0 +1,13 @@
+Template: MS_SettingsTemplate_Vents
+CeilingDrips: 0.8695652
+RumbleIntensity: 0.5652174
+WaveSpeed: 0.5108696
+WaveAmplitude: 0
+SecondWaveAmplitude: 0
+Clouds: 1
+Grime: 0.1630435
+Effects: SilenceWater-0.4347826-303-128, ElectricDeath-0.6086956-296-73, WaterFluxMinLevel-0.3423694-489.6021-133.1111, WaterFluxMaxLevel-0.3423681-399.9979-37.15556, 
+PlacedObjects: LightFixture><450.45><847.4954><RedLight~17.32051~-10~0, LightFixture><727.3586><405.3321><RedLight~17.32051~-10~0, LightFixture><113.8468><392.3714><RedLight~17.32051~-10~10, 
+AmbientSounds: OMNI><SO_WAT-ProperDrips.ogg><32.43323><205.5615><0.5><1, OMNI><SO_WAT-MoreDrips.ogg><32.06378><287.927><0.5><1, SPOT><SO_WAT-OpenFlow.ogg><738.3382><237.1325><0.4021739><0.9608696><321.4496><408.1489><259.6447><-12.35535><0><0.502174, 
+Triggers: Spot<tA>event<tB>MusicEvent<eA>songName<eB>RW_85 - Ascent<eA>vol<eB>0.452175<eA>prio<eB>0.5<eA>mxThrt<eB>1<eA>loop<eB>0<eA>droneTol<eB>0<eA>rooms<eB>-1<eA>rest<eB>5<eA>fadeIn<eB>0<eA>oneSongPerCycle<eB>0<eA>stopAtDeath<eB>0<eA>stopAtGate<eB>0<tA>multiUse<tB>0<tA>toCycle<tB>-1<tA>fromCycle<tB>0<tA>delay<tB>0<tA>panPos<tB>1009.139<tB>505.4162<tA>fireChance<tB>1<tA>entrance<tB>2<tA>karma<tB>0<tA>slugcats<tB><tA>pos<tB>204.1386<tB>537.4163<tA>handlePos<tB>-156.3553<tB>-215.3553, 
+FadePalette: 35, 0.3586957

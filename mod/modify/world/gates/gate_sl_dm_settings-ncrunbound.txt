@@ -1,0 +1,13 @@
+[FIND]BrokenZeroG-0.5-20-20, 
+[REPLACE]
+[FIND]WaterDepth-1-22-79, 
+[REPLACE]
+[MERGE]
+DangerType: Flood
+WaveSpeed: 0.5
+WaveLength: 1
+WaveAmplitude: 0
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Effects: WaterDepth-0.0720107-22-79, BrokenZeroG-0.09279881-20-20, 
+[ENDMERGE]

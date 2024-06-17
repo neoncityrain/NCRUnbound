@@ -1,7 +1,7 @@
 Template: MS_SettingsTemplate_Vents
 RumbleIntensity: 0.8152174
 Clouds: 0.7391304
-Effects: WaterDepth-0-272-20, ElectricDeath-0.7065217-273-76, BrokenZeroG-0.4130435-257-134, WaterFluxMinLevel-0.7114584-20-20, WaterFluxMaxLevel-0.7269247-30-30, WaterLights-1-40-40, 
+Effects: WaterDepth-0-272-20, ElectricDeath-0.7065217-273-76, BrokenZeroG-0.4130435-257-134, WaterFluxMinLevel-0.3201541-20-20, WaterFluxMaxLevel-0.3247508-30-30, WaterLights-1-47-181, 
 PlacedObjects: LightSource><588.3701><2077.402><0.07608695~Environment~-634~-582~42~-222.3975~1~1~None~0~0, LightFixture><155.4255><356.9356><RedLight~-191.6795~64~0, LightFixture><787.6188><491.9109><RedLight~17.32051~-10~0, LightFixture><1006.461><1582.946><RedLight~-332.6795~89~0, SteamPipe><401.1008><189.3667><-109~84, SteamPipe><471.3273><174.3155><218~156, SteamPipe><468.0504><174.2375><-54~192, SteamPipe><631.0516><203.2247><29~71, GlowWeed><248.0709><467.1807><0~0~2~3, GlowWeed><542.3547><469.4204><0~0~2~3, GlowWeed><568.3742><370.4067><0~0~2~3, 
 AmbientSounds: OMNI><SO_SFX-Drowning.ogg><805.2227><642.4481><0.3804348><1, OMNI><SO_SFX-LakeBottom.ogg><804.8648><567.3973><0.2282609><1, SPOT><waterGurgleLOOP2.wav><796.1605><441.1788><0.5><0.6282609><477.1605><188.1788><-167.3553><-130.3553><0><0.6217393, 
 FadePalette: 8, 0.6956522, 0.423913, 0.1304348

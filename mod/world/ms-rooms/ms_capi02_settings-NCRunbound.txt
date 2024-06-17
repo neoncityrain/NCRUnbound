@@ -1,0 +1,7 @@
+Template: MS_SettingsTemplate_Artery
+RumbleIntensity: 0.4782609
+Clouds: 1
+Effects: WaterDepth-0.02173913-261-15, BrokenZeroG-0.2608696-265-73, ElectricDeath-0.326087-13-20, 
+PlacedObjects: LightFixture><755.5711><68.68919><RedSubmersible~17.32051~-10~0, LightFixture><238.3145><328.5755><RedSubmersible~17.32051~-10~0, 
+AmbientSounds: SPOT><SO_WAT-LightFlow.ogg><735.6215><169.9088><0.6630435><0.7065217><164.3978><624.9146><146.6447><-40.35535><0><0.2304349, 
+FadePalette: 35, 0.3152174

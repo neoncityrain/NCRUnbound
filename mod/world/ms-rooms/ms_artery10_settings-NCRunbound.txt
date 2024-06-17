@@ -2,7 +2,7 @@ Template: MS_SettingsTemplate_Vents
 RumbleIntensity: 0.8586956
 Clouds: 1
 Grime: 0.326087
-Effects: Darkness-0.1304348-288-7, BrokenZeroG-0.3586957-282-62, ElectricDeath-0.1195652-27-18, WaterFluxMinLevel-0.8478261-30-30, WaterFluxMaxLevel-0.8478261-40-40, 
+Effects: Darkness-0.1304348-288-7, BrokenZeroG-0.3586957-282-62, ElectricDeath-0.1195652-27-18, WaterFluxMinLevel-0.1521739-30-30, WaterFluxMaxLevel-0.1521739-40-40, 
 PlacedObjects: LightFixture><148.0627><960.7831><RedLight~17.32051~-10~0, LightFixture><458.085><544.7818><RedLight~17.32051~-10~0, LightFixture><424.0969><71.83649><RedLight~17.32051~-10~0, LightFixture><116.0407><502.4769><RedLight~17.32051~-10~34, LightFixture><159.4557><1614.444><RedLight~17.32051~-10~32, LightFixture><667.0508><1146.286><RedLight~17.32051~-10~88, 
 AmbientSounds: SPOT><SO_SFX-Heartbeat1.ogg><812.3322><82.35883><0.7391304><0.4326087><372.3322><-12.64117><224.6447><473.6447><0><0.9913045, SPOT><SO_WAT-MoreDrips.ogg><817.0989><237.119><0.423913><1.195652><336.1096><420.1166><-554.3553><-386.3553><0><1, 
 FadePalette: 13, 0.326087, 0.2065217, 0.09782609, 0.04347826

@@ -1,0 +1,7 @@
+Template: MS_SettingsTemplate_Vents
+RumbleIntensity: 0.3478261
+Clouds: 1
+Effects: ElectricDeath-0.3152174-270-130, WaterFluxMinLevel-0.2391304-30-30, WaterFluxMaxLevel-0.2391304-40-40, 
+PlacedObjects: ZapCoil><247.0882><689.3821><246~42, LightFixture><360.8808><716.3345><ZapCoilLight~-243.6795~-163~34, LightFixture><1569.93><676.5528><RedLight~17.32051~-10~33, LightFixture><2098.531><325.5228><RedLight~17.32051~-10~0, LightFixture><1101.51><10.6297><RedSubmersible~17.32051~-10~0, LightFixture><298.8918><366.4097><RedLight~17.32051~-10~80, LightFixture><1056.653><426.3554><RedLight~17.32051~-10~0, LightSource><1927.271><393.1853><0.1847561~EffectColor1~-2037~33~-391.1601~-191.3971~0~0~Fade~0.3152174~0, BubbleGrass><491.9611><537.9462><0~0~4~9, BubbleGrass><423.8093><549.8101><0~0~4~9, 
+AmbientSounds: OMNI><AM_ENV-LightWind.ogg><823.4471><638.9659><0.3804348><1, OMNI><SO_IND-WeirdVent.ogg><819.3349><563.6371><0.2282609><1, OMNI><SO_NAT-LilDrips.ogg><823.5786><483.8969><0.5652174><1.195652, OMNI><SO_WAT-LilDrips.ogg><631.7503><480.45><0.5869565><1, OMNI><SO_WAT-MoreDrips.ogg><450.1379><478.8551><0.6195652><1.352174, 
+FadePalette: 35, 0.3043478, 0.3043478

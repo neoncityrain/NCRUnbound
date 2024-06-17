@@ -1,0 +1,6 @@
+Template: MS_SettingsTemplate_Vents
+RumbleIntensity: 0.04347826
+EffectColorB: 5
+Effects: WaterDepth-0-274-16, Bloom-0.4891304-276-78, ElectricDeath-0.01086957-21-136, WaterFluxMaxLevel-0.1521739-20-20, WaterFluxMinLevel-0.1521739-30-30, 
+PlacedObjects: LightSource><1489.379><242.563><0.173913~EffectColor2~-261~330~159.0015~-194.3981~0~0~None~0~0, LightSource><568.7168><435.6021><0.2065217~EffectColor2~-474~170~-250~124.6025~0~0~None~0~0, LightSource><1208.692><276.1951><0.173913~EffectColor2~165~370~-53.04462~256.5934~0~0~None~0~0, LightSource><701.5927><23.37654><0.1299591~EffectColor2~-437~166~-193.1326~365.5331~0~0~None~0~0, CentipedeAttractor><1283.317><276.6003><38~141, CentipedeAttractor><627.9325><441.6882><5~148, DeadTokenStalk><415.3175><177.6682><30~-64, DeadTokenStalk><550.6245><149.5934><-39~-66, BlueToken><493.3006><159.2653><-16~-53~0~0~1~AquaCenti~Artificer|Spear|Gourmand|NCRunbound~0~0~0~0~0~0~0, 
+FadePalette: 5, 0.2934783, 0.2934783
