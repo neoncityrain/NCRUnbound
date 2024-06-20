@@ -12,8 +12,9 @@ namespace Unbound
     public class UnbJumpsmoke : SmokeSystem
     {
         public Player player;
+        public static SmokeType UnboundSmoke = new SmokeType("UnboundSmoke", true);
 
-        public UnbJumpsmoke(Room room, Player player) : base(SmokeType.CyanLizardSmoke, room, 2, 0f)
+        public UnbJumpsmoke(Room room, Player player) : base(UnboundSmoke, room, 2, 0f)
         {
             this.player = player;
         }

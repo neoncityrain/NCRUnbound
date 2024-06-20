@@ -5,7 +5,6 @@ using SlugBase.Features;
 using static SlugBase.Features.FeatureTypes;
 using RWCustom;
 using MoreSlugcats;
-using UnboundCat;
 using Expedition;
 using JollyCoop;
 using MonoMod.RuntimeDetour;
@@ -15,8 +14,10 @@ using Unbound;
 using Menu;
 using CoralBrain;
 using System.IO;
+using System.Collections.Generic;
 
-namespace TheUnbound
+
+namespace Unbound
 {
     [BepInPlugin(MOD_ID, "NCR.theunbound", "0.0.0")]
     class Plugin : BaseUnityPlugin
@@ -24,10 +25,8 @@ namespace TheUnbound
         private const string MOD_ID = "NCR.theunbound";
         public delegate Color orig_OverseerMainColor(global::OverseerGraphics self);
         public UnbJumpsmoke smoke;
-        public static CreatureTemplate.Type GreenLizard = new CreatureTemplate.Type("GardenLizard", true);
-
-
-
+        public static DataPearl.AbstractDataPearl.DataPearlType unboundKarmaPearl = new DataPearl.AbstractDataPearl.DataPearlType("unboundKarmaPearl", true);
+        public static Conversation.ID unbKarmaPearlConv = new Conversation.ID("unbKarmaPearlConv", true);
 
         public void OnEnable()
         {
@@ -55,23 +54,14 @@ namespace TheUnbound
             On.Player.UpdateAnimation += Player_UpdateAnimation;
             // swim speed code
 
-            On.PlayerGraphics.InitiateSprites += PlayerGraphics_InitiateSprites;
-            On.PlayerGraphics.DrawSprites += PlayerGraphics_DrawSprites;
-            On.PlayerGraphics.AddToContainer += PlayerGraphics_AddToContainer;
-            // cyan spots REALLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
-
             On.GhostWorldPresence.SpawnGhost += GhostWorldPresence_SpawnGhost;
             // fixes being unable to encounter echos under 5 karma, since unbound has a max of 3 initially
-
-            On.SSOracleBehavior.PebblesConversation.AddEvents += PebblesConversation_AddEvents;
-            // oracle chats
 
             On.Player.Grabability += Player_Grabability;
             // prevents taking neurons from moon
 
             On.Player.CanBeSwallowed += Player_CanBeSwallowed;
             // cannot swallow or spit up items
-
 
             Hook ktbmain = new Hook(typeof(global::OverseerGraphics).GetProperty("MainColor", BindingFlags.Instance |
                 BindingFlags.Public).GetGetMethod(), new Func<orig_OverseerMainColor,
@@ -86,7 +76,9 @@ namespace TheUnbound
             On.OverseerGraphics.ColorOfSegment += OverseerGraphics_ColorOfSegment;
             On.Overseer.TryAddHologram += Overseer_TryAddHologram;
             On.OverseerAbstractAI.RoomAllowed += OverseerAbstractAI_RoomAllowed;
-            //ktboverseer things
+            On.OverseerCommunicationModule.FoodDelicousScore += OverseerCommunicationModule_FoodDelicousScore;
+            On.OverseerAI.Update += OverseerAI_Update;
+            //gamma things
 
             On.RoomSpecificScript.SU_A43SuperJumpOnly.Update += SU_A43SuperJumpOnly_Update;
             On.RoomSpecificScript.SU_C04StartUp.Update += SU_C04StartUp_Update;
@@ -101,7 +93,457 @@ namespace TheUnbound
             // On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += JollyPlayerSelector_SetPortraitImage_Name_Color;
             // wow thats a mouthful lol. dynamic jolly pfp images. currently disabled due to coding issues
 
+            On.SSOracleBehavior.PebblesConversation.AddEvents += PebblesConversation_AddEvents;
+            // On.SSOracleBehavior.ThrowOutBehavior.Update += ThrowOutBehavior_Update; // currently disabled as it is being worked on.
+            // oracle chats
 
+            On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += LizardAI_IUseARelationshipTracker_UpdateDynamicRelationship;
+            // cyans consider unbound to be a cyan / are territorial rather than aggressive as long as hes alive
+            // keeps them a bit more aggro than they are to one another BUT its not eating him so shrug
+
+            On.DataPearl.UniquePearlMainColor += DataPearl_UniquePearlMainColor;
+            On.DataPearl.UniquePearlHighLightColor += DataPearl_UniquePearlHighLightColor;
+            On.DataPearl.ApplyPalette += DataPearl_ApplyPalette;
+            On.Conversation.DataPearlToConversation += Conversation_DataPearlToConversation;
+            On.SLOracleBehaviorHasMark.MoonConversation.AddEvents += MoonConversation_AddEvents;
+            On.Player.StomachGlowLightColor += Player_StomachGlowLightColor;
+            // custom pearl
+
+            On.PlayerGraphics.InitiateSprites += PlayerGraphics_InitiateSprites;
+            On.PlayerGraphics.DrawSprites += PlayerGraphics_DrawSprites;
+            On.PlayerGraphics.AddToContainer += PlayerGraphics_AddToContainer;
+            // cyan spots REALLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        }
+
+        private void OverseerAI_Update(On.OverseerAI.orig_Update orig, OverseerAI self)
+        {
+            if (self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" &&
+                self.overseer.PlayerGuide)
+            {
+                self.Update();
+                self.slowLookAt = Vector2.Lerp(Custom.MoveTowards(self.slowLookAt, self.lookAt, 60f), self.lookAt, 0.02f);
+                if (UnityEngine.Random.value < 0.0125f)
+                {
+                    self.casualInterestBonus = Mathf.Pow(UnityEngine.Random.value, 3f) * 2f * ((UnityEngine.Random.value < 0.5f) ? -1f : 1f);
+                }
+                if (self.overseer.hologram != null)
+                {
+                    self.lookAt = self.overseer.hologram.lookAt;
+                }
+                else
+                {
+                    bool flag = self.casualInterestCreature != null && self.casualInterestCreature.realizedCreature != null &&
+                        self.casualInterestCreature.pos.room == self.overseer.room.abstractRoom.index && self.tutorialBehavior == null;
+                    if (flag)
+                    {
+                        if (self.targetCreature != null && self.targetCreature.realizedCreature != null &&
+                            self.targetCreature.realizedCreature.room == self.overseer.room)
+                        {
+                            flag = (self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) +
+                                self.casualInterestBonus > self.RealizedCreatureInterest(self.targetCreature.realizedCreature));
+                        }
+                        else
+                        {
+                            flag = (self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) +
+                                self.casualInterestBonus > 0f);
+                        }
+                    }
+                    if (self.lookAtFlyingWeapon != null)
+                    {
+                        self.lookAt = self.lookAtFlyingWeapon.firstChunk.pos;
+                        if (self.lookAtFlyingWeapon.slatedForDeletetion || self.lookAtFlyingWeapon.mode != Weapon.Mode.Thrown)
+                        {
+                            self.lookAtFlyingWeapon = null;
+                        }
+                    }
+                    else if (flag)
+                    {
+                        self.lookAt = self.casualInterestCreature.realizedCreature.DangerPos;
+                        self.LensUpdate(self.casualInterestCreature.realizedCreature);
+                    }
+                    else if (self.targetCreature != null && self.targetCreature.realizedCreature != null && self.targetCreature.realizedCreature.room == self.overseer.room)
+                    {
+                        self.lookAt = self.targetCreature.realizedCreature.DangerPos;
+                        self.LensUpdate(self.targetCreature.realizedCreature);
+                    }
+                    else
+                    {
+                        self.targetStationary = Mathf.Max(0f, self.targetStationary - 0.008333334f);
+                        Vector2 testPos;
+                        if (UnityEngine.Random.value < 0.1f)
+                        {
+                            testPos = self.overseer.mainBodyChunk.pos + Custom.RNV() * UnityEngine.Random.value * 600f;
+                        }
+                        else
+                        {
+                            testPos = self.lookAt + Custom.RNV() * Mathf.Pow(UnityEngine.Random.value, 3f) * 600f;
+                        }
+                        if (self.LookAtAirPosScore(testPos) > self.LookAtAirPosScore(self.lookAt))
+                        {
+                            self.lookAt = testPos;
+                            self.lookAtSameAirPosCounter = UnityEngine.Random.Range(30, 130);
+                        }
+                        else
+                        {
+                            self.lookAtSameAirPosCounter--;
+                            if (self.lookAtSameAirPosCounter < 1)
+                            {
+                                self.lastLookAtAirPositions.Insert(0, self.lookAt);
+                                if (self.lastLookAtAirPositions.Count > 10)
+                                {
+                                    self.lastLookAtAirPositions.RemoveAt(self.lastLookAtAirPositions.Count - 1);
+                                }
+                                self.lookAtSameAirPosCounter = UnityEngine.Random.Range(30, 130);
+                            }
+                        }
+                    }
+                }
+                if (UnityEngine.Random.value < 0.025f)
+                {
+                    self.lookAtAdd = Custom.RNV() * UnityEngine.Random.value;
+                }
+                self.UpdateZipMatrix();
+                self.UpdateTempHoverPosition();
+                if (self.overseer.mode == Overseer.Mode.Watching || self.overseer.mode == Overseer.Mode.Projecting)
+                {
+                    if (self.overseer.room.abstractRoom.creatures.Count == 0)
+                    {
+                        return;
+                    }
+                    AbstractCreature abstractCreature = self.overseer.room.abstractRoom.creatures[UnityEngine.Random.Range(0,
+                        self.overseer.room.abstractRoom.creatures.Count)];
+                    if (abstractCreature.realizedCreature != null)
+                    {
+                        if (abstractCreature.creatureTemplate.type != CreatureTemplate.Type.Overseer)
+                        {
+                            if (!abstractCreature.creatureTemplate.smallCreature && !abstractCreature.realizedCreature.dead
+                                && Custom.DistLess(self.overseer.rootPos, abstractCreature.realizedCreature.DangerPos,
+                                self.scaredDistance))
+                            {
+                                self.casualInterestCreature = abstractCreature;
+                                    self.overseer.afterWithdrawMode = Overseer.Mode.SittingInWall;
+                                    self.overseer.SwitchModes(Overseer.Mode.Withdrawing);
+                                    
+                            }
+                            else if (self.targetCreature != abstractCreature && (self.casualInterestCreature == null ||
+                                self.RealizedCreatureInterest(abstractCreature.realizedCreature) >
+                                self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) + 0.1f ||
+                                self.targetCreature == self.casualInterestCreature) &&
+                                self.overseer.room.VisualContact(self.overseer.mainBodyChunk.pos,
+                                abstractCreature.realizedCreature.mainBodyChunk.pos))
+                            {
+                                self.casualInterestCreature = abstractCreature;
+                            }
+                        }
+                        else if (abstractCreature.creatureTemplate.type == CreatureTemplate.Type.Scavenger && (self.creature.abstractAI as OverseerAbstractAI).goToPlayer)
+                        {
+                            (self.creature.abstractAI as OverseerAbstractAI).PlayerGuideGoAway(UnityEngine.Random.Range(200, 1200));
+                            Debug.Log("Gamma left due to Scavs");
+                        }
+                        else if (self.overseer.mode != Overseer.Mode.Projecting && self.overseer.conversationDelay == 0)
+                        {
+                            Overseer overseer = abstractCreature.realizedCreature as Overseer;
+                            if (Custom.DistLess(self.overseer.rootPos, overseer.rootPos, 70f * self.overseer.size + 70f + overseer.size) &&
+                                overseer.mode == Overseer.Mode.Watching && overseer.conversationPartner == null &&
+                                overseer.conversationDelay == 0 && self.overseer.lastConversationPartner != overseer)
+                            {
+                                self.overseer.conversationPartner = overseer;
+                                overseer.conversationPartner = self.overseer;
+                                self.overseer.SwitchModes(Overseer.Mode.Conversing);
+                                overseer.SwitchModes(Overseer.Mode.Conversing);
+                                self.overseer.conversationDelay = UnityEngine.Random.Range(30, 190);
+                                overseer.conversationDelay = UnityEngine.Random.Range(30, 190);
+                            }
+                        }
+                    }
+                }
+                else if (self.overseer.mode == Overseer.Mode.SittingInWall)
+                {
+                    bool flag2 = false;
+                    int num = 0;
+                    while (num < self.overseer.room.abstractRoom.creatures.Count && !flag2)
+                    {
+                        if (self.overseer.room.abstractRoom.creatures[num].realizedCreature != null &&
+                            self.overseer.room.abstractRoom.creatures[num].creatureTemplate.type != CreatureTemplate.Type.Overseer &&
+                            !self.overseer.room.abstractRoom.creatures[num].creatureTemplate.smallCreature &&
+                            !self.overseer.room.abstractRoom.creatures[num].realizedCreature.dead &&
+                            Custom.DistLess(self.overseer.rootPos,
+                            self.overseer.room.abstractRoom.creatures[num].realizedCreature.DangerPos, 200f))
+                        {
+                            flag2 = true;
+                        }
+                        num++;
+                    }
+                    if (!flag2)
+                    {
+                        self.overseer.SwitchModes(Overseer.Mode.Emerging);
+                    }
+                }
+                else if (self.overseer.mode == Overseer.Mode.Conversing)
+                {
+                    if (self.overseer.conversationPartner == null || self.overseer.conversationPartner.room != self.overseer.room ||
+                        self.overseer.conversationPartner.mode != Overseer.Mode.Conversing ||
+                        self.overseer.conversationPartner.conversationPartner != self.overseer)
+                    {
+                        self.overseer.SwitchModes(Overseer.Mode.Watching);
+                    }
+                    else
+                    {
+                        self.lookAt = self.overseer.conversationPartner.mainBodyChunk.pos;
+                    }
+                }
+                if (ModManager.MMF && MMF.cfgExtraTutorials.Value &&
+                    self.overseer.PlayerGuide && self.creature.world.game.session is StoryGameSession &&
+                    self.tutorialBehavior == null && self.overseer.room.game.Players.Count > 0 &&
+                    self.overseer.room.abstractRoom == self.overseer.room.game.Players[0].Room &&
+                    !self.creature.world.game.GetStorySession.saveState.deathPersistentSaveData.GateStandTutorial &&
+                    (self.overseer.room.game.Players[0].Room.name == "GATE_SU_DS" ||
+                    self.overseer.room.game.Players[0].Room.name == "GATE_SU_HI"))
+                {
+                    self.tutorialBehavior = new OverseerTutorialBehavior(self);
+                    self.AddModule(self.tutorialBehavior);
+                    return;
+                }
+                self.creature.abstractAI.AbstractBehavior(1);
+                AbstractCreature abstractCreature2 = null;
+                if (self.overseer.room != null && self.overseer.room.game.FirstAlivePlayer != null)
+                {
+                    abstractCreature2 = self.overseer.room.game.FirstAlivePlayer;
+                }
+                if (self.overseer.PlayerGuide && self.creature.world.game.session is StoryGameSession &&
+                    (self.creature.world.game.session as StoryGameSession).saveState.cycleNumber == 0 &&
+                    self.tutorialBehavior == null && self.overseer.room.game.Players.Count > 0 && abstractCreature2 != null &&
+                    self.overseer.room.abstractRoom == self.overseer.room.game.Players[0].Room &&
+                    self.overseer.room.world.region.name == "SU")
+                {
+                    OverseerAbstractAI.DefineTutorialRooms();
+                    for (int k = 0; k < OverseerAbstractAI.tutorialRooms.Length; k++)
+                    {
+                        if (abstractCreature2.Room.name == OverseerAbstractAI.tutorialRooms[k])
+                        {
+                            self.tutorialBehavior = new OverseerTutorialBehavior(self);
+                            self.AddModule(self.tutorialBehavior);
+                            break;
+                        }
+                    }
+                }
+                if (ModManager.MMF && MMF.cfgExtraTutorials.Value && self.overseer.PlayerGuide &&
+                    self.creature.world.game.session is StoryGameSession && self.tutorialBehavior == null &&
+                    self.overseer.room.game.Players.Count > 0 && abstractCreature2 != null &&
+                    self.overseer.room.abstractRoom == abstractCreature2.Room &&
+                    !self.creature.world.game.GetStorySession.saveState.deathPersistentSaveData.GateStandTutorial &&
+                    (abstractCreature2.Room.name == "GATE_SU_DS" || abstractCreature2.Room.name == "GATE_SU_HI"))
+                {
+                    self.tutorialBehavior = new OverseerTutorialBehavior(self);
+                    self.AddModule(self.tutorialBehavior);
+                    return;
+                }
+                self.creature.abstractAI.AbstractBehavior(1);
+            }
+            else
+            {
+                orig(self);
+            }
+        }
+
+        // private void ThrowOutBehavior_Update(On.SSOracleBehavior.ThrowOutBehavior.orig_Update orig, SSOracleBehavior.ThrowOutBehavior self)
+        // {
+        // if (self.owner.player.room.game.session.characterStats.name.value == "NCRunbound" &&
+        // self.action == SSOracleBehavior.Action.ThrowOut_ThrowOut && self.player != null &&
+        // (self.player.room == self.oracle.room || (ModManager.MSC && self.oracle.room.abstractRoom.creatures.Count > 0)))
+        // {
+        // if (self.player.room == self.oracle.room)
+        // {
+        //    self.owner.throwOutCounter++;
+        // }
+        //   self.movementBehavior = SSOracleBehavior.MovementBehavior.KeepDistance;
+        //     self.telekinThrowOut = (self.inActionCounter > 220);
+        //     if (self.owner.inspectPearl != null)
+        //     {
+        //         self.owner.NewAction(MoreSlugcatsEnums.SSOracleBehaviorAction.Pebbles_SlumberParty);
+        //         self.owner.getToWorking = 1f;
+        //         return;
+        //     }
+        //     return;
+        //  }
+        // orig(self);
+        //}
+
+        private float OverseerCommunicationModule_FoodDelicousScore(On.OverseerCommunicationModule.orig_FoodDelicousScore orig, OverseerCommunicationModule self, AbstractPhysicalObject foodObject, Player player)
+        {
+            if (self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRunbound")
+            {
+                if (foodObject == null || foodObject.realizedObject == null || foodObject.Room != player.abstractCreature.Room ||
+                    foodObject.slatedForDeletion)
+                {
+                    return 0f;
+                }
+                if (foodObject.type != AbstractPhysicalObject.AbstractObjectType.DangleFruit &&
+                    foodObject.type != AbstractPhysicalObject.AbstractObjectType.JellyFish &&
+                    foodObject.type != AbstractPhysicalObject.AbstractObjectType.SSOracleSwarmer)
+                {
+                    return 0f;
+                }
+                float num = Mathf.InverseLerp(1100f, 400f, Vector2.Distance(foodObject.realizedObject.firstChunk.pos, player.DangerPos));
+                if (num == 0f)
+                {
+                    return 0f;
+                }
+                if (self.GuideState.itemTypes.Contains(foodObject.type))
+                {
+                    if (num <= 0.2f || !self.room.ViewedByAnyCamera(foodObject.realizedObject.firstChunk.pos, 0f))
+                    {
+                        return 0f;
+                    }
+                    num = 0.3f;
+                }
+                for (int i = 0; i < self.objectsAlreadyTalkedAbout.Count; i++)
+                {
+                    if (self.objectsAlreadyTalkedAbout[i] == foodObject.ID)
+                    {
+                        return 0f;
+                    }
+                }
+                if (foodObject == self.mostDeliciousFoodInRoom &&
+                    self.currentConcern == OverseerCommunicationModule.PlayerConcern.FoodItemInRoom)
+                {
+                    num *= 1.1f;
+                }
+                return num * Mathf.Lerp(self.GeneralPlayerFoodNeed(player), 0.6f, 0.5f);
+            }
+            else return orig(self, foodObject, player);
+        }
+
+        private Color? Player_StomachGlowLightColor(On.Player.orig_StomachGlowLightColor orig, Player self)
+        {
+            AbstractPhysicalObject stomachObject;
+            if (self.AI == null)
+            {
+                stomachObject = self.objectInStomach;
+            }
+            else
+            {
+                stomachObject = (self.State as PlayerNPCState).StomachObject;
+            }
+
+            if (stomachObject != null)
+            {
+                if (self.objectInStomach.type == AbstractPhysicalObject.AbstractObjectType.DataPearl &&
+                    (self.objectInStomach as DataPearl.AbstractDataPearl).dataPearlType == unboundKarmaPearl)
+                {
+                    return new Color?(new Color(0.8f, 0.1f, 0.9f, 0.25f));
+                }
+            }
+            return orig(self);
+        }
+
+        private void MoonConversation_AddEvents(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig, SLOracleBehaviorHasMark.MoonConversation self)
+        {
+            if (self.id != Conversation.ID.MoonFirstPostMarkConversation &&
+                self.id != Conversation.ID.MoonSecondPostMarkConversation &&
+                self.id != MoreSlugcatsEnums.ConversationID.Moon_Gourmand_First_Conversation &&
+                self.id != Conversation.ID.MoonRecieveSwarmer &&
+                self.id == unbKarmaPearlConv)
+            {
+                self.PearlIntro();
+                self.LoadEventsFromFile(1431821);
+                return;
+            }
+            else
+            {
+                orig(self);
+            }
+        }
+
+        private Conversation.ID Conversation_DataPearlToConversation(On.Conversation.orig_DataPearlToConversation orig, DataPearl.AbstractDataPearl.DataPearlType type)
+        {
+            if (type == unboundKarmaPearl)
+            {
+                return unbKarmaPearlConv;
+            }
+            else return orig(type);
+        }
+
+        private CreatureTemplate.Relationship LizardAI_IUseARelationshipTracker_UpdateDynamicRelationship(On.LizardAI.orig_IUseARelationshipTracker_UpdateDynamicRelationship orig, LizardAI self, RelationshipTracker.DynamicRelationship dRelation)
+        {
+            
+            if (dRelation.trackerRep.representedCreature.realizedCreature is Player &&
+                dRelation.trackerRep.representedCreature.realizedCreature != null && dRelation.state != null &&
+                (dRelation.trackerRep.representedCreature.realizedCreature as Player).GetCat().IsUnbound &&
+                self.creature.creatureTemplate.type == CreatureTemplate.Type.CyanLizard &&
+                !(dRelation.trackerRep.representedCreature.realizedCreature as Player).dead &&
+                self.friendTracker.friend != dRelation.trackerRep.representedCreature.realizedCreature)
+            {
+                return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.AgressiveRival, 0.15f);
+            }
+            return orig(self, dRelation);
+        }
+
+        private void DataPearl_ApplyPalette(On.DataPearl.orig_ApplyPalette orig, DataPearl self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        {
+            if ((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType == unboundKarmaPearl)
+            {
+                self.color = DataPearl.UniquePearlMainColor((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType);
+                self.highlightColor = DataPearl.UniquePearlHighLightColor((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType);
+                self.darkness = rCam.room.Darkness(self.firstChunk.pos);
+            }
+            else
+            {
+                orig(self, sLeaser, rCam, palette);
+            }
+        }
+
+        private Color? DataPearl_UniquePearlHighLightColor(On.DataPearl.orig_UniquePearlHighLightColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
+        {
+            if (pearlType == unboundKarmaPearl)
+            {
+                return new Color(0.2f, 0f, 0.3f);
+            }
+            else return orig(pearlType);
+        }
+
+        private Color DataPearl_UniquePearlMainColor(On.DataPearl.orig_UniquePearlMainColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
+        {
+            if (pearlType == unboundKarmaPearl)
+            {
+                return new Color(0.4f, 0.1f, 0.5f);
+            }
+            else return orig(pearlType);
+        }
+
+        private void PebblesConversation_AddEvents(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
+        {
+            if (self.id == Conversation.ID.Pebbles_White && self.owner.player.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                self.colorMode = true;
+
+
+                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 10));
+
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: A little animal, on the floor of my chamber. I think I know what you are looking for."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: You're stuck in a cycle, a repeating pattern. You want a way out."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: Know that this does not make you special - every living thing shares that same frustration.<LINE>From the microbes in the processing strata to me, who am, if you excuse me, godlike in comparison."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: The good news first. In a way, I am what you are searching for. Me and my kind have as our<LINE>purpose to solve that very oscillating claustrophobia in the chests of you and countless others.<LINE>A strange charity - you the unknowing recipient, I the reluctant gift. The noble benefactors?<LINE>Gone."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: The bad news is that no definitive solution has been found. And every moment the equipment erodes to a new state of decay.<LINE>I can't help you collectively, or individually. I can't even help myself."), 0));
+
+                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
+
+                self.events.Add(new Conversation.TextEvent(self, 0, "FP: .  .  .", 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: That is quite the vile expression from such a little beast. Perhaps you do not share in the idiocy of your kind?"), 0));
+
+                if (self.owner.oracle.room.game.IsStorySession &&
+                    self.owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.memoryArraysFrolicked)
+                {
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: Yet you still find the time to put your grubby appendages all across my memory arrays.<LINE>So, I suppose, such is only the wistful musing of a superior being."), 0));
+                }
+
+                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
+
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: Find the old path. Go to the west past the Farm Arrays, and then down into the earth where the land fissures,<LINE>as deep as you can reach, where the ancients built their temples and danced their silly rituals."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, "FP: Best of luck to you, distraught one. There is nothing more I can do.", 0));
+                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: I must resume my work."), 0));
+            }
+            else orig(self);
         }
 
         //  private void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
@@ -219,12 +661,12 @@ namespace TheUnbound
                         return true;
                     }
                 }
-                return (self.world.region.name == "MS" ||
-                    // can always show up in MS
+                return (self.world.region.name == "MS" || self.world.GetAbstractRoom(room).gate ||
+                    // can always show up in MS, can enter gate rooms
                     !(self.world.GetAbstractRoom(room).AttractionForCreature(self.parent.creatureTemplate.type) ==
-                    AbstractRoom.CreatureRoomAttraction.Forbidden) &&
+                    AbstractRoom.CreatureRoomAttraction.Forbidden) ||
                     // if the room is not forbidden
-                    !self.world.GetAbstractRoom(room).scavengerOutpost && !self.world.GetAbstractRoom(room).scavengerTrader) ||
+                    !self.world.GetAbstractRoom(room).scavengerOutpost || !self.world.GetAbstractRoom(room).scavengerTrader) ||
                     // if the room is not a scav outpost / scav trader
                     self.world.GetAbstractRoom(room).shelter;
                     // or if the room IS a shelter (enabling the guide to come inside the shelter with the player)
@@ -387,7 +829,8 @@ namespace TheUnbound
 
         public Color OverseerGraphics_MainColor_get(Plugin.orig_OverseerMainColor orig, global::OverseerGraphics self)
         {
-            if (self.owner != null && self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" &&
+            if (self.owner != null && self.owner.room != null &&
+                self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" &&
                 self.overseer.PlayerGuide)
             {
                 return new Color(0.29f, 0.59f, 0.87f);
@@ -422,42 +865,6 @@ namespace TheUnbound
                 return false;
             }
             else return orig(self, testObj);
-        }
-
-
-        private void PebblesConversation_AddEvents(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
-        {
-            if (self.id == Conversation.ID.Pebbles_White && self.owner.player.room.game.session.characterStats.name.value == "NCRunbound")
-            {
-                self.colorMode = true;
-
-
-                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 10));
-
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: A little animal, on the floor of my chamber. I think I know what you are looking for."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: You're stuck in a cycle, a repeating pattern. You want a way out."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: Know that this does not make you special - every living thing shares that same frustration.<LINE>From the microbes in the processing strata to me, who am, if you excuse me, godlike in comparison."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: The good news first. In a way, I am what you are searching for. Me and my kind have as our<LINE>purpose to solve that very oscillating claustrophobia in the chests of you and countless others.<LINE>A strange charity - you the unknowing recipient, I the reluctant gift. The noble benefactors?<LINE>Gone."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: The bad news is that no definitive solution has been found. And every moment the equipment erodes to a new state of decay.<LINE>I can't help you collectively, or individually. I can't even help myself."), 0));
-                
-                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
-
-                self.events.Add(new Conversation.TextEvent(self, 0, "FP: .  .  .", 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: That is quite the vile expression from such a little beast. Perhaps you do not share in the idiocy of your kind?"), 0));
-
-                if (self.owner.oracle.room.game.IsStorySession &&
-                    self.owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.memoryArraysFrolicked)
-                {
-                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: Yet you still find the time to put your grubby appendages all across my memory arrays.<LINE>So, I suppose, such is only the wistful musing of a superior being."), 0));
-                }
-
-                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
-
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: Find the old path. Go to the west past the Farm Arrays, and then down into the earth where the land fissures,<LINE>as deep as you can reach, where the ancients built their temples and danced their silly rituals."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, "FP: Best of luck to you, distraught one. There is nothing more I can do.", 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: I must resume my work."), 0));
-            }
-            else orig(self);
         }
 
         private void Player_UpdateAnimation(On.Player.orig_UpdateAnimation orig, Player self)
@@ -1161,9 +1568,12 @@ namespace TheUnbound
                         self.GetCat().didLongjump == true &&
                         
                         self.animation != Player.AnimationIndex.GrapplingSwing &&
-                        (self.grasps[0] == null || !(self.grasps[0].grabbed is TubeWorm))
+                        (self.grasps[0] == null || !(self.grasps[0].grabbed is TubeWorm)) &&
                         // prevents triggering if using a grapple worm
-                        )
+
+                        self.EffectiveRoomGravity != 0f
+                        // prevents usage in 0g
+                    )
                     {
                         self.GetCat().CanCyanjump2 = true;
                         // if ALL OF THE ABOVE are true and just performed a longjump without touching the ground
@@ -1226,14 +1636,7 @@ namespace TheUnbound
             if (self.room.game.session.characterStats.name.value == "NCRunbound" && (self.room.game.IsStorySession ||
                  self.room.game.session is StoryGameSession))
             {
-                if (self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
-                {
-                    Debug.Log("Old save detected, fixing game");
-                    self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = false;
-                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
-                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
-                    // re-kills moon. sorry women.
-                }
+                
                 if (!self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon)
                 {
                     if (world.region.name == "MS")
@@ -1250,6 +1653,19 @@ namespace TheUnbound
                     Debug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
                 }
                 
+                if (self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+                {
+                    Debug.Log("Old save detected, fixing game");
+                    self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = false;
+                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
+                    // re-kills moon. sorry women.
+                }
+                if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles == true)
+                {
+                    Debug.Log("Pebbles dead for some reason, attempting to fix game");
+                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
+                }
             }
         }
 

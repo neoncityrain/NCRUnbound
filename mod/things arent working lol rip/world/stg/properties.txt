@@ -1,5 +1,0 @@
-slugPupSpawnChance: 0
-earlyCycleChance: 0.1
-earlyCycleFloodChance: 0.5
-
-Subregion: Star That Guides

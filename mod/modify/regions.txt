@@ -1,0 +1,3 @@
+[MERGE]
+STG
+[ENDMERGE]

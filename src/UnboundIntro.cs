@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MoreSlugcats;
 using RWCustom;
+using Unbound;
 using UnityEngine;
 
 namespace Unbound
@@ -49,6 +50,10 @@ namespace Unbound
                 if (unboundstarttimer == 0)
                 {
                     CameraSetup();
+                    (this.room.game.Players[0].realizedCreature as Player).objectInStomach =
+                        new DataPearl.AbstractDataPearl(this.room.world, AbstractPhysicalObject.AbstractObjectType.DataPearl,
+                        null, new WorldCoordinate(this.room.abstractRoom.index, -1, -1, 0), this.room.game.GetNewID(), -1, -1, null,
+                        Plugin.unboundKarmaPearl);
                 }
                 if (unboundstarttimer < 300)
                 {
