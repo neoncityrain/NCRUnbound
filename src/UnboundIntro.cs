@@ -13,6 +13,7 @@ namespace Unbound
     internal class UnboundIntro : UpdatableAndDeletable
         {
         int unboundstarttimer;
+        public AbstractCreature gammaoverseer;
 
         public UnboundIntro()
         {
@@ -63,6 +64,32 @@ namespace Unbound
                         (this.room.game.Players[i].realizedCreature as Player).airInLungs = 0.01f;
                         (this.room.game.Players[i].realizedCreature as Player).stun = 100;
                     }
+                }
+
+                if (unboundstarttimer == 200)
+                {
+                    Debug.Log("Calling Gamma");
+                    this.gammaoverseer = new AbstractCreature(this.room.world,
+                        StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Overseer), null,
+                        this.room.game.Players[0].pos, new EntityID(-1, -1412221));
+
+                    if (this.room.world.GetAbstractRoom(this.room.game.Players[0].pos).offScreenDen)
+                    {
+                        this.room.world.GetAbstractRoom(this.room.game.Players[0].pos).entitiesInDens.Add(gammaoverseer);
+                    }
+                    else
+                    {
+                        this.room.world.GetAbstractRoom(this.room.game.Players[0].pos).AddEntity(gammaoverseer);
+                    }
+
+                    gammaoverseer.ignoreCycle = true;
+                    gammaoverseer.creatureTemplate.waterVision = 0f;
+                    gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+
+                    (gammaoverseer.abstractAI as OverseerAbstractAI).SetAsPlayerGuide(4);
+                    (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(this.room.abstractRoom.index);
+
+                    gammaoverseer.RealizeInRoom();
                 }
 
                 if (unboundstarttimer == 300)

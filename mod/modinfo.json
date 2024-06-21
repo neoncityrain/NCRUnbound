@@ -1,7 +1,7 @@
 ﻿{
 	"id": "NCR.theunbound",
 	"name": "The Unbound Slugcat",
-	"version": "2.0.1",
+	"version": "2.1.5",
 	"authors": "NeonCityRain",
 	"description": "Just another slugcat mod. This is a re-upload of a mod from last year.",
 	"requirements": [ "slime-cubed.slugbase" ],

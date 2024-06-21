@@ -1,8 +1,6 @@
 [MERGE]
 // oh god dont look at this i did it all by hand. skull emoji
 CONDITIONAL LINKS
-NCRunbound : EXCLUSIVEROOM : GATE_SL_DM
-// adds the SL_DM gate. this should allow access to the FIXED gate to submerged
 
 NCRunbound : EXCLUSIVEROOM : SL_LMA02 // all connected
 NCRunbound : EXCLUSIVEROOM : SL_LMB02 // all connected
@@ -47,16 +45,8 @@ NCRunbound : SL_E01 : SL_C03 : SL_LMC03
 NCRunbound : SL_E01 : SL_B04 : SL_LMB04
 NCRunbound : SL_BRIDGEEND : SL_BRIDGE01 : SL_LMBRIDGE01
 
-NCRunbound : SL_WALL05 : GATE_MS_SL : GATE_SL_DM
-NCRunbound : SL_S15 : GATE_MS_SL : GATE_SL_DM
-NCRunbound : GATE_SL_DM : 1 : SL_WALL05
-NCRunbound : GATE_SL_DM : 3 : SL_S15
-// gate links
-
 // disconnecting vanilla rooms
 NCRunbound : SL_A02 : SL_C01 : DISCONNECTED // ok this ones just to stop ME from breaking the game repeatedly tbh
-NCRunbound : GATE_MS_SL : SL_S15 : DISCONNECTED
-NCRunbound : GATE_MS_SL : SL_WALL05 : DISCONNECTED
 END CONDITIONAL LINKS
 
 
@@ -64,8 +54,6 @@ END CONDITIONAL LINKS
 
 
 ROOMS
-GATE_SL_DM : DISCONNECTED, DISCONNECTED, DISCONNECTED : GATE
-
 SL_LMA02 : SL_LMC01, SL_LMB02, SL_A17
 SL_LMB02 : SL_LMA02, SL_C11, SL_A14
 SL_LMB04 : SL_LMTOWER01, SL_E01, SL_LMC03

@@ -1,25 +1,18 @@
 ﻿using System;
 using BepInEx;
 using UnityEngine;
-using SlugBase.Features;
-using static SlugBase.Features.FeatureTypes;
 using RWCustom;
 using MoreSlugcats;
-using Expedition;
-using JollyCoop;
 using MonoMod.RuntimeDetour;
 using System.Reflection;
 using OverseerHolograms;
 using Unbound;
-using Menu;
-using CoralBrain;
-using System.IO;
-using System.Collections.Generic;
+using JollyCoop;
 
 
 namespace Unbound
 {
-    [BepInPlugin(MOD_ID, "NCR.theunbound", "0.0.0")]
+    [BepInPlugin(MOD_ID, "NCR.theunbound", "2.1.5")]
     class Plugin : BaseUnityPlugin
     {
         private const string MOD_ID = "NCR.theunbound";
@@ -30,7 +23,7 @@ namespace Unbound
 
         public void OnEnable()
         {
-            On.RainWorld.OnModsInit += Extras.WrapInit(LoadResources);
+            On.RainWorld.OnModsInit += UnbExtras.WrapInit(LoadResources);
 
             On.Player.ctor += Player_ctor;
             // initialising
@@ -74,11 +67,7 @@ namespace Unbound
             On.OverseerGraphics.InitiateSprites -= OverseerGraphics_RemoveSprites;
             On.CoralBrain.Mycelium.UpdateColor += Mycelium_UpdateColor;
             On.OverseerGraphics.ColorOfSegment += OverseerGraphics_ColorOfSegment;
-            On.Overseer.TryAddHologram += Overseer_TryAddHologram;
-            On.OverseerAbstractAI.RoomAllowed += OverseerAbstractAI_RoomAllowed;
-            On.OverseerCommunicationModule.FoodDelicousScore += OverseerCommunicationModule_FoodDelicousScore;
-            On.OverseerAI.Update += OverseerAI_Update;
-            //gamma things
+            //gamma visual things
 
             On.RoomSpecificScript.SU_A43SuperJumpOnly.Update += SU_A43SuperJumpOnly_Update;
             On.RoomSpecificScript.SU_C04StartUp.Update += SU_C04StartUp_Update;
@@ -113,261 +102,129 @@ namespace Unbound
             On.PlayerGraphics.DrawSprites += PlayerGraphics_DrawSprites;
             On.PlayerGraphics.AddToContainer += PlayerGraphics_AddToContainer;
             // cyan spots REALLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+
+
+            On.Overseer.TryAddHologram += Overseer_TryAddHologram;
+            On.OverseerAbstractAI.RoomAllowed += OverseerAbstractAI_RoomAllowed;
+            On.OverseerCommunicationModule.FoodDelicousScore += OverseerCommunicationModule_FoodDelicousScore;
+            // On.OverseerAI.Update += OverseerAI_Update;
+            // gamma ai tweak things
+
+            On.Centipede.Shock += Centipede_Shock;
+            // centishock resistance
+        }
+
+        private void Centipede_Shock(On.Centipede.orig_Shock orig, Centipede self, PhysicalObject shockObj)
+        {
+            if (shockObj is Creature && (shockObj is Player && (shockObj as Player).GetCat().IsUnbound))
+            {
+                self.room.PlaySound(SoundID.Centipede_Shock, self.mainBodyChunk.pos);
+                if (self.graphicsModule != null)
+                {
+                    (self.graphicsModule as CentipedeGraphics).lightFlash = 1f;
+                    for (int i = 0; i < (int)Mathf.Lerp(4f, 8f, self.size); i++)
+                    {
+                        self.room.AddObject(new Spark(self.HeadChunk.pos, Custom.RNV() * Mathf.Lerp(4f, 14f, UnityEngine.Random.value),
+                            new Color(0.9f, 0.7f, 1f), null, 8, 14));
+                    }
+                }
+                for (int j = 0; j < self.bodyChunks.Length; j++)
+                {
+                    self.bodyChunks[j].vel += Custom.RNV() * 6f * UnityEngine.Random.value;
+                    self.bodyChunks[j].pos += Custom.RNV() * 6f * UnityEngine.Random.value;
+                }
+                for (int k = 0; k < shockObj.bodyChunks.Length; k++)
+                {
+                    shockObj.bodyChunks[k].vel += Custom.RNV() * 6f * UnityEngine.Random.value;
+                    shockObj.bodyChunks[k].pos += Custom.RNV() * 6f * UnityEngine.Random.value;
+                }
+                if (shockObj is Creature)
+                {
+                    if (self.Small)
+                    {
+                        (shockObj as Creature).Stun(60);
+                        self.room.AddObject(new CreatureSpasmer(shockObj as Creature, false, (shockObj as Creature).stun));
+                        (shockObj as Creature).LoseAllGrasps();
+                    }
+                    else if (self.Red)
+                    {
+                        (shockObj as Creature).Die();
+                        self.room.AddObject(new CreatureSpasmer(shockObj as Creature, true, 200));
+                        (shockObj as Creature).LoseAllGrasps();
+                    }
+                    else if (shockObj.TotalMass < self.TotalMass)
+                    {
+                        (shockObj as Player).playerState.permanentDamageTracking += self.size;
+                        if ((shockObj as Player).playerState.permanentDamageTracking >= 1)
+                        {
+                            (shockObj as Player).Die();
+                        }
+
+                        (shockObj as Creature).Stun((int)Custom.LerpMap(shockObj.TotalMass, 0f, self.TotalMass * 2f, 300f, 30f));
+                        self.room.AddObject(new CreatureSpasmer(shockObj as Creature, true, (shockObj as Creature).stun));
+
+                        self.shockGiveUpCounter = Math.Max(self.shockGiveUpCounter, 30);
+                        self.AI.annoyingCollisions = Math.Min(self.AI.annoyingCollisions / 2, 150);
+                        self.Stun((shockObj as Creature).stun + 3);
+                        self.LoseAllGrasps();
+                    }
+                    else
+                    {
+                        (shockObj as Player).playerState.permanentDamageTracking += self.TotalMass - shockObj.TotalMass;
+                        if ((shockObj as Player).playerState.permanentDamageTracking >= 1)
+                        {
+                            (shockObj as Player).Die();
+                        }
+
+                        (shockObj as Creature).Stun((int)Custom.LerpMap(shockObj.TotalMass, 0f, self.TotalMass * 2f, 300f, 30f));
+                        self.room.AddObject(new CreatureSpasmer(shockObj as Creature, true, (shockObj as Creature).stun));
+
+                        self.shockGiveUpCounter = Math.Max(self.shockGiveUpCounter, 30);
+                        self.AI.annoyingCollisions = Math.Min(self.AI.annoyingCollisions / 2, 150);
+                        self.Stun((shockObj as Creature).stun + 3);
+                        self.LoseAllGrasps();
+                    }
+                }
+                if (shockObj.Submersion > 0f)
+                {
+                    self.room.AddObject(new UnderwaterShock(self.room, self,
+                        self.HeadChunk.pos, 14, Mathf.Lerp(ModManager.MMF ? 0f : 200f, 1200f, self.size),
+                        0.2f + 1.9f * self.size, self, new Color(0.9f, 0.7f, 1f)));
+                }
+            }
+            else
+            {
+                orig(self, shockObj);
+            }
         }
 
         private void OverseerAI_Update(On.OverseerAI.orig_Update orig, OverseerAI self)
         {
-            if (self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" &&
-                self.overseer.PlayerGuide)
+            orig(self);
+            if (self.overseer.room.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
-                self.Update();
-                self.slowLookAt = Vector2.Lerp(Custom.MoveTowards(self.slowLookAt, self.lookAt, 60f), self.lookAt, 0.02f);
-                if (UnityEngine.Random.value < 0.0125f)
+                Debug.Log("Gamma overseer detected");
+
+                if (self.scaredDistance != 0 && self.casualInterestCreature != null &&
+                    self.casualInterestCreature.realizedCreature != null &&
+                    self.casualInterestCreature.pos.room == self.overseer.room.abstractRoom.index &&
+                    self.tutorialBehavior == null && (self.overseer.mode == Overseer.Mode.Watching ||
+                    self.overseer.mode == Overseer.Mode.Projecting) && self.overseer.room.abstractRoom.creatures.Count != 0 &&
+                    self.casualInterestCreature.creatureTemplate.type == CreatureTemplate.Type.Slugcat)
                 {
-                    self.casualInterestBonus = Mathf.Pow(UnityEngine.Random.value, 3f) * 2f * ((UnityEngine.Random.value < 0.5f) ? -1f : 1f);
+                    Debug.Log("Disabled scaredDistance for Gamma");
+                    self.scaredDistance = 0;
                 }
-                if (self.overseer.hologram != null)
+                else if (self.scaredDistance != 130f)
                 {
-                    self.lookAt = self.overseer.hologram.lookAt;
+                    self.scaredDistance = 130f;
                 }
-                else
-                {
-                    bool flag = self.casualInterestCreature != null && self.casualInterestCreature.realizedCreature != null &&
-                        self.casualInterestCreature.pos.room == self.overseer.room.abstractRoom.index && self.tutorialBehavior == null;
-                    if (flag)
-                    {
-                        if (self.targetCreature != null && self.targetCreature.realizedCreature != null &&
-                            self.targetCreature.realizedCreature.room == self.overseer.room)
-                        {
-                            flag = (self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) +
-                                self.casualInterestBonus > self.RealizedCreatureInterest(self.targetCreature.realizedCreature));
-                        }
-                        else
-                        {
-                            flag = (self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) +
-                                self.casualInterestBonus > 0f);
-                        }
-                    }
-                    if (self.lookAtFlyingWeapon != null)
-                    {
-                        self.lookAt = self.lookAtFlyingWeapon.firstChunk.pos;
-                        if (self.lookAtFlyingWeapon.slatedForDeletetion || self.lookAtFlyingWeapon.mode != Weapon.Mode.Thrown)
-                        {
-                            self.lookAtFlyingWeapon = null;
-                        }
-                    }
-                    else if (flag)
-                    {
-                        self.lookAt = self.casualInterestCreature.realizedCreature.DangerPos;
-                        self.LensUpdate(self.casualInterestCreature.realizedCreature);
-                    }
-                    else if (self.targetCreature != null && self.targetCreature.realizedCreature != null && self.targetCreature.realizedCreature.room == self.overseer.room)
-                    {
-                        self.lookAt = self.targetCreature.realizedCreature.DangerPos;
-                        self.LensUpdate(self.targetCreature.realizedCreature);
-                    }
-                    else
-                    {
-                        self.targetStationary = Mathf.Max(0f, self.targetStationary - 0.008333334f);
-                        Vector2 testPos;
-                        if (UnityEngine.Random.value < 0.1f)
-                        {
-                            testPos = self.overseer.mainBodyChunk.pos + Custom.RNV() * UnityEngine.Random.value * 600f;
-                        }
-                        else
-                        {
-                            testPos = self.lookAt + Custom.RNV() * Mathf.Pow(UnityEngine.Random.value, 3f) * 600f;
-                        }
-                        if (self.LookAtAirPosScore(testPos) > self.LookAtAirPosScore(self.lookAt))
-                        {
-                            self.lookAt = testPos;
-                            self.lookAtSameAirPosCounter = UnityEngine.Random.Range(30, 130);
-                        }
-                        else
-                        {
-                            self.lookAtSameAirPosCounter--;
-                            if (self.lookAtSameAirPosCounter < 1)
-                            {
-                                self.lastLookAtAirPositions.Insert(0, self.lookAt);
-                                if (self.lastLookAtAirPositions.Count > 10)
-                                {
-                                    self.lastLookAtAirPositions.RemoveAt(self.lastLookAtAirPositions.Count - 1);
-                                }
-                                self.lookAtSameAirPosCounter = UnityEngine.Random.Range(30, 130);
-                            }
-                        }
-                    }
-                }
-                if (UnityEngine.Random.value < 0.025f)
-                {
-                    self.lookAtAdd = Custom.RNV() * UnityEngine.Random.value;
-                }
-                self.UpdateZipMatrix();
-                self.UpdateTempHoverPosition();
-                if (self.overseer.mode == Overseer.Mode.Watching || self.overseer.mode == Overseer.Mode.Projecting)
-                {
-                    if (self.overseer.room.abstractRoom.creatures.Count == 0)
-                    {
-                        return;
-                    }
-                    AbstractCreature abstractCreature = self.overseer.room.abstractRoom.creatures[UnityEngine.Random.Range(0,
-                        self.overseer.room.abstractRoom.creatures.Count)];
-                    if (abstractCreature.realizedCreature != null)
-                    {
-                        if (abstractCreature.creatureTemplate.type != CreatureTemplate.Type.Overseer)
-                        {
-                            if (!abstractCreature.creatureTemplate.smallCreature && !abstractCreature.realizedCreature.dead
-                                && Custom.DistLess(self.overseer.rootPos, abstractCreature.realizedCreature.DangerPos,
-                                self.scaredDistance))
-                            {
-                                self.casualInterestCreature = abstractCreature;
-                                    self.overseer.afterWithdrawMode = Overseer.Mode.SittingInWall;
-                                    self.overseer.SwitchModes(Overseer.Mode.Withdrawing);
-                                    
-                            }
-                            else if (self.targetCreature != abstractCreature && (self.casualInterestCreature == null ||
-                                self.RealizedCreatureInterest(abstractCreature.realizedCreature) >
-                                self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) + 0.1f ||
-                                self.targetCreature == self.casualInterestCreature) &&
-                                self.overseer.room.VisualContact(self.overseer.mainBodyChunk.pos,
-                                abstractCreature.realizedCreature.mainBodyChunk.pos))
-                            {
-                                self.casualInterestCreature = abstractCreature;
-                            }
-                        }
-                        else if (abstractCreature.creatureTemplate.type == CreatureTemplate.Type.Scavenger && (self.creature.abstractAI as OverseerAbstractAI).goToPlayer)
-                        {
-                            (self.creature.abstractAI as OverseerAbstractAI).PlayerGuideGoAway(UnityEngine.Random.Range(200, 1200));
-                            Debug.Log("Gamma left due to Scavs");
-                        }
-                        else if (self.overseer.mode != Overseer.Mode.Projecting && self.overseer.conversationDelay == 0)
-                        {
-                            Overseer overseer = abstractCreature.realizedCreature as Overseer;
-                            if (Custom.DistLess(self.overseer.rootPos, overseer.rootPos, 70f * self.overseer.size + 70f + overseer.size) &&
-                                overseer.mode == Overseer.Mode.Watching && overseer.conversationPartner == null &&
-                                overseer.conversationDelay == 0 && self.overseer.lastConversationPartner != overseer)
-                            {
-                                self.overseer.conversationPartner = overseer;
-                                overseer.conversationPartner = self.overseer;
-                                self.overseer.SwitchModes(Overseer.Mode.Conversing);
-                                overseer.SwitchModes(Overseer.Mode.Conversing);
-                                self.overseer.conversationDelay = UnityEngine.Random.Range(30, 190);
-                                overseer.conversationDelay = UnityEngine.Random.Range(30, 190);
-                            }
-                        }
-                    }
-                }
-                else if (self.overseer.mode == Overseer.Mode.SittingInWall)
-                {
-                    bool flag2 = false;
-                    int num = 0;
-                    while (num < self.overseer.room.abstractRoom.creatures.Count && !flag2)
-                    {
-                        if (self.overseer.room.abstractRoom.creatures[num].realizedCreature != null &&
-                            self.overseer.room.abstractRoom.creatures[num].creatureTemplate.type != CreatureTemplate.Type.Overseer &&
-                            !self.overseer.room.abstractRoom.creatures[num].creatureTemplate.smallCreature &&
-                            !self.overseer.room.abstractRoom.creatures[num].realizedCreature.dead &&
-                            Custom.DistLess(self.overseer.rootPos,
-                            self.overseer.room.abstractRoom.creatures[num].realizedCreature.DangerPos, 200f))
-                        {
-                            flag2 = true;
-                        }
-                        num++;
-                    }
-                    if (!flag2)
-                    {
-                        self.overseer.SwitchModes(Overseer.Mode.Emerging);
-                    }
-                }
-                else if (self.overseer.mode == Overseer.Mode.Conversing)
-                {
-                    if (self.overseer.conversationPartner == null || self.overseer.conversationPartner.room != self.overseer.room ||
-                        self.overseer.conversationPartner.mode != Overseer.Mode.Conversing ||
-                        self.overseer.conversationPartner.conversationPartner != self.overseer)
-                    {
-                        self.overseer.SwitchModes(Overseer.Mode.Watching);
-                    }
-                    else
-                    {
-                        self.lookAt = self.overseer.conversationPartner.mainBodyChunk.pos;
-                    }
-                }
-                if (ModManager.MMF && MMF.cfgExtraTutorials.Value &&
-                    self.overseer.PlayerGuide && self.creature.world.game.session is StoryGameSession &&
-                    self.tutorialBehavior == null && self.overseer.room.game.Players.Count > 0 &&
-                    self.overseer.room.abstractRoom == self.overseer.room.game.Players[0].Room &&
-                    !self.creature.world.game.GetStorySession.saveState.deathPersistentSaveData.GateStandTutorial &&
-                    (self.overseer.room.game.Players[0].Room.name == "GATE_SU_DS" ||
-                    self.overseer.room.game.Players[0].Room.name == "GATE_SU_HI"))
-                {
-                    self.tutorialBehavior = new OverseerTutorialBehavior(self);
-                    self.AddModule(self.tutorialBehavior);
-                    return;
-                }
-                self.creature.abstractAI.AbstractBehavior(1);
-                AbstractCreature abstractCreature2 = null;
-                if (self.overseer.room != null && self.overseer.room.game.FirstAlivePlayer != null)
-                {
-                    abstractCreature2 = self.overseer.room.game.FirstAlivePlayer;
-                }
-                if (self.overseer.PlayerGuide && self.creature.world.game.session is StoryGameSession &&
-                    (self.creature.world.game.session as StoryGameSession).saveState.cycleNumber == 0 &&
-                    self.tutorialBehavior == null && self.overseer.room.game.Players.Count > 0 && abstractCreature2 != null &&
-                    self.overseer.room.abstractRoom == self.overseer.room.game.Players[0].Room &&
-                    self.overseer.room.world.region.name == "SU")
-                {
-                    OverseerAbstractAI.DefineTutorialRooms();
-                    for (int k = 0; k < OverseerAbstractAI.tutorialRooms.Length; k++)
-                    {
-                        if (abstractCreature2.Room.name == OverseerAbstractAI.tutorialRooms[k])
-                        {
-                            self.tutorialBehavior = new OverseerTutorialBehavior(self);
-                            self.AddModule(self.tutorialBehavior);
-                            break;
-                        }
-                    }
-                }
-                if (ModManager.MMF && MMF.cfgExtraTutorials.Value && self.overseer.PlayerGuide &&
-                    self.creature.world.game.session is StoryGameSession && self.tutorialBehavior == null &&
-                    self.overseer.room.game.Players.Count > 0 && abstractCreature2 != null &&
-                    self.overseer.room.abstractRoom == abstractCreature2.Room &&
-                    !self.creature.world.game.GetStorySession.saveState.deathPersistentSaveData.GateStandTutorial &&
-                    (abstractCreature2.Room.name == "GATE_SU_DS" || abstractCreature2.Room.name == "GATE_SU_HI"))
-                {
-                    self.tutorialBehavior = new OverseerTutorialBehavior(self);
-                    self.AddModule(self.tutorialBehavior);
-                    return;
-                }
-                self.creature.abstractAI.AbstractBehavior(1);
             }
-            else
+            else if (self.scaredDistance != 130f)
             {
-                orig(self);
+                self.scaredDistance = 130f;
             }
         }
-
-        // private void ThrowOutBehavior_Update(On.SSOracleBehavior.ThrowOutBehavior.orig_Update orig, SSOracleBehavior.ThrowOutBehavior self)
-        // {
-        // if (self.owner.player.room.game.session.characterStats.name.value == "NCRunbound" &&
-        // self.action == SSOracleBehavior.Action.ThrowOut_ThrowOut && self.player != null &&
-        // (self.player.room == self.oracle.room || (ModManager.MSC && self.oracle.room.abstractRoom.creatures.Count > 0)))
-        // {
-        // if (self.player.room == self.oracle.room)
-        // {
-        //    self.owner.throwOutCounter++;
-        // }
-        //   self.movementBehavior = SSOracleBehavior.MovementBehavior.KeepDistance;
-        //     self.telekinThrowOut = (self.inActionCounter > 220);
-        //     if (self.owner.inspectPearl != null)
-        //     {
-        //         self.owner.NewAction(MoreSlugcatsEnums.SSOracleBehaviorAction.Pebbles_SlumberParty);
-        //         self.owner.getToWorking = 1f;
-        //         return;
-        //     }
-        //     return;
-        //  }
-        // orig(self);
-        //}
 
         private float OverseerCommunicationModule_FoodDelicousScore(On.OverseerCommunicationModule.orig_FoodDelicousScore orig, OverseerCommunicationModule self, AbstractPhysicalObject foodObject, Player player)
         {
@@ -779,7 +636,8 @@ namespace Unbound
         private void OverseerGraphics_InitiateSprites(On.OverseerGraphics.orig_InitiateSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
-            if (self.owner != null && 
+            if (self.owner != null && self.overseer.room != null && self.overseer != null &&
+                // making sure no values are null
                 self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
                 sLeaser.sprites[self.PupilSprite].color = new Color(0.2f, 0.56f, 0.478f, 0.5f);
@@ -793,7 +651,8 @@ namespace Unbound
 
         private Color OverseerGraphics_ColorOfSegment(On.OverseerGraphics.orig_ColorOfSegment orig, OverseerGraphics self, float f, float timeStacker)
         {
-            if (self.owner != null &&
+            if (self.owner != null && self != null && self.overseer != null && self.overseer.room != null &&
+                // making sure no values are null, because the game is a little bastard sometimes
                 self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
                 return Color.Lerp(Color.Lerp(Custom.RGB2RGBA((self.MainColor + new Color(0.3f, 0.86f, 0.67f) +
@@ -1058,14 +917,14 @@ namespace Unbound
                     }
                     else
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].color = new Color(0.59f, 0.14f, 0.14f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 1].color = new Color(0.87f, 0.39f, 0.33f, 1f);
                         sLeaser.sprites[sLeaser.sprites.Length - 2].color = new Color(0.89f, 0.79f, 0.6f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 3].color = new Color(0.59f, 0.14f, 0.14f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 3].color = new Color(0.87f, 0.39f, 0.33f, 1f);
                         sLeaser.sprites[sLeaser.sprites.Length - 4].color = new Color(0.89f, 0.79f, 0.6f, 1f);
 
-                        sLeaser.sprites[sLeaser.sprites.Length - 5].color = new Color(0.59f, 0.14f, 0.14f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 5].color = new Color(0.87f, 0.39f, 0.33f, 1f);
                         sLeaser.sprites[sLeaser.sprites.Length - 6].color = new Color(0.89f, 0.79f, 0.6f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 7].color = new Color(0.59f, 0.14f, 0.14f, 1f);
+                        sLeaser.sprites[sLeaser.sprites.Length - 7].color = new Color(0.87f, 0.39f, 0.33f, 1f);
                         sLeaser.sprites[sLeaser.sprites.Length - 8].color = new Color(0.89f, 0.79f, 0.6f, 1f);
                     }
                 }
@@ -1098,14 +957,14 @@ namespace Unbound
                     else
                     {
                         
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[sLeaser.sprites.Length - 1].color = Color.Lerp(new Color(0.87f, 0.39f, 0.33f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
                         sLeaser.sprites[sLeaser.sprites.Length - 2].color = new Color(0.89f, 0.79f, 0.6f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 3].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[sLeaser.sprites.Length - 3].color = Color.Lerp(new Color(0.87f, 0.39f, 0.33f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
                         sLeaser.sprites[sLeaser.sprites.Length - 4].color = new Color(0.89f, 0.79f, 0.6f, 1f);
 
-                        sLeaser.sprites[sLeaser.sprites.Length - 5].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[sLeaser.sprites.Length - 5].color = Color.Lerp(new Color(0.87f, 0.39f, 0.33f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
                         sLeaser.sprites[sLeaser.sprites.Length - 6].color = new Color(0.89f, 0.79f, 0.6f, 1f);
-                        sLeaser.sprites[sLeaser.sprites.Length - 7].color = Color.Lerp(new Color(0.59f, 0.14f, 0.14f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[sLeaser.sprites.Length - 7].color = Color.Lerp(new Color(0.87f, 0.39f, 0.33f, 1f), new Color(0.89f, 0.79f, 0.6f, 1f), (self.player.GetCat().UnbCyanjumpCountdown / 100f));
                         sLeaser.sprites[sLeaser.sprites.Length - 8].color = new Color(0.89f, 0.79f, 0.6f, 1f);
                     }
                 }
@@ -1132,35 +991,24 @@ namespace Unbound
                         newContatiner = rCam.ReturnFContainer("Items");
                         newContatiner.AddChild(sLeaser.sprites[i]);
                     }
-                    else if (ModManager.MSC)
+                    if (i == sLeaser.sprites.Length - 1 || i == sLeaser.sprites.Length - 2)
                     {
-                        if (i == sLeaser.sprites.Length - 1 || i == sLeaser.sprites.Length - 2)
-                        {
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 1]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 2]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 3]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 4]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 5]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 6]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 7]);
-                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 8]);
-                        }
-                        else if ((i <= 6 || i >= 9) && i <= 9)
-                        {
-                            newContatiner.AddChild(sLeaser.sprites[i]);
-                        }
-                        else
-                        {
-                            rCam.ReturnFContainer("Foreground").AddChild(sLeaser.sprites[i]);
-                        }
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 1]);
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 2]);
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 3]);
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 4]);
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 5]);
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 6]);
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 7]);
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[sLeaser.sprites.Length - 8]);
                     }
-                    else if ((i > 6 && i < 9) || i > 9)
+                    else if ((i <= 6 || i >= 9) && i <= 9)
                     {
-                        rCam.ReturnFContainer("Foreground").AddChild(sLeaser.sprites[i]);
+                        newContatiner.AddChild(sLeaser.sprites[i]);
                     }
                     else
                     {
-                        newContatiner.AddChild(sLeaser.sprites[i]);
+                        rCam.ReturnFContainer("Foreground").AddChild(sLeaser.sprites[i]);
                     }
                 }
             }
@@ -1374,7 +1222,7 @@ namespace Unbound
             {
                 return;
             }
-            if (self.room.game.session.characterStats.name.value == "NCRunbound")
+            if (self.room.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
             {
                 if (self.room.roomSettings.DangerType == MoreSlugcatsEnums.RoomRainDangerType.Blizzard && weapon.firstChunk.vel.magnitude < 20f)
                 {
@@ -1605,7 +1453,7 @@ namespace Unbound
 
         private bool StowawayBugState_AwakeThisCycle(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig, MoreSlugcats.StowawayBugState self, int cycle)
         {
-            if (self.creature.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self.creature.world.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
             {
                 Debug.Log("Unbound world, rerolling stowawake (because life is a fucking nightmare)");
                 System.Random rd = new System.Random();
@@ -1632,6 +1480,7 @@ namespace Unbound
             if (self.slugcatStats.name.value == "NCRunbound")
             {
                 self.GetCat().IsUnbound = true;
+                self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
             }
             if (self.room.game.session.characterStats.name.value == "NCRunbound" && (self.room.game.IsStorySession ||
                  self.room.game.session is StoryGameSession))
@@ -1647,6 +1496,11 @@ namespace Unbound
                     else if (world.region.name == "SL")
                     {
                         Debug.Log("SL start detected");
+                        self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
+                            AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
+                            new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
+                            unboundKarmaPearl);
+                        self.room.world.overseersWorldAI.playerGuide.ChangeRooms(self.coord);
                     }
                     (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;

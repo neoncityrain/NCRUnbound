@@ -13,7 +13,7 @@ using UnityEngine;
 #pragma warning restore CS0618
 
 
-internal static class Extras
+internal static class UnbExtras
 {
     private static bool _initialized;
 
