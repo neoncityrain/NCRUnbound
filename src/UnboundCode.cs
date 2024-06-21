@@ -1451,7 +1451,7 @@ namespace Unbound
             }
         }
 
-        private bool StowawayBugState_AwakeThisCycle(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig, MoreSlugcats.StowawayBugState self, int cycle)
+        private bool StowawayBugState_AwakeThisCycle(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig, StowawayBugState self, int cycle)
         {
             if (self.creature.world.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
             {
@@ -1488,19 +1488,22 @@ namespace Unbound
                 
                 if (!self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon)
                 {
-                    if (world.region.name == "MS")
+                    if (world.region.name == "MS" && ModManager.MSC)
                     {
                         Debug.Log("MS start detected, triggering intro");
                         self.room.AddObject(new UnboundIntro());
                     }
-                    else if (world.region.name == "SL")
+                    else if (world.region.name == "SL" && !ModManager.MSC)
                     {
                         Debug.Log("SL start detected");
                         self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
                             AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
                             new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
                             unboundKarmaPearl);
-                        self.room.world.overseersWorldAI.playerGuide.ChangeRooms(self.coord);
+                        if (self.room.world.overseersWorldAI.playerGuide != null)
+                        {
+                            self.room.world.overseersWorldAI.playerGuide.ChangeRooms(self.coord);
+                        }
                     }
                     (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
@@ -1522,7 +1525,6 @@ namespace Unbound
                 }
             }
         }
-
 
         private void LoadResources(RainWorld rainWorld)
         {
