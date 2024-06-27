@@ -107,7 +107,6 @@ namespace Unbound
             On.Overseer.TryAddHologram += Overseer_TryAddHologram;
             On.OverseerAbstractAI.RoomAllowed += OverseerAbstractAI_RoomAllowed;
             On.OverseerCommunicationModule.FoodDelicousScore += OverseerCommunicationModule_FoodDelicousScore;
-            // On.OverseerAI.Update += OverseerAI_Update;
             // gamma ai tweak things
 
             On.Centipede.Shock += Centipede_Shock;
@@ -195,34 +194,6 @@ namespace Unbound
             else
             {
                 orig(self, shockObj);
-            }
-        }
-
-        private void OverseerAI_Update(On.OverseerAI.orig_Update orig, OverseerAI self)
-        {
-            orig(self);
-            if (self.overseer.room.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
-            {
-                Debug.Log("Gamma overseer detected");
-
-                if (self.scaredDistance != 0 && self.casualInterestCreature != null &&
-                    self.casualInterestCreature.realizedCreature != null &&
-                    self.casualInterestCreature.pos.room == self.overseer.room.abstractRoom.index &&
-                    self.tutorialBehavior == null && (self.overseer.mode == Overseer.Mode.Watching ||
-                    self.overseer.mode == Overseer.Mode.Projecting) && self.overseer.room.abstractRoom.creatures.Count != 0 &&
-                    self.casualInterestCreature.creatureTemplate.type == CreatureTemplate.Type.Slugcat)
-                {
-                    Debug.Log("Disabled scaredDistance for Gamma");
-                    self.scaredDistance = 0;
-                }
-                else if (self.scaredDistance != 130f)
-                {
-                    self.scaredDistance = 130f;
-                }
-            }
-            else if (self.scaredDistance != 130f)
-            {
-                self.scaredDistance = 130f;
             }
         }
 
@@ -569,22 +540,31 @@ namespace Unbound
                 }
                 // ordinarily the tutorial holograms are here. this mod goes with the assumption that the player knows how to play,
                 // so those are removed
-                if (message == OverseerHologram.Message.Bats)
+                if (message == OverseerHologram.Message.Angry)
                 {
-                    self.hologram = new OverseerHologram.BatPointer(self, message, communicateWith, importance);
+                    self.hologram = new AngryHologram(self, message, communicateWith, importance);
                 }
-                else if (message == OverseerHologram.Message.Shelter)
-                {
-                    self.hologram = new OverseerHologram.ShelterPointer(self, message, communicateWith, importance);
-                }
+                // this is moved to the top, as it is the highest priority.
                 else if (message == OverseerHologram.Message.DangerousCreature)
                 {
                     self.hologram = new OverseerHologram.CreaturePointer(self, message, communicateWith, importance);
                 }
+
+                else if (message == OverseerHologram.Message.Shelter)
+                {
+                    self.hologram = new OverseerHologram.ShelterPointer(self, message, communicateWith, importance);
+                }
+
+                else if (message == OverseerHologram.Message.Bats)
+                {
+                    self.hologram = new OverseerHologram.BatPointer(self, message, communicateWith, importance);
+                }
+                
                 else if (message == OverseerHologram.Message.FoodObject)
                 {
                     self.hologram = new OverseerHologram.FoodPointer(self, message, communicateWith, importance);
                 }
+
                 else
                 {
                     return;
@@ -674,6 +654,7 @@ namespace Unbound
                 self.owner.room.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
                 sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0.2f, 0.56f, 0.47f), 0.5f);
+                sLeaser.sprites[self.InnerGlowSprite].color = new Color(0.23f, 0.25f, 0.28f);
             }
             else if (self.owner.room != null && self.overseer != null)
             {
@@ -1492,6 +1473,15 @@ namespace Unbound
                     {
                         Debug.Log("MS start detected, triggering intro");
                         self.room.AddObject(new UnboundIntro());
+                        if (self.room.world.overseersWorldAI.playerGuide != null)
+                        {
+                            AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
+                            gammaoverseer.ignoreCycle = true;
+                            gammaoverseer.creatureTemplate.waterVision = 0;
+                            gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+
+                            (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
+                        }
                     }
                     else if (world.region.name == "SL" && !ModManager.MSC)
                     {
@@ -1502,7 +1492,12 @@ namespace Unbound
                             unboundKarmaPearl);
                         if (self.room.world.overseersWorldAI.playerGuide != null)
                         {
-                            self.room.world.overseersWorldAI.playerGuide.ChangeRooms(self.coord);
+                            AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
+                            gammaoverseer.ignoreCycle = true;
+                            gammaoverseer.creatureTemplate.waterVision = 0;
+                            gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+
+                            (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
                         }
                     }
                     (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
