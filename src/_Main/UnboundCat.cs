@@ -12,6 +12,7 @@ namespace Unbound
         public class UnboundCat
         {
             // Define your variables to store here!
+            public UnbJumpsmoke unbsmoke;
             public bool IsUnbound;
             public bool PlayingSound;
             public bool didLongjump;
