@@ -64,13 +64,13 @@ namespace Unbound
                         (room.game.Players[i].realizedCreature as Player).stun = 0;
                     }
 
-                    Debug.Log("Start of game initiated, yippee!");
+                    UnityEngine.Debug.Log("Start of game initiated, yippee!");
                     Destroy();
                 }
             }
             else
             {
-                Debug.Log("Player not realized! Sorry for dropping you into water to drown, I twied :(");
+                UnityEngine.Debug.Log("Player not realized! Sorry for dropping you into water to drown, I twied :(");
             }
         }
     }
