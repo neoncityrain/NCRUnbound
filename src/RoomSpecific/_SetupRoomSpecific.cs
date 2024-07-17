@@ -47,7 +47,7 @@ namespace Unbound
                 {
                     if (world.region.name == "MS" && ModManager.MSC)
                     {
-                        Debug.Log("MS start detected, triggering intro");
+                        UnityEngine.Debug.Log("MS start detected, triggering intro");
                         self.room.AddObject(new UnboundIntro());
                         if (self.room.world.overseersWorldAI.playerGuide != null)
                         {
@@ -61,7 +61,7 @@ namespace Unbound
                     }
                     else if (world.region.name == "SL" && !ModManager.MSC)
                     {
-                        Debug.Log("SL start detected");
+                        UnityEngine.Debug.Log("SL start detected");
                         self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
                             AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
                             new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
@@ -78,12 +78,12 @@ namespace Unbound
                     }
                     (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
-                    Debug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
+                    UnityEngine.Debug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
                 }
 
                 if (self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
                 {
-                    Debug.Log("Old save detected, fixing game");
+                    UnityEngine.Debug.Log("Old save detected, fixing game");
                     self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = false;
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
@@ -91,7 +91,7 @@ namespace Unbound
                 }
                 if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles == true)
                 {
-                    Debug.Log("Pebbles dead for some reason, attempting to fix game");
+                    UnityEngine.Debug.Log("Pebbles dead for some reason, attempting to fix game");
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
                 }
             }
