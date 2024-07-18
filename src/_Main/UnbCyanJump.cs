@@ -14,7 +14,8 @@ namespace Unbound
 
         private static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
         {
-            if (self.GetCat().IsUnbound)
+            if (self != null && self.room != null &&
+                self.GetCat().IsUnbound)
             {
                 if (self.GetCat().unbsmoke != null && (self.GetCat().unbsmoke.slatedForDeletetion || self.GetCat().unbsmoke.room != self.room))
                 {
@@ -62,7 +63,8 @@ namespace Unbound
                         self.bodyChunks[1].vel.y = 8f * num4;
 
 
-                        self.GetCat().UnbCyanjumpCountdown = 60;
+                        self.GetCat().UnbCyanjumpCountdown += (int)self.GetCat().CyJump1Maximum / 3;
+                        // 0g
                     }
                     else
                     {
@@ -88,8 +90,7 @@ namespace Unbound
                             self.bodyChunks[0].vel.x = 15f * (float)self.input[0].x;
                             self.bodyChunks[1].vel.x = 13f * (float)self.input[0].x;
                         }
-                        self.GetCat().UnbCyanjumpCountdown = 180;
-
+                        self.GetCat().UnbCyanjumpCountdown += (int)self.GetCat().CyJump1Maximum;
                     }
 
                     if (self.GetCat().unbsmoke == null)
@@ -146,7 +147,7 @@ namespace Unbound
                         self.bodyChunks[1].vel.x = 15f * (float)self.input[0].x;
                     }
 
-                    self.GetCat().UnbCyanjumpCountdown += 400;
+                    self.GetCat().UnbCyanjumpCountdown += (int)self.GetCat().CyJump2Maximum;
                     // adds a LOT more to the countdown- it recharges very slowly
 
                     if (self.GetCat().unbsmoke == null)
@@ -171,7 +172,8 @@ namespace Unbound
         private static void Player_WallJump(On.Player.orig_WallJump orig, Player self, int direction)
         {
             orig(self, direction);
-            if (self.GetCat().IsUnbound)
+            if (self != null && self.room != null &&
+                self.GetCat().IsUnbound)
             {
                 self.GetCat().UnbChainjumps += 1;
                 if (self.GetCat().UnbChainjumps > 1)
@@ -219,7 +221,8 @@ namespace Unbound
         {
             orig(self, eu);
 
-            if (self.GetCat().IsUnbound)
+            if (self != null && self.room != null &&
+                self.GetCat().IsUnbound)
             {
                 if (self.lowerBodyFramesOnGround > 1 || self.submerged)
                 {

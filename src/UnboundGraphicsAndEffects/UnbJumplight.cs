@@ -26,11 +26,11 @@ namespace Unbound
 
         public override void Update(bool eu)
         {
-            this.lastLife = this.life;
-            this.life -= 1f / this.lifeTime;
-            if (this.lastLife <= 0f)
+            lastLife = life;
+            life -= 1f / lifeTime;
+            if (lastLife <= 0f)
             {
-                this.Destroy();
+                Destroy();
             }
             base.Update(eu);
         }
@@ -45,23 +45,23 @@ namespace Unbound
             sLeaser.sprites[0].shader = rCam.game.rainWorld.Shaders["LightSource"];
             sLeaser.sprites[1].shader = rCam.game.rainWorld.Shaders["FlatLight"];
             sLeaser.sprites[2].shader = rCam.game.rainWorld.Shaders["FlatLight"];
-            this.AddToContainer(sLeaser, rCam, null);
+            AddToContainer(sLeaser, rCam, null);
         }
 
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
-            Vector2 vector = Vector2.Lerp(this.lastPos, this.pos, timeStacker);
-            float num = Mathf.Lerp(this.lastLife, this.life, timeStacker);
+            Vector2 vector = Vector2.Lerp(lastPos, pos, timeStacker);
+            float num = Mathf.Lerp(lastLife, life, timeStacker);
             for (int i = 0; i < sLeaser.sprites.Length; i++)
             {
                 sLeaser.sprites[i].x = vector.x - camPos.x;
                 sLeaser.sprites[i].y = vector.y - camPos.y;
             }
-            float num2 = Mathf.Lerp(20f + 10f * this.intensity, 40f + 30f * this.intensity, num) + Mathf.Lerp(50f, 90f, this.intensity) * Mathf.Sin(Mathf.Pow(num, 2f) * 3.1415927f);
+            float num2 = Mathf.Lerp(20f + 10f * intensity, 40f + 30f * intensity, num) + Mathf.Lerp(50f, 90f, intensity) * Mathf.Sin(Mathf.Pow(num, 2f) * 3.1415927f);
             sLeaser.sprites[0].scale = num2 * 2f / 8f;
             sLeaser.sprites[0].alpha = Mathf.Pow(Mathf.InverseLerp(0f, 0.5f, num), 0.5f);
             sLeaser.sprites[1].scale = num2 / 8f;
-            sLeaser.sprites[1].alpha = Mathf.Pow(num, 2f) * (0.4f + 0.4f * this.intensity);
+            sLeaser.sprites[1].alpha = Mathf.Pow(num, 2f) * (0.4f + 0.4f * intensity);
 
 
             if (ModManager.JollyCoop)
@@ -80,8 +80,9 @@ namespace Unbound
                 sLeaser.sprites[0].color = new Color(0.8f, 0.1f, 0.1f);
                 sLeaser.sprites[1].color = new Color(0.6f, 0.1f, 0.1f);
             }
+
             sLeaser.sprites[2].scale = num2 * Mathf.Lerp(0.4f, 0.8f, UnityEngine.Random.value) / 8f;
-            sLeaser.sprites[2].alpha = Mathf.Pow(Mathf.InverseLerp(0.25f, 1f, num), 3f) * this.intensity;
+            sLeaser.sprites[2].alpha = Mathf.Pow(Mathf.InverseLerp(0.25f, 1f, num), 3f) * intensity;
             base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
         }
 

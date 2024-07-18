@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevInterface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,8 @@ namespace Unbound
 
         private static void RoomSpecificTextMessage_Update(On.RoomSpecificTextMessage.orig_Update orig, RoomSpecificTextMessage self, bool eu)
         {
-            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.room != null && !self.slatedForDeletetion &&
+                self.room.world.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.Destroy();
             }
@@ -33,7 +35,8 @@ namespace Unbound
 
         private static void SL_C12JetFish_Update(On.RoomSpecificScript.SL_C12JetFish.orig_Update orig, RoomSpecificScript.SL_C12JetFish self, bool eu)
         {
-            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.room != null && !self.slatedForDeletetion &&
+                self.room.world.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.Destroy();
             }
@@ -45,7 +48,8 @@ namespace Unbound
 
         private static void SU_A23FirstCycleMessage_Update(On.RoomSpecificScript.SU_A23FirstCycleMessage.orig_Update orig, RoomSpecificScript.SU_A23FirstCycleMessage self, bool eu)
         {
-            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.room != null && !self.slatedForDeletetion &&
+                self.room.world.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.Destroy();
             }
@@ -57,7 +61,8 @@ namespace Unbound
 
         private static void SU_C04StartUp_Update(On.RoomSpecificScript.SU_C04StartUp.orig_Update orig, RoomSpecificScript.SU_C04StartUp self, bool eu)
         {
-            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.room != null && !self.slatedForDeletetion &&
+                self.room.world.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.Destroy();
             }
@@ -69,7 +74,8 @@ namespace Unbound
 
         private static void SU_A43SuperJumpOnly_Update(On.RoomSpecificScript.SU_A43SuperJumpOnly.orig_Update orig, RoomSpecificScript.SU_A43SuperJumpOnly self, bool eu)
         {
-            if (self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.room != null && !self.slatedForDeletetion &&
+                self.room.world.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.Destroy();
             }

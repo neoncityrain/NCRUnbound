@@ -39,9 +39,6 @@
         <Reference Include="..\lib\SlugBase.dll">
           <Private>false</Private>
         </Reference>
-        <Reference Include="..\lib\Stripped-FakeAchievements.dll">
-          <Private>false</Private>
-        </Reference>
         <Reference Include="..\lib\UnityEngine.CoreModule.dll">
           <Private>false</Private>
         </Reference>

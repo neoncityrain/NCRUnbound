@@ -31,10 +31,10 @@ namespace Unbound
 
         private static void Mycelium_UpdateColor(On.CoralBrain.Mycelium.orig_UpdateColor orig, CoralBrain.Mycelium self, Color newColor, float gradientStart, int spr, RoomCamera.SpriteLeaser sLeaser)
         {
-            if (self.owner.OwnerRoom.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.owner != null && self.owner.OwnerRoom != null &&
+                self.owner.OwnerRoom.game.session.characterStats.name.value == "NCRunbound")
             {
-                if (self != null && self.owner != null &&
-                    self.owner is OverseerGraphics && (self.owner as OverseerGraphics).overseer.PlayerGuide)
+                if (self.owner is OverseerGraphics && (self.owner as OverseerGraphics).overseer.PlayerGuide)
                 {
                     self.color = newColor;
                     for (int i = 0; i < (sLeaser.sprites[spr] as TriangleMesh).verticeColors.Length; i++)
@@ -84,7 +84,7 @@ namespace Unbound
         private static void OverseerGraphics_DrawSprites(On.OverseerGraphics.orig_DrawSprites orig, OverseerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
-            if (self.owner.room != null && self.overseer != null &&
+            if (self.owner.room != null && self.overseer != null && self != null &&
                 self.owner.room.game.session.characterStats.name.value == "NCRunbound" && self.overseer.PlayerGuide)
             {
                 sLeaser.sprites[self.WhiteSprite].color = Color.Lerp(self.ColorOfSegment(0.75f, timeStacker), new Color(0.2f, 0.56f, 0.47f), 0.5f);
@@ -121,7 +121,7 @@ namespace Unbound
 
         public static Color OverseerGraphics_MainColor_get(orig_OverseerMainColor orig, global::OverseerGraphics self)
         {
-            if (self.owner != null && self.owner.room != null &&
+            if (self.owner != null && self.owner.room != null && self != null &&
                 self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" &&
                 self.overseer.PlayerGuide)
             {

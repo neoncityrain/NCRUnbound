@@ -39,7 +39,8 @@ namespace Unbound
 
         private static void Centipede_Shock(On.Centipede.orig_Shock orig, Centipede self, PhysicalObject shockObj)
         {
-            if (shockObj is Creature && (shockObj is Player && (shockObj as Player).GetCat().IsUnbound))
+            if (self != null && self.room != null && shockObj != null &&
+                shockObj is Creature && (shockObj is Player && (shockObj as Player).GetCat().IsUnbound))
             {
                 self.room.PlaySound(SoundID.Centipede_Shock, self.mainBodyChunk.pos);
                 if (self.graphicsModule != null)
@@ -142,7 +143,8 @@ namespace Unbound
 
         private static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
-            if (self.GetCat().IsUnbound)
+            if (self != null && self.room != null && obj != null &&
+                self.GetCat().IsUnbound)
             {
                 if (obj is SLOracleSwarmer)
                 {
@@ -154,7 +156,9 @@ namespace Unbound
 
         private static bool Player_CanBeSwallowed(On.Player.orig_CanBeSwallowed orig, Player self, PhysicalObject testObj)
         {
-            if (self.GetCat().IsUnbound)
+            if (!self.GetCat().Unpicky &&
+                self != null && self.room != null && testObj != null &&
+                self.GetCat().IsUnbound)
             {
                 return false;
             }
@@ -165,7 +169,8 @@ namespace Unbound
         {
             // swimming code
             orig(self);
-            if (self.GetCat().IsUnbound)
+            if (self != null && self.room != null &&
+                self.GetCat().IsUnbound)
             {
                 if (!self.submerged && !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
                     (self.grasps[0].grabbed as JetFish).Consious) && self.waterFriction >= 0.7f)
@@ -183,7 +188,8 @@ namespace Unbound
 
         private static bool GhostWorldPresence_SpawnGhost(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)
         {
-            if (Custom.rainWorld.progression.PlayingAsSlugcat.value == "NCRunbound" &&
+            if (ghostID != null &&
+                Custom.rainWorld.progression.PlayingAsSlugcat.value == "NCRunbound" &&
                 !(ModManager.Expedition && Custom.rainWorld.ExpeditionMode && Custom.rainWorld.progression.currentSaveState.cycleNumber == 0)
                 && !Custom.rainWorld.safariMode && karmaCap < 4 && ghostPreviouslyEncountered < 0f)
             {
@@ -196,13 +202,12 @@ namespace Unbound
 
         private static void SeedCob_HitByWeapon(On.SeedCob.orig_HitByWeapon orig, SeedCob self, Weapon weapon)
         {
-            if (weapon == null || self.room == null || self.room.roomSettings == null)
+            if (self != null &&
+                !(weapon == null || self.room == null || self.room.roomSettings == null) &&
+                self.room.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
             {
-                return;
-            }
-            if (self.room.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
-            {
-                if (self.room.roomSettings.DangerType == MoreSlugcats.MoreSlugcatsEnums.RoomRainDangerType.Blizzard && weapon.firstChunk.vel.magnitude < 20f)
+                if (self.room.roomSettings.DangerType == MoreSlugcats.MoreSlugcatsEnums.RoomRainDangerType.Blizzard &&
+                    weapon.firstChunk.vel.magnitude < 20f)
                 {
                     if (UnityEngine.Random.Range(0.5f, 0.8f) < self.freezingCounter)
                     {
@@ -228,7 +233,8 @@ namespace Unbound
         private static void Player_Jump(On.Player.orig_Jump orig, Player self)
         {
             orig(self);
-            if (self.GetCat().IsUnbound)
+            if (self != null && self.room != null &&
+                self.GetCat().IsUnbound)
             {
                 self.jumpBoost += 1f;
                 // has a jump boost of +1 compared to surv
@@ -238,7 +244,8 @@ namespace Unbound
         private static bool StowawayBugState_AwakeThisCycle(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig,
             MoreSlugcats.StowawayBugState self, int cycle)
         {
-            if (self.creature.world.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
+            if (self != null && self.creature != null && self.creature.Room != null &&
+                self.creature.world.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
             {
                 Debug.Log("Unbound world, rerolling stowawake (because life is a fucking nightmare)");
                 System.Random rd = new System.Random();

@@ -19,7 +19,8 @@ namespace Unbound
 
         private static float OverseerCommunicationModule_FoodDelicousScore(On.OverseerCommunicationModule.orig_FoodDelicousScore orig, OverseerCommunicationModule self, AbstractPhysicalObject foodObject, Player player)
         {
-            if (self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.overseerAI != null && self.overseerAI.overseer != null && self.overseerAI.overseer.room != null &&
+                self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRunbound")
             {
                 if (foodObject == null || foodObject.realizedObject == null || foodObject.Room != player.abstractCreature.Room ||
                     foodObject.slatedForDeletion)
@@ -64,7 +65,8 @@ namespace Unbound
 
         private static bool OverseerAbstractAI_RoomAllowed(On.OverseerAbstractAI.orig_RoomAllowed orig, OverseerAbstractAI self, int room)
         {
-            if (self.world.game.session.characterStats.name.value == "NCRunbound" && self.playerGuide)
+            if (self != null && self.world != null && self.RelevantPlayer != null &&
+                self.world.game.session.characterStats.name.value == "NCRunbound" && self.playerGuide)
             {
                 if (room < self.world.firstRoomIndex || room >= self.world.firstRoomIndex + self.world.NumberOfRooms)
                 {
@@ -92,20 +94,17 @@ namespace Unbound
 
         private static void Overseer_TryAddHologram(On.Overseer.orig_TryAddHologram orig, Overseer self, OverseerHolograms.OverseerHologram.Message message, Creature communicateWith, float importance)
         {
-            if (self.room.game.session.characterStats.name.value == "NCRunbound" && self.PlayerGuide)
+            if (self != null && self.room != null && !self.dead &&
+                self.room.game.session.characterStats.name.value == "NCRunbound" && self.PlayerGuide)
             {
-                if (self.dead)
-                {
-                    return;
-                }
-                // dont show holograms if dead
                 if (self.room != null)
                 {
                     if (self.room.abstractRoom.name == "SS_AI")
                     {
                         return;
                     }
-                    // dont show holograms in pebbles' chamber. this is initially only for MSC- should not trigger for UB either
+                    // dont show holograms in pebbles' chamber. this is initially only for MSC- should not trigger for UB either,
+                    // at least for now
                 }
                 if (self.hologram != null)
                 {
