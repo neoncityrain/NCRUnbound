@@ -37,7 +37,7 @@ namespace Unbound
                 if (self.GetCat().CanCyanjump1 && self.input[0].jmp && !self.input[1].jmp)
                 {
                     // standard cyanjump!!!!
-                    Debug.Log("Unbound Cyanjump1 Triggered");
+                    if (self.GetCat().MoreDebug) { Debug.Log("Unbound Cyanjump1 Triggered"); }
                     if (!self.GetCat().PlayingSound)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, self.mainBodyChunk);
@@ -96,7 +96,7 @@ namespace Unbound
                     {
                         self.GetCat().unbsmoke = new UnbJumpsmoke(self.room, self);
                         self.room.AddObject(self.GetCat().unbsmoke);
-                        Debug.Log("Emitting smoke!");
+                        if (self.GetCat().MoreDebug) { Debug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
@@ -114,7 +114,7 @@ namespace Unbound
                 {
                     // if they cant cyanjump1, BUT CAN cyanjump2, trigger
 
-                    Debug.Log("Unbound Cyanjump2 Triggered");
+                    if (self.GetCat().MoreDebug) { Debug.Log("Unbound Cyanjump2 Triggered"); }
                     if (!self.GetCat().PlayingSound)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Powerful_Jump, self.mainBodyChunk);
@@ -153,7 +153,7 @@ namespace Unbound
                     {
                         self.GetCat().unbsmoke = new UnbJumpsmoke(self.room, self);
                         self.room.AddObject(self.GetCat().unbsmoke);
-                        Debug.Log("Emitting smoke!");
+                        if (self.GetCat().MoreDebug) { Debug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
@@ -202,7 +202,7 @@ namespace Unbound
                     {
                         self.GetCat().unbsmoke = new UnbJumpsmoke(self.room, self);
                         self.room.AddObject(self.GetCat().unbsmoke);
-                        Debug.Log("Emitting smoke!");
+                        if (self.GetCat().MoreDebug) { Debug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
@@ -264,7 +264,7 @@ namespace Unbound
                     {
                         self.GetCat().unbsmoke = new UnbJumpsmoke(self.room, self);
                         self.room.AddObject(self.GetCat().unbsmoke);
-                        Debug.Log("Emitting smoke!");
+                        if (self.GetCat().MoreDebug) { Debug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
@@ -277,7 +277,7 @@ namespace Unbound
                     // sets longjump to true
                     self.GetCat().UnbChainjumps += 1;
                     // adds to the chainjump count
-                    Debug.Log("Longjump detected!");
+                    if (self.GetCat().MoreDebug) { Debug.Log("Longjump detected!"); }
                 }
 
 

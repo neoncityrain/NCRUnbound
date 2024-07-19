@@ -8,6 +8,8 @@ namespace Unbound
         {
             public UnbJumpsmoke unbsmoke;
 
+            public bool MoreDebug;
+
             public bool IsUnbound;
             public bool PlayingSound;
             public bool didLongjump;
@@ -25,11 +27,14 @@ namespace Unbound
             public bool Unpicky;
 
             public UnboundCat(){
+                MoreDebug = true;
+                // SET TO FALSE WHEN RELEASING
+
                 UnbChainjumps = 0;
                 UnbCyanjumpCountdown = 0;
 
-                CyJump1Maximum = 180f;
-                CyJump1Maximum = 400f;
+                CyJump1Maximum = 180f;// these are here for reading purposes, not use
+                CyJump1Maximum = 400f; // these are here for reading purposes, not use
             }
         }
 

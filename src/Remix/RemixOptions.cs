@@ -7,6 +7,7 @@ namespace Unbound
         private void PlayerOnctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractcreature, World world)
         {
             orig(self, abstractcreature, world);
+            self.GetCat().MoreDebug = UnbOptions.MoreDebugLogs.Value;
 
             self.GetCat().CyJump1Maximum = UnbOptions.CyJumpCharge.Value;
             self.GetCat().CyJump2Maximum = UnbOptions.CyJump2Charge.Value;

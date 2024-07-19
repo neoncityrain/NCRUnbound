@@ -52,7 +52,7 @@ namespace Unbound
             orig(self, ow);
             if (self.player.GetCat().IsUnbound)
             {
-                // self.player.GetCat().scalefrill = new UnbScales(self, 13);
+                // self.player.GetCat().scalefrill = new UnbScales(self, 24);
             }
         }
 
@@ -96,8 +96,8 @@ namespace Unbound
                                 break;
                         }
                     }
-                    self.player.GetCat().scalefrill.SetScaleColors(color2, effectCol);
-                    self.player.GetCat().scalefrill.ApplyPalette(sLeaser, rCam, palette);
+                    //self.player.GetCat().scalefrill.SetScaleColors(color2, effectCol);
+                    //self.player.GetCat().scalefrill.ApplyPalette(sLeaser, rCam, palette);
                 }
             }
             // end applypalette
@@ -743,7 +743,7 @@ namespace Unbound
                 }
 
 
-                self.player.GetCat().scalefrill.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+                // self.player.GetCat().scalefrill.DrawSprites(sLeaser, rCam, timeStacker, camPos);
                 // end drawsprites
             }
         }
@@ -755,7 +755,11 @@ namespace Unbound
                 self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
                 self.player.GetCat().IsUnbound)
             {
-                sLeaser.RemoveAllSpritesFromContainer();
+                try { sLeaser.RemoveAllSpritesFromContainer(); }
+                catch (Exception e)
+                {
+                    Debug.Log("Error removing sprites from container: " + e);
+                }
 
                 if (newContatiner == null)
                 {
@@ -859,7 +863,7 @@ namespace Unbound
                 self != null && self.player != null &&
                 self.player.GetCat().IsUnbound)
             {
-                Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + 11
+                Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + 10
                     //+ self.player.GetCat().scalefrill.numberOfSprites
                     );
 
@@ -900,11 +904,31 @@ namespace Unbound
                 sLeaser.sprites[sLeaser.sprites.Length - 1].shader = rCam.game.rainWorld.Shaders["Basic"];
                 // pupils
 
-                //try { sLeaser.sprites = new FSprite[sLeaser.sprites.Length - 11 - self.player.GetCat().scalefrill.numberOfSprites]; Debug.Log("Scalefrill index: " + (sLeaser.sprites.Length - 11 - self.player.GetCat().scalefrill.numberOfSprites));
-                //    self.player.GetCat().scalefrill.InitiateSprites(sLeaser, rCam); }
-                //catch (Exception e) { Debug.Log("Scalefrills failed to apply: " + e); Debug.Log("Scalefrill index: " + (sLeaser.sprites.Length - 11 - self.player.GetCat().scalefrill.numberOfSprites)); }
 
-                Debug.Log("Number of sprites in array: " + (sLeaser.sprites.Length));
+                if (self.player.GetCat().MoreDebug)
+                {
+                    Debug.Log("Unbound start array : " + (sLeaser.sprites.Length - 10));
+                    Debug.Log("Unbound end array: " + (sLeaser.sprites.Length - 1));
+                    Debug.Log("Total number of sprites in array: " + (sLeaser.sprites.Length));
+                    Debug.Log("Number of sprites NORMALLY in array: " + (sLeaser.sprites.Length - 11));
+                }
+
+
+                try
+                {
+                    //Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + self.player.GetCat().scalefrill.numberOfSprites);
+                    //Debug.Log("Number of sprites in array after scalefrills added: " + (sLeaser.sprites.Length));
+
+                    //sLeaser.sprites = new FSprite[14 + self.player.GetCat().scalefrill.numberOfSprites];
+                    //Debug.Log("Last scalefrill index: " + (14 + self.player.GetCat().scalefrill.numberOfSprites));
+                    //self.player.GetCat().scalefrill.InitiateSprites(sLeaser, rCam);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Scalefrills failed to apply: " + e);
+                    Debug.Log("Scalefrill start: " + (sLeaser.sprites.Length - 10 - self.player.GetCat().scalefrill.numberOfSprites));
+                }
+
                 // DONT FORGET TO RESIZE THE ARRAY
                 self.AddToContainer(sLeaser, rCam, null);
             }
