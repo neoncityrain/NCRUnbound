@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+using System;
 
 namespace Unbound
 {
@@ -15,6 +15,7 @@ namespace Unbound
             public bool CanCyanjump2;
             public int UnbChainjumps;
             public int UnbCyanjumpCountdown;
+            public UnbScales scalefrill;
 
             // remix values
             public float CyJump1Maximum;

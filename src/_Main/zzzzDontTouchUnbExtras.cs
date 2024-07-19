@@ -1,6 +1,4 @@
 using System;
-using System.Security.Permissions;
-using UnityEngine;
 
 /*
  * This file contains fixes to some common problems when modding Rain World.

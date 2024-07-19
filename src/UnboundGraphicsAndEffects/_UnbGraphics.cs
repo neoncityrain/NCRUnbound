@@ -1,9 +1,5 @@
-﻿using System;
-using RWCustom;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using IL.LizardCosmetics;
+using System;
 
 namespace Unbound
 {
@@ -45,6 +41,66 @@ namespace Unbound
             unblegs ??= Futile.atlasManager.LoadAtlas("atlases/unblegs");
             unbmittenlegs ??= Futile.atlasManager.LoadAtlas("atlases/unbmittenlegs");
             // initiating atlases
+
+            On.PlayerGraphics.ctor += PlayerGraphics_ctor;
+            On.PlayerGraphics.ApplyPalette += PlayerGraphics_ApplyPalette;
+            // cyan frills
+        }
+
+        private static void PlayerGraphics_ctor(On.PlayerGraphics.orig_ctor orig, PlayerGraphics self, PhysicalObject ow)
+        {
+            orig(self, ow);
+            if (self.player.GetCat().IsUnbound)
+            {
+                // self.player.GetCat().scalefrill = new UnbScales(self, 13);
+            }
+        }
+
+        private static void PlayerGraphics_ApplyPalette(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        {
+            orig(self, sLeaser, rCam, palette);
+
+            if (self.player.GetCat().IsUnbound)
+            {
+                Color color = PlayerGraphics.SlugcatColor(self.CharacterForColor);
+                Color color2 = new Color(color.r, color.g, color.b);
+                if (self.malnourished > 0f)
+                {
+                    float num = self.player.Malnourished ? self.malnourished : Mathf.Max(0f, self.malnourished - 0.005f);
+                    color2 = Color.Lerp(color2, Color.gray, 0.4f * num);
+                }
+                color2 = self.HypothermiaColorBlend(color2);
+                // initiate colour values
+
+                if (self.player.GetCat().scalefrill != null)
+                {
+                    Color effectCol = new Color(0.87f, 0.39f, 0.33f);
+                    if (!rCam.room.game.setupValues.arenaDefaultColors && !ModManager.CoopAvailable)
+                    {
+                        switch (self.player.playerState.playerNumber)
+                        {
+                            case 0:
+                                if (rCam.room.game.IsArenaSession)
+                                {
+                                    effectCol = new Color(0.25f, 0.65f, 0.82f);
+                                }
+                                break;
+                            case 1:
+                                effectCol = new Color(0.31f, 0.73f, 0.26f);
+                                break;
+                            case 2:
+                                effectCol = new Color(0.6f, 0.16f, 0.6f);
+                                break;
+                            case 3:
+                                effectCol = new Color(0.96f, 0.75f, 0.95f);
+                                break;
+                        }
+                    }
+                    self.player.GetCat().scalefrill.SetScaleColors(color2, effectCol);
+                    self.player.GetCat().scalefrill.ApplyPalette(sLeaser, rCam, palette);
+                }
+            }
+            // end applypalette
         }
 
         //  private static void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
@@ -685,6 +741,10 @@ namespace Unbound
                     }
                     // gives his jumprings that nice fade effect
                 }
+
+
+                self.player.GetCat().scalefrill.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+                // end drawsprites
             }
         }
 
@@ -701,6 +761,7 @@ namespace Unbound
                 {
                     newContatiner = rCam.ReturnFContainer("Midground");
                 }
+
 
                 for (int i = 0; i < sLeaser.sprites.Length; i++)
                 {
@@ -771,6 +832,18 @@ namespace Unbound
                         rCam.ReturnFContainer("Foreground").AddChild(sLeaser.sprites[i]);
                     }
                 }
+
+                try
+                {
+                    // self.player.GetCat().scalefrill.AddToContainer(sLeaser, rCam, rCam.ReturnFContainer("Midground"));
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Error trying to add scalefrills: " + e);
+                    Debug.Log("Spritelength is " + sLeaser.sprites.Length);
+                    Debug.Log("Spritelength should be around " + (24 + self.player.GetCat().scalefrill.numberOfSprites) + " or so");
+                }
+                // end
             }
             else
             {
@@ -786,7 +859,9 @@ namespace Unbound
                 self != null && self.player != null &&
                 self.player.GetCat().IsUnbound)
             {
-                Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + 10);
+                Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + 11
+                    //+ self.player.GetCat().scalefrill.numberOfSprites
+                    );
 
                 sLeaser.sprites[sLeaser.sprites.Length - 10] = new FSprite("unbLegsA0", true);
                 sLeaser.sprites[sLeaser.sprites.Length - 10].shader = rCam.game.rainWorld.Shaders["Basic"];
@@ -825,6 +900,11 @@ namespace Unbound
                 sLeaser.sprites[sLeaser.sprites.Length - 1].shader = rCam.game.rainWorld.Shaders["Basic"];
                 // pupils
 
+                //try { sLeaser.sprites = new FSprite[sLeaser.sprites.Length - 11 - self.player.GetCat().scalefrill.numberOfSprites]; Debug.Log("Scalefrill index: " + (sLeaser.sprites.Length - 11 - self.player.GetCat().scalefrill.numberOfSprites));
+                //    self.player.GetCat().scalefrill.InitiateSprites(sLeaser, rCam); }
+                //catch (Exception e) { Debug.Log("Scalefrills failed to apply: " + e); Debug.Log("Scalefrill index: " + (sLeaser.sprites.Length - 11 - self.player.GetCat().scalefrill.numberOfSprites)); }
+
+                Debug.Log("Number of sprites in array: " + (sLeaser.sprites.Length));
                 // DONT FORGET TO RESIZE THE ARRAY
                 self.AddToContainer(sLeaser, rCam, null);
             }

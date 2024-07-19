@@ -1,6 +1,4 @@
 ﻿using System;
-using RWCustom;
-using UnityEngine;
 
 namespace Unbound
 {

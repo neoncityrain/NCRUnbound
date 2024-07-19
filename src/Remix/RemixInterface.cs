@@ -1,8 +1,4 @@
-﻿using BepInEx.Logging;
-using Menu.Remix.MixedUI;
-using RWCustom;
-using UnityEngine;
-
+﻿using Menu.Remix.MixedUI;
 
 namespace Unbound
 {

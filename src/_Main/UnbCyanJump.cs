@@ -1,5 +1,4 @@
-﻿using RWCustom;
-using UnityEngine;
+﻿using System;
 
 namespace Unbound
 {
@@ -293,38 +292,56 @@ namespace Unbound
                     // is not underwater and not climbing through a pipe
                     self.animation != Player.AnimationIndex.VineGrab &&
                     self.animation != Player.AnimationIndex.CorridorTurn &&
-                    self.bodyMode != Player.BodyModeIndex.Crawl &&
-                    self.bodyMode != Player.BodyModeIndex.WallClimb &&
                     self.animation != Player.AnimationIndex.LedgeCrawl &&
                     self.animation != Player.AnimationIndex.BellySlide &&
                     self.animation != Player.AnimationIndex.SurfaceSwim &&
-                    self.bodyMode != Player.BodyModeIndex.Swimming &&
                     self.animation != Player.AnimationIndex.DeepSwim &&
                     self.animation != Player.AnimationIndex.AntlerClimb &&
+                    // animation indexes
                     self.bodyMode != Player.BodyModeIndex.CorridorClimb &&
+                    self.bodyMode != Player.BodyModeIndex.Crawl &&
+                    self.bodyMode != Player.BodyModeIndex.WallClimb &&
+                    self.bodyMode != Player.BodyModeIndex.Swimming &&
+                    // body mode indexes
 
                     self.animation != Player.AnimationIndex.HangFromBeam &&
+                    self.animation != Player.AnimationIndex.ClimbOnBeam &&
+                    self.animation != Player.AnimationIndex.ZeroGPoleGrab &&
+                    self.animation != Player.AnimationIndex.GetUpOnBeam &&
+                    self.animation != Player.AnimationIndex.StandOnBeam &&
+                    self.animation != Player.AnimationIndex.AntlerClimb &&
                     self.animation != Player.AnimationIndex.HangUnderVerticalBeam &&
                     self.animation != Player.AnimationIndex.BeamTip &&
-                    self.animation != Player.AnimationIndex.ClimbOnBeam &&
-                    self.animation != Player.AnimationIndex.GetUpOnBeam &&
-                    self.animation != Player.AnimationIndex.GetUpToBeamTip &&
-                    self.animation != Player.AnimationIndex.StandOnBeam
+                    self.animation != Player.AnimationIndex.GetUpToBeamTip
                     // beam stuff
                     )
 
                     ||
 
+                    // checks if theyre swimming in zerog
                     (self.GetCat().UnbCyanjumpCountdown <= 0 && self.canJump == 0 &&
                     self.Consious && !self.dead &&
                     !self.submerged && self.goIntoCorridorClimb > 0 &&
-                    self.EffectiveRoomGravity == 0f && self.animation == Player.AnimationIndex.ZeroGSwim &&
+                    self.EffectiveRoomGravity == 0f &&
+                    self.animation == Player.AnimationIndex.ZeroGSwim &&
                     self.animation != Player.AnimationIndex.VineGrab &&
-                    self.animation != Player.AnimationIndex.ZeroGPoleGrab &&
+                    // animation indexes
                     self.bodyMode != Player.BodyModeIndex.ClimbingOnBeam &&
+                    self.bodyMode != Player.BodyModeIndex.CorridorClimb &&
+                    // bodymode indexes
+                    self.animation != Player.AnimationIndex.ZeroGPoleGrab &&
                     self.animation != Player.AnimationIndex.HangFromBeam &&
-                    self.animation != Player.AnimationIndex.ClimbOnBeam)
-                    // checks if theyre swimming in zerog
+                    self.animation != Player.AnimationIndex.ClimbOnBeam &&
+                    self.animation != Player.AnimationIndex.ZeroGPoleGrab &&
+                    self.animation != Player.AnimationIndex.GetUpOnBeam &&
+                    self.animation != Player.AnimationIndex.StandOnBeam &&
+                    self.animation != Player.AnimationIndex.AntlerClimb &&
+                    self.animation != Player.AnimationIndex.HangUnderVerticalBeam &&
+                    self.animation != Player.AnimationIndex.BeamTip &&
+                    self.animation != Player.AnimationIndex.GetUpToBeamTip
+                    // pole things. antler climb should not be relevant in 0g but you never know
+                    )
+                    // 0g end
                     )
                 {
                     if (self.GetCat().UnbCyanjumpCountdown <= 0)
@@ -346,7 +363,7 @@ namespace Unbound
                         // prevents triggering if using a grapple worm
 
                         self.EffectiveRoomGravity != 0f
-                    // prevents usage in 0g
+                        // prevents usage in 0g
                     )
                     {
                         self.GetCat().CanCyanjump2 = true;

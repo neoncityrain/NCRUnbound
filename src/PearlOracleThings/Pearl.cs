@@ -1,8 +1,4 @@
 ﻿using UnityEngine;
-using RWCustom;
-using MoreSlugcats;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Unbound
 {
@@ -59,7 +55,7 @@ namespace Unbound
             }
             else
             {
-                stomachObject = (self.State as PlayerNPCState).StomachObject;
+                stomachObject = (self.State as MoreSlugcats.PlayerNPCState).StomachObject;
             }
 
             if (stomachObject != null)
