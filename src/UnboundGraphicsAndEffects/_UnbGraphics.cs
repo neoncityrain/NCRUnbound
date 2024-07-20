@@ -17,16 +17,20 @@ namespace Unbound
         static FAtlas unblegs;
         #endregion
         #region sLeaser Sprite Variables
-        static int unbSocksNum = 13;
-        static int unbJumprings1Num = 14;
-        static int unbFreckleNum = 15;
-        static int unbJumprings2Num = 16;
-        static int unbEarTips = 17;
-        static int unbLeftMittens = 18;
-        static int unbRightMittens = 19;
-        static int unbLeftToes = 20;
-        static int unbRightToes = 21;
-        static int unbPupils = 22;
+        static int unbSocksNum = ModManager.MSC ? 13 : 12;
+        static int unbJumprings1Num = ModManager.MSC ? 14 : 13;
+        static int unbFreckleNum = ModManager.MSC ? 15 : 14;
+        static int unbJumprings2Num = ModManager.MSC ? 16 : 15;
+        static int unbEarTips = ModManager.MSC ? 17 : 16;
+        static int unbLeftMittens = ModManager.MSC ? 18 : 17;
+        static int unbRightMittens = ModManager.MSC ? 19 : 18;
+        static int unbLeftToes = ModManager.MSC ? 20 : 19;
+        static int unbRightToes = ModManager.MSC ? 21 : 20;
+        static int unbPupils = ModManager.MSC ? 22 : 21;
+
+        static int ThisIsTheLengthOfMyMadness = 10; // update when adding more to above
+
+        static int unbFrillStarts = ModManager.MSC ? 23 : 22;
         #endregion
 
         public static void Init()
@@ -35,9 +39,6 @@ namespace Unbound
             On.PlayerGraphics.AddToContainer += AddToContainer;
             On.PlayerGraphics.DrawSprites += DrawSprites;
             // unbound jumpring graphics, 1-4
-
-            // On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += RecolourJollyPhoto;
-            // wow thats a mouthful lol. dynamic jolly pfp images. currently disabled due to coding issues
 
             #region LoadAtlases
             unbsleevesarm ??= Futile.atlasManager.LoadAtlas("atlases/unbsleevesarm");
@@ -53,17 +54,18 @@ namespace Unbound
             // initiating atlases
             #endregion
 
-            On.PlayerGraphics.ctor += CyanFrillsInit;
             On.PlayerGraphics.ApplyPalette += ColourCyanFrills;
+            On.PlayerGraphics.Update += UpdateFrills;
             // cyan frills
         }
 
-        private static void CyanFrillsInit(On.PlayerGraphics.orig_ctor orig, PlayerGraphics self, PhysicalObject ow)
+        private static void UpdateFrills(On.PlayerGraphics.orig_Update orig, PlayerGraphics self)
         {
-            orig(self, ow);
-            if (self.player.GetNCRunbound().IsUnbound)
+            orig(self);
+            if (self != null && self.player != null && self.player.room != null && self.player.GetNCRunbound().scalefrill != null &&
+                self.player.GetNCRunbound().IsUnbound)
             {
-                // self.player.GetCat().scalefrill = new UnbScales(self, 24);
+                self.player.GetNCRunbound().scalefrill.Update();
             }
         }
 
@@ -71,7 +73,8 @@ namespace Unbound
         {
             orig(self, sLeaser, rCam, palette);
 
-            if (self.player.GetNCRunbound().IsUnbound)
+            if (self != null && self.player != null && self.player.room != null && self.player.GetNCRunbound().scalefrill != null &&
+                self.player.GetNCRunbound().IsUnbound)
             {
                 #region VanillaColourStuff
                 Color color = PlayerGraphics.SlugcatColor(self.CharacterForColor);
@@ -84,65 +87,33 @@ namespace Unbound
                 color2 = self.HypothermiaColorBlend(color2);
                 // initiate colour values
 
-                if (self.player.GetNCRunbound().scalefrill != null)
+                Color effectCol = new Color(0.87f, 0.39f, 0.33f);
+                if (!rCam.room.game.setupValues.arenaDefaultColors && !ModManager.CoopAvailable)
                 {
-                    Color effectCol = new Color(0.87f, 0.39f, 0.33f);
-                    if (!rCam.room.game.setupValues.arenaDefaultColors && !ModManager.CoopAvailable)
+                    switch (self.player.playerState.playerNumber)
                     {
-                        switch (self.player.playerState.playerNumber)
-                        {
-                            case 0:
-                                if (rCam.room.game.IsArenaSession)
-                                {
-                                    effectCol = new Color(0.25f, 0.65f, 0.82f);
-                                }
-                                break;
-                            case 1:
-                                effectCol = new Color(0.31f, 0.73f, 0.26f);
-                                break;
-                            case 2:
-                                effectCol = new Color(0.6f, 0.16f, 0.6f);
-                                break;
-                            case 3:
-                                effectCol = new Color(0.96f, 0.75f, 0.95f);
-                                break;
-                        }
+                        case 0:
+                            if (rCam.room.game.IsArenaSession)
+                            {
+                                effectCol = new Color(0.25f, 0.65f, 0.82f);
+                            }
+                            break;
+                        case 1:
+                            effectCol = new Color(0.31f, 0.73f, 0.26f);
+                            break;
+                        case 2:
+                            effectCol = new Color(0.6f, 0.16f, 0.6f);
+                            break;
+                        case 3:
+                            effectCol = new Color(0.96f, 0.75f, 0.95f);
+                            break;
                     }
-                    #endregion
-                    //self.player.GetCat().scalefrill.SetScaleColors(color2, effectCol);
-                    //self.player.GetCat().scalefrill.ApplyPalette(sLeaser, rCam, palette);
                 }
+                #endregion
+                self.player.GetNCRunbound().scalefrill.SetScaleColors(color2, effectCol);
+                self.player.GetNCRunbound().scalefrill.ApplyPalette(sLeaser, rCam, palette);
             }
             // end applypalette
-        }
-
-        private static void RecolourJollyPhoto(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
-        {
-            orig(self, className, colorTint);
-
-            if (colorTint != null && className != null && ModManager.JollyCoop &&
-                className.value == "NCRunbound" && !(className.value != "NCRunbound"))
-            {
-                MenuIllustration portrait1 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer1", new Vector2(100f, 100f) / 2f, true, true);
-                MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
-                MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
-                MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer4", new Vector2(100f, 100f) / 2f, true, true);
-
-                portrait2.sprite.color = self.faceTintColor;
-                portrait3.sprite.color = self.uniqueTintColor;
-                portrait4.sprite.color = self.bodyTintColor;
-
-                self.subObjects.Add(portrait1);
-                self.subObjects.Add(portrait2);
-                self.subObjects.Add(portrait3);
-                self.subObjects.Add(portrait4);
-
-                portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-                portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-                portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-
-                self.dirty = true;
-            }
         }
 
         private static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
@@ -154,6 +125,7 @@ namespace Unbound
                 self != null && self.player != null && self.player.room != null &&
                 self.player.GetNCRunbound().IsUnbound)
             {
+
                 #region Initiating Variables
                 // INITIATING THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -364,7 +336,7 @@ namespace Unbound
                 string hipwthekids = sLeaser.sprites[1]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled && unbfrecklehips == null)
                 {
-                    UnityEngine.Debug.Log("Unbound Freckle sprites missing!");
+                    Debug.Log("Unbound Freckle sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     hipwthekids != null && hipwthekids.StartsWith("Hips") &&
@@ -421,8 +393,8 @@ namespace Unbound
                     sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * bodyhipscenterish, 0.15f,
                         self.player.sleepCurlUp);
                     // makes unbound thinner
-                    sLeaser.sprites[10].RemoveFromContainer();
-                    sLeaser.sprites[11].RemoveFromContainer();
+                    sLeaser.sprites[10].alpha = 0f;
+                    sLeaser.sprites[11].alpha = 0f;
                     // removes the mark and the marks glow
                     if (self.player.stun > 0)
                     {
@@ -726,7 +698,15 @@ namespace Unbound
                 }
                 #endregion
 
-                // self.player.GetCat().scalefrill.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+                if (self.player.GetNCRunbound().scalefrill != null)
+                {
+                    try { self.player.GetNCRunbound().scalefrill.DrawSprites(sLeaser, rCam, timeStacker, camPos); }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Error drawing scalefrills: " + e);
+                    }
+                }
+                
                 // end drawsprites
             }
         }
@@ -735,10 +715,13 @@ namespace Unbound
             RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
-                self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
+                self != null && self.player != null && self.player.room != null && rCam != null && sLeaser != null &&
                 self.player.GetNCRunbound().IsUnbound)
             {
-                try { sLeaser.RemoveAllSpritesFromContainer(); }
+                try
+                {
+                    sLeaser.RemoveAllSpritesFromContainer();
+                }
                 catch (Exception e)
                 {
                     Debug.Log("Error removing sprites from container: " + e);
@@ -748,7 +731,6 @@ namespace Unbound
                 {
                     newContatiner = rCam.ReturnFContainer("Midground");
                 }
-
 
                 for (int i = 0; i < sLeaser.sprites.Length; i++)
                 {
@@ -808,7 +790,20 @@ namespace Unbound
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[8]);
                         // move in front of hand sprites
                     }
-
+                    else if (i == 27)
+                    {
+                        try
+                        {
+                            self.player.GetNCRunbound().scalefrill.AddToContainer(sLeaser, rCam, rCam.ReturnFContainer("Midground"));
+                            Debug.Log("Scalefrills successfully added! About fucking time");
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log("Error trying to add scalefrills: " + e);
+                            Debug.Log("Spritelength is " + sLeaser.sprites.Length);
+                            Debug.Log("Spritelength should be " + (23 + self.player.GetNCRunbound().scalefrill.numberOfSprites));
+                        }
+                    }
                     // VANILLA ---------------------------------------------------------------------
                     else if ((i <= 6 || i >= 9) && i <= 9)
                     {
@@ -820,16 +815,7 @@ namespace Unbound
                     }
                 }
 
-                try
-                {
-                    // self.player.GetCat().scalefrill.AddToContainer(sLeaser, rCam, rCam.ReturnFContainer("Midground"));
-                }
-                catch (Exception e)
-                {
-                    Debug.Log("Error trying to add scalefrills: " + e);
-                    Debug.Log("Spritelength is " + sLeaser.sprites.Length);
-                    Debug.Log("Spritelength should be around " + (12 + self.player.GetNCRunbound().scalefrill.numberOfSprites) + " or so");
-                }
+                
                 // end
             }
             else
@@ -841,81 +827,109 @@ namespace Unbound
         private static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
-
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
-                self != null && self.player != null &&
+                self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
                 self.player.GetNCRunbound().IsUnbound)
             {
-                Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + 10
-                    //+ self.player.GetCat().scalefrill.numberOfSprites
-                    );
 
-                sLeaser.sprites[unbSocksNum] = new FSprite("unbLegsA0", true);
-                sLeaser.sprites[unbSocksNum].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[unbSocksNum].anchorY = 0.25f;
-                // leggy
-
-                sLeaser.sprites[unbJumprings1Num] = new FSprite("unbjumpHipsA", true);
-                sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[unbFreckleNum] = new FSprite("unbfreckleHipsA", true);
-                sLeaser.sprites[unbFreckleNum].shader = rCam.game.rainWorld.Shaders["Basic"];
-                // hips
-
-                sLeaser.sprites[unbJumprings2Num] = new FSprite("unbjumpBodyA", true);
-                sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Basic"];
-                // body
-
-                sLeaser.sprites[unbEarTips] = new FSprite("unbearHeadA0", true);
-                sLeaser.sprites[unbEarTips].shader = rCam.game.rainWorld.Shaders["Basic"];
-                // head
-
-                sLeaser.sprites[unbLeftMittens] = new FSprite("unbsleevesPlayerArm0", true);
-                sLeaser.sprites[unbLeftMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[unbLeftMittens].anchorX = 0.9f;
-                sLeaser.sprites[unbLeftMittens].scaleY = -1f;
-                sLeaser.sprites[unbRightMittens] = new FSprite("unbsleevesPlayerArm0", true);
-                sLeaser.sprites[unbRightMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[unbRightMittens].anchorX = 0.9f;
-                sLeaser.sprites[unbLeftToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
-                sLeaser.sprites[unbLeftToes].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[unbRightToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
-                sLeaser.sprites[unbRightToes].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[unbRightToes].scaleX = -1f;
-                // mittens, including anchors and base scales
-
-                sLeaser.sprites[unbPupils] = new FSprite("unbpupFaceA0", true);
-                sLeaser.sprites[unbPupils].shader = rCam.game.rainWorld.Shaders["Basic"];
-                // pupils
-
-
-                if (self.player.GetNCRunbound().MoreDebug)
-                {
-                    Debug.Log("Unbound start array : " + (sLeaser.sprites.Length - 10));
-                    Debug.Log("Unbound end array: " + (sLeaser.sprites.Length - 1));
-                    Debug.Log("Total number of sprites in array: " + (sLeaser.sprites.Length));
-                    Debug.Log("Number of sprites NORMALLY in array: " + (sLeaser.sprites.Length - 11));
-                }
-
-
+                #region Unbound Exclusive
                 try
                 {
-                    //Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + self.player.GetCat().scalefrill.numberOfSprites);
-                    //Debug.Log("Number of sprites in array after scalefrills added: " + (sLeaser.sprites.Length));
+                    Array.Resize(ref sLeaser.sprites,
+                        sLeaser.sprites.Length + ThisIsTheLengthOfMyMadness +
+                        (self.player.GetNCRunbound().scalefrill == null ? 0 : self.player.GetNCRunbound().scalefrill.numberOfSprites));
 
-                    //sLeaser.sprites = new FSprite[14 + self.player.GetCat().scalefrill.numberOfSprites];
-                    //Debug.Log("Last scalefrill index: " + (14 + self.player.GetCat().scalefrill.numberOfSprites));
-                    //self.player.GetCat().scalefrill.InitiateSprites(sLeaser, rCam);
+                    sLeaser.sprites[unbSocksNum] = new FSprite("unbLegsA0", true);
+                    sLeaser.sprites[unbSocksNum].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    sLeaser.sprites[unbSocksNum].anchorY = 0.25f;
+                    // leggy
+
+                    sLeaser.sprites[unbJumprings1Num] = new FSprite("unbjumpHipsA", true);
+                    sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    sLeaser.sprites[unbFreckleNum] = new FSprite("unbfreckleHipsA", true);
+                    sLeaser.sprites[unbFreckleNum].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    // hips
+
+                    sLeaser.sprites[unbJumprings2Num] = new FSprite("unbjumpBodyA", true);
+                    sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    // body
+
+                    sLeaser.sprites[unbEarTips] = new FSprite("unbearHeadA0", true);
+                    sLeaser.sprites[unbEarTips].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    // head
+
+                    sLeaser.sprites[unbLeftMittens] = new FSprite("unbsleevesPlayerArm0", true);
+                    sLeaser.sprites[unbLeftMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    sLeaser.sprites[unbLeftMittens].anchorX = 0.9f;
+                    sLeaser.sprites[unbLeftMittens].scaleY = -1f;
+                    sLeaser.sprites[unbRightMittens] = new FSprite("unbsleevesPlayerArm0", true);
+                    sLeaser.sprites[unbRightMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    sLeaser.sprites[unbRightMittens].anchorX = 0.9f;
+                    sLeaser.sprites[unbLeftToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
+                    sLeaser.sprites[unbLeftToes].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    sLeaser.sprites[unbRightToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
+                    sLeaser.sprites[unbRightToes].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    sLeaser.sprites[unbRightToes].scaleX = -1f;
+                    // mittens, including anchors and base scales
+
+                    sLeaser.sprites[unbPupils] = new FSprite("unbpupFaceA0", true);
+                    sLeaser.sprites[unbPupils].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    // pupils
+
+
+                    if (self.player.GetNCRunbound().MoreDebug)
+                    {
+
+                        if (self.player.GetNCRunbound().scalefrill == null)
+                        {
+                            Debug.Log("Errm. Scalefrills are null");
+                            Debug.Log("Unbound end array: " + (sLeaser.sprites.Length));
+                        }
+                        else
+                        {
+                            Debug.Log("Unbound start array: " + (sLeaser.sprites.Length - ThisIsTheLengthOfMyMadness -
+                            self.player.GetNCRunbound().scalefrill.numberOfSprites) + ". This should be 13.");
+                            Debug.Log("Unbound end array: " + (sLeaser.sprites.Length) + ". This should be 27.");
+                            Debug.Log("Total number of sprites in array, zero exclusive: " + (sLeaser.sprites.Length + 1));
+                            Debug.Log("Total number of sprites in array prior to frillscales: " + (sLeaser.sprites.Length -
+                                self.player.GetNCRunbound().scalefrill.numberOfSprites) + ". If this number isn't 23 there's an issue");
+                            Debug.Log("Number of sprites NORMALLY in array is 12, I am this insane: " + (ThisIsTheLengthOfMyMadness +
+                                self.player.GetNCRunbound().scalefrill.numberOfSprites));
+                        }
+                        
+                    }
+
+
+                    if (self.player.GetNCRunbound().scalefrill != null)
+                    {
+                        try
+                        {
+                            Debug.Log("Number of sprites in array after scalefrills added: " + (sLeaser.sprites.Length));
+
+                            sLeaser.sprites = new FSprite[unbFrillStarts + self.player.GetNCRunbound().scalefrill.numberOfSprites];
+                            Debug.Log("Last scalefrill index: " + (unbFrillStarts + self.player.GetNCRunbound().scalefrill.numberOfSprites));
+                            Debug.Log("Scalefrill sprite number: " + (self.player.GetNCRunbound().scalefrill.numberOfSprites));
+                            self.player.GetNCRunbound().scalefrill.InitiateSprites(sLeaser, rCam);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log("Scalefrills failed to apply: " + e);
+                            Debug.Log("Scalefrill sprite number: " + (self.player.GetNCRunbound().scalefrill.numberOfSprites));
+                        }
+                    }
+                    
+
+                    // DONT FORGET TO RESIZE THE ARRAY
+                    self.AddToContainer(sLeaser, rCam, null);
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Scalefrills failed to apply: " + e);
-                    Debug.Log("Scalefrill start: " + (self.player.GetNCRunbound().scalefrill.numberOfSprites));
+                    Debug.Log("What the fuck Unbound!! " + e);
                 }
 
-                // DONT FORGET TO RESIZE THE ARRAY
-                self.AddToContainer(sLeaser, rCam, null);
+                #endregion
+                // end unbgraphics
             }
         }
-        // end unbgraphics
     }
 }

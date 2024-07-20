@@ -22,7 +22,7 @@
         public UnbScales(PlayerGraphics pGraphics, int startSprite)
         {
             this.pGraphics = pGraphics;
-            this.startSprite = startSprite;
+            this.startSprite = 23;
             this.rigor = 0.5873646f;
             float num = 1.310689f;
             this.colored = true;
@@ -64,7 +64,7 @@
                 }
             }
             this.numberOfSprites = ((!this.colored) ? this.scalesPositions.Length : (this.scalesPositions.Length * 2));
-            this.spritesOverlap = SpritesOverlap.BehindHead;
+            this.spritesOverlap = SpritesOverlap.InFront;
         }
 
         public void Update()

@@ -29,7 +29,7 @@ namespace Unbound
 
             if (room.game.AllPlayersRealized)
             {
-                if (unboundstarttimer == 0)
+                if (unboundstarttimer == 1)
                 {
                     try
                     {
@@ -37,6 +37,7 @@ namespace Unbound
                         new DataPearl.AbstractDataPearl(room.world, AbstractPhysicalObject.AbstractObjectType.DataPearl,
                         null, new WorldCoordinate(room.abstractRoom.index, 1, 1, 0), room.game.GetNewID(), -1, -1, null,
                         Pearl.unboundKarmaPearl);
+                        // first player only
                     }
                     catch (Exception e)
                     {
@@ -46,10 +47,42 @@ namespace Unbound
 
                     for (int i = 0; i < room.game.Players.Count; i++)
                     {
-                        (room.game.Players[i].realizedCreature as Player).standing = false;
-                        (room.game.Players[i].realizedCreature as Player).bodyChunks[0].HardSetPosition(room.MiddleOfTile(141, 72));
-                        (room.game.Players[i].realizedCreature as Player).bodyChunks[1].HardSetPosition(room.MiddleOfTile(142, 72));
-                        // this should force the player to be facing the left
+                        try
+                        {
+                            if (i == 0)
+                            {
+                                // player 1
+                                (room.game.Players[i].realizedCreature as Player).standing = false;
+                                (room.game.Players[i].realizedCreature as Player).bodyChunks[0].HardSetPosition(room.MiddleOfTile(141, 72));
+                                (room.game.Players[i].realizedCreature as Player).bodyChunks[1].HardSetPosition(room.MiddleOfTile(142, 72));
+                                // this should force the player to be facing the left. but sometimes it doesnt so idfk
+                            }
+                            else if (i == 1)
+                            {
+                                // player 2
+                                (room.game.Players[i].realizedCreature as Player).standing = false;
+                                (room.game.Players[i].realizedCreature as Player).bodyChunks[0].HardSetPosition(room.MiddleOfTile(134, 73));
+                                (room.game.Players[i].realizedCreature as Player).bodyChunks[1].HardSetPosition(room.MiddleOfTile(133, 73));
+                            }
+                            else if (i == 2)
+                            {
+                                // player 3
+                                (room.game.Players[i].realizedCreature as Player).standing = false;
+                                (room.game.Players[i].realizedCreature as Player).bodyChunks[0].HardSetPosition(room.MiddleOfTile(128, 74));
+                                (room.game.Players[i].realizedCreature as Player).bodyChunks[1].HardSetPosition(room.MiddleOfTile(129, 74));
+                            }
+                            else
+                            {
+                                Debug.Log("Ya got a lot of players there, eh? I'm flattered! Have fun, gang :]");
+                                (room.game.Players[i].realizedCreature as Player).standing = false;
+                                (room.game.Players[i].realizedCreature as Player).bodyChunks[0].HardSetPosition(room.MiddleOfTile(112, 72));
+                                (room.game.Players[i].realizedCreature as Player).bodyChunks[1].HardSetPosition(room.MiddleOfTile(113, 72));
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log("Error triggered: " + e);
+                        }
                     }
                 }
 
