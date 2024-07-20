@@ -36,7 +36,7 @@ namespace Unbound
             On.PlayerGraphics.DrawSprites += DrawSprites;
             // unbound jumpring graphics, 1-4
 
-            // On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += JollyPlayerSelector_SetPortraitImage_Name_Color;
+            // On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += RecolourJollyPhoto;
             // wow thats a mouthful lol. dynamic jolly pfp images. currently disabled due to coding issues
 
             #region LoadAtlases
@@ -116,10 +116,13 @@ namespace Unbound
             // end applypalette
         }
 
-          private static void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
-          {
-                orig(self, className, colorTint);
+        private static void RecolourJollyPhoto(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
+        {
+            orig(self, className, colorTint);
 
+            if (colorTint != null && className != null && ModManager.JollyCoop &&
+                className.value == "NCRunbound" && !(className.value != "NCRunbound"))
+            {
                 MenuIllustration portrait1 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer1", new Vector2(100f, 100f) / 2f, true, true);
                 MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
                 MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
@@ -137,7 +140,10 @@ namespace Unbound
                 portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
                 portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
                 portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-          }
+
+                self.dirty = true;
+            }
+        }
 
         private static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
@@ -164,44 +170,44 @@ namespace Unbound
                     headposition -= Custom.DirVec(hipstobody, bodytohips) * Mathf.Lerp(-1f, 1f, breathaltered) * Mathf.Pow(Mathf.InverseLerp(0.5f, 1f,
                         self.player.aerobicLevel), 1.5f) * 0.75f;
                 }
-                float num2 = Mathf.InverseLerp(0.3f, 0.5f, Mathf.Abs(Custom.DirVec(hipstobody, bodytohips).y));
-                Vector2 vector4 = (hipstobody * 3f + bodytohips) / 4f;
+                float bodyhipscenterish = Mathf.InverseLerp(0.3f, 0.5f, Mathf.Abs(Custom.DirVec(hipstobody, bodytohips).y));
+                Vector2 legspositionprobably = (hipstobody * 3f + bodytohips) / 4f;
                 // body to hips position-ish. looks to be lower than normal, so probably about where the legs start
-                float d = 1f - 0.2f * self.malnourished; // malnourished-dependent
-                float d2 = 6f; // tail stretch value. idk why the default is 6 but shrug
+                float malnourishdependant = 1f - 0.2f * self.malnourished; // malnourished-dependent
+                float tailstretch = 6f; // tail stretch value. idk why the default is 6 but shrug
 
                 for (int i = 0; i < 4; i++)
                 {
                     Vector2 tailposition = Vector2.Lerp(self.tail[i].lastPos, self.tail[i].pos, timeStacker); // determining tail position
-                    Vector2 normalized = (tailposition - vector4).normalized; // switches the numbers into actual (x,y) format, should be the tail base
-                    Vector2 a = Custom.PerpendicularVector(normalized); // ?
-                    float d3 = Vector2.Distance(tailposition, vector4) / 5f; // the distance from tail position to body/hips/legs position
+                    Vector2 normalized = (tailposition - legspositionprobably).normalized; // switches the numbers into actual (x,y) format, should be the tail base
+                    Vector2 perpendiculartonormalized = Custom.PerpendicularVector(normalized); // ?
+                    float tailsizeish = Vector2.Distance(tailposition, legspositionprobably) / 5f; // the distance from tail position to body/hips/legs position
                     if (i == 0)
                     {
-                        d3 = 0f;
+                        tailsizeish = 0f;
                     }
-                    d2 = self.tail[i].StretchedRad;
-                    vector4 = tailposition; // sets the legs / tailbase value to be the same
+                    tailstretch = self.tail[i].StretchedRad;
+                    legspositionprobably = tailposition; // sets the legs / tailbase value to be the same
                 }
-                float num3 = Custom.AimFromOneVectorToAnother(Vector2.Lerp(hipstobody, bodytohips, 0.5f), headposition); // body-hips based on head
-                int num4 = Mathf.RoundToInt(Mathf.Abs(num3 / 360f * 34f)); // round the above to an integer
-                Vector2 vector6 = Vector2.Lerp(self.lastLookDir, self.lookDirection, timeStacker) * 3f * (1f - self.player.sleepCurlUp); // face position
+                float bodyhipsbasedonhead = Custom.AimFromOneVectorToAnother(Vector2.Lerp(hipstobody, bodytohips, 0.5f), headposition); // body-hips based on head
+                int headishintversion = Mathf.RoundToInt(Mathf.Abs(bodyhipsbasedonhead / 360f * 34f)); // round the above to an integer
+                Vector2 faceposition = Vector2.Lerp(self.lastLookDir, self.lookDirection, timeStacker) * 3f * (1f - self.player.sleepCurlUp); // face position
                 if (self.player.sleepCurlUp > 0f)
                 {
                     // if sneebing
-                    num4 = 7; // ?
-                    num4 = Custom.IntClamp((int)Mathf.Lerp(num4, 4f, self.player.sleepCurlUp), 0, 8);
+                    headishintversion = 7; // ?
+                    headishintversion = Custom.IntClamp((int)Mathf.Lerp(headishintversion, 4f, self.player.sleepCurlUp), 0, 8);
                     // body-hips position based on the head, but dependant on sleep pose and an integer?
-                    num3 = Mathf.Lerp(num3, 45f * Mathf.Sign(bodytohips.x - hipstobody.x), self.player.sleepCurlUp); // tailbase position dependant on sleep pose
+                    bodyhipsbasedonhead = Mathf.Lerp(bodyhipsbasedonhead, 45f * Mathf.Sign(bodytohips.x - hipstobody.x), self.player.sleepCurlUp); // tailbase position dependant on sleep pose
                     headposition.y += 1f * self.player.sleepCurlUp; // head y position dependant on sleep pose
                     headposition.x += Mathf.Sign(bodytohips.x - hipstobody.x) * 2f * self.player.sleepCurlUp; // head x position dependant on sleep pose
-                    vector6.y -= 2f * self.player.sleepCurlUp; // face y position dependant on sleep pose
-                    vector6.x -= 4f * Mathf.Sign(bodytohips.x - hipstobody.x) * self.player.sleepCurlUp; // youll never fucking guess
+                    faceposition.y -= 2f * self.player.sleepCurlUp; // face y position dependant on sleep pose
+                    faceposition.x -= 4f * Mathf.Sign(bodytohips.x - hipstobody.x) * self.player.sleepCurlUp; // youll never fucking guess
                 }
                 else if (self.owner.room != null && self.owner.EffectiveRoomGravity == 0f)
                 {
                     // if in 0g
-                    num4 = 0; // good lerd num4 eludes me. maybe this is a head atlas value?
+                    headishintversion = 0; // good lerd num4 eludes me. maybe this is a head atlas value?
                 }
                 else if (self.player.Consious)
                 {
@@ -210,34 +216,34 @@ namespace Unbound
                     {
                         if (self.player.bodyMode == Player.BodyModeIndex.Crawl)
                         {
-                            num4 = 7; // if crawling
+                            headishintversion = 7; // if crawling
                         }
                         else
                         {
-                            num4 = 6; // if standing
+                            headishintversion = 6; // if standing
                         }
-                        vector6.x = 0f; // face x position
+                        faceposition.x = 0f; // face x position
                     }
                     else
                     {
-                        Vector2 p = headposition - hipstobody; // hips - body
-                        p.x *= 1f - vector6.magnitude / 3f; // lawd help me
-                        p = p.normalized; // p = (p.x, p.y)
+                        Vector2 headminuships = headposition - hipstobody;
+                        headminuships.x *= 1f - faceposition.magnitude / 3f; // lawd help me
+                        headminuships = headminuships.normalized; // p = (p.x, p.y)
                     }
                 }
                 else
                 {
-                    vector6 *= 0f; // sets face y position to zero
-                    num4 = 0;
+                    faceposition *= 0f; // sets face y position to zero
+                    headishintversion = 0;
                 }
                 if (ModManager.CoopAvailable && self.player.bool1)
                 {
                     // if the player is a pup, except this doesn't entirely make sense but we aint worryin about it right now
                     headposition.y -= 1.9f;
-                    num3 = Mathf.Lerp(num3, 45f * Mathf.Sign(bodytohips.x - hipstobody.x), 0.7f);
-                    vector6.x -= 0.2f;
+                    bodyhipsbasedonhead = Mathf.Lerp(bodyhipsbasedonhead, 45f * Mathf.Sign(bodytohips.x - hipstobody.x), 0.7f);
+                    faceposition.x -= 0.2f;
                 }
-                Vector2 vector7 = Vector2.Lerp(self.legs.lastPos, self.legs.pos, timeStacker); // legs position
+                Vector2 MYLEGS = Vector2.Lerp(self.legs.lastPos, self.legs.pos, timeStacker); // legs position
                 #endregion
                 #region Adding / Replacing Atlases
                 // ADDING / REPLACING ATLAS THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -412,7 +418,7 @@ namespace Unbound
                 if (!self.player.GetNCRunbound().GraphicsDisabled)
                 {
                     sLeaser.sprites[1].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
-                    sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * num2, 0.15f,
+                    sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * bodyhipscenterish, 0.15f,
                         self.player.sleepCurlUp);
                     // makes unbound thinner
                     sLeaser.sprites[10].RemoveFromContainer();
@@ -442,17 +448,17 @@ namespace Unbound
                     // body things
                     sLeaser.sprites[unbJumprings2Num].x = bodytohips.x - camPos.x;
                     sLeaser.sprites[unbJumprings2Num].y = bodytohips.y - camPos.y - self.player.sleepCurlUp * 4f + Mathf.Lerp(0.5f, 1f, self.player.aerobicLevel) * breathaltered *
-                        (1f - num2);
+                        (1f - bodyhipscenterish);
                     sLeaser.sprites[unbJumprings2Num].rotation = Custom.AimFromOneVectorToAnother(hipstobody, bodytohips);
-                    sLeaser.sprites[unbJumprings2Num].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * num2, 0.15f,
+                    sLeaser.sprites[unbJumprings2Num].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * bodyhipscenterish, 0.15f,
                         self.player.sleepCurlUp);
                     // lower jumprings, attached to body
                 }
                 if (!self.player.GetNCRunbound().GraphicsDisabled)
                 {
                     // legs
-                    sLeaser.sprites[unbSocksNum].x = vector7.x - camPos.x;
-                    sLeaser.sprites[unbSocksNum].y = vector7.y - camPos.y;
+                    sLeaser.sprites[unbSocksNum].x = MYLEGS.x - camPos.x;
+                    sLeaser.sprites[unbSocksNum].y = MYLEGS.y - camPos.y;
                     sLeaser.sprites[unbSocksNum].rotation = Custom.AimFromOneVectorToAnother(self.legsDirection, new Vector2(0f, 0f));
                     sLeaser.sprites[unbSocksNum].isVisible = true;
                     if (self.player.bodyMode == Player.BodyModeIndex.Stand)
@@ -514,8 +520,8 @@ namespace Unbound
                     // head things
                     sLeaser.sprites[unbEarTips].x = headposition.x - camPos.x;
                     sLeaser.sprites[unbEarTips].y = headposition.y - camPos.y;
-                    sLeaser.sprites[unbEarTips].rotation = num3;
-                    sLeaser.sprites[unbEarTips].scaleX = ((num3 < 0f) ? -1f : 1f);
+                    sLeaser.sprites[unbEarTips].rotation = bodyhipsbasedonhead;
+                    sLeaser.sprites[unbEarTips].scaleX = ((bodyhipsbasedonhead < 0f) ? -1f : 1f);
 
                     // hips things
                     sLeaser.sprites[unbFreckleNum].x = (hipstobody.x * 2f + bodytohips.x) / 3f - camPos.x;
@@ -531,11 +537,11 @@ namespace Unbound
                     if (self.player.sleepCurlUp > 0f)
                     {
                         sLeaser.sprites[unbPupils].scaleX = Mathf.Sign(bodytohips.x - hipstobody.x);
-                        sLeaser.sprites[unbPupils].rotation = num3 * (1f - self.player.sleepCurlUp);
+                        sLeaser.sprites[unbPupils].rotation = bodyhipsbasedonhead * (1f - self.player.sleepCurlUp);
                     }
                     else if (self.owner.room != null && self.owner.EffectiveRoomGravity == 0f)
                     {
-                        sLeaser.sprites[unbPupils].rotation = num3;
+                        sLeaser.sprites[unbPupils].rotation = bodyhipsbasedonhead;
                     }
 
                     else if (self.player.Consious)
@@ -549,34 +555,34 @@ namespace Unbound
                             }
                             else
                             {
-                                sLeaser.sprites[unbPupils].scaleX = ((num3 < 0f) ? -1f : 1f);
+                                sLeaser.sprites[unbPupils].scaleX = ((bodyhipsbasedonhead < 0f) ? -1f : 1f);
                             }
-                            vector6.x = 0f;
+                            faceposition.x = 0f;
                             sLeaser.sprites[unbPupils].y += 1f;
                         }
                         else
                         {
-                            if (Mathf.Abs(vector6.x) < 0.1f)
+                            if (Mathf.Abs(faceposition.x) < 0.1f)
                             {
-                                sLeaser.sprites[unbPupils].scaleX = ((num3 < 0f) ? -1f : 1f);
+                                sLeaser.sprites[unbPupils].scaleX = ((bodyhipsbasedonhead < 0f) ? -1f : 1f);
                             }
                             else
                             {
-                                sLeaser.sprites[unbPupils].scaleX = Mathf.Sign(vector6.x);
+                                sLeaser.sprites[unbPupils].scaleX = Mathf.Sign(faceposition.x);
                             }
                         }
                         sLeaser.sprites[unbPupils].rotation = 0f;
                     }
                     else
                     {
-                        sLeaser.sprites[unbPupils].rotation = num3;
+                        sLeaser.sprites[unbPupils].rotation = bodyhipsbasedonhead;
                     }
                     if (ModManager.CoopAvailable && self.player.bool1)
                     {
-                        sLeaser.sprites[unbPupils].rotation = num3 + 0.2f;
+                        sLeaser.sprites[unbPupils].rotation = bodyhipsbasedonhead + 0.2f;
                     }
-                    sLeaser.sprites[unbPupils].x = headposition.x + vector6.x - camPos.x;
-                    sLeaser.sprites[unbPupils].y = headposition.y + vector6.y - 2f - camPos.y;
+                    sLeaser.sprites[unbPupils].x = headposition.x + faceposition.x - camPos.x;
+                    sLeaser.sprites[unbPupils].y = headposition.y + faceposition.y - 2f - camPos.y;
 
                     // arms things. keep beneath the rest to avoid strange errors
                     for (int j = 0; j < 2; j++)

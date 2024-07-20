@@ -5,7 +5,7 @@
 
 namespace Unbound
 {
-    [BepInPlugin("NCR.theunbound", "unbound", "2.2.0")]
+    [BepInPlugin("NCR.theunbound", "unbound", "2.2.1")]
     [BepInDependency("MoreSlugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("MSC", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
