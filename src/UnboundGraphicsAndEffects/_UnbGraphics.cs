@@ -1,10 +1,10 @@
-﻿using IL.LizardCosmetics;
-using System;
+﻿using Menu;
 
 namespace Unbound
 {
     internal class UnbGraphics
     {
+        #region FAtlases
         static FAtlas unbsleevesarm;
         static FAtlas unbearhead;
         static FAtlas unbpupface;
@@ -15,53 +15,65 @@ namespace Unbound
         static FAtlas unbarm;
         static FAtlas unbmittenlegs;
         static FAtlas unblegs;
+        #endregion
+        #region sLeaser Sprite Variables
+        static int unbSocksNum = 13;
+        static int unbJumprings1Num = 14;
+        static int unbFreckleNum = 15;
+        static int unbJumprings2Num = 16;
+        static int unbEarTips = 17;
+        static int unbLeftMittens = 18;
+        static int unbRightMittens = 19;
+        static int unbLeftToes = 20;
+        static int unbRightToes = 21;
+        static int unbPupils = 22;
+        #endregion
 
         public static void Init()
         {
-            On.PlayerGraphics.InitiateSprites += PlayerGraphics_InitiateSprites;
-            On.PlayerGraphics.AddToContainer += PlayerGraphics_AddToContainer;
-            On.PlayerGraphics.DrawSprites += PlayerGraphics_DrawSprites;
+            On.PlayerGraphics.InitiateSprites += InitiateSprites;
+            On.PlayerGraphics.AddToContainer += AddToContainer;
+            On.PlayerGraphics.DrawSprites += DrawSprites;
             // unbound jumpring graphics, 1-4
 
             // On.JollyCoop.JollyMenu.JollyPlayerSelector.SetPortraitImage_Name_Color += JollyPlayerSelector_SetPortraitImage_Name_Color;
             // wow thats a mouthful lol. dynamic jolly pfp images. currently disabled due to coding issues
 
+            #region LoadAtlases
             unbsleevesarm ??= Futile.atlasManager.LoadAtlas("atlases/unbsleevesarm");
             unbarm ??= Futile.atlasManager.LoadAtlas("atlases/unbarm");
-
             unbpupface ??= Futile.atlasManager.LoadAtlas("atlases/unbpupface");
-
             unbfrecklehips ??= Futile.atlasManager.LoadAtlas("atlases/unbfrecklehips");
             unbjumphips ??= Futile.atlasManager.LoadAtlas("atlases/unbjumphips");
             unbjumpbody ??= Futile.atlasManager.LoadAtlas("atlases/unbjumpbody");
-
             unbearhead ??= Futile.atlasManager.LoadAtlas("atlases/unbearhead");
             unbhead ??= Futile.atlasManager.LoadAtlas("atlases/unbhead");
-
             unblegs ??= Futile.atlasManager.LoadAtlas("atlases/unblegs");
             unbmittenlegs ??= Futile.atlasManager.LoadAtlas("atlases/unbmittenlegs");
             // initiating atlases
+            #endregion
 
-            On.PlayerGraphics.ctor += PlayerGraphics_ctor;
-            On.PlayerGraphics.ApplyPalette += PlayerGraphics_ApplyPalette;
+            On.PlayerGraphics.ctor += CyanFrillsInit;
+            On.PlayerGraphics.ApplyPalette += ColourCyanFrills;
             // cyan frills
         }
 
-        private static void PlayerGraphics_ctor(On.PlayerGraphics.orig_ctor orig, PlayerGraphics self, PhysicalObject ow)
+        private static void CyanFrillsInit(On.PlayerGraphics.orig_ctor orig, PlayerGraphics self, PhysicalObject ow)
         {
             orig(self, ow);
-            if (self.player.GetCat().IsUnbound)
+            if (self.player.GetNCRunbound().IsUnbound)
             {
                 // self.player.GetCat().scalefrill = new UnbScales(self, 24);
             }
         }
 
-        private static void PlayerGraphics_ApplyPalette(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        private static void ColourCyanFrills(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
 
-            if (self.player.GetCat().IsUnbound)
+            if (self.player.GetNCRunbound().IsUnbound)
             {
+                #region VanillaColourStuff
                 Color color = PlayerGraphics.SlugcatColor(self.CharacterForColor);
                 Color color2 = new Color(color.r, color.g, color.b);
                 if (self.malnourished > 0f)
@@ -72,7 +84,7 @@ namespace Unbound
                 color2 = self.HypothermiaColorBlend(color2);
                 // initiate colour values
 
-                if (self.player.GetCat().scalefrill != null)
+                if (self.player.GetNCRunbound().scalefrill != null)
                 {
                     Color effectCol = new Color(0.87f, 0.39f, 0.33f);
                     if (!rCam.room.game.setupValues.arenaDefaultColors && !ModManager.CoopAvailable)
@@ -96,6 +108,7 @@ namespace Unbound
                                 break;
                         }
                     }
+                    #endregion
                     //self.player.GetCat().scalefrill.SetScaleColors(color2, effectCol);
                     //self.player.GetCat().scalefrill.ApplyPalette(sLeaser, rCam, palette);
                 }
@@ -103,91 +116,74 @@ namespace Unbound
             // end applypalette
         }
 
-        //  private static void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
-        // {
-        //orig(self, className, colorTint);
+          private static void JollyPlayerSelector_SetPortraitImage_Name_Color(On.JollyCoop.JollyMenu.JollyPlayerSelector.orig_SetPortraitImage_Name_Color orig, JollyCoop.JollyMenu.JollyPlayerSelector self, SlugcatStats.Name className, Color colorTint)
+          {
+                orig(self, className, colorTint);
 
-        // MenuIllustration portrait1 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer1", new Vector2(100f, 100f) / 2f, true, true);
-        //MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
-        //MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
-        // MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer4", new Vector2(100f, 100f) / 2f, true, true);
+                MenuIllustration portrait1 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer1", new Vector2(100f, 100f) / 2f, true, true);
+                MenuIllustration portrait2 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer2", new Vector2(100f, 100f) / 2f, true, true);
+                MenuIllustration portrait3 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer3", new Vector2(100f, 100f) / 2f, true, true);
+                MenuIllustration portrait4 = new MenuIllustration(self.dialog, self, "", "recolarena-" + className.ToString() + "layer4", new Vector2(100f, 100f) / 2f, true, true);
 
-        // portrait2.sprite.color = self.faceTintColor;
-        // portrait3.sprite.color = self.uniqueTintColor;
-        // portrait4.sprite.color = self.bodyTintColor;
+                portrait2.sprite.color = self.faceTintColor;
+                portrait3.sprite.color = self.uniqueTintColor;
+                portrait4.sprite.color = self.bodyTintColor;
 
-        // self.subObjects.Add(portrait1);
-        // self.subObjects.Add(portrait2);
-        // self.subObjects.Add(portrait3);
-        // self.subObjects.Add(portrait4);
+                self.subObjects.Add(portrait1);
+                self.subObjects.Add(portrait2);
+                self.subObjects.Add(portrait3);
+                self.subObjects.Add(portrait4);
 
-        // portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-        //  portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-        // portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
-        // }
+                portrait2.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+                portrait3.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+                portrait4.sprite.alpha = (className.value == "NCRunbound") ? 1f : 0f;
+          }
 
-        private static void PlayerGraphics_DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+        private static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
             //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-            if (!(self.player.GetCat().GraphicsDisabled && self.player.GetCat().RingsDisabled) &&
+            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null &&
-                self.player.GetCat().IsUnbound)
+                self.player.GetNCRunbound().IsUnbound)
             {
+                #region Initiating Variables
                 // INITIATING THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                float num = 0.5f + 0.5f * Mathf.Sin(Mathf.Lerp(self.lastBreath, self.breath, timeStacker) * 3.1415927f * 2f); // breath-altered
-                Vector2 vector = Vector2.Lerp(self.drawPositions[0, 1], self.drawPositions[0, 0], timeStacker); // positions from body to hips
-                Vector2 vector2 = Vector2.Lerp(self.drawPositions[1, 1], self.drawPositions[1, 0], timeStacker); // positions from hips to body
+                float breathaltered = 0.5f + 0.5f * Mathf.Sin(Mathf.Lerp(self.lastBreath, self.breath, timeStacker) * 3.1415927f * 2f); // breath-altered
+                Vector2 bodytohips = Vector2.Lerp(self.drawPositions[0, 1], self.drawPositions[0, 0], timeStacker); // positions from body to hips
+                Vector2 hipstobody = Vector2.Lerp(self.drawPositions[1, 1], self.drawPositions[1, 0], timeStacker); // positions from hips to body
                 // when vector and vector2 are combined, the position should be the exact center of the body
-                Vector2 vector3 = Vector2.Lerp(self.head.lastPos, self.head.pos, timeStacker); // head position
+                Vector2 headposition = Vector2.Lerp(self.head.lastPos, self.head.pos, timeStacker); // head position
                 if (self.player.aerobicLevel > 0.5f)
                 {
                     // when exhausted, maybe?
-                    vector += Custom.DirVec(vector2, vector) * Mathf.Lerp(-1f, 1f, num) *
+                    bodytohips += Custom.DirVec(hipstobody, bodytohips) * Mathf.Lerp(-1f, 1f, breathaltered) *
                         Mathf.InverseLerp(0.5f, 1f, self.player.aerobicLevel) * 0.5f;
-                    vector3 -= Custom.DirVec(vector2, vector) * Mathf.Lerp(-1f, 1f, num) * Mathf.Pow(Mathf.InverseLerp(0.5f, 1f,
+                    headposition -= Custom.DirVec(hipstobody, bodytohips) * Mathf.Lerp(-1f, 1f, breathaltered) * Mathf.Pow(Mathf.InverseLerp(0.5f, 1f,
                         self.player.aerobicLevel), 1.5f) * 0.75f;
                 }
-                float num2 = Mathf.InverseLerp(0.3f, 0.5f, Mathf.Abs(Custom.DirVec(vector2, vector).y));
-                // ill be honest im lost
-                Vector2 vector4 = (vector2 * 3f + vector) / 4f;
+                float num2 = Mathf.InverseLerp(0.3f, 0.5f, Mathf.Abs(Custom.DirVec(hipstobody, bodytohips).y));
+                Vector2 vector4 = (hipstobody * 3f + bodytohips) / 4f;
                 // body to hips position-ish. looks to be lower than normal, so probably about where the legs start
                 float d = 1f - 0.2f * self.malnourished; // malnourished-dependent
                 float d2 = 6f; // tail stretch value. idk why the default is 6 but shrug
 
                 for (int i = 0; i < 4; i++)
                 {
-                    Vector2 vector5 = Vector2.Lerp(self.tail[i].lastPos, self.tail[i].pos, timeStacker); // determining tail position
-                    Vector2 normalized = (vector5 - vector4).normalized; // switches the numbers into actual (x,y) format, should be the tail base
+                    Vector2 tailposition = Vector2.Lerp(self.tail[i].lastPos, self.tail[i].pos, timeStacker); // determining tail position
+                    Vector2 normalized = (tailposition - vector4).normalized; // switches the numbers into actual (x,y) format, should be the tail base
                     Vector2 a = Custom.PerpendicularVector(normalized); // ?
-                    float d3 = Vector2.Distance(vector5, vector4) / 5f; // the distance from tail position to body/hips/legs position
+                    float d3 = Vector2.Distance(tailposition, vector4) / 5f; // the distance from tail position to body/hips/legs position
                     if (i == 0)
                     {
                         d3 = 0f;
                     }
-
-                    // TAIL MOVEMENT
-                    (sLeaser.sprites[sLeaser.sprites.Length - 11] as TriangleMesh).MoveVertice(i * 4, vector4 - a * d2 * d + normalized * d3 - camPos);
-                    (sLeaser.sprites[sLeaser.sprites.Length - 11] as TriangleMesh).MoveVertice(i * 4 + 1, vector4 + a * d2 * d + normalized * d3 - camPos);
-                    if (i < 3)
-                    {
-                        (sLeaser.sprites[sLeaser.sprites.Length - 11] as TriangleMesh).MoveVertice(i * 4 + 2, vector5 - a *
-                            self.tail[i].StretchedRad * d - normalized * d3 - camPos);
-                        (sLeaser.sprites[sLeaser.sprites.Length - 11] as TriangleMesh).MoveVertice(i * 4 + 3, vector5 + a *
-                            self.tail[i].StretchedRad * d - normalized * d3 - camPos);
-                    }
-                    else
-                    {
-                        (sLeaser.sprites[sLeaser.sprites.Length - 11] as TriangleMesh).MoveVertice(i * 4 + 2, vector5 - camPos);
-                    }
-                    // END TAIL MOVEMENT
-
                     d2 = self.tail[i].StretchedRad;
-                    vector4 = vector5; // sets the legs / tailbase value to be the same
+                    vector4 = tailposition; // sets the legs / tailbase value to be the same
                 }
-                float num3 = Custom.AimFromOneVectorToAnother(Vector2.Lerp(vector2, vector, 0.5f), vector3); // body-hips based on head
+                float num3 = Custom.AimFromOneVectorToAnother(Vector2.Lerp(hipstobody, bodytohips, 0.5f), headposition); // body-hips based on head
                 int num4 = Mathf.RoundToInt(Mathf.Abs(num3 / 360f * 34f)); // round the above to an integer
                 Vector2 vector6 = Vector2.Lerp(self.lastLookDir, self.lookDirection, timeStacker) * 3f * (1f - self.player.sleepCurlUp); // face position
                 if (self.player.sleepCurlUp > 0f)
@@ -196,11 +192,11 @@ namespace Unbound
                     num4 = 7; // ?
                     num4 = Custom.IntClamp((int)Mathf.Lerp(num4, 4f, self.player.sleepCurlUp), 0, 8);
                     // body-hips position based on the head, but dependant on sleep pose and an integer?
-                    num3 = Mathf.Lerp(num3, 45f * Mathf.Sign(vector.x - vector2.x), self.player.sleepCurlUp); // tailbase position dependant on sleep pose
-                    vector3.y += 1f * self.player.sleepCurlUp; // head y position dependant on sleep pose
-                    vector3.x += Mathf.Sign(vector.x - vector2.x) * 2f * self.player.sleepCurlUp; // head x position dependant on sleep pose
+                    num3 = Mathf.Lerp(num3, 45f * Mathf.Sign(bodytohips.x - hipstobody.x), self.player.sleepCurlUp); // tailbase position dependant on sleep pose
+                    headposition.y += 1f * self.player.sleepCurlUp; // head y position dependant on sleep pose
+                    headposition.x += Mathf.Sign(bodytohips.x - hipstobody.x) * 2f * self.player.sleepCurlUp; // head x position dependant on sleep pose
                     vector6.y -= 2f * self.player.sleepCurlUp; // face y position dependant on sleep pose
-                    vector6.x -= 4f * Mathf.Sign(vector.x - vector2.x) * self.player.sleepCurlUp; // youll never fucking guess
+                    vector6.x -= 4f * Mathf.Sign(bodytohips.x - hipstobody.x) * self.player.sleepCurlUp; // youll never fucking guess
                 }
                 else if (self.owner.room != null && self.owner.EffectiveRoomGravity == 0f)
                 {
@@ -224,7 +220,7 @@ namespace Unbound
                     }
                     else
                     {
-                        Vector2 p = vector3 - vector2; // hips - body
+                        Vector2 p = headposition - hipstobody; // hips - body
                         p.x *= 1f - vector6.magnitude / 3f; // lawd help me
                         p = p.normalized; // p = (p.x, p.y)
                     }
@@ -237,13 +233,13 @@ namespace Unbound
                 if (ModManager.CoopAvailable && self.player.bool1)
                 {
                     // if the player is a pup, except this doesn't entirely make sense but we aint worryin about it right now
-                    vector3.y -= 1.9f;
-                    num3 = Mathf.Lerp(num3, 45f * Mathf.Sign(vector.x - vector2.x), 0.7f);
+                    headposition.y -= 1.9f;
+                    num3 = Mathf.Lerp(num3, 45f * Mathf.Sign(bodytohips.x - hipstobody.x), 0.7f);
                     vector6.x -= 0.2f;
                 }
                 Vector2 vector7 = Vector2.Lerp(self.legs.lastPos, self.legs.pos, timeStacker); // legs position
-
-
+                #endregion
+                #region Adding / Replacing Atlases
                 // ADDING / REPLACING ATLAS THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -251,23 +247,23 @@ namespace Unbound
 
                 // LEG THINGS
                 string lego = sLeaser.sprites[4]?.element?.name;
-                if (!self.player.GetCat().GraphicsDisabled &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unbmittenlegs == null)
                 {
                     UnityEngine.Debug.Log("Unbound Socks sprites missing!");
                 }
-                else if (!self.player.GetCat().GraphicsDisabled &&
+                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     lego != null && lego.StartsWith("Legs") &&
                     unbmittenlegs._elementsByName.TryGetValue("unbmitten" + lego, out var leggy))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 10].element = leggy;
+                    sLeaser.sprites[unbSocksNum].element = leggy;
                 }
-                if (!self.player.GetCat().GraphicsDisabled &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unblegs == null)
                 {
                     UnityEngine.Debug.Log("Unbound Leg sprites missing!");
                 }
-                else if (!self.player.GetCat().GraphicsDisabled &&
+                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     lego != null && lego.StartsWith("Legs") &&
                     unblegs._elementsByName.TryGetValue("unb" + lego, out var leggie))
                 {
@@ -276,23 +272,23 @@ namespace Unbound
 
                 // HEAD THINGS
                 string head = sLeaser.sprites[3]?.element?.name;
-                if (!self.player.GetCat().GraphicsDisabled && unbearhead == null)
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbearhead == null)
                 {
                     UnityEngine.Debug.Log("Unbound Eartip sprites missing!");
                 }
-                else if (!self.player.GetCat().GraphicsDisabled &&
+                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     head != null && head.StartsWith("Head") &&
                     unbearhead._elementsByName.TryGetValue("unbear" + head, out var eartip))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 5].element = eartip;
+                    sLeaser.sprites[unbEarTips].element = eartip;
                 }
                 // eartips
-                if (!self.player.GetCat().GraphicsDisabled &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unbhead == null)
                 {
                     UnityEngine.Debug.Log("Unbound Head sprites missing!");
                 }
-                else if (!self.player.GetCat().GraphicsDisabled &&
+                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     head != null && head.StartsWith("Head") &&
                     unbhead._elementsByName.TryGetValue("unb" + head, out var headreplace))
                 {
@@ -302,120 +298,121 @@ namespace Unbound
                 // ARM THINGS
                 string larm = sLeaser.sprites[5]?.element?.name;
                 string rarm = sLeaser.sprites[6]?.element?.name;
-                if (!self.player.GetCat().GraphicsDisabled && unbarm == null)
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm == null)
                 {
                     UnityEngine.Debug.Log("Unbound Arm sprites missing!");
                 }
-                else if (!self.player.GetCat().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
+                else if (!self.player.GetNCRunbound().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
                     unbarm._elementsByName.TryGetValue("unb" + larm, out var leftreplace))
                 {
                     sLeaser.sprites[5].element = leftreplace;
                 }
-                if (!self.player.GetCat().GraphicsDisabled && unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
                     unbarm._elementsByName.TryGetValue("unb" + rarm, out var rightreplace))
                 {
                     sLeaser.sprites[6].element = rightreplace;
                 }
                 // arm replacements
-                if (!self.player.GetCat().GraphicsDisabled && unbsleevesarm == null)
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbsleevesarm == null)
                 {
                     UnityEngine.Debug.Log("Unbound Mitten sprites missing!");
                 }
-                else if (!self.player.GetCat().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
+                else if (!self.player.GetNCRunbound().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
                     unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var larmreplace))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 6].element = larmreplace;
+                    sLeaser.sprites[unbLeftMittens].element = larmreplace;
                 }
-                if (!self.player.GetCat().GraphicsDisabled && unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
                     unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var rarmreplace))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 7].element = rarmreplace;
+                    sLeaser.sprites[unbRightMittens].element = rarmreplace;
                 }
 
 
                 // HAND THINGS
                 string lhand = sLeaser.sprites[7]?.element?.name;
                 string rhand = sLeaser.sprites[8]?.element?.name;
-                if (!self.player.GetCat().GraphicsDisabled && unbarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
                     unbarm._elementsByName.TryGetValue("unb" + lhand, out var lhandreplace))
                 {
                     sLeaser.sprites[7].element = lhandreplace;
                 }
-                if (!self.player.GetCat().GraphicsDisabled && unbarm != null && rhand != null && rhand.StartsWith("OnTopOf") &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rhand != null && rhand.StartsWith("OnTopOf") &&
                     unbarm._elementsByName.TryGetValue("unb" + rhand, out var rhandreplace))
                 {
                     sLeaser.sprites[8].element = rhandreplace;
                 }
 
-                if (!self.player.GetCat().GraphicsDisabled && unbsleevesarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbsleevesarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
                     unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + lhand, out var lsleeve))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 8].element = lsleeve;
+                    sLeaser.sprites[unbLeftToes].element = lsleeve;
                 }
-                if (!self.player.GetCat().GraphicsDisabled && unbsleevesarm != null && rhand != null && rhand.StartsWith("OnTopOf") &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbsleevesarm != null && rhand != null && rhand.StartsWith("OnTopOf") &&
                     unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + rhand, out var rsleeve))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 9].element = rsleeve;
+                    sLeaser.sprites[unbRightToes].element = rsleeve;
                 }
 
                 // HIPS THINGS
                 string hipwthekids = sLeaser.sprites[1]?.element?.name;
-                if (!self.player.GetCat().GraphicsDisabled && unbfrecklehips == null)
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbfrecklehips == null)
                 {
                     UnityEngine.Debug.Log("Unbound Freckle sprites missing!");
                 }
-                else if (!self.player.GetCat().GraphicsDisabled &&
+                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     hipwthekids != null && hipwthekids.StartsWith("Hips") &&
                     unbfrecklehips._elementsByName.TryGetValue("unbfreckle" + hipwthekids, out var freck))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 3].element = freck;
+                    sLeaser.sprites[unbFreckleNum].element = freck;
                 }
                 // body freckles
-                if (!self.player.GetCat().RingsDisabled && unbjumphips == null)
+                if (!self.player.GetNCRunbound().RingsDisabled && unbjumphips == null)
                 {
                     UnityEngine.Debug.Log("Unbound LOWER Jumpring sprites missing!");
                 }
-                else if (!self.player.GetCat().RingsDisabled && hipwthekids != null && hipwthekids.StartsWith("Hips") &&
+                else if (!self.player.GetNCRunbound().RingsDisabled && hipwthekids != null && hipwthekids.StartsWith("Hips") &&
                     unbjumphips._elementsByName.TryGetValue("unbjump" + hipwthekids, out var jumprings))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 2].element = jumprings;
+                    sLeaser.sprites[unbJumprings1Num].element = jumprings;
                 }
                 // lower jumprings
 
                 // BODY THINGS
                 string bodyget = sLeaser.sprites[0]?.element?.name;
-                if (!self.player.GetCat().RingsDisabled && unbjumpbody == null)
+                if (!self.player.GetNCRunbound().RingsDisabled && unbjumpbody == null)
                 {
                     UnityEngine.Debug.Log("Unbound UPPER Jumpring sprites missing!");
                 }
-                else if (!self.player.GetCat().RingsDisabled && bodyget != null && bodyget.StartsWith("Body") &&
+                else if (!self.player.GetNCRunbound().RingsDisabled && bodyget != null && bodyget.StartsWith("Body") &&
                     unbjumpbody._elementsByName.TryGetValue("unbjump" + bodyget, out var jumprings2))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 4].element = jumprings2;
+                    sLeaser.sprites[unbJumprings2Num].element = jumprings2;
                 }
                 // upper jumprings
 
                 // FACE THINGS
                 string faceget = sLeaser.sprites[9]?.element?.name;
-                if (!self.player.GetCat().GraphicsDisabled &&
+                if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unbpupface == null)
                 {
                     UnityEngine.Debug.Log("Unbound Pupil sprites missing!");
                 }
-                else if (!self.player.GetCat().GraphicsDisabled &&
+                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     faceget != null && faceget.StartsWith("Face") &&
                     unbpupface._elementsByName.TryGetValue("unbpup" + faceget, out var pupils))
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 1].element = pupils;
+                    sLeaser.sprites[unbPupils].element = pupils;
                 }
                 // pupils
-
+                #endregion
+                #region Vanilla Tweaks
                 // VANILLA TWEAKING THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                
-                if (!self.player.GetCat().GraphicsDisabled)
+
+                if (!self.player.GetNCRunbound().GraphicsDisabled)
                 {
-                    sLeaser.sprites[1].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * num - 0.05f * self.malnourished;
-                    sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, num) * num2, 0.15f,
+                    sLeaser.sprites[1].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
+                    sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * num2, 0.15f,
                         self.player.sleepCurlUp);
                     // makes unbound thinner
                     sLeaser.sprites[10].RemoveFromContainer();
@@ -427,43 +424,44 @@ namespace Unbound
                     }
                     // hides legs when stunned
                 }
-
+                #endregion
+                #region Animating Things
                 //  ANIMATED PLACEMENT THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                 //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-                if (!self.player.GetCat().RingsDisabled)
+                if (!self.player.GetNCRunbound().RingsDisabled)
                 {
-                    sLeaser.sprites[sLeaser.sprites.Length - 2].x = (vector2.x * 2f + vector.x) / 3f - camPos.x;
-                    sLeaser.sprites[sLeaser.sprites.Length - 2].y = (vector2.y * 2f + vector.y) / 3f - camPos.y - self.player.sleepCurlUp * 3f;
-                    sLeaser.sprites[sLeaser.sprites.Length - 2].rotation = Custom.AimFromOneVectorToAnother(vector, Vector2.Lerp(self.tail[0].lastPos, self.tail[0].pos,
+                    sLeaser.sprites[unbJumprings1Num].x = (hipstobody.x * 2f + bodytohips.x) / 3f - camPos.x;
+                    sLeaser.sprites[unbJumprings1Num].y = (hipstobody.y * 2f + bodytohips.y) / 3f - camPos.y - self.player.sleepCurlUp * 3f;
+                    sLeaser.sprites[unbJumprings1Num].rotation = Custom.AimFromOneVectorToAnother(bodytohips, Vector2.Lerp(self.tail[0].lastPos, self.tail[0].pos,
                         timeStacker));
-                    sLeaser.sprites[sLeaser.sprites.Length - 2].scaleY = 1f + self.player.sleepCurlUp * 0.2f;
-                    sLeaser.sprites[sLeaser.sprites.Length - 2].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * num - 0.05f * self.malnourished;
+                    sLeaser.sprites[unbJumprings1Num].scaleY = 1f + self.player.sleepCurlUp * 0.2f;
+                    sLeaser.sprites[unbJumprings1Num].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
                     // lower jumprings, attached to hips
 
                     // body things
-                    sLeaser.sprites[sLeaser.sprites.Length - 4].x = vector.x - camPos.x;
-                    sLeaser.sprites[sLeaser.sprites.Length - 4].y = vector.y - camPos.y - self.player.sleepCurlUp * 4f + Mathf.Lerp(0.5f, 1f, self.player.aerobicLevel) * num *
+                    sLeaser.sprites[unbJumprings2Num].x = bodytohips.x - camPos.x;
+                    sLeaser.sprites[unbJumprings2Num].y = bodytohips.y - camPos.y - self.player.sleepCurlUp * 4f + Mathf.Lerp(0.5f, 1f, self.player.aerobicLevel) * breathaltered *
                         (1f - num2);
-                    sLeaser.sprites[sLeaser.sprites.Length - 4].rotation = Custom.AimFromOneVectorToAnother(vector2, vector);
-                    sLeaser.sprites[sLeaser.sprites.Length - 4].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, num) * num2, 0.15f,
+                    sLeaser.sprites[unbJumprings2Num].rotation = Custom.AimFromOneVectorToAnother(hipstobody, bodytohips);
+                    sLeaser.sprites[unbJumprings2Num].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * num2, 0.15f,
                         self.player.sleepCurlUp);
                     // lower jumprings, attached to body
                 }
-                if (!self.player.GetCat().GraphicsDisabled)
+                if (!self.player.GetNCRunbound().GraphicsDisabled)
                 {
                     // legs
-                    sLeaser.sprites[sLeaser.sprites.Length - 10].x = vector7.x - camPos.x;
-                    sLeaser.sprites[sLeaser.sprites.Length - 10].y = vector7.y - camPos.y;
-                    sLeaser.sprites[sLeaser.sprites.Length - 10].rotation = Custom.AimFromOneVectorToAnother(self.legsDirection, new Vector2(0f, 0f));
-                    sLeaser.sprites[sLeaser.sprites.Length - 10].isVisible = true;
+                    sLeaser.sprites[unbSocksNum].x = vector7.x - camPos.x;
+                    sLeaser.sprites[unbSocksNum].y = vector7.y - camPos.y;
+                    sLeaser.sprites[unbSocksNum].rotation = Custom.AimFromOneVectorToAnother(self.legsDirection, new Vector2(0f, 0f));
+                    sLeaser.sprites[unbSocksNum].isVisible = true;
                     if (self.player.bodyMode == Player.BodyModeIndex.Stand)
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 10].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
                     }
                     else if (self.player.bodyMode == Player.BodyModeIndex.Crawl)
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 10].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
                     }
                     else if (self.player.bodyMode == Player.BodyModeIndex.CorridorClimb)
                     {
@@ -471,73 +469,73 @@ namespace Unbound
                         if (num5 > 6)
                         {
                             num5 %= 6;
-                            sLeaser.sprites[sLeaser.sprites.Length - 10].scaleX = -1f;
+                            sLeaser.sprites[unbSocksNum].scaleX = -1f;
                         }
                         else
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 10].scaleX = 1f;
+                            sLeaser.sprites[unbSocksNum].scaleX = 1f;
                         }
                     }
                     else if (self.player.bodyMode == Player.BodyModeIndex.ClimbingOnBeam)
                     {
                         if (self.player.animation == Player.AnimationIndex.StandOnBeam)
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 10].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
                         }
                         else if (self.player.animation == Player.AnimationIndex.ClimbOnBeam)
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 10].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
-                            sLeaser.sprites[sLeaser.sprites.Length - 10].y = Mathf.Clamp(sLeaser.sprites[4].y, vector2.y - 6f - camPos.y, vector2.y + 4f - camPos.y);
+                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                            sLeaser.sprites[unbSocksNum].y = Mathf.Clamp(sLeaser.sprites[4].y, hipstobody.y - 6f - camPos.y, hipstobody.y + 4f - camPos.y);
                         }
                     }
                     else if (self.player.bodyMode == Player.BodyModeIndex.WallClimb)
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 10].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
                     }
                     else if (self.player.bodyMode == Player.BodyModeIndex.Default)
                     {
                         if (self.player.animation == Player.AnimationIndex.LedgeGrab)
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 10].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
                         }
                     }
                     else if (self.player.bodyMode == Player.BodyModeIndex.Swimming)
                     {
                         if (self.player.animation == Player.AnimationIndex.DeepSwim)
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 10].isVisible = false;
+                            sLeaser.sprites[unbSocksNum].isVisible = false;
                         }
                         if (self.player.stun > 0)
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 10].isVisible = false;
+                            sLeaser.sprites[unbSocksNum].isVisible = false;
                         }
                     }
 
                     // head things
-                    sLeaser.sprites[sLeaser.sprites.Length - 5].x = vector3.x - camPos.x;
-                    sLeaser.sprites[sLeaser.sprites.Length - 5].y = vector3.y - camPos.y;
-                    sLeaser.sprites[sLeaser.sprites.Length - 5].rotation = num3;
-                    sLeaser.sprites[sLeaser.sprites.Length - 5].scaleX = ((num3 < 0f) ? -1f : 1f);
+                    sLeaser.sprites[unbEarTips].x = headposition.x - camPos.x;
+                    sLeaser.sprites[unbEarTips].y = headposition.y - camPos.y;
+                    sLeaser.sprites[unbEarTips].rotation = num3;
+                    sLeaser.sprites[unbEarTips].scaleX = ((num3 < 0f) ? -1f : 1f);
 
                     // hips things
-                    sLeaser.sprites[sLeaser.sprites.Length - 3].x = (vector2.x * 2f + vector.x) / 3f - camPos.x;
-                    sLeaser.sprites[sLeaser.sprites.Length - 3].y = (vector2.y * 2f + vector.y) / 3f - camPos.y - self.player.sleepCurlUp * 3f;
-                    sLeaser.sprites[sLeaser.sprites.Length - 3].rotation = Custom.AimFromOneVectorToAnother(vector, Vector2.Lerp(self.tail[0].lastPos, self.tail[0].pos,
+                    sLeaser.sprites[unbFreckleNum].x = (hipstobody.x * 2f + bodytohips.x) / 3f - camPos.x;
+                    sLeaser.sprites[unbFreckleNum].y = (hipstobody.y * 2f + bodytohips.y) / 3f - camPos.y - self.player.sleepCurlUp * 3f;
+                    sLeaser.sprites[unbFreckleNum].rotation = Custom.AimFromOneVectorToAnother(bodytohips, Vector2.Lerp(self.tail[0].lastPos, self.tail[0].pos,
                         timeStacker));
-                    sLeaser.sprites[sLeaser.sprites.Length - 3].scaleY = 1f + self.player.sleepCurlUp * 0.2f;
-                    sLeaser.sprites[sLeaser.sprites.Length - 3].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * num - 0.05f * self.malnourished;
+                    sLeaser.sprites[unbFreckleNum].scaleY = 1f + self.player.sleepCurlUp * 0.2f;
+                    sLeaser.sprites[unbFreckleNum].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
                     // freckles
                     
 
                     // face things
                     if (self.player.sleepCurlUp > 0f)
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].scaleX = Mathf.Sign(vector.x - vector2.x);
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].rotation = num3 * (1f - self.player.sleepCurlUp);
+                        sLeaser.sprites[unbPupils].scaleX = Mathf.Sign(bodytohips.x - hipstobody.x);
+                        sLeaser.sprites[unbPupils].rotation = num3 * (1f - self.player.sleepCurlUp);
                     }
                     else if (self.owner.room != null && self.owner.EffectiveRoomGravity == 0f)
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].rotation = num3;
+                        sLeaser.sprites[unbPupils].rotation = num3;
                     }
 
                     else if (self.player.Consious)
@@ -547,38 +545,38 @@ namespace Unbound
                         {
                             if (self.player.bodyMode == Player.BodyModeIndex.Crawl)
                             {
-                                sLeaser.sprites[sLeaser.sprites.Length - 1].scaleX = Mathf.Sign(vector.x - vector2.x);
+                                sLeaser.sprites[unbPupils].scaleX = Mathf.Sign(bodytohips.x - hipstobody.x);
                             }
                             else
                             {
-                                sLeaser.sprites[sLeaser.sprites.Length - 1].scaleX = ((num3 < 0f) ? -1f : 1f);
+                                sLeaser.sprites[unbPupils].scaleX = ((num3 < 0f) ? -1f : 1f);
                             }
                             vector6.x = 0f;
-                            sLeaser.sprites[sLeaser.sprites.Length - 1].y += 1f;
+                            sLeaser.sprites[unbPupils].y += 1f;
                         }
                         else
                         {
                             if (Mathf.Abs(vector6.x) < 0.1f)
                             {
-                                sLeaser.sprites[sLeaser.sprites.Length - 1].scaleX = ((num3 < 0f) ? -1f : 1f);
+                                sLeaser.sprites[unbPupils].scaleX = ((num3 < 0f) ? -1f : 1f);
                             }
                             else
                             {
-                                sLeaser.sprites[sLeaser.sprites.Length - 1].scaleX = Mathf.Sign(vector6.x);
+                                sLeaser.sprites[unbPupils].scaleX = Mathf.Sign(vector6.x);
                             }
                         }
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].rotation = 0f;
+                        sLeaser.sprites[unbPupils].rotation = 0f;
                     }
                     else
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].rotation = num3;
+                        sLeaser.sprites[unbPupils].rotation = num3;
                     }
                     if (ModManager.CoopAvailable && self.player.bool1)
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].rotation = num3 + 0.2f;
+                        sLeaser.sprites[unbPupils].rotation = num3 + 0.2f;
                     }
-                    sLeaser.sprites[sLeaser.sprites.Length - 1].x = vector3.x + vector6.x - camPos.x;
-                    sLeaser.sprites[sLeaser.sprites.Length - 1].y = vector3.y + vector6.y - 2f - camPos.y;
+                    sLeaser.sprites[unbPupils].x = headposition.x + vector6.x - camPos.x;
+                    sLeaser.sprites[unbPupils].y = headposition.y + vector6.y - 2f - camPos.y;
 
                     // arms things. keep beneath the rest to avoid strange errors
                     for (int j = 0; j < 2; j++)
@@ -586,8 +584,8 @@ namespace Unbound
                         Vector2 vector8 = Vector2.Lerp(self.hands[j].lastPos, self.hands[j].pos, timeStacker);
                         if (self.hands[j].mode != Limb.Mode.Retracted)
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 6 - j].x = vector8.x - camPos.x;
-                            sLeaser.sprites[sLeaser.sprites.Length - 6 - j].y = vector8.y - camPos.y;
+                            sLeaser.sprites[unbLeftMittens + j].x = vector8.x - camPos.x;
+                            sLeaser.sprites[unbLeftMittens + j].y = vector8.y - camPos.y;
                             float num6 = 4.5f / ((float)self.hands[j].retractCounter + 1f);
                             if ((self.player.animation == Player.AnimationIndex.StandOnBeam || self.player.animation ==
                                 Player.AnimationIndex.BeamTip) && self.disbalanceAmount <= 40f &&
@@ -599,71 +597,50 @@ namespace Unbound
                             {
                                 num6 *= 0.5f;
                             }
-                            num6 *= Mathf.Abs(Mathf.Cos(Custom.AimFromOneVectorToAnother(vector2, vector) / 360f * 3.1415927f * 2f));
+                            num6 *= Mathf.Abs(Mathf.Cos(Custom.AimFromOneVectorToAnother(hipstobody, bodytohips) / 360f * 3.1415927f * 2f));
                             Vector2 vector9;
-                            vector9 = vector + Custom.RotateAroundOrigo(new Vector2((-1f + 2f * (float)j) * (num6 * 0.6f), -3.5f),
-                                Custom.AimFromOneVectorToAnother(vector2, vector));
-                            sLeaser.sprites[sLeaser.sprites.Length - 6 - j].rotation = Custom.AimFromOneVectorToAnother(vector8, vector9) + 90f;
+                            vector9 = bodytohips + Custom.RotateAroundOrigo(new Vector2((-1f + 2f * (float)j) * (num6 * 0.6f), -3.5f),
+                                Custom.AimFromOneVectorToAnother(hipstobody, bodytohips));
+                            sLeaser.sprites[unbLeftMittens + j].rotation = Custom.AimFromOneVectorToAnother(vector8, vector9) + 90f;
                             if (self.player.bodyMode == Player.BodyModeIndex.Crawl)
                             {
-                                sLeaser.sprites[sLeaser.sprites.Length - 6 - j].scaleY = ((vector.x < vector2.x) ? -1f : 1f);
+                                sLeaser.sprites[unbLeftMittens + j].scaleY = ((bodytohips.x < hipstobody.x) ? -1f : 1f);
                             }
                             else if (self.player.bodyMode == Player.BodyModeIndex.WallClimb)
                             {
-                                sLeaser.sprites[sLeaser.sprites.Length - 6 - j].scaleY = ((self.player.flipDirection == -1) ? -1f : 1f);
+                                sLeaser.sprites[unbLeftMittens + j].scaleY = ((self.player.flipDirection == -1) ? -1f : 1f);
                             }
                             else
                             {
-                                sLeaser.sprites[sLeaser.sprites.Length - 6 - j].scaleY = Mathf.Sign(Custom.DistanceToLine(vector8, vector, vector2));
+                                sLeaser.sprites[unbLeftMittens + j].scaleY = Mathf.Sign(Custom.DistanceToLine(vector8, bodytohips, hipstobody));
                             }
                             if (self.player.animation == Player.AnimationIndex.HangUnderVerticalBeam)
                             {
-                                sLeaser.sprites[sLeaser.sprites.Length - 6 - j].scaleY = ((j == 0) ? 1f : -1f);
+                                sLeaser.sprites[unbLeftMittens + j].scaleY = ((j == 0) ? 1f : -1f);
                             }
                         }
-                        sLeaser.sprites[sLeaser.sprites.Length - 6 - j].isVisible = (self.hands[j].mode != Limb.Mode.Retracted &&
+                        sLeaser.sprites[unbLeftMittens + j].isVisible = (self.hands[j].mode != Limb.Mode.Retracted &&
                             ((self.player.animation != Player.AnimationIndex.ClimbOnBeam &&
                             self.player.animation != Player.AnimationIndex.ZeroGPoleGrab) || !self.hands[j].reachedSnapPosition));
                         if ((self.player.animation == Player.AnimationIndex.ClimbOnBeam || self.player.animation == Player.AnimationIndex.HangFromBeam ||
                             self.player.animation == Player.AnimationIndex.GetUpOnBeam || self.player.animation == Player.AnimationIndex.ZeroGPoleGrab) &&
                             self.hands[j].reachedSnapPosition)
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 8 - j].x = vector8.x - camPos.x;
-                            sLeaser.sprites[sLeaser.sprites.Length - 8 - j].y = vector8.y - camPos.y +
+                            sLeaser.sprites[unbLeftToes + j].x = vector8.x - camPos.x;
+                            sLeaser.sprites[unbLeftToes + j].y = vector8.y - camPos.y +
                                 ((self.player.animation != Player.AnimationIndex.ClimbOnBeam &&
                                 self.player.animation != Player.AnimationIndex.ZeroGPoleGrab) ? 3f : 0f);
 
-                            sLeaser.sprites[sLeaser.sprites.Length - 8 - j].isVisible = true;
+                            sLeaser.sprites[unbLeftToes + j].isVisible = true;
                         }
                         else
                         {
-                            sLeaser.sprites[sLeaser.sprites.Length - 8 - j].isVisible = false;
+                            sLeaser.sprites[unbLeftToes + j].isVisible = false;
                         }
                     }
                 }
-                   
-                // VANILLA PLACEMENTS FOR REFERENCE ------------------------------------------------------------------------------------------------------------------------------------------------
-
-                // BODY ------------------------------------------
-                //sLeaser.sprites[0].x = vector.x - camPos.x;
-                //sLeaser.sprites[0].y = vector.y - camPos.y - self.player.sleepCurlUp * 4f + Mathf.Lerp(0.5f, 1f, self.player.aerobicLevel) * num *
-                //    (1f - num2);
-                //sLeaser.sprites[0].rotation = Custom.AimFromOneVectorToAnother(vector2, vector);
-                //sLeaser.sprites[0].scaleX = 1f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, num) * num2, 0.15f,
-                //    self.player.sleepCurlUp);
-                // HIPS ------------------------------------------
-                // the 1f on scalex is what to edit for fatter or thinner slugcats.
-                // note that these sprites are considered upside down and therefore referencing from them may cause errors.
-                //sLeaser.sprites[1].x = (vector2.x * 2f + vector.x) / 3f - camPos.x;
-                //sLeaser.sprites[1].y = (vector2.y * 2f + vector.y) / 3f - camPos.y - self.player.sleepCurlUp * 3f;
-                //sLeaser.sprites[1].rotation = Custom.AimFromOneVectorToAnother(vector, Vector2.Lerp(self.tail[0].lastPos, self.tail[0].pos,
-                //    timeStacker));
-                //sLeaser.sprites[1].scaleY = 1f + self.player.sleepCurlUp * 0.2f;
-                //sLeaser.sprites[1].scaleX = 1f + self.player.sleepCurlUp * 0.2f + 0.05f * num - 0.05f * self.malnourished;
-
-
-
-
+                #endregion
+                #region Colours
                 // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
 
                 Color effectcol = new Color(0.87f, 0.39f, 0.33f);
@@ -683,20 +660,20 @@ namespace Unbound
                     bodycol = PlayerGraphics.CustomColorSafety(0);
                 }
 
-                if (!self.player.GetCat().GraphicsDisabled)
+                if (!self.player.GetNCRunbound().GraphicsDisabled)
                 {
 
                     // applying colour ------------------------------
-                    sLeaser.sprites[sLeaser.sprites.Length - 3].color = effectcol; // freckles
-                    sLeaser.sprites[sLeaser.sprites.Length - 5].color = effectcol; // head
-                    sLeaser.sprites[sLeaser.sprites.Length - 6].color = effectcol; // arm
-                    sLeaser.sprites[sLeaser.sprites.Length - 7].color = effectcol; // arm
-                    sLeaser.sprites[sLeaser.sprites.Length - 8].color = effectcol; // hand
-                    sLeaser.sprites[sLeaser.sprites.Length - 9].color = effectcol; // hand
-                    sLeaser.sprites[sLeaser.sprites.Length - 10].color = effectcol; // legs
+                    sLeaser.sprites[unbFreckleNum].color = effectcol; // freckles
+                    sLeaser.sprites[unbEarTips].color = effectcol; // head
+                    sLeaser.sprites[unbLeftMittens].color = effectcol; // arm
+                    sLeaser.sprites[unbRightMittens].color = effectcol; // arm
+                    sLeaser.sprites[unbLeftToes].color = effectcol; // hand
+                    sLeaser.sprites[unbRightToes].color = effectcol; // hand
+                    sLeaser.sprites[unbSocksNum].color = effectcol; // legs
                 }
                 
-                if (!self.player.GetCat().RingsDisabled)
+                if (!self.player.GetNCRunbound().RingsDisabled)
                 {
                     Color saturatedpupil = effectcol;
 
@@ -720,40 +697,40 @@ namespace Unbound
 
 
                     // animated colour ------------------------------
-                    if (self.player.GetCat().UnbCyanjumpCountdown == 0)
+                    if (self.player.GetNCRunbound().UnbCyanjumpCountdown == 0)
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 2].color = effectcol;
-                        sLeaser.sprites[sLeaser.sprites.Length - 4].color = effectcol;
+                        sLeaser.sprites[unbJumprings1Num].color = effectcol;
+                        sLeaser.sprites[unbJumprings2Num].color = effectcol;
                         // jumprings
 
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].color = saturatedpupil;
+                        sLeaser.sprites[unbPupils].color = saturatedpupil;
                         // his pupils normally become the effect colour, but super saturated
                     }
                     else
                     {
-                        sLeaser.sprites[sLeaser.sprites.Length - 2].color = Color.Lerp(effectcol, bodycol,
-                            (self.player.GetCat().UnbCyanjumpCountdown / 100f));
-                        sLeaser.sprites[sLeaser.sprites.Length - 4].color = Color.Lerp(effectcol, bodycol,
-                            (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(effectcol, bodycol,
+                            (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(effectcol, bodycol,
+                            (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
 
-                        sLeaser.sprites[sLeaser.sprites.Length - 1].color = Color.Lerp(saturatedpupil, eyecol,
-                            (self.player.GetCat().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[unbPupils].color = Color.Lerp(saturatedpupil, eyecol,
+                            (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
                     }
                     // gives his jumprings that nice fade effect
                 }
-
+                #endregion
 
                 // self.player.GetCat().scalefrill.DrawSprites(sLeaser, rCam, timeStacker, camPos);
                 // end drawsprites
             }
         }
 
-        private static void PlayerGraphics_AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
+        private static void AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
             RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
-            if (!(self.player.GetCat().GraphicsDisabled && self.player.GetCat().RingsDisabled) &&
+            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
-                self.player.GetCat().IsUnbound)
+                self.player.GetNCRunbound().IsUnbound)
             {
                 try { sLeaser.RemoveAllSpritesFromContainer(); }
                 catch (Exception e)
@@ -776,49 +753,49 @@ namespace Unbound
                     }
                     //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-                    if (i == sLeaser.sprites.Length - 1)
+                    if (i == unbPupils)
                     {
                         // pupils
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[9]);
                         // move in front of face sprite
                     }
-                    else if (i == sLeaser.sprites.Length - 2 || i == sLeaser.sprites.Length - 3 || i == sLeaser.sprites.Length - 4 ||
-                        i == sLeaser.sprites.Length - 10)
+                    else if (i == unbJumprings1Num || i == unbFreckleNum || i == unbJumprings2Num ||
+                        i == unbSocksNum)
                     {
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[4]);
                         // in front of legs
                     }
-                    else if (i == sLeaser.sprites.Length - 5)
+                    else if (i == unbEarTips)
                     {
                         // eartips
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[3]);
                         // move in front of head sprite
                     }
-                    else if (i == sLeaser.sprites.Length - 6)
+                    else if (i == unbLeftMittens)
                     {
                         // arm sleeves
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[5]);
                         // move in front of arm sprites
                     }
-                    else if (i == sLeaser.sprites.Length - 7)
+                    else if (i == unbRightMittens)
                     {
                         // arm sleeves
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[6]);
                         // move in front of arm sprites
                     }
-                    else if (i == sLeaser.sprites.Length - 8)
+                    else if (i == unbLeftToes)
                     {
                         // arm sleeves
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[7]);
                         // move in front of hand sprites
                     }
-                    else if (i == sLeaser.sprites.Length - 9)
+                    else if (i == unbRightToes)
                     {
                         // arm sleeves
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
@@ -845,7 +822,7 @@ namespace Unbound
                 {
                     Debug.Log("Error trying to add scalefrills: " + e);
                     Debug.Log("Spritelength is " + sLeaser.sprites.Length);
-                    Debug.Log("Spritelength should be around " + (24 + self.player.GetCat().scalefrill.numberOfSprites) + " or so");
+                    Debug.Log("Spritelength should be around " + (12 + self.player.GetNCRunbound().scalefrill.numberOfSprites) + " or so");
                 }
                 // end
             }
@@ -855,57 +832,57 @@ namespace Unbound
             }
         }
 
-        private static void PlayerGraphics_InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        private static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
 
-            if (!(self.player.GetCat().GraphicsDisabled && self.player.GetCat().RingsDisabled) &&
+            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null &&
-                self.player.GetCat().IsUnbound)
+                self.player.GetNCRunbound().IsUnbound)
             {
                 Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + 10
                     //+ self.player.GetCat().scalefrill.numberOfSprites
                     );
 
-                sLeaser.sprites[sLeaser.sprites.Length - 10] = new FSprite("unbLegsA0", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 10].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[sLeaser.sprites.Length - 10].anchorY = 0.25f;
+                sLeaser.sprites[unbSocksNum] = new FSprite("unbLegsA0", true);
+                sLeaser.sprites[unbSocksNum].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbSocksNum].anchorY = 0.25f;
                 // leggy
 
-                sLeaser.sprites[sLeaser.sprites.Length - 2] = new FSprite("unbjumpHipsA", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 2].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[sLeaser.sprites.Length - 3] = new FSprite("unbfreckleHipsA", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 3].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbJumprings1Num] = new FSprite("unbjumpHipsA", true);
+                sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbFreckleNum] = new FSprite("unbfreckleHipsA", true);
+                sLeaser.sprites[unbFreckleNum].shader = rCam.game.rainWorld.Shaders["Basic"];
                 // hips
 
-                sLeaser.sprites[sLeaser.sprites.Length - 4] = new FSprite("unbjumpBodyA", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 4].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbJumprings2Num] = new FSprite("unbjumpBodyA", true);
+                sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Basic"];
                 // body
 
-                sLeaser.sprites[sLeaser.sprites.Length - 5] = new FSprite("unbearHeadA0", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 5].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbEarTips] = new FSprite("unbearHeadA0", true);
+                sLeaser.sprites[unbEarTips].shader = rCam.game.rainWorld.Shaders["Basic"];
                 // head
 
-                sLeaser.sprites[sLeaser.sprites.Length - 6] = new FSprite("unbsleevesPlayerArm0", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 6].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[sLeaser.sprites.Length - 6].anchorX = 0.9f;
-                sLeaser.sprites[sLeaser.sprites.Length - 6].scaleY = -1f;
-                sLeaser.sprites[sLeaser.sprites.Length - 7] = new FSprite("unbsleevesPlayerArm0", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 7].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[sLeaser.sprites.Length - 7].anchorX = 0.9f;
-                sLeaser.sprites[sLeaser.sprites.Length - 8] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 8].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[sLeaser.sprites.Length - 9] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 9].shader = rCam.game.rainWorld.Shaders["Basic"];
-                sLeaser.sprites[sLeaser.sprites.Length - 9].scaleX = -1f;
+                sLeaser.sprites[unbLeftMittens] = new FSprite("unbsleevesPlayerArm0", true);
+                sLeaser.sprites[unbLeftMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbLeftMittens].anchorX = 0.9f;
+                sLeaser.sprites[unbLeftMittens].scaleY = -1f;
+                sLeaser.sprites[unbRightMittens] = new FSprite("unbsleevesPlayerArm0", true);
+                sLeaser.sprites[unbRightMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbRightMittens].anchorX = 0.9f;
+                sLeaser.sprites[unbLeftToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
+                sLeaser.sprites[unbLeftToes].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbRightToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
+                sLeaser.sprites[unbRightToes].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbRightToes].scaleX = -1f;
                 // mittens, including anchors and base scales
 
-                sLeaser.sprites[sLeaser.sprites.Length - 1] = new FSprite("unbpupFaceA0", true);
-                sLeaser.sprites[sLeaser.sprites.Length - 1].shader = rCam.game.rainWorld.Shaders["Basic"];
+                sLeaser.sprites[unbPupils] = new FSprite("unbpupFaceA0", true);
+                sLeaser.sprites[unbPupils].shader = rCam.game.rainWorld.Shaders["Basic"];
                 // pupils
 
 
-                if (self.player.GetCat().MoreDebug)
+                if (self.player.GetNCRunbound().MoreDebug)
                 {
                     Debug.Log("Unbound start array : " + (sLeaser.sprites.Length - 10));
                     Debug.Log("Unbound end array: " + (sLeaser.sprites.Length - 1));
@@ -926,7 +903,7 @@ namespace Unbound
                 catch (Exception e)
                 {
                     Debug.Log("Scalefrills failed to apply: " + e);
-                    Debug.Log("Scalefrill start: " + (sLeaser.sprites.Length - 10 - self.player.GetCat().scalefrill.numberOfSprites));
+                    Debug.Log("Scalefrill start: " + (self.player.GetNCRunbound().scalefrill.numberOfSprites));
                 }
 
                 // DONT FORGET TO RESIZE THE ARRAY

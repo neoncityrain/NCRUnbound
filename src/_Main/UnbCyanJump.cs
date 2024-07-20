@@ -6,39 +6,40 @@ namespace Unbound
     {
         public static void Init()
         {
-            On.Player.MovementUpdate += ouuuhejumpin;
-            On.Player.WallJump += Player_WallJump;
-            On.Player.Update += Player_Update;
+            On.Player.MovementUpdate += SetupJumps;
+            On.Player.WallJump += SetupWalljumps;
+
+            On.Player.Update += UnboundCyanJumps;
         }
 
-        private static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
+        private static void UnboundCyanJumps(On.Player.orig_Update orig, Player self, bool eu)
         {
             if (self != null && self.room != null &&
-                self.GetCat().IsUnbound)
+                self.GetNCRunbound().IsUnbound)
             {
-                if (self.GetCat().unbsmoke != null && (self.GetCat().unbsmoke.slatedForDeletetion || self.GetCat().unbsmoke.room != self.room))
+                if (self.GetNCRunbound().unbsmoke != null && (self.GetNCRunbound().unbsmoke.slatedForDeletetion || self.GetNCRunbound().unbsmoke.room != self.room))
                 {
-                    self.GetCat().unbsmoke = null;
+                    self.GetNCRunbound().unbsmoke = null;
                 }
 
-                if (self.GetCat().UnbCyanjumpCountdown != 0)
+                if (self.GetNCRunbound().UnbCyanjumpCountdown != 0)
                 {
-                    self.GetCat().UnbCyanjumpCountdown--;
+                    self.GetNCRunbound().UnbCyanjumpCountdown--;
                 }
 
 
 
-                if (self.GetCat().UnbCyanjumpCountdown < 0)
+                if (self.GetNCRunbound().UnbCyanjumpCountdown < 0)
                 {
-                    self.GetCat().UnbCyanjumpCountdown = 0;
+                    self.GetNCRunbound().UnbCyanjumpCountdown = 0;
                 }
                 // makes sure the countdown doesnt go under zero, even though it really Shouldnt
 
-                if (self.GetCat().CanCyanjump1 && self.input[0].jmp && !self.input[1].jmp)
+                if (self.GetNCRunbound().CanDoubleCyanJump && self.input[0].jmp && !self.input[1].jmp)
                 {
                     // standard cyanjump!!!!
-                    if (self.GetCat().MoreDebug) { Debug.Log("Unbound Cyanjump1 Triggered"); }
-                    if (!self.GetCat().PlayingSound)
+                    if (self.GetNCRunbound().MoreDebug) { Debug.Log("Unbound Cyanjump1 Triggered"); }
+                    if (!self.GetNCRunbound().holdingJumpkey)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, self.mainBodyChunk);
                     }
@@ -62,7 +63,7 @@ namespace Unbound
                         self.bodyChunks[1].vel.y = 8f * num4;
 
 
-                        self.GetCat().UnbCyanjumpCountdown += (int)self.GetCat().CyJump1Maximum / 3;
+                        self.GetNCRunbound().UnbCyanjumpCountdown += (int)self.GetNCRunbound().CyJump1Maximum / 3;
                         // 0g
                     }
                     else
@@ -89,18 +90,18 @@ namespace Unbound
                             self.bodyChunks[0].vel.x = 15f * (float)self.input[0].x;
                             self.bodyChunks[1].vel.x = 13f * (float)self.input[0].x;
                         }
-                        self.GetCat().UnbCyanjumpCountdown += (int)self.GetCat().CyJump1Maximum;
+                        self.GetNCRunbound().UnbCyanjumpCountdown += (int)self.GetNCRunbound().CyJump1Maximum;
                     }
 
-                    if (self.GetCat().unbsmoke == null)
+                    if (self.GetNCRunbound().unbsmoke == null)
                     {
-                        self.GetCat().unbsmoke = new UnbJumpsmoke(self.room, self);
-                        self.room.AddObject(self.GetCat().unbsmoke);
-                        if (self.GetCat().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
+                        self.room.AddObject(self.GetNCRunbound().unbsmoke);
+                        if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
-                        self.GetCat().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
+                        self.GetNCRunbound().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
                             Custom.DirVec(self.bodyChunks[0].pos, self.bodyChunks[1].pos) * 30f,
                             self.bodyMode == Player.BodyModeIndex.ZeroG ? false : true, 45f);
                     }
@@ -110,12 +111,12 @@ namespace Unbound
 
 
                 }
-                if (self.GetCat().CanCyanjump2 && self.input[0].jmp && !self.input[1].jmp && !self.GetCat().CanCyanjump1)
+                if (self.GetNCRunbound().CanTripleCyanJump && self.input[0].jmp && !self.input[1].jmp && !self.GetNCRunbound().CanDoubleCyanJump)
                 {
                     // if they cant cyanjump1, BUT CAN cyanjump2, trigger
 
-                    if (self.GetCat().MoreDebug) { Debug.Log("Unbound Cyanjump2 Triggered"); }
-                    if (!self.GetCat().PlayingSound)
+                    if (self.GetNCRunbound().MoreDebug) { Debug.Log("Unbound Cyanjump2 Triggered"); }
+                    if (!self.GetNCRunbound().holdingJumpkey)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Powerful_Jump, self.mainBodyChunk);
                     }
@@ -146,18 +147,18 @@ namespace Unbound
                         self.bodyChunks[1].vel.x = 15f * (float)self.input[0].x;
                     }
 
-                    self.GetCat().UnbCyanjumpCountdown += (int)self.GetCat().CyJump2Maximum;
+                    self.GetNCRunbound().UnbCyanjumpCountdown += (int)self.GetNCRunbound().CyJump2Maximum;
                     // adds a LOT more to the countdown- it recharges very slowly
 
-                    if (self.GetCat().unbsmoke == null)
+                    if (self.GetNCRunbound().unbsmoke == null)
                     {
-                        self.GetCat().unbsmoke = new UnbJumpsmoke(self.room, self);
-                        self.room.AddObject(self.GetCat().unbsmoke);
-                        if (self.GetCat().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
+                        self.room.AddObject(self.GetNCRunbound().unbsmoke);
+                        if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
-                        self.GetCat().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
+                        self.GetNCRunbound().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
                             Custom.DirVec(self.bodyChunks[0].pos, self.bodyChunks[1].pos) * 30f, true, 50f);
                     }
 
@@ -168,17 +169,17 @@ namespace Unbound
             orig(self, eu);
         }
 
-        private static void Player_WallJump(On.Player.orig_WallJump orig, Player self, int direction)
+        private static void SetupWalljumps(On.Player.orig_WallJump orig, Player self, int direction)
         {
             orig(self, direction);
             if (self != null && self.room != null &&
-                self.GetCat().IsUnbound)
+                self.GetNCRunbound().IsUnbound)
             {
-                self.GetCat().UnbChainjumps += 1;
-                if (self.GetCat().UnbChainjumps > 1)
+                self.GetNCRunbound().UnbChainjumpsCount += 1;
+                if (self.GetNCRunbound().UnbChainjumpsCount > 1)
                 {
                     // only triggers if unbchainjumps is greater than 1, preventing a chainjump from triggering when bouncing off a wall normally
-                    self.GetCat().UnbCyanjumpCountdown += 10;
+                    self.GetNCRunbound().UnbCyanjumpCountdown += 10;
 
 
                     self.room.PlaySound(SoundID.Cyan_Lizard_Small_Jump, self.mainBodyChunk);
@@ -186,9 +187,9 @@ namespace Unbound
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
                     // grants a cyan-like distortion effect and sparks
 
-                    if (self.GetCat().UnbChainjumps < 7)
+                    if (self.GetNCRunbound().UnbChainjumpsCount < 7)
                     {
-                        self.jumpBoost += self.GetCat().UnbChainjumps;
+                        self.jumpBoost += self.GetNCRunbound().UnbChainjumpsCount;
                         // jump boost raises with chained jumps
                     }
                     else
@@ -198,15 +199,15 @@ namespace Unbound
                     }
 
 
-                    if (self.GetCat().unbsmoke == null)
+                    if (self.GetNCRunbound().unbsmoke == null)
                     {
-                        self.GetCat().unbsmoke = new UnbJumpsmoke(self.room, self);
-                        self.room.AddObject(self.GetCat().unbsmoke);
-                        if (self.GetCat().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
+                        self.room.AddObject(self.GetNCRunbound().unbsmoke);
+                        if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
-                        self.GetCat().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
+                        self.GetNCRunbound().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
                             Custom.DirVec(self.bodyChunks[0].pos, self.bodyChunks[1].pos) * 20f,
                             self.bodyMode == Player.BodyModeIndex.ZeroG ? false : true, 35f);
                     }
@@ -216,27 +217,27 @@ namespace Unbound
             }
         }
 
-        private static void ouuuhejumpin(On.Player.orig_MovementUpdate orig, Player self, bool eu)
+        private static void SetupJumps(On.Player.orig_MovementUpdate orig, Player self, bool eu)
         {
             orig(self, eu);
 
             if (self != null && self.room != null &&
-                self.GetCat().IsUnbound)
+                self.GetNCRunbound().IsUnbound)
             {
                 if (self.lowerBodyFramesOnGround > 1 || self.submerged)
                 {
-                    self.GetCat().didLongjump = false;
-                    self.GetCat().UnbChainjumps = 0;
+                    self.GetNCRunbound().didLongjump = false;
+                    self.GetNCRunbound().UnbChainjumpsCount = 0;
                     // this prevents the jump boosts from retaining, though using a grapple worm may keep it- which is fine
                     // it is kept when touching water or going onto poles
                     // this should be above longjump to keep the chainjump from not truly being considered "raising" the
                     // chainjump counter
                 }
 
-                if (self.simulateHoldJumpButton == 0 && self.GetCat().PlayingSound)
+                if (self.simulateHoldJumpButton == 0 && self.GetNCRunbound().holdingJumpkey)
                 {
                     // this checks if sound is playing so it doesnt made the worst sound known to god
-                    self.GetCat().PlayingSound = false;
+                    self.GetNCRunbound().holdingJumpkey = false;
                     // if playingsound is true but the jump button isnt being held, set it to false. this isnt perfect obviously but shrug
                     // this assumes there is room for error in the player movements, as generally to make a terrible noise it would need to
                     // be clicked very, very rapidly
@@ -244,40 +245,40 @@ namespace Unbound
 
 
 
-                if (self.simulateHoldJumpButton > 0 && !self.GetCat().PlayingSound &&
+                if (self.simulateHoldJumpButton > 0 && !self.GetNCRunbound().holdingJumpkey &&
                     self.goIntoCorridorClimb <= 0 && self.room.gravity != 0f)
                 {
                     // if jump is being held and it ISNT playing sound, AKA a longjump
 
-                    self.GetCat().UnbCyanjumpCountdown += 5;
+                    self.GetNCRunbound().UnbCyanjumpCountdown += 5;
                     // regardless, locks cyanjump for 5 frames
                     self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, self.mainBodyChunk);
                     self.jumpBoost += 3;
                     // has a decent extra boost with a standard cyanjump noise
 
-                    self.GetCat().PlayingSound = true;
+                    self.GetNCRunbound().holdingJumpkey = true;
                     // so that the game doesnt make the worst noise ever
 
                     self.room.AddObject(new UnbJumplight(self.bodyChunks[1].pos, 0.4f, self));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
-                    if (self.GetCat().unbsmoke == null)
+                    if (self.GetNCRunbound().unbsmoke == null)
                     {
-                        self.GetCat().unbsmoke = new UnbJumpsmoke(self.room, self);
-                        self.room.AddObject(self.GetCat().unbsmoke);
-                        if (self.GetCat().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
+                        self.room.AddObject(self.GetNCRunbound().unbsmoke);
+                        if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
-                        self.GetCat().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
+                        self.GetNCRunbound().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
                             Custom.DirVec(self.bodyChunks[0].pos, self.bodyChunks[1].pos) * 30f, true, 45f);
                     }
                     // emits smoke. longjumps are not possible in true 0g, so its considered a "big" jump
 
-                    self.GetCat().didLongjump = true;
+                    self.GetNCRunbound().didLongjump = true;
                     // sets longjump to true
-                    self.GetCat().UnbChainjumps += 1;
+                    self.GetNCRunbound().UnbChainjumpsCount += 1;
                     // adds to the chainjump count
-                    if (self.GetCat().MoreDebug) { Debug.Log("Longjump detected!"); }
+                    if (self.GetNCRunbound().MoreDebug) { Debug.Log("Longjump detected!"); }
                 }
 
 
@@ -319,7 +320,7 @@ namespace Unbound
                     ||
 
                     // checks if theyre swimming in zerog
-                    (self.GetCat().UnbCyanjumpCountdown <= 0 && self.canJump == 0 &&
+                    (self.GetNCRunbound().UnbCyanjumpCountdown <= 0 && self.canJump == 0 &&
                     self.Consious && !self.dead &&
                     !self.submerged && self.goIntoCorridorClimb > 0 &&
                     self.EffectiveRoomGravity == 0f &&
@@ -344,19 +345,19 @@ namespace Unbound
                     // 0g end
                     )
                 {
-                    if (self.GetCat().UnbCyanjumpCountdown <= 0)
+                    if (self.GetNCRunbound().UnbCyanjumpCountdown <= 0)
                     {
-                        self.GetCat().CanCyanjump1 = true;
+                        self.GetNCRunbound().CanDoubleCyanJump = true;
                         // if the cyan countdown is 0 or less than zero, can perform the first cyanjump
                     }
                     else
                     {
-                        self.GetCat().CanCyanjump1 = false;
+                        self.GetNCRunbound().CanDoubleCyanJump = false;
                     }
 
 
-                    if (self.GetCat().UnbCyanjumpCountdown <= 175 && self.GetCat().UnbCyanjumpCountdown > 20 &&
-                        self.GetCat().didLongjump == true &&
+                    if (self.GetNCRunbound().UnbCyanjumpCountdown <= 175 && self.GetNCRunbound().UnbCyanjumpCountdown > 20 &&
+                        self.GetNCRunbound().didLongjump == true &&
 
                         self.animation != Player.AnimationIndex.GrapplingSwing &&
                         (self.grasps[0] == null || !(self.grasps[0].grabbed is TubeWorm)) &&
@@ -366,20 +367,20 @@ namespace Unbound
                         // prevents usage in 0g
                     )
                     {
-                        self.GetCat().CanCyanjump2 = true;
+                        self.GetNCRunbound().CanTripleCyanJump = true;
                         // if ALL OF THE ABOVE are true and just performed a longjump without touching the ground
                         // also makes sure the coundown is below or at 175 so that cyjump2 isnt triggered IMMEDIATELY after cyjump1
                         // and isnt triggered immediately after itself. should never trigger in 0g
                     }
                     else
                     {
-                        self.GetCat().CanCyanjump2 = false;
+                        self.GetNCRunbound().CanTripleCyanJump = false;
                     }
                 }
                 else
                 {
-                    self.GetCat().CanCyanjump1 = false;
-                    self.GetCat().CanCyanjump2 = false;
+                    self.GetNCRunbound().CanDoubleCyanJump = false;
+                    self.GetNCRunbound().CanTripleCyanJump = false;
                 }
             }
         }

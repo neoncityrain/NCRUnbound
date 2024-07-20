@@ -8,42 +8,51 @@ namespace Unbound
 
         public UnboundIntro()
         {
-        }
 
-        public void CameraSetup()
-        {
-            room.game.cameras[0].MoveCamera(2);
         }
 
         public override void Update(bool eu)
         {
             base.Update(eu);
 
-            room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.BigEel, false);
-            room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Leech, false);
-            room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.SeaLeech, false);
-            room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", MoreSlugcatsEnums.CreatureTemplateType.JungleLeech, false);
-            room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Vulture, false);
-            room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.KingVulture, false);
+            try
+            {
+                room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.BigEel, false);
+                room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Vulture, false);
+                room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.KingVulture, false);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Could not ban creatures from the cutscene room! Error code: " + e);
+            }
+            
 
             if (room.game.AllPlayersRealized)
             {
-
                 if (unboundstarttimer == 0)
                 {
-                    CameraSetup();
-                    (room.game.Players[0].realizedCreature as Player).objectInStomach =
+                    try
+                    {
+                        (room.game.Players[0].realizedCreature as Player).objectInStomach =
                         new DataPearl.AbstractDataPearl(room.world, AbstractPhysicalObject.AbstractObjectType.DataPearl,
                         null, new WorldCoordinate(room.abstractRoom.index, 1, 1, 0), room.game.GetNewID(), -1, -1, null,
                         Pearl.unboundKarmaPearl);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Could not spawn unbound pearl! Error code: " + e);
+                    }
+                    
 
                     for (int i = 0; i < room.game.Players.Count; i++)
                     {
-                        (room.game.Players[i].realizedCreature as Player).bodyChunks[1].HardSetPosition(room.MiddleOfTile(142, 72));
-                        (room.game.Players[i].realizedCreature as Player).bodyChunks[0].HardSetPosition(room.MiddleOfTile(141, 72));
                         (room.game.Players[i].realizedCreature as Player).standing = false;
+                        (room.game.Players[i].realizedCreature as Player).bodyChunks[0].HardSetPosition(room.MiddleOfTile(141, 72));
+                        (room.game.Players[i].realizedCreature as Player).bodyChunks[1].HardSetPosition(room.MiddleOfTile(142, 72));
+                        // this should force the player to be facing the left
                     }
                 }
+
                 if (unboundstarttimer < 290)
                 {
                     unboundstarttimer++;
@@ -51,6 +60,7 @@ namespace Unbound
                     {
                         (room.game.Players[i].realizedCreature as Player).airInLungs = 0.01f;
                         (room.game.Players[i].realizedCreature as Player).stun = 100;
+                        // forces all players to remain stunned and without any breath until the start timer ends
                     }
                 }
 
@@ -59,15 +69,17 @@ namespace Unbound
                     for (int i = 0; i < room.game.Players.Count; i++)
                     {
                         (room.game.Players[i].realizedCreature as Player).stun = 0;
+                        // frees players from stunlock
                     }
 
-                    UnityEngine.Debug.Log("Start of game initiated, yippee!");
+                    Debug.Log("Start of game initiated, yippee!");
                     Destroy();
+                    // then die <3
                 }
             }
             else
             {
-                UnityEngine.Debug.Log("Player not realized! Sorry for dropping you into water to drown, I twied :(");
+                Debug.Log("Player not realized! Sorry for dropping you into water to drown, I twied :(");
             }
         }
     }

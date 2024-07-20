@@ -7,14 +7,14 @@ namespace Unbound
         private void PlayerOnctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractcreature, World world)
         {
             orig(self, abstractcreature, world);
-            self.GetCat().MoreDebug = UnbOptions.MoreDebugLogs.Value;
+            self.GetNCRunbound().MoreDebug = UnbOptions.MoreDebugLogs.Value;
 
-            self.GetCat().CyJump1Maximum = UnbOptions.CyJumpCharge.Value;
-            self.GetCat().CyJump2Maximum = UnbOptions.CyJump2Charge.Value;
+            self.GetNCRunbound().CyJump1Maximum = UnbOptions.CyJumpCharge.Value;
+            self.GetNCRunbound().CyJump2Maximum = UnbOptions.CyJump2Charge.Value;
 
-            self.GetCat().GraphicsDisabled = UnbOptions.UnbGraphicsDisabled.Value;
-            self.GetCat().RingsDisabled = UnbOptions.UnbRingsDisabled.Value;
-            self.GetCat().Unpicky = UnbOptions.UnbUnpicky.Value;
+            self.GetNCRunbound().GraphicsDisabled = UnbOptions.UnbGraphicsDisabled.Value;
+            self.GetNCRunbound().RingsDisabled = UnbOptions.UnbRingsDisabled.Value;
+            self.GetNCRunbound().Unpicky = UnbOptions.UnbUnpicky.Value;
         }
     }
 }

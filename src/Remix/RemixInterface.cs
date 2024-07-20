@@ -10,7 +10,7 @@ public class UnbRemInterface : OptionInterface
     {
             Logger = loggerSource;
             CyJumpCharge = this.config.Bind<float>("CyJumpCharge", 180f, new ConfigAcceptableRange<float>(5f, 500f));
-            CyJump2Charge = this.config.Bind<float>("CyJump2Charge", 400f, new ConfigAcceptableRange<float>(5f, 1000f));
+            CyJump2Charge = this.config.Bind<float>("CyJump2Charge", 400f, new ConfigAcceptableRange<float>(25f, 1000f));
             UnbGraphicsDisabled = this.config.Bind<bool>("UnbGraphicsDisabled", false);
             UnbRingsDisabled = this.config.Bind<bool>("UnbRingsDisabled", false);
             UnbUnpicky = this.config.Bind<bool>("UnbUnpicky", false);

@@ -44,7 +44,7 @@ namespace Unbound
                 PearlConversations.Init();
                 PebblesConversations.Init();
                 // iterators
-                _SetupRoomSpecific.Init();
+                SetupRoomSpecific.Init();
                 // room specific
 
                 On.RainWorldGame.ShutDownProcess += RainWorldGameOnShutDownProcess;

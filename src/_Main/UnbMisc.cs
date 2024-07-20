@@ -38,7 +38,7 @@ namespace Unbound
         private static void Centipede_Shock(On.Centipede.orig_Shock orig, Centipede self, PhysicalObject shockObj)
         {
             if (self != null && self.room != null && shockObj != null &&
-                shockObj is Creature && (shockObj is Player && (shockObj as Player).GetCat().IsUnbound))
+                shockObj is Creature && (shockObj is Player && (shockObj as Player).GetNCRunbound().IsUnbound))
             {
                 self.room.PlaySound(SoundID.Centipede_Shock, self.mainBodyChunk.pos);
                 if (self.graphicsModule != null)
@@ -128,7 +128,7 @@ namespace Unbound
                 // making sure things arent null
                 self.creature.creatureTemplate.type == CreatureTemplate.Type.CyanLizard &&
                 dRelation.trackerRep.representedCreature.realizedCreature is Player &&
-                (dRelation.trackerRep.representedCreature.realizedCreature as Player).GetCat().IsUnbound &&
+                (dRelation.trackerRep.representedCreature.realizedCreature as Player).GetNCRunbound().IsUnbound &&
                 // if cyan, if unbound
                 self.friendTracker.friend != dRelation.trackerRep.representedCreature.realizedCreature
                 // should still allow making friends with it
@@ -142,7 +142,7 @@ namespace Unbound
         private static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
             if (self != null && self.room != null && obj != null &&
-                self.GetCat().IsUnbound)
+                self.GetNCRunbound().IsUnbound)
             {
                 if (obj is SLOracleSwarmer)
                 {
@@ -154,9 +154,9 @@ namespace Unbound
 
         private static bool Player_CanBeSwallowed(On.Player.orig_CanBeSwallowed orig, Player self, PhysicalObject testObj)
         {
-            if (!self.GetCat().Unpicky &&
+            if (!self.GetNCRunbound().Unpicky &&
                 self != null && self.room != null && testObj != null &&
-                self.GetCat().IsUnbound)
+                self.GetNCRunbound().IsUnbound)
             {
                 return false;
             }
@@ -168,7 +168,7 @@ namespace Unbound
             // swimming code
             orig(self);
             if (self != null && self.room != null &&
-                self.GetCat().IsUnbound)
+                self.GetNCRunbound().IsUnbound)
             {
                 if (!self.submerged && !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&
                     (self.grasps[0].grabbed as JetFish).Consious) && self.waterFriction >= 0.7f)
@@ -232,7 +232,7 @@ namespace Unbound
         {
             orig(self);
             if (self != null && self.room != null &&
-                self.GetCat().IsUnbound)
+                self.GetNCRunbound().IsUnbound)
             {
                 self.jumpBoost += 1f;
                 // has a jump boost of +1 compared to surv

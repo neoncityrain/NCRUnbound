@@ -4,7 +4,7 @@ namespace Unbound
 {
     internal class Pearl
     {
-        public static DataPearl.AbstractDataPearl.DataPearlType unboundKarmaPearl = new DataPearl.AbstractDataPearl.DataPearlType("unboundKarmaPearl", true);
+        public static DataPearl.AbstractDataPearl.DataPearlType unboundKarmaPearl = new("unboundKarmaPearl", true);
 
         public static void Init()
         {
