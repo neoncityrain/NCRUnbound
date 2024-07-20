@@ -622,7 +622,7 @@ namespace Unbound
                 // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
 
                 Color effectcol = new Color(0.87f, 0.39f, 0.33f);
-                Color eyecol = new Color(0.7f, 0.2f, 0.31f);
+                Color eyecol = new Color(0.07f, 0.2f, 0.31f);
                 Color bodycol = new Color(0.89f, 0.79f, 0.6f);
 
                 if (self.useJollyColor)
@@ -650,7 +650,7 @@ namespace Unbound
                     sLeaser.sprites[unbRightToes].color = effectcol; // hand
                     sLeaser.sprites[unbSocksNum].color = effectcol; // legs
                 }
-                
+
                 if (!self.player.GetNCRunbound().RingsDisabled)
                 {
                     Color saturatedpupil = effectcol;
@@ -682,7 +682,37 @@ namespace Unbound
                         // jumprings
 
                         sLeaser.sprites[unbPupils].color = saturatedpupil;
-                        // his pupils normally become the effect colour, but super saturated
+
+                        if (sLeaser.sprites[unbJumprings1Num].shader != rCam.game.rainWorld.Shaders["Basic"])
+                        {
+                            try
+                            {
+                                sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Basic"];
+                                sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Basic"];
+                            }
+                            catch (Exception e) { Debug.Log("Shader error: " + e); }
+                        }
+                    }
+                    else if (self.player.GetNCRunbound().DidTripleCyanJump)
+                    {
+                        // if he did a triple jump
+                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(effectcol, eyecol,
+                            (self.player.GetNCRunbound().UnbCyanjumpCountdown / 120f));
+                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(effectcol, eyecol,
+                            (self.player.GetNCRunbound().UnbCyanjumpCountdown / 130f));
+
+                        sLeaser.sprites[unbPupils].color = Color.Lerp(saturatedpupil, eyecol,
+                                (self.player.GetNCRunbound().UnbCyanjumpCountdown) / 140f);
+
+                        if (sLeaser.sprites[unbJumprings1Num].shader == rCam.game.rainWorld.Shaders["Basic"])
+                        {
+                            try
+                            {
+                                sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Hologram"];
+                                sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Hologram"];
+                            }
+                            catch (Exception e) { Debug.Log("Shader error: " + e); }
+                        }
                     }
                     else
                     {
@@ -691,10 +721,11 @@ namespace Unbound
                         sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(effectcol, bodycol,
                             (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
 
-                        sLeaser.sprites[unbPupils].color = Color.Lerp(saturatedpupil, eyecol,
-                            (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
+                        sLeaser.sprites[unbPupils].color = Color.Lerp(saturatedpupil, effectcol,
+                                self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f);
                     }
-                    // gives his jumprings that nice fade effect
+                    // gives his jumprings (and eyes) that nice fade effect
+
                 }
                 #endregion
 
@@ -879,7 +910,6 @@ namespace Unbound
 
                     if (self.player.GetNCRunbound().MoreDebug)
                     {
-
                         if (self.player.GetNCRunbound().scalefrill == null)
                         {
                             Debug.Log("Errm. Scalefrills are null");

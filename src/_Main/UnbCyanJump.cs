@@ -25,6 +25,37 @@ namespace Unbound
                 if (self.GetNCRunbound().UnbCyanjumpCountdown != 0)
                 {
                     self.GetNCRunbound().UnbCyanjumpCountdown--;
+
+                    if (self.GetNCRunbound().DidTripleCyanJump &&
+                        Math.Pow(2, self.GetNCRunbound().UnbCyanjumpCountdown) > 5)
+                    {
+                        // only spawn smoke if triple jumped, and (should?) get exponentially less likely
+
+                        if (UnityEngine.Random.value < 0.1f)
+                        {
+                            if (self.GetNCRunbound().unbsmoke == null)
+                            {
+                                self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
+                                self.room.AddObject(self.GetNCRunbound().unbsmoke);
+                            }
+                            self.GetNCRunbound().unbsmoke.EmitSmoke(self.firstChunk.pos, Custom.RNV(), false, 10f);
+                            if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        }
+                        if (UnityEngine.Random.value < 0.02f)
+                        {
+                            Color color = new Color();
+                            if (ModManager.JollyCoop) { color = PlayerGraphics.JollyColor(self.playerState.playerNumber, 2); }
+                            else if (PlayerGraphics.customColors != null && !ModManager.JollyCoop) { color = PlayerGraphics.CustomColorSafety(2); }
+                            else { color = new Color(0.8f, 0.1f, 0.1f); }
+                            // gets pols colours
+
+                            self.room.AddObject(new Spark(self.mainBodyChunk.pos, Custom.RNV(), color, null, 4, 8));
+                        }
+                    }
+                }
+                else if (self.GetNCRunbound().DidTripleCyanJump)
+                {
+                    self.GetNCRunbound().DidTripleCyanJump = false;
                 }
 
 
@@ -116,6 +147,7 @@ namespace Unbound
                     // if they cant cyanjump1, BUT CAN cyanjump2, trigger
 
                     if (self.GetNCRunbound().MoreDebug) { Debug.Log("Unbound Cyanjump2 Triggered"); }
+                    self.GetNCRunbound().DidTripleCyanJump = true;
                     if (!self.GetNCRunbound().holdingJumpkey)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Powerful_Jump, self.mainBodyChunk);
@@ -226,8 +258,8 @@ namespace Unbound
             {
                 if (self.lowerBodyFramesOnGround > 1 || self.submerged)
                 {
-                    self.GetNCRunbound().didLongjump = false;
-                    self.GetNCRunbound().UnbChainjumpsCount = 0;
+                    if (self.GetNCRunbound().didLongjump) { self.GetNCRunbound().didLongjump = false; }
+                    if (self.GetNCRunbound().UnbChainjumpsCount != 0) { self.GetNCRunbound().UnbChainjumpsCount = 0; }
                     // this prevents the jump boosts from retaining, though using a grapple worm may keep it- which is fine
                     // it is kept when touching water or going onto poles
                     // this should be above longjump to keep the chainjump from not truly being considered "raising" the

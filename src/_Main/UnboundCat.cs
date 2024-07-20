@@ -1,4 +1,5 @@
 using System;
+using static MonoMod.Cil.RuntimeILReferenceBag.FastDelegateInvokers;
 
 namespace Unbound
 {
@@ -14,6 +15,7 @@ namespace Unbound
             public bool didLongjump;
             public bool CanDoubleCyanJump;
             public bool CanTripleCyanJump;
+            public bool DidTripleCyanJump;
             public int UnbChainjumpsCount;
             public int UnbCyanjumpCountdown;
             public UnbScales scalefrill;
