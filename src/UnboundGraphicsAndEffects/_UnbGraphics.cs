@@ -1,4 +1,5 @@
 ﻿using Menu;
+using System;
 
 namespace Unbound
 {
@@ -28,7 +29,7 @@ namespace Unbound
         static int unbRightToes = ModManager.MSC ? 21 : 20;
         static int unbPupils = ModManager.MSC ? 22 : 21;
 
-        static int ThisIsTheLengthOfMyMadness = 10; // update when adding more to above
+        static int ThisIsTheLengthOfMyMadness = 11; // update when adding more to above
 
         static int unbFrillStarts = ModManager.MSC ? 23 : 22;
         #endregion
@@ -53,77 +54,17 @@ namespace Unbound
             unbmittenlegs ??= Futile.atlasManager.LoadAtlas("atlases/unbmittenlegs");
             // initiating atlases
             #endregion
-
-            On.PlayerGraphics.ApplyPalette += ColourCyanFrills;
-            On.PlayerGraphics.Update += UpdateFrills;
-            // cyan frills
         }
 
-        private static void UpdateFrills(On.PlayerGraphics.orig_Update orig, PlayerGraphics self)
-        {
-            orig(self);
-            if (self != null && self.player != null && self.player.room != null && self.player.GetNCRunbound().scalefrill != null &&
-                self.player.GetNCRunbound().IsUnbound)
-            {
-                self.player.GetNCRunbound().scalefrill.Update();
-            }
-        }
-
-        private static void ColourCyanFrills(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
-        {
-            orig(self, sLeaser, rCam, palette);
-
-            if (self != null && self.player != null && self.player.room != null && self.player.GetNCRunbound().scalefrill != null &&
-                self.player.GetNCRunbound().IsUnbound)
-            {
-                #region VanillaColourStuff
-                Color color = PlayerGraphics.SlugcatColor(self.CharacterForColor);
-                Color color2 = new Color(color.r, color.g, color.b);
-                if (self.malnourished > 0f)
-                {
-                    float num = self.player.Malnourished ? self.malnourished : Mathf.Max(0f, self.malnourished - 0.005f);
-                    color2 = Color.Lerp(color2, Color.gray, 0.4f * num);
-                }
-                color2 = self.HypothermiaColorBlend(color2);
-                // initiate colour values
-
-                Color effectCol = new Color(0.87f, 0.39f, 0.33f);
-                if (!rCam.room.game.setupValues.arenaDefaultColors && !ModManager.CoopAvailable)
-                {
-                    switch (self.player.playerState.playerNumber)
-                    {
-                        case 0:
-                            if (rCam.room.game.IsArenaSession)
-                            {
-                                effectCol = new Color(0.25f, 0.65f, 0.82f);
-                            }
-                            break;
-                        case 1:
-                            effectCol = new Color(0.31f, 0.73f, 0.26f);
-                            break;
-                        case 2:
-                            effectCol = new Color(0.6f, 0.16f, 0.6f);
-                            break;
-                        case 3:
-                            effectCol = new Color(0.96f, 0.75f, 0.95f);
-                            break;
-                    }
-                }
-                #endregion
-                self.player.GetNCRunbound().scalefrill.SetScaleColors(color2, effectCol);
-                self.player.GetNCRunbound().scalefrill.ApplyPalette(sLeaser, rCam, palette);
-            }
-            // end applypalette
-        }
-
-        private static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+        private static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam,
+            float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
             //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null &&
-                self.player.GetNCRunbound().IsUnbound)
+                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
 
                 #region Initiating Variables
@@ -371,12 +312,12 @@ namespace Unbound
 
                 // FACE THINGS
                 string faceget = sLeaser.sprites[9]?.element?.name;
-                if (!self.player.GetNCRunbound().GraphicsDisabled &&
+                if (!self.player.GetNCRunbound().RingsDisabled &&
                     unbpupface == null)
                 {
                     UnityEngine.Debug.Log("Unbound Pupil sprites missing!");
                 }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
+                else if (!self.player.GetNCRunbound().RingsDisabled &&
                     faceget != null && faceget.StartsWith("Face") &&
                     unbpupface._elementsByName.TryGetValue("unbpup" + faceget, out var pupils))
                 {
@@ -425,85 +366,7 @@ namespace Unbound
                     sLeaser.sprites[unbJumprings2Num].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * bodyhipscenterish, 0.15f,
                         self.player.sleepCurlUp);
                     // lower jumprings, attached to body
-                }
-                if (!self.player.GetNCRunbound().GraphicsDisabled)
-                {
-                    // legs
-                    sLeaser.sprites[unbSocksNum].x = MYLEGS.x - camPos.x;
-                    sLeaser.sprites[unbSocksNum].y = MYLEGS.y - camPos.y;
-                    sLeaser.sprites[unbSocksNum].rotation = Custom.AimFromOneVectorToAnother(self.legsDirection, new Vector2(0f, 0f));
-                    sLeaser.sprites[unbSocksNum].isVisible = true;
-                    if (self.player.bodyMode == Player.BodyModeIndex.Stand)
-                    {
-                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
-                    }
-                    else if (self.player.bodyMode == Player.BodyModeIndex.Crawl)
-                    {
-                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
-                    }
-                    else if (self.player.bodyMode == Player.BodyModeIndex.CorridorClimb)
-                    {
-                        int num5 = self.player.animationFrame;
-                        if (num5 > 6)
-                        {
-                            num5 %= 6;
-                            sLeaser.sprites[unbSocksNum].scaleX = -1f;
-                        }
-                        else
-                        {
-                            sLeaser.sprites[unbSocksNum].scaleX = 1f;
-                        }
-                    }
-                    else if (self.player.bodyMode == Player.BodyModeIndex.ClimbingOnBeam)
-                    {
-                        if (self.player.animation == Player.AnimationIndex.StandOnBeam)
-                        {
-                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
-                        }
-                        else if (self.player.animation == Player.AnimationIndex.ClimbOnBeam)
-                        {
-                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
-                            sLeaser.sprites[unbSocksNum].y = Mathf.Clamp(sLeaser.sprites[4].y, hipstobody.y - 6f - camPos.y, hipstobody.y + 4f - camPos.y);
-                        }
-                    }
-                    else if (self.player.bodyMode == Player.BodyModeIndex.WallClimb)
-                    {
-                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
-                    }
-                    else if (self.player.bodyMode == Player.BodyModeIndex.Default)
-                    {
-                        if (self.player.animation == Player.AnimationIndex.LedgeGrab)
-                        {
-                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
-                        }
-                    }
-                    else if (self.player.bodyMode == Player.BodyModeIndex.Swimming)
-                    {
-                        if (self.player.animation == Player.AnimationIndex.DeepSwim)
-                        {
-                            sLeaser.sprites[unbSocksNum].isVisible = false;
-                        }
-                        if (self.player.stun > 0)
-                        {
-                            sLeaser.sprites[unbSocksNum].isVisible = false;
-                        }
-                    }
 
-                    // head things
-                    sLeaser.sprites[unbEarTips].x = headposition.x - camPos.x;
-                    sLeaser.sprites[unbEarTips].y = headposition.y - camPos.y;
-                    sLeaser.sprites[unbEarTips].rotation = bodyhipsbasedonhead;
-                    sLeaser.sprites[unbEarTips].scaleX = ((bodyhipsbasedonhead < 0f) ? -1f : 1f);
-
-                    // hips things
-                    sLeaser.sprites[unbFreckleNum].x = (hipstobody.x * 2f + bodytohips.x) / 3f - camPos.x;
-                    sLeaser.sprites[unbFreckleNum].y = (hipstobody.y * 2f + bodytohips.y) / 3f - camPos.y - self.player.sleepCurlUp * 3f;
-                    sLeaser.sprites[unbFreckleNum].rotation = Custom.AimFromOneVectorToAnother(bodytohips, Vector2.Lerp(self.tail[0].lastPos, self.tail[0].pos,
-                        timeStacker));
-                    sLeaser.sprites[unbFreckleNum].scaleY = 1f + self.player.sleepCurlUp * 0.2f;
-                    sLeaser.sprites[unbFreckleNum].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
-                    // freckles
-                    
 
                     // face things
                     if (self.player.sleepCurlUp > 0f)
@@ -555,6 +418,108 @@ namespace Unbound
                     }
                     sLeaser.sprites[unbPupils].x = headposition.x + faceposition.x - camPos.x;
                     sLeaser.sprites[unbPupils].y = headposition.y + faceposition.y - 2f - camPos.y;
+                }
+
+                if (!self.player.GetNCRunbound().WingscalesDisabled)
+                {
+                    // wingscales
+
+                    //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
+                    Vector2 editedhead = faceposition;
+                    bool facingopposite = bodyhipsbasedonhead < 0f;
+                    editedhead.x += (facingopposite ? 20f : -20f);
+
+                    sLeaser.sprites[unbFrillStarts].x = editedhead.x - camPos.x;
+                    sLeaser.sprites[unbFrillStarts].y = editedhead.y - camPos.y;
+                    sLeaser.sprites[unbFrillStarts].rotation = (Custom.AimFromOneVectorToAnother(editedhead,
+                        Vector2.Lerp(self.head.lastPos, self.head.pos, timeStacker)) + (facingopposite ?
+                        90f : -90f));
+                    sLeaser.sprites[unbFrillStarts].scaleX = (facingopposite ? 1f : -1f);
+                    sLeaser.sprites[unbFrillStarts].scaleY = ((Mathf.Lerp(2.5f, 15f, 0.78f)) /
+                        (Futile.atlasManager.GetElementWithName("LizardScaleA3").sourcePixelSize.y));
+                }
+
+                if (!self.player.GetNCRunbound().GraphicsDisabled)
+                {
+                    // legs
+                    sLeaser.sprites[unbSocksNum].x = MYLEGS.x - camPos.x;
+                    sLeaser.sprites[unbSocksNum].y = MYLEGS.y - camPos.y;
+                    sLeaser.sprites[unbSocksNum].rotation = Custom.AimFromOneVectorToAnother(self.legsDirection, new Vector2(0f, 0f));
+                    sLeaser.sprites[unbSocksNum].isVisible = true;
+                    if (self.player.bodyMode == Player.BodyModeIndex.Stand)
+                    {
+                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                    }
+                    else if (self.player.bodyMode == Player.BodyModeIndex.Crawl)
+                    {
+                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                    }
+                    else if (self.player.bodyMode == Player.BodyModeIndex.CorridorClimb)
+                    {
+                        int num5 = self.player.animationFrame;
+                        if (num5 > 6)
+                        {
+                            num5 %= 6;
+                            sLeaser.sprites[unbSocksNum].scaleX = -1f;
+                        }
+                        else
+                        {
+                            sLeaser.sprites[unbSocksNum].scaleX = 1f;
+                        }
+                    }
+                    else if (self.player.bodyMode == Player.BodyModeIndex.ClimbingOnBeam)
+                    {
+                        if (self.player.animation == Player.AnimationIndex.StandOnBeam)
+                        {
+                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                        }
+                        else if (self.player.animation == Player.AnimationIndex.ClimbOnBeam)
+                        {
+                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                            sLeaser.sprites[unbSocksNum].y = Mathf.Clamp(sLeaser.sprites[4].y, hipstobody.y - 6f - camPos.y,
+                                hipstobody.y + 4f - camPos.y);
+                        }
+                    }
+                    else if (self.player.bodyMode == Player.BodyModeIndex.WallClimb)
+                    {
+                        sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                    }
+                    else if (self.player.bodyMode == Player.BodyModeIndex.Default)
+                    {
+                        if (self.player.animation == Player.AnimationIndex.LedgeGrab)
+                        {
+                            sLeaser.sprites[unbSocksNum].scaleX = (float)((self.player.flipDirection > 0) ? 1 : -1);
+                        }
+                    }
+                    else if (self.player.bodyMode == Player.BodyModeIndex.Swimming)
+                    {
+                        if (self.player.animation == Player.AnimationIndex.DeepSwim)
+                        {
+                            sLeaser.sprites[unbSocksNum].isVisible = false;
+                        }
+                        if (self.player.stun > 0)
+                        {
+                            sLeaser.sprites[unbSocksNum].isVisible = false;
+                        }
+                    }
+
+                    // head things
+                    sLeaser.sprites[unbEarTips].x = headposition.x - camPos.x;
+                    sLeaser.sprites[unbEarTips].y = headposition.y - camPos.y;
+                    sLeaser.sprites[unbEarTips].rotation = bodyhipsbasedonhead;
+                    sLeaser.sprites[unbEarTips].scaleX = ((bodyhipsbasedonhead < 0f) ? -1f : 1f);
+
+                    // hips things
+                    sLeaser.sprites[unbFreckleNum].x = (hipstobody.x * 2f + bodytohips.x) / 3f - camPos.x;
+                    sLeaser.sprites[unbFreckleNum].y = (hipstobody.y * 2f + bodytohips.y) / 3f - camPos.y - self.player.sleepCurlUp * 3f;
+                    sLeaser.sprites[unbFreckleNum].rotation = Custom.AimFromOneVectorToAnother(bodytohips,
+                        Vector2.Lerp(self.tail[0].lastPos, self.tail[0].pos,
+                        timeStacker));
+                    sLeaser.sprites[unbFreckleNum].scaleY = 1f + self.player.sleepCurlUp * 0.2f;
+                    sLeaser.sprites[unbFreckleNum].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
+                    // freckles
+                    
+
 
                     // arms things. keep beneath the rest to avoid strange errors
                     for (int j = 0; j < 2; j++)
@@ -621,9 +586,10 @@ namespace Unbound
                 #region Colours
                 // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
 
-                Color effectcol = new Color(0.87f, 0.39f, 0.33f);
-                Color eyecol = new Color(0.07f, 0.2f, 0.31f);
-                Color bodycol = new Color(0.89f, 0.79f, 0.6f);
+                Color effectcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.24f, 0.14f, 0.05f) : new Color(0.87f, 0.39f, 0.33f);
+                Color eyecol = self.player.GetNCRunbound().IsTechnician ? new Color(0.42f, 0.21f, 0.18f) : new Color(0.07f, 0.2f, 0.31f);
+                Color bodycol = self.player.GetNCRunbound().IsTechnician ? new Color(0.91f, 0.8f, 0.53f) : new Color(0.89f, 0.79f, 0.6f);
+                Color pupilcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.26f, 0.09f, 0.08f) : effectcol;
 
                 if (self.useJollyColor)
                 {
@@ -631,7 +597,7 @@ namespace Unbound
                     eyecol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 1);
                     bodycol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 0);
                 }
-                else if (PlayerGraphics.customColors != null)
+                else if (PlayerGraphics.customColors != null && !ModManager.JollyCoop)
                 {
                     effectcol = PlayerGraphics.CustomColorSafety(2);
                     eyecol = PlayerGraphics.CustomColorSafety(1);
@@ -640,10 +606,8 @@ namespace Unbound
 
                 if (!self.player.GetNCRunbound().GraphicsDisabled)
                 {
-
-                    // applying colour ------------------------------
-                    sLeaser.sprites[unbFreckleNum].color = effectcol; // freckles
-                    sLeaser.sprites[unbEarTips].color = effectcol; // head
+                    sLeaser.sprites[unbFreckleNum].color = self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol; // freckles
+                    sLeaser.sprites[unbEarTips].color = self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol; // head
                     sLeaser.sprites[unbLeftMittens].color = effectcol; // arm
                     sLeaser.sprites[unbRightMittens].color = effectcol; // arm
                     sLeaser.sprites[unbLeftToes].color = effectcol; // hand
@@ -651,37 +615,43 @@ namespace Unbound
                     sLeaser.sprites[unbSocksNum].color = effectcol; // legs
                 }
 
+                if (!self.player.GetNCRunbound().WingscalesDisabled)
+                {
+                    sLeaser.sprites[unbFrillStarts].color = effectcol;
+                }
+
                 if (!self.player.GetNCRunbound().RingsDisabled)
                 {
-                    Color saturatedpupil = effectcol;
-
-                    // colour tweaked ------------------------------
-                    if ((saturatedpupil.r >= saturatedpupil.b && saturatedpupil.r >= saturatedpupil.g) ||
-                        (saturatedpupil.r == saturatedpupil.b && saturatedpupil.b == saturatedpupil.g && saturatedpupil.r == saturatedpupil.g) ||
-                        (saturatedpupil.g > 0.8 && saturatedpupil.r > 0.8 && saturatedpupil.b > 0.8) ||
-                        (saturatedpupil.g < 0.1 && saturatedpupil.r < 0.1 && saturatedpupil.b < 0.1))
+                    if (self.player.GetNCRunbound().IsUnbound)
                     {
-                        // itll be red the most often
-                        saturatedpupil.r = 1f;
-                    }
-                    else if (saturatedpupil.b > saturatedpupil.r && saturatedpupil.b >= saturatedpupil.g)
-                    {
-                        saturatedpupil.b = 1f;
-                    }
-                    else
-                    {
-                        saturatedpupil.g = 1f;
+                        // colour tweaked ------------------------------
+                        if ((pupilcol.r >= pupilcol.b && pupilcol.r >= pupilcol.g) ||
+                            (pupilcol.r == pupilcol.b && pupilcol.b == pupilcol.g && pupilcol.r == pupilcol.g) ||
+                            (pupilcol.g > 0.8 && pupilcol.r > 0.8 && pupilcol.b > 0.8) ||
+                            (pupilcol.g < 0.1 && pupilcol.r < 0.1 && pupilcol.b < 0.1))
+                        {
+                            // itll be red the most often
+                            pupilcol.r = 1f;
+                        }
+                        else if (pupilcol.b > pupilcol.r && pupilcol.b >= pupilcol.g)
+                        {
+                            pupilcol.b = 1f;
+                        }
+                        else
+                        {
+                            pupilcol.g = 1f;
+                        }
                     }
 
 
                     // animated colour ------------------------------
                     if (self.player.GetNCRunbound().UnbCyanjumpCountdown == 0)
                     {
-                        sLeaser.sprites[unbJumprings1Num].color = effectcol;
-                        sLeaser.sprites[unbJumprings2Num].color = effectcol;
+                        sLeaser.sprites[unbJumprings1Num].color = self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol;
+                        sLeaser.sprites[unbJumprings2Num].color = self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol;
                         // jumprings
 
-                        sLeaser.sprites[unbPupils].color = saturatedpupil;
+                        sLeaser.sprites[unbPupils].color = pupilcol;
 
                         if (sLeaser.sprites[unbJumprings1Num].shader != rCam.game.rainWorld.Shaders["Basic"])
                         {
@@ -696,12 +666,12 @@ namespace Unbound
                     else if (self.player.GetNCRunbound().DidTripleCyanJump)
                     {
                         // if he did a triple jump
-                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(effectcol, eyecol,
-                            (self.player.GetNCRunbound().UnbCyanjumpCountdown / 120f));
-                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(effectcol, eyecol,
-                            (self.player.GetNCRunbound().UnbCyanjumpCountdown / 130f));
+                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
+                            self.player.GetNCRunbound().IsUnbound ? eyecol : pupilcol, (self.player.GetNCRunbound().UnbCyanjumpCountdown / 120f));
+                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
+                            self.player.GetNCRunbound().IsUnbound ? eyecol : pupilcol, (self.player.GetNCRunbound().UnbCyanjumpCountdown / 130f));
 
-                        sLeaser.sprites[unbPupils].color = Color.Lerp(saturatedpupil, eyecol,
+                        sLeaser.sprites[unbPupils].color = Color.Lerp(pupilcol, self.player.GetNCRunbound().IsUnbound ? eyecol : effectcol,
                                 (self.player.GetNCRunbound().UnbCyanjumpCountdown) / 140f);
 
                         if (sLeaser.sprites[unbJumprings1Num].shader == rCam.game.rainWorld.Shaders["Basic"])
@@ -716,12 +686,12 @@ namespace Unbound
                     }
                     else
                     {
-                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(effectcol, bodycol,
+                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol, bodycol,
                             (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
-                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(effectcol, bodycol,
+                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol, bodycol,
                             (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
 
-                        sLeaser.sprites[unbPupils].color = Color.Lerp(saturatedpupil, effectcol,
+                        sLeaser.sprites[unbPupils].color = Color.Lerp(pupilcol, self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
                                 self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f);
                     }
                     // gives his jumprings (and eyes) that nice fade effect
@@ -729,14 +699,6 @@ namespace Unbound
                 }
                 #endregion
 
-                if (self.player.GetNCRunbound().scalefrill != null)
-                {
-                    try { self.player.GetNCRunbound().scalefrill.DrawSprites(sLeaser, rCam, timeStacker, camPos); }
-                    catch (Exception e)
-                    {
-                        Debug.Log("Error drawing scalefrills: " + e);
-                    }
-                }
                 
                 // end drawsprites
             }
@@ -747,8 +709,9 @@ namespace Unbound
         {
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && rCam != null && sLeaser != null &&
-                self.player.GetNCRunbound().IsUnbound)
+                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
+
                 try
                 {
                     sLeaser.RemoveAllSpritesFromContainer();
@@ -772,7 +735,14 @@ namespace Unbound
                     }
                     //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-                    if (i == unbPupils)
+                    if (i == unbFrillStarts)
+                    {
+                        // wingscales!
+                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
+                        (sLeaser.sprites[i]).MoveBehindOtherNode(sLeaser.sprites[0]);
+                        // move behind all other sprites
+                    }
+                    else if (i == unbPupils)
                     {
                         // pupils
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
@@ -821,20 +791,9 @@ namespace Unbound
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[8]);
                         // move in front of hand sprites
                     }
-                    else if (i == 27)
-                    {
-                        try
-                        {
-                            self.player.GetNCRunbound().scalefrill.AddToContainer(sLeaser, rCam, rCam.ReturnFContainer("Midground"));
-                            Debug.Log("Scalefrills successfully added! About fucking time");
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Log("Error trying to add scalefrills: " + e);
-                            Debug.Log("Spritelength is " + sLeaser.sprites.Length);
-                            Debug.Log("Spritelength should be " + (23 + self.player.GetNCRunbound().scalefrill.numberOfSprites));
-                        }
-                    }
+
+
+
                     // VANILLA ---------------------------------------------------------------------
                     else if ((i <= 6 || i >= 9) && i <= 9)
                     {
@@ -846,7 +805,21 @@ namespace Unbound
                     }
                 }
 
-                
+
+                if (sLeaser.sprites.Length < 14)
+                {
+                    try
+                    {
+                        Array.Resize(ref sLeaser.sprites, (ModManager.MSC ? 13 : 12) + ThisIsTheLengthOfMyMadness);
+                        if (self.player.GetNCRunbound().MoreDebug) { Debug.Log("Array resize success!"); }
+                    }
+                    catch (Exception e)
+                    {
+
+                        Debug.Log("Couldn't resize array: " + e);
+                    }
+                }
+
                 // end
             }
             else
@@ -858,17 +831,19 @@ namespace Unbound
         private static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
+
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
-                self.player.GetNCRunbound().IsUnbound)
+                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
 
                 #region Unbound Exclusive
                 try
                 {
-                    Array.Resize(ref sLeaser.sprites,
-                        sLeaser.sprites.Length + ThisIsTheLengthOfMyMadness +
-                        (self.player.GetNCRunbound().scalefrill == null ? 0 : self.player.GetNCRunbound().scalefrill.numberOfSprites));
+                    sLeaser.sprites[unbFrillStarts] = new FSprite("LizardScaleA3", true);
+                    sLeaser.sprites[unbFrillStarts].shader = rCam.game.rainWorld.Shaders["Basic"];
+                    sLeaser.sprites[unbFrillStarts].anchorY = 0.1f;
+                    // frill scale one
 
                     sLeaser.sprites[unbSocksNum] = new FSprite("unbLegsA0", true);
                     sLeaser.sprites[unbSocksNum].shader = rCam.game.rainWorld.Shaders["Basic"];
@@ -906,47 +881,6 @@ namespace Unbound
                     sLeaser.sprites[unbPupils] = new FSprite("unbpupFaceA0", true);
                     sLeaser.sprites[unbPupils].shader = rCam.game.rainWorld.Shaders["Basic"];
                     // pupils
-
-
-                    if (self.player.GetNCRunbound().MoreDebug)
-                    {
-                        if (self.player.GetNCRunbound().scalefrill == null)
-                        {
-                            Debug.Log("Errm. Scalefrills are null");
-                            Debug.Log("Unbound end array: " + (sLeaser.sprites.Length));
-                        }
-                        else
-                        {
-                            Debug.Log("Unbound start array: " + (sLeaser.sprites.Length - ThisIsTheLengthOfMyMadness -
-                            self.player.GetNCRunbound().scalefrill.numberOfSprites) + ". This should be 13.");
-                            Debug.Log("Unbound end array: " + (sLeaser.sprites.Length) + ". This should be 27.");
-                            Debug.Log("Total number of sprites in array, zero exclusive: " + (sLeaser.sprites.Length + 1));
-                            Debug.Log("Total number of sprites in array prior to frillscales: " + (sLeaser.sprites.Length -
-                                self.player.GetNCRunbound().scalefrill.numberOfSprites) + ". If this number isn't 23 there's an issue");
-                            Debug.Log("Number of sprites NORMALLY in array is 12, I am this insane: " + (ThisIsTheLengthOfMyMadness +
-                                self.player.GetNCRunbound().scalefrill.numberOfSprites));
-                        }
-                        
-                    }
-
-
-                    if (self.player.GetNCRunbound().scalefrill != null)
-                    {
-                        try
-                        {
-                            Debug.Log("Number of sprites in array after scalefrills added: " + (sLeaser.sprites.Length));
-
-                            sLeaser.sprites = new FSprite[unbFrillStarts + self.player.GetNCRunbound().scalefrill.numberOfSprites];
-                            Debug.Log("Last scalefrill index: " + (unbFrillStarts + self.player.GetNCRunbound().scalefrill.numberOfSprites));
-                            Debug.Log("Scalefrill sprite number: " + (self.player.GetNCRunbound().scalefrill.numberOfSprites));
-                            self.player.GetNCRunbound().scalefrill.InitiateSprites(sLeaser, rCam);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Log("Scalefrills failed to apply: " + e);
-                            Debug.Log("Scalefrill sprite number: " + (self.player.GetNCRunbound().scalefrill.numberOfSprites));
-                        }
-                    }
                     
 
                     // DONT FORGET TO RESIZE THE ARRAY

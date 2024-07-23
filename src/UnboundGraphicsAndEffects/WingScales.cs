@@ -1,6 +1,6 @@
 ﻿namespace Unbound
 {
-    public class UnbScales
+    public class UnbScales : PlayerGraphics
     {
         public WingScale[] scaleObjects;
         public float[] backwardsFactors;
@@ -13,16 +13,15 @@
         public PlayerGraphics pGraphics;
         public int numberOfSprites;
         public int startSprite;
-        public RoomPalette palette;
-        public SpritesOverlap spritesOverlap;
+        public WingscaleOverlap spritesOverlap;
         public Color baseColor;
         public Color effectColor;
 
 
-        public UnbScales(PlayerGraphics pGraphics, int startSprite)
+        public UnbScales(PlayerGraphics pGraphics, Player ow, int startSprite) : base (ow)
         {
             this.pGraphics = pGraphics;
-            this.startSprite = 23;
+            this.startSprite = ModManager.MSC ? 23 : 22;
             this.rigor = 0.5873646f;
             float num = 1.310689f;
             this.colored = true;
@@ -64,10 +63,10 @@
                 }
             }
             this.numberOfSprites = ((!this.colored) ? this.scalesPositions.Length : (this.scalesPositions.Length * 2));
-            this.spritesOverlap = SpritesOverlap.InFront;
+            this.spritesOverlap = WingscaleOverlap.InFront;
         }
 
-        public void Update()
+        public void UpdateScales()
         {
             for (int i = 0; i < this.scaleObjects.Length; i++)
             {
@@ -111,7 +110,7 @@
             }
         }
 
-        public void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        public void InitiateScales(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             for (int i = this.startSprite + this.scalesPositions.Length - 1; i >= this.startSprite; i--)
             {
@@ -127,7 +126,7 @@
             }
         }
 
-        public void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+        public void DrawScales(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             if (this.pGraphics.owner == null)
             {
@@ -196,9 +195,8 @@
             this.effectColor = effectCol;
         }
 
-        public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        public void ApplyScalePalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
-            this.palette = palette;
             for (int i = this.startSprite + this.scalesPositions.Length - 1; i >= this.startSprite; i--)
             {
                 sLeaser.sprites[i].color = this.baseColor;
@@ -209,7 +207,7 @@
             }
         }
 
-        public void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
+        public void AddScale(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
             for (int i = this.startSprite; i < this.startSprite + this.numberOfSprites; i++)
             {
@@ -217,23 +215,30 @@
             }
         }
 
-        public class SpritesOverlap : ExtEnum<PlayerGraphics.AxolotlGills.SpritesOverlap>
+        public class WingscaleOverlap : ExtEnum<WingscaleOverlap>
         {
-            public SpritesOverlap(string value, bool register = false) : base(value, register)
+            public WingscaleOverlap(string value, bool register = false) : base(value, register)
             {
             }
 
-            public static SpritesOverlap Behind = new SpritesOverlap("Behind", true);
-            public static SpritesOverlap BehindHead = new SpritesOverlap("BehindHead", true);
-            public static SpritesOverlap InFront = new SpritesOverlap("InFront", true);
+            public static WingscaleOverlap Behind = new WingscaleOverlap("Behind", true);
+            public static WingscaleOverlap BehindHead = new WingscaleOverlap("BehindHead", true);
+            public static WingscaleOverlap InFront = new WingscaleOverlap("InFront", true);
         }
         // end scalebunch
     }
+
+
+
+
+
+
 
     public class WingScale : BodyPart
     {
         public WingScale(GraphicsModule cosmetics) : base(cosmetics)
         {
+
         }
         public float length;
         public float width;

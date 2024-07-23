@@ -53,7 +53,8 @@ namespace Unbound
                 sLeaser.sprites[i].x = vector.x - camPos.x;
                 sLeaser.sprites[i].y = vector.y - camPos.y;
             }
-            float num2 = Mathf.Lerp(20f + 10f * intensity, 40f + 30f * intensity, num) + Mathf.Lerp(50f, 90f, intensity) * Mathf.Sin(Mathf.Pow(num, 2f) * 3.1415927f);
+            float num2 = Mathf.Lerp(20f + 10f * intensity, 40f + 30f * intensity, num) +
+                Mathf.Lerp(50f, 90f, intensity) * Mathf.Sin(Mathf.Pow(num, 2f) * 3.1415927f);
             sLeaser.sprites[0].scale = num2 * 2f / 8f;
             sLeaser.sprites[0].alpha = Mathf.Pow(Mathf.InverseLerp(0f, 0.5f, num), 0.5f);
             sLeaser.sprites[1].scale = num2 / 8f;

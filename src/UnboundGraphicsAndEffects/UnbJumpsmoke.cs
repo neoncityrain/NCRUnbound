@@ -59,7 +59,8 @@ namespace Unbound
                 counter++;
                 if (room.GetTile(pos).Solid && !room.GetTile(lastPos).Solid)
                 {
-                    IntVector2? intVector = SharedPhysics.RayTraceTilesForTerrainReturnFirstSolid(room, room.GetTilePosition(lastPos), room.GetTilePosition(pos));
+                    IntVector2? intVector = SharedPhysics.RayTraceTilesForTerrainReturnFirstSolid(room,
+                        room.GetTilePosition(lastPos), room.GetTilePosition(pos));
                     FloatRect floatRect = Custom.RectCollision(pos, lastPos, room.TileRect(intVector.Value).Grow(2f));
                     pos = floatRect.GetCorner(FloatRect.CornerLabel.D);
                     if (floatRect.GetCorner(FloatRect.CornerLabel.B).x < 0f)
@@ -144,7 +145,6 @@ namespace Unbound
                     else if (PlayerGraphics.customColors != null && !ModManager.JollyCoop)
                     {
                         color = Color.Lerp(PlayerGraphics.CustomColorSafety(2), fadeColor, Mathf.InverseLerp(1f, 0.25f, num));
-
                     }
                     else
                     {

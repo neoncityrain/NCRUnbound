@@ -8,8 +8,9 @@ namespace Unbound
         public class UnboundCat
         {
             public UnbJumpsmoke unbsmoke;
+            public UnbJumpsmoke damagesmoke;
 
-
+            public bool IsTechnician;
             public bool IsUnbound;
             public bool holdingJumpkey;
             public bool didLongjump;
@@ -22,18 +23,18 @@ namespace Unbound
 
 
             // remix values
-            public float CyJump1Maximum; // the maximum amount of time a double cyan jump takes to recharge, used in remix
-            public float CyJump2Maximum; // the maximum amount of time a triple cyan jump takes to recharge, used in remix
+            public float CyJump1Maximum; // base 180
+            public float CyJump2Maximum; // base 400
             public bool GraphicsDisabled;
             public bool RingsDisabled;
             public bool Unpicky;
             public bool MoreDebug;
+            public bool WingscalesDisabled;
             // end remix values
 
             public UnboundCat()
             {
-                CyJump1Maximum = 180f;// these are here for reading purposes, not use
-                CyJump1Maximum = 400f; // these are here for reading purposes, not use
+
             }
         }
 

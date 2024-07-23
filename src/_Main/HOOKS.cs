@@ -31,6 +31,8 @@ namespace Unbound
             {
                 if (IsInit) return;
 
+                UnbName.RegisterValues();
+
                 UnbMisc.Init();
                 UnbGraphics.Init();
                 // _Main
@@ -46,6 +48,7 @@ namespace Unbound
                 // iterators
                 SetupRoomSpecific.Init();
                 // room specific
+
 
                 On.RainWorldGame.ShutDownProcess += RainWorldGameOnShutDownProcess;
                 On.GameSession.ctor += GameSessionOnctor;
@@ -76,7 +79,7 @@ namespace Unbound
         private void ClearMemory()
         {
             // clear collections here
-            
+            UnbName.UnregisterValues();
         }
 
 

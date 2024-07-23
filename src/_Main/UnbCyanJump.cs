@@ -17,9 +17,15 @@ namespace Unbound
             if (self != null && self.room != null &&
                 self.GetNCRunbound().IsUnbound)
             {
-                if (self.GetNCRunbound().unbsmoke != null && (self.GetNCRunbound().unbsmoke.slatedForDeletetion || self.GetNCRunbound().unbsmoke.room != self.room))
+                if (self.GetNCRunbound().unbsmoke != null &&
+                    (self.GetNCRunbound().unbsmoke.slatedForDeletetion || self.GetNCRunbound().unbsmoke.room != self.room))
                 {
                     self.GetNCRunbound().unbsmoke = null;
+                }
+                if (self.GetNCRunbound().damagesmoke != null &&
+                    (self.GetNCRunbound().damagesmoke.slatedForDeletetion || self.GetNCRunbound().damagesmoke.room != self.room))
+                {
+                    self.GetNCRunbound().damagesmoke = null;
                 }
 
                 if (self.GetNCRunbound().UnbCyanjumpCountdown != 0)
@@ -33,12 +39,12 @@ namespace Unbound
 
                         if (UnityEngine.Random.value < 0.1f)
                         {
-                            if (self.GetNCRunbound().unbsmoke == null)
+                            if (self.GetNCRunbound().damagesmoke == null)
                             {
-                                self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
-                                self.room.AddObject(self.GetNCRunbound().unbsmoke);
+                                self.GetNCRunbound().damagesmoke = new UnbJumpsmoke(self.room, self);
+                                self.room.AddObject(self.GetNCRunbound().damagesmoke);
                             }
-                            self.GetNCRunbound().unbsmoke.EmitSmoke(self.firstChunk.pos, Custom.RNV(), false, 10f);
+                            self.GetNCRunbound().damagesmoke.EmitSmoke(self.firstChunk.pos, Custom.RNV(), false, 20f);
                             if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
                         }
                         if (UnityEngine.Random.value < 0.02f)
