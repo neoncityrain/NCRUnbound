@@ -4,7 +4,6 @@ namespace Unbound
 {
     internal class PearlConversations
     {
-        public static Conversation.ID unbKarmaPearlConv = new Conversation.ID("unbKarmaPearlConv", true);
         public static void Init()
         {
             On.Conversation.DataPearlToConversation += Conversation_DataPearlToConversation;
@@ -18,7 +17,7 @@ namespace Unbound
                 self.id != Conversation.ID.MoonSecondPostMarkConversation &&
                 self.id != MoreSlugcats.MoreSlugcatsEnums.ConversationID.Moon_Gourmand_First_Conversation &&
                 self.id != Conversation.ID.MoonRecieveSwarmer &&
-                self.id == unbKarmaPearlConv)
+                self.id == UnboundEnums.unbKarmaPearlConv)
             {
                 self.PearlIntro();
                 self.LoadEventsFromFile(1431821);
@@ -35,7 +34,7 @@ namespace Unbound
             if (type != null &&
                 type == Pearl.unboundKarmaPearl)
             {
-                return unbKarmaPearlConv;
+                return UnboundEnums.unbKarmaPearlConv;
             }
             else return orig(type);
         }

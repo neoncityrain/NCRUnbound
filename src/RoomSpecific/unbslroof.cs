@@ -80,7 +80,7 @@ public class UnbSLWall06 : UpdatableAndDeletable
 
                     this.abstractcat.ID.setAltSeed(-1913912525); // 19 13 9 12 5 25 : smiley
 
-                    this.abstractcat.state = new PlayerState(this.abstractcat, 4, UnbName.NCRTechnician, false);
+                    this.abstractcat.state = new PlayerState(this.abstractcat, 4, UnboundEnums.NCRTechnician, false);
 
                     this.technicianCat = this.abstractcat.realizedCreature;
                 }

@@ -31,7 +31,7 @@ namespace Unbound
             {
                 if (IsInit) return;
 
-                UnbName.RegisterValues();
+                UnboundEnums.RegisterValues();
 
                 UnbMisc.Init();
                 UnbGraphics.Init();
@@ -44,7 +44,8 @@ namespace Unbound
                 // gamma
                 Pearl.Init();
                 PearlConversations.Init();
-                PebblesConversations.Init();
+                PebblesDialogue.Init();
+                PebblesCode.Init();
                 // iterators
                 SetupRoomSpecific.Init();
                 // room specific
@@ -79,7 +80,7 @@ namespace Unbound
         private void ClearMemory()
         {
             // clear collections here
-            UnbName.UnregisterValues();
+            UnboundEnums.UnregisterValues();
         }
 
 

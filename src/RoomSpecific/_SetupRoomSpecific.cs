@@ -4,7 +4,6 @@ namespace Unbound
 {
     internal class SetupRoomSpecific
     {
-        public static Player rsplayer;
 
         public static void Init()
         {
@@ -23,7 +22,7 @@ namespace Unbound
 
         private static void RoomSpecificScripts(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
         {
-            if (room != null && room.game != null && room.game.session is StoryGameSession && rsplayer != null && room.world != null &&
+            if (room != null && room.game != null && room.game.session is StoryGameSession && room.world != null &&
                 room.game.session.characterStats.name.value == "NCRunbound")
             {
                 orig(room);
@@ -90,52 +89,61 @@ namespace Unbound
         private static void Initial(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-            if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
+            if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null && world != null &&
+                world.region != null && world.region.name != null && self.room.game.GetStorySession != null && abstractCreature != null &&
+
                 self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.session is StoryGameSession)
             {
-                rsplayer = self;
-                // THINGS FOR GAME SETUP BELOW ------------------------------------------------------------------------------------------------------------
-                if (!self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon)
+                try
                 {
-                    if (world.region.name == "MS" && ModManager.MSC)
+                    if (!self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon)
                     {
-                        Debug.Log("Unbound's MS start detected, triggering intro!");
-                        self.room.AddObject(new UnboundIntro());
-                    }
-                    else if (world.region.name == "SL" && !ModManager.MSC)
-                    {
-                        Debug.Log("Unbound's SL start detected! Remind me to set up a non-MSC intro :<");
-                        self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
-                            AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
-                            new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
-                            Pearl.unboundKarmaPearl);
-                    }
-
-                    if (self.room.world.overseersWorldAI.playerGuide != null && self.room.world.overseersWorldAI != null)
-                    {
-                        try
+                        if (world.region.name == "MS" && ModManager.MSC)
                         {
-                            AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
-                            gammaoverseer.ignoreCycle = true;
-                            gammaoverseer.creatureTemplate.waterVision = 0;
-                            gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
-
-                            (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
-                            (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
+                            Debug.Log("Unbound's MS start detected, triggering intro!");
+                            self.room.AddObject(new UnboundIntro());
                         }
-                        catch (Exception e)
+                        else if (world.region.name == "SL" && !ModManager.MSC)
                         {
-                            Debug.Log("Gamma missing! Error: " + e);
+                            Debug.Log("Unbound's SL start detected! Remind me to set up a non-MSC intro :<");
+                            self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
+                                AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
+                                new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
+                                Pearl.unboundKarmaPearl);
                         }
-                    }
 
-                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+                        if (self.room.world.overseersWorldAI.playerGuide != null && self.room.world.overseersWorldAI != null)
+                        {
+                            try
+                            {
+                                AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
+                                gammaoverseer.ignoreCycle = true;
+                                gammaoverseer.creatureTemplate.waterVision = 0;
+                                gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
 
-                    if (self.GetNCRunbound().MoreDebug)
-                    {
-                        Debug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
+                                (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
+                                (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.Log("Gamma missing! Error: " + e);
+                            }
+                        }
+
+                        self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+
+                        if (self.GetNCRunbound().MoreDebug)
+                        {
+                            Debug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    Debug.Log("The intro is fucking up!" + e);
+                }
+                // THINGS FOR GAME SETUP BELOW ------------------------------------------------------------------------------------------------------------
+                
 
 
 
@@ -163,17 +171,24 @@ namespace Unbound
             if (self != null && self.room != null && self.abstractCreature != null &&
                 self.slugcatStats.name.value == "NCRunbound")
             {
-                self.GetNCRunbound().IsUnbound = true;
-
-                if (self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] != 1.5f)
+                try
                 {
-                    self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+                    self.GetNCRunbound().IsUnbound = true;
+
+                    if (self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] != 1.5f)
+                    {
+                        self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+                    }
+
+                    if (self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.session is StoryGameSession &&
+                        self.glowing == false)
+                    {
+                        self.glowing = true;
+                    }
                 }
-
-                if (self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.session is StoryGameSession &&
-                    self.glowing == false)
+                catch (Exception e)
                 {
-                    self.glowing = true;
+                    Debug.Log("The character setup for Unbound is fucking up!" + e);
                 }
             }
             else if (self != null && self.room != null &&

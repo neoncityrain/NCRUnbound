@@ -4,8 +4,6 @@ namespace Unbound
 {
     internal class Pearl
     {
-        public static DataPearl.AbstractDataPearl.DataPearlType unboundKarmaPearl = new("unboundKarmaPearl", true);
-
         public static void Init()
         {
             On.DataPearl.UniquePearlMainColor += DataPearl_UniquePearlMainColor;
@@ -16,7 +14,7 @@ namespace Unbound
 
         private static Color? DataPearl_UniquePearlHighLightColor(On.DataPearl.orig_UniquePearlHighLightColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
         {
-            if (pearlType == unboundKarmaPearl)
+            if (pearlType == UnboundEnums.unboundKarmaPearl)
             {
                 return new Color(0.2f, 0f, 0.3f);
             }
@@ -25,7 +23,7 @@ namespace Unbound
 
         private static Color DataPearl_UniquePearlMainColor(On.DataPearl.orig_UniquePearlMainColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
         {
-            if (pearlType == unboundKarmaPearl)
+            if (pearlType == UnboundEnums.unboundKarmaPearl)
             {
                 return new Color(0.4f, 0.1f, 0.5f);
             }
@@ -34,7 +32,7 @@ namespace Unbound
 
         private static void DataPearl_ApplyPalette(On.DataPearl.orig_ApplyPalette orig, DataPearl self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
-            if ((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType == unboundKarmaPearl)
+            if ((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
             {
                 self.color = DataPearl.UniquePearlMainColor((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType);
                 self.highlightColor = DataPearl.UniquePearlHighLightColor((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType);
@@ -61,7 +59,7 @@ namespace Unbound
             if (stomachObject != null)
             {
                 if (self.objectInStomach.type == AbstractPhysicalObject.AbstractObjectType.DataPearl &&
-                    (self.objectInStomach as DataPearl.AbstractDataPearl).dataPearlType == unboundKarmaPearl)
+                    (self.objectInStomach as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
                 {
                     return new Color?(new Color(0.8f, 0.1f, 0.9f, 0.25f));
                 }
