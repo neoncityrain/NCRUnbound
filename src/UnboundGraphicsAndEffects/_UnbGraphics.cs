@@ -169,7 +169,7 @@ namespace Unbound
                 if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unbmittenlegs == null)
                 {
-                    UnityEngine.Debug.Log("Unbound Socks sprites missing!");
+                    NCRDebug.Log("Unbound Socks sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     lego != null && lego.StartsWith("Legs") &&
@@ -180,7 +180,7 @@ namespace Unbound
                 if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unblegs == null)
                 {
-                    UnityEngine.Debug.Log("Unbound Leg sprites missing!");
+                    NCRDebug.Log("Unbound Leg sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     lego != null && lego.StartsWith("Legs") &&
@@ -193,7 +193,7 @@ namespace Unbound
                 string head = sLeaser.sprites[3]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled && unbearhead == null)
                 {
-                    UnityEngine.Debug.Log("Unbound Eartip sprites missing!");
+                    NCRDebug.Log("Unbound Eartip sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     head != null && head.StartsWith("Head") &&
@@ -205,7 +205,7 @@ namespace Unbound
                 if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unbhead == null)
                 {
-                    UnityEngine.Debug.Log("Unbound Head sprites missing!");
+                    NCRDebug.Log("Unbound Head sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     head != null && head.StartsWith("Head") &&
@@ -219,7 +219,7 @@ namespace Unbound
                 string rarm = sLeaser.sprites[6]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm == null)
                 {
-                    UnityEngine.Debug.Log("Unbound Arm sprites missing!");
+                    NCRDebug.Log("Unbound Arm sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
                     unbarm._elementsByName.TryGetValue("unb" + larm, out var leftreplace))
@@ -234,7 +234,7 @@ namespace Unbound
                 // arm replacements
                 if (!self.player.GetNCRunbound().GraphicsDisabled && unbsleevesarm == null)
                 {
-                    UnityEngine.Debug.Log("Unbound Mitten sprites missing!");
+                    NCRDebug.Log("Unbound Mitten sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
                     unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var larmreplace))
@@ -277,7 +277,7 @@ namespace Unbound
                 string hipwthekids = sLeaser.sprites[1]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled && unbfrecklehips == null)
                 {
-                    Debug.Log("Unbound Freckle sprites missing!");
+                    NCRDebug.Log("Unbound Freckle sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     hipwthekids != null && hipwthekids.StartsWith("Hips") &&
@@ -288,7 +288,7 @@ namespace Unbound
                 // body freckles
                 if (!self.player.GetNCRunbound().RingsDisabled && unbjumphips == null)
                 {
-                    UnityEngine.Debug.Log("Unbound LOWER Jumpring sprites missing!");
+                    NCRDebug.Log("Unbound LOWER Jumpring sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().RingsDisabled && hipwthekids != null && hipwthekids.StartsWith("Hips") &&
                     unbjumphips._elementsByName.TryGetValue("unbjump" + hipwthekids, out var jumprings))
@@ -301,7 +301,7 @@ namespace Unbound
                 string bodyget = sLeaser.sprites[0]?.element?.name;
                 if (!self.player.GetNCRunbound().RingsDisabled && unbjumpbody == null)
                 {
-                    UnityEngine.Debug.Log("Unbound UPPER Jumpring sprites missing!");
+                    NCRDebug.Log("Unbound UPPER Jumpring sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().RingsDisabled && bodyget != null && bodyget.StartsWith("Body") &&
                     unbjumpbody._elementsByName.TryGetValue("unbjump" + bodyget, out var jumprings2))
@@ -315,7 +315,7 @@ namespace Unbound
                 if (!self.player.GetNCRunbound().RingsDisabled &&
                     unbpupface == null)
                 {
-                    UnityEngine.Debug.Log("Unbound Pupil sprites missing!");
+                    NCRDebug.Log("Unbound Pupil sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().RingsDisabled &&
                     faceget != null && faceget.StartsWith("Face") &&
@@ -660,7 +660,7 @@ namespace Unbound
                                 sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Basic"];
                                 sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Basic"];
                             }
-                            catch (Exception e) { Debug.Log("Shader error: " + e); }
+                            catch (Exception e) { NCRDebug.Log("Shader error: " + e); }
                         }
                     }
                     else if (self.player.GetNCRunbound().DidTripleCyanJump)
@@ -681,7 +681,7 @@ namespace Unbound
                                 sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Hologram"];
                                 sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Hologram"];
                             }
-                            catch (Exception e) { Debug.Log("Shader error: " + e); }
+                            catch (Exception e) { NCRDebug.Log("Shader error: " + e); }
                         }
                     }
                     else
@@ -718,7 +718,7 @@ namespace Unbound
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Error removing sprites from container: " + e);
+                    NCRDebug.Log("Error removing sprites from container: " + e);
                 }
 
                 if (newContatiner == null)
@@ -811,12 +811,12 @@ namespace Unbound
                     try
                     {
                         Array.Resize(ref sLeaser.sprites, (ModManager.MSC ? 13 : 12) + ThisIsTheLengthOfMyMadness);
-                        if (self.player.GetNCRunbound().MoreDebug) { Debug.Log("Array resize success!"); }
+                        if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Array resize success!"); }
                     }
                     catch (Exception e)
                     {
 
-                        Debug.Log("Couldn't resize array: " + e);
+                        NCRDebug.Log("Couldn't resize array: " + e);
                     }
                 }
 
@@ -888,7 +888,7 @@ namespace Unbound
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("What the fuck Unbound!! " + e);
+                    NCRDebug.Log("What the fuck Unbound!! " + e);
                 }
 
                 #endregion

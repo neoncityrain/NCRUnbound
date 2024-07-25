@@ -100,16 +100,16 @@ namespace Unbound
                     {
                         if (world.region.name == "MS" && ModManager.MSC)
                         {
-                            Debug.Log("Unbound's MS start detected, triggering intro!");
+                            NCRDebug.Log("Unbound's MS start detected, triggering intro!");
                             self.room.AddObject(new UnboundIntro());
                         }
                         else if (world.region.name == "SL" && !ModManager.MSC)
                         {
-                            Debug.Log("Unbound's SL start detected! Remind me to set up a non-MSC intro :<");
+                            NCRDebug.Log("Unbound's SL start detected! Remind me to set up a non-MSC intro :<");
                             self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
                                 AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
                                 new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
-                                Pearl.unboundKarmaPearl);
+                                UnboundEnums.unboundKarmaPearl);
                         }
 
                         if (self.room.world.overseersWorldAI.playerGuide != null && self.room.world.overseersWorldAI != null)
@@ -126,7 +126,7 @@ namespace Unbound
                             }
                             catch (Exception e)
                             {
-                                Debug.Log("Gamma missing! Error: " + e);
+                                NCRDebug.Log("Gamma missing! Error: " + e);
                             }
                         }
 
@@ -134,13 +134,13 @@ namespace Unbound
 
                         if (self.GetNCRunbound().MoreDebug)
                         {
-                            Debug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
+                            NCRDebug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("The intro is fucking up!" + e);
+                    NCRDebug.Log("The intro is fucking up!" + e);
                 }
                 // THINGS FOR GAME SETUP BELOW ------------------------------------------------------------------------------------------------------------
                 
@@ -154,7 +154,7 @@ namespace Unbound
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
                     if (self.GetNCRunbound().MoreDebug)
                     {
-                        Debug.Log("Old save detected, fixing game- moon has been re-killed! Sorry, women");
+                        NCRDebug.Log("Old save detected, fixing game- moon has been re-killed! Sorry, women");
                     }
                 }
                 if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles == true)
@@ -162,7 +162,7 @@ namespace Unbound
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
                     if (self.GetNCRunbound().MoreDebug)
                     {
-                        Debug.Log("Pebbles was killed for some reason and has been revived");
+                        NCRDebug.Log("Pebbles was killed for some reason and has been revived");
                     }
                 }
             }
@@ -188,7 +188,7 @@ namespace Unbound
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("The character setup for Unbound is fucking up!" + e);
+                    NCRDebug.Log("The character setup for Unbound is fucking up!" + e);
                 }
             }
             else if (self != null && self.room != null &&

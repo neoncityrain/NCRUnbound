@@ -1,5 +1,4 @@
 using System;
-using static MonoMod.Cil.RuntimeILReferenceBag.FastDelegateInvokers;
 
 namespace Unbound
 {

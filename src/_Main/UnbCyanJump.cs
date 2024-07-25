@@ -45,7 +45,7 @@ namespace Unbound
                                 self.room.AddObject(self.GetNCRunbound().damagesmoke);
                             }
                             self.GetNCRunbound().damagesmoke.EmitSmoke(self.firstChunk.pos, Custom.RNV(), false, 20f);
-                            if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                            if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Emitting smoke!"); }
                         }
                         if (UnityEngine.Random.value < 0.02f)
                         {
@@ -75,7 +75,7 @@ namespace Unbound
                 if (self.GetNCRunbound().CanDoubleCyanJump && self.input[0].jmp && !self.input[1].jmp)
                 {
                     // standard cyanjump!!!!
-                    if (self.GetNCRunbound().MoreDebug) { Debug.Log("Unbound Cyanjump1 Triggered"); }
+                    if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Unbound Cyanjump1 Triggered"); }
                     if (!self.GetNCRunbound().holdingJumpkey)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, self.mainBodyChunk);
@@ -134,7 +134,7 @@ namespace Unbound
                     {
                         self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
                         self.room.AddObject(self.GetNCRunbound().unbsmoke);
-                        if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
@@ -152,7 +152,7 @@ namespace Unbound
                 {
                     // if they cant cyanjump1, BUT CAN cyanjump2, trigger
 
-                    if (self.GetNCRunbound().MoreDebug) { Debug.Log("Unbound Cyanjump2 Triggered"); }
+                    if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Unbound Cyanjump2 Triggered"); }
                     self.GetNCRunbound().DidTripleCyanJump = true;
                     if (!self.GetNCRunbound().holdingJumpkey)
                     {
@@ -192,7 +192,7 @@ namespace Unbound
                     {
                         self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
                         self.room.AddObject(self.GetNCRunbound().unbsmoke);
-                        if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
@@ -241,7 +241,7 @@ namespace Unbound
                     {
                         self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
                         self.room.AddObject(self.GetNCRunbound().unbsmoke);
-                        if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
@@ -303,7 +303,7 @@ namespace Unbound
                     {
                         self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
                         self.room.AddObject(self.GetNCRunbound().unbsmoke);
-                        if (self.GetNCRunbound().MoreDebug) { Debug.Log("Emitting smoke!"); }
+                        if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Emitting smoke!"); }
                     }
                     for (int k = 0; k < 7; k++)
                     {
@@ -316,7 +316,7 @@ namespace Unbound
                     // sets longjump to true
                     self.GetNCRunbound().UnbChainjumpsCount += 1;
                     // adds to the chainjump count
-                    if (self.GetNCRunbound().MoreDebug) { Debug.Log("Longjump detected!"); }
+                    if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Longjump detected!"); }
                 }
 
 

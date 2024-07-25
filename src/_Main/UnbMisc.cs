@@ -452,18 +452,18 @@ namespace Unbound
             if (self != null && self.creature != null && self.creature.Room != null &&
                 self.creature.world.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
             {
-                Debug.Log("Unbound world, rerolling stowawake (because life is a fucking nightmare)");
+                NCRDebug.Log("Unbound world, rerolling stowawake (because life is a fucking nightmare)");
                 System.Random rd = new System.Random();
                 int rand_num = rd.Next(1, 3);
                 if (rand_num == 1)
                 {
-                    Debug.Log("Congrats! Stowaway awoken (because life is a fucking nightmare)");
+                    NCRDebug.Log("Congrats! Stowaway awoken (because life is a fucking nightmare)");
                     return true;
                     // if random number is 1, awaken stowaway
                 }
                 else
                 {
-                    Debug.Log("Stowaway state defaulting to normal");
+                    NCRDebug.Log("Stowaway state defaulting to normal");
                     return orig(self, cycle);
                     // if the random number isnt 1, refer to the original code
                 }

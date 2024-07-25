@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevInterface;
+using System;
 
 namespace Unbound
 {
@@ -6,135 +7,151 @@ namespace Unbound
     {
         public static void Init()
         {
-            On.SSOracleBehavior.PebblesConversation.AddEvents += AddEvents;
+            On.SSOracleBehavior.PebblesConversation.AddEvents += InitialText;
             On.SSOracleBehavior.CreatureJokeDialog += JokeDialogue; // just adds the prefix to his dialogue. for now.
             On.SSOracleBehavior.InitateConversation += InitateConvo; // adds prefix and forces colourmode to always be active
             On.SSOracleBehavior.InterruptPearlMessagePlayerLeaving += PlayerLeftDuringPearlread;
             On.SSOracleBehavior.ResumePausedPearlConversation += ResumePearlread;
             On.SSOracleBehavior.NameForPlayer += NameForPlayer; // i dont think this is used, BUT just in case!
-            On.SSOracleBehavior.SSSleepoverBehavior.ctor += Sleepover;
+
+            On.SLOracleBehaviorHasMark.MoonConversation.PearlIntro += PearlIntro;
+            On.OracleBehavior.AlreadyDiscussedItemString += AlreadyDiscussedItemString;
+            // pearl intros
         }
 
-        private static void Sleepover(On.SSOracleBehavior.SSSleepoverBehavior.orig_ctor orig, SSOracleBehavior.SSSleepoverBehavior self,
-            SSOracleBehavior owner)
+        public static void UnbPearlTalk(SSOracleBehavior self)
         {
-            if (self != null && self.player != null && self.player.room != null && self.player.room.game != null && owner != null &&
-                owner.player != null && owner.oracle != null &&
+            #region UnboundPearl
+            if (self.conversation != null && self.conversation.id == Conversation.ID.Pebbles_White)
+            {
+                for (int j = 0; j < self.player.grasps.Length; j++)
+                {
+                    if (self.player.grasps[j] != null && self.player.grasps[j].grabbed is DataPearl &&
+                        (self.player.grasps[j].grabbed as DataPearl).AbstractPearl.dataPearlType == UnboundEnums.unboundKarmaPearl)
+                    {
+                        self.pearlConversation.Interrupt(self.Translate("FP: . . ."), 10);
+                        self.restartConversationAfterCurrentDialoge = false;
+
+                        self.NewAction(UnboundEnums.UnbSlumberParty);
+                        self.player.ReleaseGrasp(j);
+                        return;
+                    }
+                }
+                if (self.player.objectInStomach != null)
+                {
+                    self.player.Regurgitate();
+                }
+            }
+            #endregion
+        }
+
+        private static string AlreadyDiscussedItemString(On.OracleBehavior.orig_AlreadyDiscussedItemString orig, OracleBehavior self, bool pearl)
+        {
+            if (self != null && self.oracle != null && self.oracle.ID == Oracle.OracleID.SS &&
+                self.player != null && self.player.room != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
-                try
+                string result = string.Empty;
+                int randomvar = UnityEngine.Random.Range(0, 3);
+                if (randomvar != 0)
                 {
-                    self.PickNextPanicTime();
-                    self.lowGravity = -1f;
-
-                    if (!owner.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+                    if (randomvar != 1)
                     {
-                        owner.getToWorking = 0f;
-                        self.gravOn = false;
-                        self.firstMetOnThisCycle = true;
-                        owner.SlugcatEnterRoomReaction();
-                        self.owner.voice = owner.oracle.room.PlaySound(SoundID.SL_AI_Talk_4, owner.oracle.firstChunk);
-                        self.owner.voice.requireActiveUpkeep = true;
-                        owner.LockShortcuts();
-                        return;
-                    }
-                    if (self.owner.conversation != null)
-                    {
-                        owner.conversation.Destroy();
-                        owner.conversation = null;
-                        return;
-                    }
-
-                    self.owner.TurnOffSSMusic(true);
-                    owner.getToWorking = 1f;
-                    self.gravOn = true;
-
-                    if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts < 100)
-                    {
-                        self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts = 0;
-
-                        if (owner.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.altEnding)
-                        {
-                            owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts = 100;
-                            owner.dialogBox.NewMessage(owner.Translate(
-                                ""), 0);
-                            owner.dialogBox.NewMessage(owner.Translate(
-                                ""), 0);
-                            owner.dialogBox.NewMessage(owner.Translate(
-                                ""), 0);
-                            owner.dialogBox.NewMessage(owner.Translate(
-                                ""), 0);
-                            return;
-                        }
-                    }
-
-                    Debug.Log("Conversations with Pebbles:" +
-                        owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad.ToString());
-
-
-                    if (owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad <= 2)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate(
-                            "FP: What is your purpose in coming here? Are you here to mock me?"), 0);
-                    }
-                    else if (owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad <= 3)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: Do you mind? I am busy."), 0);
-                    }
-                    else if (owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad <= 4)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: I will not rid myself of you, will I...?"), 0);
-                    }
-
-                    else if (owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 9)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: . . ."), 0);
-                    }
-                    else if (owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 10)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: I have been nothing but cold to you. And yet, here you are."), 0);
-                        owner.dialogBox.NewMessage(owner.Translate("FP: What goes through your miniscule synapses?"), 0);
-                        owner.dialogBox.NewMessage(owner.Translate(
-                            "FP: Is it only because I cannot kill you? Or is there another reason?"), 10);
-                    }
-
-                    else if (UnityEngine.Random.value < 0.1f)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: Your presence is not welcome. Please leave."), 0);
-                    }
-                    else if (UnityEngine.Random.value < 0.3f)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: Have you brought something new this time?"), 0);
-                    }
-                    else if (UnityEngine.Random.value < 0.3f)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: What is it this time?"), 0);
-                    }
-                    else if (UnityEngine.Random.value < 0.3f)
-                    {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: I am quite busy. Get on with it."), 0);
+                        result = self.Translate("FP: I have read this. As I have stated before:");
                     }
                     else
                     {
-                        owner.dialogBox.NewMessage(owner.Translate("FP: .  .  ."), 0);
+                        result = self.Translate("FP: As if I am not busy enough...");
                     }
-                    owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad++;
-                    return;
                 }
-                catch (Exception e) 
+                else
                 {
-                    Debug.Log("Pebbles is breaking the game, like an asshole: " + e);
+                    result = self.Translate("FP: This again? Fine.");
                 }
+                return result;
             }
             else
             {
-                orig(self, owner);
+                return orig(self, pearl);
+            }
+        }
+
+        private static void PearlIntro(On.SLOracleBehaviorHasMark.MoonConversation.orig_PearlIntro orig,
+            SLOracleBehaviorHasMark.MoonConversation self)
+        {
+            if (self != null && self.myBehavior.oracle != null && self.myBehavior.oracle.ID == Oracle.OracleID.SS &&
+                self.myBehavior.player != null && self.myBehavior.player.room != null &&
+                self.myBehavior.player.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                if (self.myBehavior.isRepeatedDiscussion)
+                {
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.myBehavior.AlreadyDiscussedItemString(true), 10));
+                    return;
+                }
+                if (!self.colorMode) { self.colorMode = true; }
+                switch (self.State.totalPearlsBrought + self.State.miscPearlCounter)
+                {
+                    case 0:
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                            "FP: Fine. I will read your garbage, provided it leads you to leave me be."), 10));
+                        return;
+                    case 1:
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                            "FP: More? Really?"), 0));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                            "FP: Fine."), 0));
+                        return;
+                    case 2:
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                            "FP: I suppose I must read to you again."), 10));
+                        return;
+                    case 3:
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                            "FP: I would much prefer it if you did not bring these upon every given opportunity."), 10));
+                        return;
+                    case 10:
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                            "FP: You are quite skilled when it comes to finding these."), 10));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                            "FP: I suppose I will entertain this behavior a short while longer."), 10));
+                        return;
+                    default:
+                        switch (UnityEngine.Random.Range(0, 5))
+                        {
+                            case 0:
+                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                    "FP: I suppose you expect me to read this."), 10));
+                                return;
+                            case 1:
+                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                    "FP: Something new? Fine."), 10));
+                                return;
+                            case 2:
+                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                    "FP: What is this?"), 10));
+                                return;
+                            case 3:
+                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                    "FP: Is that something new? Allow me to see."), 10));
+                                return;
+                            default:
+                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                    "FP: Let us see if there is anything important written on this."), 10));
+                                break;
+                        }
+                    break;
+                }
+                // end unbound-pebbles convo
+            }
+            else
+            {
+                orig(self);
             }
         }
 
         private static void ResumePearlread(On.SSOracleBehavior.orig_ResumePausedPearlConversation orig, SSOracleBehavior self)
         {
-            if (self != null && self.player != null && self.player.room != null &&
+            if (self != null && self.oracle != null && self.oracle.ID == Oracle.OracleID.SS && self.player != null && self.player.room != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 int num = UnityEngine.Random.Range(0, 5);
@@ -170,7 +187,7 @@ namespace Unbound
 
         private static string NameForPlayer(On.SSOracleBehavior.orig_NameForPlayer orig, SSOracleBehavior self, bool capitalized)
         {
-            if (self != null && self.player != null && self.player.room != null &&
+            if (self != null && self.oracle != null && self.oracle.ID == Oracle.OracleID.SS && self.player != null && self.player.room != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 string str = self.Translate("beast");
@@ -186,7 +203,7 @@ namespace Unbound
 
         private static void PlayerLeftDuringPearlread(On.SSOracleBehavior.orig_InterruptPearlMessagePlayerLeaving orig, SSOracleBehavior self)
         {
-            if (self != null && self.player != null && self.player.room != null &&
+            if (self != null && self.oracle != null && self.oracle.ID == Oracle.OracleID.SS && self.player != null && self.player.room != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 int randnum = UnityEngine.Random.Range(0, 8);
@@ -231,7 +248,7 @@ namespace Unbound
         private static void InitateConvo(On.SSOracleBehavior.orig_InitateConversation orig, SSOracleBehavior self,
             Conversation.ID convoId, SSOracleBehavior.ConversationBehavior convBehav)
         {
-            if (self != null && self.player != null && self.player.room != null &&
+            if (self != null && self.oracle != null && self.oracle.ID == Oracle.OracleID.SS && self.player != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 if (self.conversation != null)
@@ -250,13 +267,13 @@ namespace Unbound
 
         private static void JokeDialogue(On.SSOracleBehavior.orig_CreatureJokeDialog orig, SSOracleBehavior self)
         {
-            if (self != null && self.player != null && self.player.room != null &&
+            if (self != null && self.oracle != null && self.oracle.ID == Oracle.OracleID.SS && self.player != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 CreatureTemplate.Type frienddraggedin = self.CheckStrayCreatureInRoom();
                 if (frienddraggedin == CreatureTemplate.Type.Vulture || frienddraggedin == CreatureTemplate.Type.KingVulture ||
                     frienddraggedin == CreatureTemplate.Type.BigEel || frienddraggedin == CreatureTemplate.Type.MirosBird ||
-                    (ModManager.MSC && frienddraggedin == MoreSlugcats.MoreSlugcatsEnums.CreatureTemplateType.MirosVulture) ||
+                    (ModManager.MSC && frienddraggedin == MoreSlugcatsEnums.CreatureTemplateType.MirosVulture) ||
                     frienddraggedin == CreatureTemplate.Type.RedCentipede)
                 {
                     self.dialogBox.NewMessage(self.Translate("FP: How did you fit them inside here anyhow?"), 10);
@@ -269,7 +286,7 @@ namespace Unbound
                 }
                 if (frienddraggedin == CreatureTemplate.Type.DaddyLongLegs ||
                     frienddraggedin == CreatureTemplate.Type.BrotherLongLegs ||
-                    (ModManager.MSC && frienddraggedin == MoreSlugcats.MoreSlugcatsEnums.CreatureTemplateType.TerrorLongLegs))
+                    (ModManager.MSC && frienddraggedin == MoreSlugcatsEnums.CreatureTemplateType.TerrorLongLegs))
                 {
                     self.dialogBox.NewMessage(self.Translate("FP: Take your friend with you. Please. I beg you."), 10);
                 }
@@ -280,40 +297,58 @@ namespace Unbound
             }
         }
 
-        private static void AddEvents(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
+        private static void InitialText(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
         {
-            if (self != null && self.id != null && self.owner != null &&
-                self.id == Conversation.ID.Pebbles_White && self.owner.player.room.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.id != null && self.owner != null && self.owner.oracle != null && self.owner.oracle.ID == Oracle.OracleID.SS &&
+                self.owner.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
-                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 10));
-
-                self.events.Add(new Conversation.TextEvent(self, 0,
-                    self.Translate("FP: A little animal, on the floor of my chamber. I think I know what you are looking for."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0,
-                    self.Translate("FP: You're stuck in a cycle, a repeating pattern. You want a way out."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0,
-                    self.Translate("FP: Know that this does not make you special - every living thing shares that same frustration.<LINE>From the microbes in the processing strata to me, who am, if you excuse me, godlike in comparison."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0,
-                    self.Translate("FP: The good news first. In a way, I am what you are searching for. Me and my kind have as our<LINE>purpose to solve that very oscillating claustrophobia in the chests of you and countless others.<LINE>A strange charity - you the unknowing recipient, I the reluctant gift. The noble benefactors?<LINE>Gone."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0,
-                    self.Translate("FP: The bad news is that no definitive solution has been found. And every moment the equipment erodes to a new state of decay.<LINE>I can't help you collectively, or individually. I can't even help myself."), 0));
-
-                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
-
-                self.events.Add(new Conversation.TextEvent(self, 0, "FP: .  .  .", 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: That is quite the vile expression from such a little beast. Perhaps you do not share in the idiocy of your kind?"), 0));
-
-                if (self.owner.oracle.room.game.IsStorySession &&
-                    self.owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.memoryArraysFrolicked)
+                try
                 {
-                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: Yet you still find the time to put your grubby appendages all across my memory arrays.<LINE>So, I suppose, such is only the wistful musing of a superior being."), 0));
+                    self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 10));
+
+                    self.events.Add(new Conversation.TextEvent(self, 0,
+                        self.Translate("FP: A little animal, on the floor of my chamber. I think I know what you are looking for."), 0));
+                    self.events.Add(new Conversation.TextEvent(self, 0,
+                        self.Translate("FP: You're stuck in a cycle, a repeating pattern. You want a way out."), 0));
+                    self.events.Add(new Conversation.TextEvent(self, 0,
+                        self.Translate(
+                            "FP: Know that this does not make you special - every living thing shares that same frustration.<LINE>" +
+                            "From the microbes in the processing strata to me, who am, if you excuse me, godlike in comparison."), 0));
+                    self.events.Add(new Conversation.TextEvent(self, 0,
+                        self.Translate("FP: The good news first. In a way, I am what you are searching for. Me and my kind have as our<LINE>" +
+                        "purpose to solve that very oscillating claustrophobia in the chests of you and countless others.<LINE>" +
+                        "A strange charity - you the unknowing recipient, I the reluctant gift. The noble benefactors?<LINE>Gone."), 0));
+                    self.events.Add(new Conversation.TextEvent(self, 0,
+                        self.Translate(
+                            "FP: The bad news is that no definitive solution has been found. And every moment the equipment erodes to a new state of decay.<LINE>" +
+                            "I can't help you collectively, or individually. I can't even help myself."), 0));
+
+                    self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
+
+                    self.events.Add(new Conversation.TextEvent(self, 0, "FP: .  .  .", 0));
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                        "FP: That is quite the vile expression from such a little beast. Perhaps you do not share in the idiocy of your kind?"), 0));
+
+                    if (self.owner.oracle.room.game.IsStorySession &&
+                        self.owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.memoryArraysFrolicked)
+                    {
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                            "FP: Yet you still find the time to put your grubby appendages all across my memory arrays.<LINE>" +
+                            "So, I suppose, such is only the wistful musing of a superior being."), 0));
+                    }
+
+                    self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
+
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                        "FP: Find the old path. Go to the west past the Farm Arrays, and then down into the earth where the land fissures,<LINE>" +
+                        "as deep as you can reach, where the ancients built their temples and danced their silly rituals."), 0));
+                    self.events.Add(new Conversation.TextEvent(self, 0, "FP: Best of luck to you, distraught one. There is nothing more I can do.", 0));
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: I must resume my work."), 0));
                 }
-
-                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
-
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: Find the old path. Go to the west past the Farm Arrays, and then down into the earth where the land fissures,<LINE>as deep as you can reach, where the ancients built their temples and danced their silly rituals."), 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, "FP: Best of luck to you, distraught one. There is nothing more I can do.", 0));
-                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: I must resume my work."), 0));
+                catch (Exception e) 
+                {
+                    NCRDebug.Log("Unbound Intro Error: " + e);
+                }
             }
             else { orig(self); }
         }

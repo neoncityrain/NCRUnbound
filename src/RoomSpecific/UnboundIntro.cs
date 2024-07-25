@@ -23,7 +23,7 @@ namespace Unbound
             }
             catch (Exception e)
             {
-                Debug.Log("Could not ban creatures from the cutscene room! Error code: " + e);
+                NCRDebug.Log("Could not ban creatures from the cutscene room! Error code: " + e);
             }
             
 
@@ -36,12 +36,12 @@ namespace Unbound
                         (room.game.Players[0].realizedCreature as Player).objectInStomach =
                         new DataPearl.AbstractDataPearl(room.world, AbstractPhysicalObject.AbstractObjectType.DataPearl,
                         null, new WorldCoordinate(room.abstractRoom.index, 1, 1, 0), room.game.GetNewID(), -1, -1, null,
-                        Pearl.unboundKarmaPearl);
+                        UnboundEnums.unboundKarmaPearl);
                         // first player only
                     }
                     catch (Exception e)
                     {
-                        Debug.Log("Could not spawn unbound pearl! Error code: " + e);
+                        NCRDebug.Log("Could not spawn unbound pearl! Error code: " + e);
                     }
                     
 
@@ -73,7 +73,7 @@ namespace Unbound
                             }
                             else
                             {
-                                Debug.Log("Ya got a lot of players there, eh? I'm flattered! Have fun, gang :]");
+                                NCRDebug.Log("Ya got a lot of players there, eh? I'm flattered! Have fun, gang :]");
                                 (room.game.Players[i].realizedCreature as Player).standing = false;
                                 (room.game.Players[i].realizedCreature as Player).bodyChunks[0].HardSetPosition(room.MiddleOfTile(112, 72));
                                 (room.game.Players[i].realizedCreature as Player).bodyChunks[1].HardSetPosition(room.MiddleOfTile(113, 72));
@@ -81,7 +81,7 @@ namespace Unbound
                         }
                         catch (Exception e)
                         {
-                            Debug.Log("Error triggered: " + e);
+                            NCRDebug.Log("Error triggered: " + e);
                         }
                     }
                 }
@@ -105,14 +105,14 @@ namespace Unbound
                         // frees players from stunlock
                     }
 
-                    Debug.Log("Start of game initiated, yippee!");
+                    NCRDebug.Log("Start of game initiated, yippee!");
                     Destroy();
                     // then die <3
                 }
             }
             else
             {
-                Debug.Log("Player not realized! Sorry for dropping you into water to drown, I twied :(");
+                NCRDebug.Log("Player not realized! Sorry for dropping you into water to drown, I twied :(");
             }
         }
     }

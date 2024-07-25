@@ -10,6 +10,35 @@ namespace Unbound
             On.DataPearl.UniquePearlHighLightColor += DataPearl_UniquePearlHighLightColor;
             On.DataPearl.ApplyPalette += DataPearl_ApplyPalette;
             On.Player.StomachGlowLightColor += Player_StomachGlowLightColor;
+
+            On.DataPearl.PearlIsNotMisc += NotMisc;
+            On.MoreSlugcats.PersistentObjectTracker.getRepData += RepData;
+        }
+
+        private static string RepData(On.MoreSlugcats.PersistentObjectTracker.orig_getRepData orig, PersistentObjectTracker self,
+            AbstractPhysicalObject abstractObj)
+        {
+            if (abstractObj is DataPearl.AbstractDataPearl &&
+                (abstractObj as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
+            {
+                return "unboundKarmaPearl";
+            }
+            else
+            {
+                return orig(self, abstractObj);
+            }
+        }
+
+        private static bool NotMisc(On.DataPearl.orig_PearlIsNotMisc orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
+        {
+            if (pearlType == UnboundEnums.unboundKarmaPearl)
+            {
+                return true;
+            }
+            else
+            {
+                return orig(pearlType);
+            }
         }
 
         private static Color? DataPearl_UniquePearlHighLightColor(On.DataPearl.orig_UniquePearlHighLightColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
@@ -53,7 +82,7 @@ namespace Unbound
             }
             else
             {
-                stomachObject = (self.State as MoreSlugcats.PlayerNPCState).StomachObject;
+                stomachObject = (self.State as PlayerNPCState).StomachObject;
             }
 
             if (stomachObject != null)

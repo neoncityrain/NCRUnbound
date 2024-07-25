@@ -2,53 +2,41 @@
 {
     public class UnboundEnums
     {
+        public static DataPearl.AbstractDataPearl.DataPearlType unboundKarmaPearl;
+        // pearls
         public static SlugcatStats.Name NCRTechnician;
         public static SlugcatStats.Name NCRUnbound;
-        public static SSOracleBehavior.Action UnboundPebblesSlumberParty;
-        public static SSOracleBehavior.SubBehavior.SubBehavID UnbSlumberParty;
+        // slugcats
         public static Conversation.ID unbKarmaPearlConv;
-        public static DataPearl.AbstractDataPearl.DataPearlType unboundKarmaPearl;
-        public static Conversation.ID UnboundSleepoverConversation;
+        // conversations
+        public static SSOracleBehavior.Action UnbSlumberParty;
+        // pebbsactions
+        public static SSOracleBehavior.SubBehavior.SubBehavID UnbSlumberPartySub;
+        public static SSOracleBehavior.SubBehavior.SubBehavID SSMeetUnboundSub;
+        // pebbssubbehaviors
 
         public static void RegisterValues()
         {
-            NCRUnbound = new("NCRunbound", false);
-            NCRTechnician = new ("NCRtech", false);
-            UnboundPebblesSlumberParty = new ("UnboundPebblesSlumberParty", true);
-            UnbSlumberParty = new ("UnbSlumberParty", true);
-            unbKarmaPearlConv = new ("unbKarmaPearlConv", true);
-            unboundKarmaPearl = new("unboundKarmaPearl", true);
-            UnboundSleepoverConversation = new("UnboundSleepoverConversation", true);
+            unboundKarmaPearl = new DataPearl.AbstractDataPearl.DataPearlType("unboundKarmaPearl", true);
+            // pearls
+            NCRUnbound = new SlugcatStats.Name("NCRunbound", false);
+            NCRTechnician = new SlugcatStats.Name("NCRtech", false);
+            // slugcats
+            unbKarmaPearlConv = new Conversation.ID("unbKarmaPearlConv", true);
+            // conversations
+            UnbSlumberParty = new SSOracleBehavior.Action("UnbSlumberParty", true);
+            UnbSlumberPartySub = new SSOracleBehavior.SubBehavior.SubBehavID("UnbSlumberPartySub", true);
+            SSMeetUnboundSub = new SSOracleBehavior.SubBehavior.SubBehavID("SSMeetUnboundSub", true);
         }
+
         public static void UnregisterValues()
         {
-            Conversation.ID sleepoverconvo = UnboundSleepoverConversation;
-            if (sleepoverconvo != null) { sleepoverconvo.Unregister(); }
-            UnboundSleepoverConversation = null;
-
-            DataPearl.AbstractDataPearl.DataPearlType unbpearl = unboundKarmaPearl;
-            if (unbpearl != null) { unbpearl.Unregister(); }
-            unboundKarmaPearl = null;
-
-            Conversation.ID karmaconvo = unbKarmaPearlConv;
-            if (karmaconvo != null) { karmaconvo.Unregister(); }
-            unbKarmaPearlConv = null;
-
-            SlugcatStats.Name smiley = NCRTechnician;
-            if (smiley != null) { smiley.Unregister(); }
-            NCRTechnician = null;
-
-            SlugcatStats.Name unb = NCRUnbound;
-            if (unb != null) {  unb.Unregister(); }
-            NCRUnbound = null;
-
-            SSOracleBehavior.Action partysover = UnboundPebblesSlumberParty;
-            if (partysover != null) { partysover.Unregister(); }
-            UnboundPebblesSlumberParty = null;
-
-            SSOracleBehavior.SubBehavior.SubBehavID noparty = UnbSlumberParty;
-            if (noparty != null) { noparty.Unregister(); }
-            UnbSlumberParty = null;
+            if (SSMeetUnboundSub != null) { SSMeetUnboundSub.Unregister(); SSMeetUnboundSub = null; }
+            if (unbKarmaPearlConv != null) { unbKarmaPearlConv.Unregister(); unbKarmaPearlConv = null; }
+            if (NCRTechnician != null) { NCRTechnician.Unregister(); NCRTechnician = null; }
+            if (NCRUnbound != null) { NCRUnbound.Unregister(); NCRUnbound = null; }
+            if (UnbSlumberParty != null) { UnbSlumberParty.Unregister(); UnbSlumberParty = null; }
+            if (UnbSlumberPartySub != null) { UnbSlumberPartySub.Unregister(); UnbSlumberPartySub = null; }
         }
 
         // end names

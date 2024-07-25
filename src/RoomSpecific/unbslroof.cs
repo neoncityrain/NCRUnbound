@@ -33,13 +33,13 @@ public class UnbSLWall06 : UpdatableAndDeletable
                     {
                         this.abstractcat.Realize();
                         this.technicianCat.mainBodyChunk.HardSetPosition(new Vector2(30f, 34f));
-                        Debug.Log("Tech position set!");
+                        NCRDebug.Log("Tech position set!");
                     }
                 }
-                catch (Exception e) { Debug.Log("Error setting tech position: " + e); }
+                catch (Exception e) { NCRDebug.Log("Error setting tech position: " + e); }
 
 
-                Debug.Log("Running timer...");
+                NCRDebug.Log("Running timer...");
                 if (this.room == player.room) { this.timer++; }
                 // proceed timer while in room
 
@@ -70,7 +70,7 @@ public class UnbSLWall06 : UpdatableAndDeletable
                 // start init
                 try
                 {
-                    Debug.Log("Initiating...");
+                    NCRDebug.Log("Initiating...");
                     this.timer = 0;
 
                     this.abstractcat = new AbstractCreature(this.room.world,
@@ -84,20 +84,20 @@ public class UnbSLWall06 : UpdatableAndDeletable
 
                     this.technicianCat = this.abstractcat.realizedCreature;
                 }
-                catch (Exception e) { Debug.Log("Error setting up abstractcat: " + e); }
+                catch (Exception e) { NCRDebug.Log("Error setting up abstractcat: " + e); }
 
 
                 
                 try { this.technicianCat = this.technicianCat as Player;}
-                catch (Exception e) { Debug.Log("Error techniciancat to be player: " + e); }
+                catch (Exception e) { NCRDebug.Log("Error techniciancat to be player: " + e); }
 
                 try { this.room.abstractRoom.AddEntity(this.abstractcat); }
-                catch (Exception e) { Debug.Log("Error realizing: " + e); }
+                catch (Exception e) { NCRDebug.Log("Error realizing: " + e); }
 
 
                 this.setUp = true;
             }
-            catch (Exception e) { Debug.Log("Error in initiating: " + e); this.Destroy(); }
+            catch (Exception e) { NCRDebug.Log("Error in initiating: " + e); this.Destroy(); }
             // end setup
         }
     }

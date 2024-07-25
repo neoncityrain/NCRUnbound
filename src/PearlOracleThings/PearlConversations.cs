@@ -6,22 +6,41 @@ namespace Unbound
     {
         public static void Init()
         {
-            On.Conversation.DataPearlToConversation += Conversation_DataPearlToConversation;
-            On.SLOracleBehaviorHasMark.MoonConversation.AddEvents += MoonConversation_AddEvents;
+            On.Conversation.DataPearlToConversation += DataPearlToConversation;
+            On.SLOracleBehaviorHasMark.MoonConversation.AddEvents += PearlTalk;
         }
 
-        private static void MoonConversation_AddEvents(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig, SLOracleBehaviorHasMark.MoonConversation self)
+        private static void PearlTalk(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig, SLOracleBehaviorHasMark.MoonConversation self)
         {
-            if (self.id != null && self != null &&
-                self.id != Conversation.ID.MoonFirstPostMarkConversation &&
-                self.id != Conversation.ID.MoonSecondPostMarkConversation &&
-                self.id != MoreSlugcats.MoreSlugcatsEnums.ConversationID.Moon_Gourmand_First_Conversation &&
-                self.id != Conversation.ID.MoonRecieveSwarmer &&
+            if (self.id != null && self != null && self.myBehavior != null && self.myBehavior.oracle != null && self.myBehavior.player != null &&
                 self.id == UnboundEnums.unbKarmaPearlConv)
             {
-                self.PearlIntro();
-                self.LoadEventsFromFile(1431821);
-                return;
+                if (self.myBehavior.oracle.ID == Oracle.OracleID.SL)
+                {
+                    // leave this, as it should probably be tweaked for moon?
+                    self.PearlIntro();
+                    self.LoadEventsFromFile(1431821);
+                    return;
+                }
+                else if (self.myBehavior.oracle.ID == Oracle.OracleID.SS && self.myBehavior.player.GetNCRunbound().IsUnbound)
+                {
+                    if (self.myBehavior.isRepeatedDiscussion)
+                    { 
+                        self.PearlIntro();
+                        self.LoadEventsFromFile(1431821); // change this
+                    }
+                    else
+                    {
+                        self.dialogBox.NewMessage(self.Translate("FP: . . ."), 10);
+                    }
+                    return;
+                }
+                else
+                {
+                    self.PearlIntro();
+                    self.LoadEventsFromFile(1431821);
+                    return;
+                }
             }
             else
             {
@@ -29,10 +48,11 @@ namespace Unbound
             }
         }
 
-        private static Conversation.ID Conversation_DataPearlToConversation(On.Conversation.orig_DataPearlToConversation orig, DataPearl.AbstractDataPearl.DataPearlType type)
+        private static Conversation.ID DataPearlToConversation(On.Conversation.orig_DataPearlToConversation orig,
+            DataPearl.AbstractDataPearl.DataPearlType type)
         {
             if (type != null &&
-                type == Pearl.unboundKarmaPearl)
+                type == UnboundEnums.unboundKarmaPearl)
             {
                 return UnboundEnums.unbKarmaPearlConv;
             }

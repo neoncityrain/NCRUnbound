@@ -33,6 +33,7 @@ namespace Unbound
 
                 UnboundEnums.RegisterValues();
 
+                UnboundSlugcatStats.Init();
                 UnbMisc.Init();
                 UnbGraphics.Init();
                 // _Main
@@ -69,6 +70,7 @@ namespace Unbound
         private void RainWorldGameOnShutDownProcess(On.RainWorldGame.orig_ShutDownProcess orig, RainWorldGame self)
         {
             orig(self);
+            if (UnboundEnums.unboundKarmaPearl != null) { UnboundEnums.unboundKarmaPearl.Unregister(); UnboundEnums.unboundKarmaPearl = null; }
             ClearMemory();
         }
         private void GameSessionOnctor(On.GameSession.orig_ctor orig, GameSession self, RainWorldGame game)
