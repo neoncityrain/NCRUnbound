@@ -9,7 +9,6 @@ namespace Unbound
         {
             On.SSOracleBehavior.PebblesConversation.AddEvents += InitialText;
             On.SSOracleBehavior.CreatureJokeDialog += JokeDialogue; // just adds the prefix to his dialogue. for now.
-            On.SSOracleBehavior.InitateConversation += InitateConvo; // adds prefix and forces colourmode to always be active
             On.SSOracleBehavior.InterruptPearlMessagePlayerLeaving += PlayerLeftDuringPearlread;
             On.SSOracleBehavior.ResumePausedPearlConversation += ResumePearlread;
             On.SSOracleBehavior.NameForPlayer += NameForPlayer; // i dont think this is used, BUT just in case!
@@ -17,32 +16,6 @@ namespace Unbound
             On.SLOracleBehaviorHasMark.MoonConversation.PearlIntro += PearlIntro;
             On.OracleBehavior.AlreadyDiscussedItemString += AlreadyDiscussedItemString;
             // pearl intros
-        }
-
-        public static void UnbPearlTalk(SSOracleBehavior self)
-        {
-            #region UnboundPearl
-            if (self.conversation != null && self.conversation.id == Conversation.ID.Pebbles_White)
-            {
-                for (int j = 0; j < self.player.grasps.Length; j++)
-                {
-                    if (self.player.grasps[j] != null && self.player.grasps[j].grabbed is DataPearl &&
-                        (self.player.grasps[j].grabbed as DataPearl).AbstractPearl.dataPearlType == UnboundEnums.unboundKarmaPearl)
-                    {
-                        self.pearlConversation.Interrupt(self.Translate("FP: . . ."), 10);
-                        self.restartConversationAfterCurrentDialoge = false;
-
-                        self.NewAction(UnboundEnums.UnbSlumberParty);
-                        self.player.ReleaseGrasp(j);
-                        return;
-                    }
-                }
-                if (self.player.objectInStomach != null)
-                {
-                    self.player.Regurgitate();
-                }
-            }
-            #endregion
         }
 
         private static string AlreadyDiscussedItemString(On.OracleBehavior.orig_AlreadyDiscussedItemString orig, OracleBehavior self, bool pearl)
@@ -83,63 +56,66 @@ namespace Unbound
                 self.myBehavior.player != null && self.myBehavior.player.room != null &&
                 self.myBehavior.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
+                if (!self.colorMode) { self.colorMode = true; }
                 if (self.myBehavior.isRepeatedDiscussion)
                 {
                     self.events.Add(new Conversation.TextEvent(self, 0, self.myBehavior.AlreadyDiscussedItemString(true), 10));
                     return;
                 }
-                if (!self.colorMode) { self.colorMode = true; }
-                switch (self.State.totalPearlsBrought + self.State.miscPearlCounter)
+                else
                 {
-                    case 0:
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                            "FP: Fine. I will read your garbage, provided it leads you to leave me be."), 10));
-                        return;
-                    case 1:
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                            "FP: More? Really?"), 0));
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                            "FP: Fine."), 0));
-                        return;
-                    case 2:
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                            "FP: I suppose I must read to you again."), 10));
-                        return;
-                    case 3:
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                            "FP: I would much prefer it if you did not bring these upon every given opportunity."), 10));
-                        return;
-                    case 10:
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                            "FP: You are quite skilled when it comes to finding these."), 10));
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                            "FP: I suppose I will entertain this behavior a short while longer."), 10));
-                        return;
-                    default:
-                        switch (UnityEngine.Random.Range(0, 5))
-                        {
-                            case 0:
-                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                                    "FP: I suppose you expect me to read this."), 10));
-                                return;
-                            case 1:
-                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                                    "FP: Something new? Fine."), 10));
-                                return;
-                            case 2:
-                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                                    "FP: What is this?"), 10));
-                                return;
-                            case 3:
-                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                                    "FP: Is that something new? Allow me to see."), 10));
-                                return;
-                            default:
-                                self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
-                                    "FP: Let us see if there is anything important written on this."), 10));
-                                break;
-                        }
-                    break;
+                    switch (self.State.totalPearlsBrought + self.State.miscPearlCounter)
+                    {
+                        case 0:
+                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                "FP: Fine. I will read your garbage, provided it leads you to leave me be."), 10));
+                            return;
+                        case 1:
+                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                "FP: More? Really?"), 0));
+                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                "FP: Fine."), 0));
+                            return;
+                        case 2:
+                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                "FP: I suppose I must read to you again."), 10));
+                            return;
+                        case 3:
+                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                "FP: I would much prefer it if you did not bring these upon every given opportunity."), 10));
+                            return;
+                        case 10:
+                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                "FP: You are quite skilled when it comes to finding these."), 10));
+                            self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                "FP: I suppose I will entertain this behavior a short while longer."), 10));
+                            return;
+                        default:
+                            switch (UnityEngine.Random.Range(0, 5))
+                            {
+                                case 0:
+                                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                        "FP: I suppose you expect me to read this."), 10));
+                                    return;
+                                case 1:
+                                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                        "FP: Something new? Fine."), 10));
+                                    return;
+                                case 2:
+                                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                        "FP: What is this?"), 10));
+                                    return;
+                                case 3:
+                                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                        "FP: Is that something new? Allow me to see."), 10));
+                                    return;
+                                default:
+                                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
+                                        "FP: Let us see if there is anything important written on this."), 10));
+                                    break;
+                            }
+                            break;
+                    }
                 }
                 // end unbound-pebbles convo
             }
@@ -245,26 +221,6 @@ namespace Unbound
             else { orig(self); }
         }
 
-        private static void InitateConvo(On.SSOracleBehavior.orig_InitateConversation orig, SSOracleBehavior self,
-            Conversation.ID convoId, SSOracleBehavior.ConversationBehavior convBehav)
-        {
-            if (self != null && self.oracle != null && self.oracle.ID == Oracle.OracleID.SS && self.player != null &&
-                self.player.room.game.session.characterStats.name.value == "NCRunbound")
-            {
-                if (self.conversation != null)
-                {
-                    self.conversation.Interrupt("FP: ...", 0);
-                    self.conversation.Destroy();
-                }
-                self.conversation = new SSOracleBehavior.PebblesConversation(self, convBehav, convoId, self.dialogBox);
-                self.conversation.colorMode = true;
-            }
-            else
-            {
-                orig(self, convoId, convBehav);
-            }
-        }
-
         private static void JokeDialogue(On.SSOracleBehavior.orig_CreatureJokeDialog orig, SSOracleBehavior self)
         {
             if (self != null && self.oracle != null && self.oracle.ID == Oracle.OracleID.SS && self.player != null &&
@@ -334,7 +290,7 @@ namespace Unbound
                     {
                         self.events.Add(new Conversation.TextEvent(self, 0, self.Translate(
                             "FP: Yet you still find the time to put your grubby appendages all across my memory arrays.<LINE>" +
-                            "So, I suppose, such is only the wistful musing of a superior being."), 0));
+                            "So I suppose such is only the wistful musing of a superior being."), 0));
                     }
 
                     self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));

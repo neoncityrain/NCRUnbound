@@ -1,8 +1,5 @@
 ﻿using System;
 
-#pragma warning disable CS0618
-[assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
-
 namespace Unbound
 {
     [BepInPlugin("NCR.theunbound", "unbound", "2.2.1")]
@@ -70,22 +67,13 @@ namespace Unbound
         private void RainWorldGameOnShutDownProcess(On.RainWorldGame.orig_ShutDownProcess orig, RainWorldGame self)
         {
             orig(self);
-            if (UnboundEnums.unboundKarmaPearl != null) { UnboundEnums.unboundKarmaPearl.Unregister(); UnboundEnums.unboundKarmaPearl = null; }
-            ClearMemory();
+            UnboundEnums.FullUnregister();
         }
         private void GameSessionOnctor(On.GameSession.orig_ctor orig, GameSession self, RainWorldGame game)
         {
             orig(self, game);
-            ClearMemory();
+            UnboundEnums.FullUnregister();
         }
-
-        private void ClearMemory()
-        {
-            // clear collections here
-            UnboundEnums.UnregisterValues();
-        }
-
-
         public NCRUnbound()
         {
             try

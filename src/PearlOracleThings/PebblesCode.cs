@@ -7,21 +7,90 @@ namespace Unbound
 {
     internal class PebblesCode
     {
+
         public static void Init()
         {
             On.SSOracleBehavior.ThrowOutBehavior.Update += ThrowOutToSleepover;
             On.SSOracleBehavior.Update += UpdateBehavior;
             On.SSOracleBehavior.SeePlayer += SeeUnbound;
             On.SSOracleBehavior.NewAction += NewAction;
-
             On.SSOracleBehavior.storedPearlOrbitLocation += storedPearlOrbitLocation;
             On.SSOracleBehavior.ctor += SSctor;
+            On.SSOracleBehavior.UpdateStoryPearlCollection += StoryPearl;
+            On.SSOracleBehavior.InitateConversation += InitateConversation;
+        }
+
+        private static void InitateConversation(On.SSOracleBehavior.orig_InitateConversation orig, SSOracleBehavior self, Conversation.ID convoId, SSOracleBehavior.ConversationBehavior convBehav)
+        {
+            orig(self, convoId, convBehav);
+            if (self.player.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                self.conversation.colorMode = true;
+            }
+        }
+
+        private static void StoryPearl(On.SSOracleBehavior.orig_UpdateStoryPearlCollection orig, SSOracleBehavior self)
+        {
+            if (self != null && self.player != null &&
+                self.player.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                List<DataPearl.AbstractDataPearl> list = new List<DataPearl.AbstractDataPearl>();
+                int num = 0;
+                foreach (DataPearl.AbstractDataPearl abstractDataPearl in self.readDataPearlOrbits)
+                {
+                    if (abstractDataPearl.realizedObject != null)
+                    {
+                        if (abstractDataPearl.realizedObject.grabbedBy.Count > 0)
+                        {
+                            list.Add(abstractDataPearl);
+                        }
+                        else
+                        {
+                            if (!self.readPearlGlyphs.ContainsKey(abstractDataPearl))
+                            {
+                                try
+                                {
+                                    self.readPearlGlyphs.Add(abstractDataPearl, new
+                                    GlyphLabel(abstractDataPearl.realizedObject.firstChunk.pos, GlyphLabel.RandomString(1, 1, 12842 +
+                                    (((abstractDataPearl as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl) ? 4 :
+                                    abstractDataPearl.dataPearlType.Index), false)));
+                                    self.oracle.room.AddObject(self.readPearlGlyphs[abstractDataPearl]);
+                                }
+                                catch (Exception e)
+                                {
+                                    NCRDebug.Log("Error with glyphs: " + e);
+                                }
+                                
+                            }
+                            else
+                            {
+                                self.readPearlGlyphs[abstractDataPearl].setPos = new Vector2?(abstractDataPearl.realizedObject.firstChunk.pos);
+                            }
+                            abstractDataPearl.realizedObject.firstChunk.pos = Custom.MoveTowards(abstractDataPearl.realizedObject.firstChunk.pos,
+                                self.storedPearlOrbitLocation(num), 2.5f);
+                            abstractDataPearl.realizedObject.firstChunk.vel *= 0.99f;
+                            num++;
+                        }
+                    }
+                }
+                foreach (DataPearl.AbstractDataPearl abstractDataPearl2 in list)
+                {
+                    NCRDebug.Log("stored pearl grabbed, releasing from storage " + abstractDataPearl2);
+                    self.readPearlGlyphs[abstractDataPearl2].Destroy();
+                    self.readPearlGlyphs.Remove(abstractDataPearl2);
+                    self.readDataPearlOrbits.Remove(abstractDataPearl2);
+                }
+            }
+            else
+            {
+                orig(self);
+            }
         }
 
         private static Vector2 storedPearlOrbitLocation(On.SSOracleBehavior.orig_storedPearlOrbitLocation orig, SSOracleBehavior self, int index)
         {
             if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
-                self.oracle.ID == Oracle.OracleID.SS && self.oracle != null && ModManager.MSC &&
+                self.oracle.ID == Oracle.OracleID.SS && self.oracle != null &&
                 self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 1 &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
@@ -40,32 +109,33 @@ namespace Unbound
         private static void SSctor(On.SSOracleBehavior.orig_ctor orig, SSOracleBehavior self, Oracle oracle)
         {
             orig(self, oracle);
-            if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
-                self.player.room.game.session.characterStats.name.value == "NCRunbound")
+            if (self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.InitStoryPearlCollection();
-                
-                if (self.conversation != null)
-                {
-                    self.conversation.colorMode = true;
-                }
             }
         }
 
         private static void NewAction(On.SSOracleBehavior.orig_NewAction orig, SSOracleBehavior self, SSOracleBehavior.Action nextAction)
         {
             if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
-                nextAction != self.action &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 SSOracleBehavior.SubBehavior.SubBehavID subBehavID = SSOracleBehavior.SubBehavior.SubBehavID.General;
 
-                if (nextAction == SSOracleBehavior.Action.MeetWhite_Curious ||
+                if (nextAction == UnboundEnums.UnbSlumberParty &&
+                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad >= 1 &&
+                    nextAction != SSOracleBehavior.Action.MeetWhite_Shocked)
+                {
+                    subBehavID = UnboundEnums.UnbSlumberPartySub;
+                }
+                else if (nextAction == SSOracleBehavior.Action.MeetWhite_Curious ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_Images ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_SecondCurious ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_Shocked ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_Talking ||
-                    nextAction == SSOracleBehavior.Action.MeetWhite_Texting)
+                    nextAction == SSOracleBehavior.Action.MeetWhite_Texting ||
+                    (nextAction == UnboundEnums.UnbSlumberParty &&
+                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1))
                 {
                     try { subBehavID = UnboundEnums.SSMeetUnboundSub; }
                     catch (Exception e) { NCRDebug.Log("Error meeting Unbound: " + e); }
@@ -88,10 +158,6 @@ namespace Unbound
                 {
                     subBehavID = SSOracleBehavior.SubBehavior.SubBehavID.ThrowOut;
                 }
-                else if (nextAction == UnboundEnums.UnbSlumberParty)
-                {
-                    subBehavID = UnboundEnums.UnbSlumberPartySub;
-                }
                 else
                 {
                     subBehavID = SSOracleBehavior.SubBehavior.SubBehavID.General;
@@ -101,6 +167,7 @@ namespace Unbound
 
                 if (subBehavID != SSOracleBehavior.SubBehavior.SubBehavID.General && subBehavID != self.currSubBehavior.ID)
                 {
+                    if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Next subBehavior: " + subBehavID); }
                     SSOracleBehavior.SubBehavior subBehavior = null;
                     for (int i = 0; i < self.allSubBehaviors.Count; i++)
                     {
@@ -112,19 +179,24 @@ namespace Unbound
                     }
                     if (subBehavior == null)
                     {
-                        if (subBehavID == SSOracleBehavior.SubBehavior.SubBehavID.MeetWhite ||
-                            subBehavID == UnboundEnums.UnbSlumberPartySub)
+                        self.LockShortcuts();
+                        if (subBehavID == UnboundEnums.UnbSlumberPartySub &&
+                            self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad >= 1 &&
+                            nextAction != SSOracleBehavior.Action.MeetWhite_Shocked)
                         {
-                            self.LockShortcuts();
+                            subBehavior = new UnboundPebblesSleepover(self);
+                            self.UnlockShortcuts();
+                        }
+                        else if (subBehavID == SSOracleBehavior.SubBehavior.SubBehavID.MeetWhite ||
+                            subBehavID == UnboundEnums.SSMeetUnboundSub ||
+                            (nextAction == UnboundEnums.UnbSlumberParty &&
+                            self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1))
+                        {
                             subBehavior = new SSOracleBehavior.SSOracleMeetWhite(self);
                         }
                         else if (subBehavID == SSOracleBehavior.SubBehavior.SubBehavID.ThrowOut)
                         {
                             subBehavior = new SSOracleBehavior.ThrowOutBehavior(self);
-                        }
-                        else if (subBehavID == UnboundEnums.UnbSlumberPartySub)
-                        {
-                            subBehavior = new UnboundPebblesSleepover(self);
                         }
                         self.allSubBehaviors.Add(subBehavior);
                     }
@@ -223,20 +295,33 @@ namespace Unbound
                 }
                 #endregion
 
-                if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad <= 1)
+                if (self.action != SSOracleBehavior.Action.MeetWhite_Shocked && self.action != UnboundEnums.UnbSlumberParty
+                    && self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad >= 1)
                 {
+                    if (self.player.GetNCRunbound().MoreDebug)
+                    {
+                        NCRDebug.Log("Pebbles seeing Unbound again!");
+                    }
+                    self.NewAction(UnboundEnums.UnbSlumberParty);
+                }
+                else if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1)
+                {
+                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad = 0;
                     if (self.player.GetNCRunbound().MoreDebug && self.action != SSOracleBehavior.Action.MeetWhite_Shocked)
                     { NCRDebug.Log("Pebbles meet Unbound!"); }
                     self.NewAction(SSOracleBehavior.Action.MeetWhite_Shocked);
                     self.SlugcatEnterRoomReaction();
                 }
-                else
+                if (self.player.GetNCRunbound().MoreDebug)
                 {
-                    if (self.player.GetNCRunbound().MoreDebug && self.action != UnboundEnums.UnbSlumberParty)
-                    { NCRDebug.Log("Pebbles seeing Unbound again!"); }
-                    self.NewAction(UnboundEnums.UnbSlumberParty);
+                    NCRDebug.Log("Conversations with Pebbles: " +
+                            self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad.ToString());
                 }
 
+                if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad != 0)
+                {
+                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad++;
+                }
             }
             else
             {
@@ -247,15 +332,17 @@ namespace Unbound
         private static void UpdateBehavior(On.SSOracleBehavior.orig_Update orig, SSOracleBehavior self, bool eu)
         {
             if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
-                self.oracle.ID == Oracle.OracleID.SS &&
+                self.oracle.ID == Oracle.OracleID.SS && self.oracle != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
-                if (ModManager.MMF && self.player.dead && self.currSubBehavior.ID != SSOracleBehavior.SubBehavior.SubBehavID.ThrowOut)
+                if (self.player.dead && self.currSubBehavior.ID != SSOracleBehavior.SubBehavior.SubBehavID.ThrowOut)
                 {
+                    // kicks out dead player
                     self.NewAction(SSOracleBehavior.Action.ThrowOut_KillOnSight);
                 }
 
-                if (self.inspectPearl != null && self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 0)
+                if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 1 &&
+                    self.inspectPearl != null)
                 {
                     if (self.inspectPearl.AbstractPearl.dataPearlType == UnboundEnums.unboundKarmaPearl)
                     {
@@ -284,11 +371,13 @@ namespace Unbound
                         }
                     }
 
-                    Vector2 vector = self.oracle.firstChunk.pos - self.inspectPearl.firstChunk.pos;
-                    float num = Custom.Dist(self.oracle.firstChunk.pos, self.inspectPearl.firstChunk.pos);
+                    Vector2 oracletopearl = self.oracle.firstChunk.pos - self.inspectPearl.firstChunk.pos;
+                    float oraclepearldis = Custom.Dist(self.oracle.firstChunk.pos, self.inspectPearl.firstChunk.pos);
 
-                    self.inspectPearl.firstChunk.vel += Vector2.ClampMagnitude(vector, 40f) / 40f * Mathf.Clamp(2f - num / 200f * 2f, 0.5f, 2f);
-                    if (self.inspectPearl.firstChunk.vel.magnitude < 1f && num < 16f)
+                    self.inspectPearl.firstChunk.vel += Vector2.ClampMagnitude(oracletopearl, 40f) / 40f *
+                        Mathf.Clamp(2f - oraclepearldis / 200f * 2f, 0.5f, 2f);
+
+                    if (self.inspectPearl.firstChunk.vel.magnitude < 1f && oraclepearldis < 16f)
                     {
                         self.inspectPearl.firstChunk.vel = Custom.RNV() * 8f;
                     }
@@ -297,12 +386,13 @@ namespace Unbound
                         self.inspectPearl.firstChunk.vel /= 2f;
                     }
 
-                    if (num < 100f && self.pearlConversation == null && self.conversation == null)
+                    if (oraclepearldis < 100f && self.pearlConversation == null && self.conversation == null)
                     {
                         self.StartItemConversation(self.inspectPearl);
                     }
-                    
-                     // should the pearl update be here instead?
+
+
+                    // should the pearl update be here instead?
                 }
                 self.UpdateStoryPearlCollection();
 
@@ -310,6 +400,7 @@ namespace Unbound
                 {
                     self.timeSinceSeenPlayer++;
                 }
+
                 if (self.pearlPickupReaction && self.timeSinceSeenPlayer > 300 && self.oracle.room.game.IsStorySession &&
                     self.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark &&
                     (!(self.currSubBehavior is SSOracleBehavior.ThrowOutBehavior) ||
@@ -329,7 +420,7 @@ namespace Unbound
                     }
 
                     if (PebbsPearl && !self.lastPearlPickedUp &&
-                        self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 1 &&
+                        self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1 &&
                         (self.conversation == null || (self.conversation.age > 300 && !self.conversation.paused)))
                     {
                         if (self.conversation != null)
@@ -432,6 +523,7 @@ namespace Unbound
                 {
                     self.conversation.Update();
                 }
+
                 if (!self.currSubBehavior.CurrentlyCommunicating && self.pearlConversation == null)
                 {
                     self.pathProgression = Mathf.Min(1f, self.pathProgression + 1f / Mathf.Lerp(40f + self.pathProgression * 80f,
@@ -596,8 +688,7 @@ namespace Unbound
                     }
                 }
 
-                if (self.action != null && self.oracle.room.physicalObjects != null &&
-                    self.player.room == self.oracle.room)
+                if (self.player.room == self.oracle.room)
                 {
                     List<PhysicalObject>[] physicalObjects = self.oracle.room.physicalObjects;
                     for (int ObjLength = 0; ObjLength < physicalObjects.Length; ObjLength++)
@@ -606,16 +697,19 @@ namespace Unbound
                         {
                             PhysicalObject physicalObject = physicalObjects[ObjLength][ObjCount];
 
-                            if ((self.action == UnboundEnums.UnbSlumberParty ||
+                            if (!self.talkedAboutThisSession.Contains(physicalObject.abstractPhysicalObject.ID) &&
+                                (self.action == UnboundEnums.UnbSlumberParty ||
                                 self.action == SSOracleBehavior.Action.General_Idle) &&
                                 self.currSubBehavior is UnboundPebblesSleepover &&
-                                self.inspectPearl == null && self.conversation == null &&
+                                self.inspectPearl == null && (self.conversation == null ||
+                                self.conversation.id == UnboundEnums.unbSlumberConv) &&
                                 !(self.currSubBehavior is SSOracleBehavior.ThrowOutBehavior) &&
                                 physicalObject is DataPearl && (physicalObject as DataPearl).grabbedBy.Count == 0 &&
                                 ((physicalObject as DataPearl).AbstractPearl.dataPearlType != 
                                 DataPearl.AbstractDataPearl.DataPearlType.PebblesPearl))
                             {
                                 self.inspectPearl = (physicalObject as DataPearl);
+
                                 if (self.player.GetNCRunbound().MoreDebug)
                                 { NCRDebug.Log("Inspecting pearl: " + self.inspectPearl.AbstractPearl.dataPearlType); }
                                 break;
@@ -654,7 +748,7 @@ namespace Unbound
             if (self != null && self.player != null && self.player.room != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
-                self.owner.UnlockShortcuts();
+                self.owner.LockShortcuts();
                 if (self.owner.conversation != null && self.owner.conversation.colorMode == false)
                 {
                     self.owner.conversation.colorMode = true;
@@ -693,7 +787,7 @@ namespace Unbound
                                     }
                                 }
                             }
-                            goto IL_722;
+                            goto IL_ThrowOut;
                         }
                     }
 
@@ -726,7 +820,7 @@ namespace Unbound
                 }
 #endregion
 
-                IL_722:
+                IL_ThrowOut:
                 if (self.action == SSOracleBehavior.Action.ThrowOut_ThrowOut)
                 {
                     if (self.player.room == self.oracle.room)
@@ -736,11 +830,7 @@ namespace Unbound
                     self.movementBehavior = SSOracleBehavior.MovementBehavior.KeepDistance;
                     self.telekinThrowOut = (self.inActionCounter > 220);
                     
-                    if (self.owner.throwOutCounter == 1)
-                    {
-                        self.owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad = 1;
-                    }
-                    else if (self.owner.throwOutCounter == 700)
+                    if (self.owner.throwOutCounter == 700)
                     {
                         self.dialogBox.Interrupt(self.Translate("FP: That's all. You'll have to go now."), 0);
                     }
@@ -764,58 +854,6 @@ namespace Unbound
                         return;
                     }
                 }
-                else if (self.action == SSOracleBehavior.Action.ThrowOut_SecondThrowOut)
-                {
-                    if (self.player.room == self.oracle.room)
-                    {
-                        self.owner.throwOutCounter++;
-                    }
-                    self.movementBehavior = SSOracleBehavior.MovementBehavior.KeepDistance;
-                    self.telekinThrowOut = (self.inActionCounter > 220);
-                    if (self.owner.throwOutCounter == 50)
-                    {
-                            self.dialogBox.Interrupt(self.Translate("FP: You again? I have nothing for you."), 0);
-                    }
-                    else if (self.owner.throwOutCounter == 250)
-                    {
-                        int num = 0;
-                        if (ModManager.MSC)
-                        {
-                            for (int i = 0; i < self.oracle.room.physicalObjects.Length; i++)
-                            {
-                                for (int j = 0; j < self.oracle.room.physicalObjects[i].Count; j++)
-                                {
-                                    if (self.oracle.room.physicalObjects[i][j] is Player && (self.oracle.room.physicalObjects[i][j] as Player).isNPC)
-                                    {
-                                        num++;
-                                    }
-                                }
-                            }
-                        }
-                        if (num > 0)
-                        {
-                            self.dialogBox.Interrupt(self.Translate("FP: Leave immediately and don't come back. And take THEM with you!"), 0);
-                        }
-                        else
-                        {
-                            self.dialogBox.Interrupt(self.Translate("FP: I won't tolerate this. Leave immediately and don't come back."), 0);
-                        }
-                    }
-                    else if (self.owner.throwOutCounter == 700)
-                    {
-                        self.dialogBox.Interrupt(self.Translate("FP: You had your chances."), 0);
-                    }
-                    else if (self.owner.throwOutCounter > 770)
-                    {
-                        self.owner.NewAction(SSOracleBehavior.Action.ThrowOut_KillOnSight);
-                    }
-                    if (self.owner.playerOutOfRoomCounter > 100 && self.owner.throwOutCounter > 400)
-                    {
-                        self.owner.NewAction(SSOracleBehavior.Action.General_Idle);
-                        self.owner.getToWorking = 1f;
-                        return;
-                    }
-                }
                 else if (self.action == SSOracleBehavior.Action.ThrowOut_KillOnSight)
                 {
                     if (ModManager.MMF)
@@ -826,7 +864,7 @@ namespace Unbound
                         }
                         if (self.owner.throwOutCounter == 10)
                         {
-                            self.dialogBox.Interrupt(self.Translate("..."), 200);
+                            self.dialogBox.Interrupt(self.Translate("FP: ..."), 200);
                         }
                     }
                     if (!ModManager.MMF || self.owner.throwOutCounter >= 200)
@@ -842,9 +880,18 @@ namespace Unbound
                                     self.oracle.room.AddObject(new Spark(self.player.mainBodyChunk.pos, Custom.RNV() *
                                         UnityEngine.Random.value * 40f, new Color(1f, 1f, 1f), null, 30, 120));
                                 }
-                                self.player.Die();
                                 self.owner.killFac = 0f;
-                                return;
+                                self.owner.player.GetNCRunbound().pebbleskilltries++;
+                                if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Pebbles attempting to kill Unbound"); }
+                                if (self.owner.player.GetNCRunbound().pebbleskilltries == 3)
+                                {
+                                    if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Pebbles failed to kill Unbound 3 times!"); }
+
+                                }
+                                else
+                                {
+                                    return;
+                                }
                             }
                         }
                         else
@@ -874,8 +921,10 @@ namespace Unbound
                                     while (enumerator2.MoveNext())
                                     {
                                         Player player = enumerator2.Current;
-                                        player.mainBodyChunk.vel += Custom.DirVec(player.mainBodyChunk.pos, self.oracle.room.MiddleOfTile(28, 32)) * 0.6f * (1f - self.oracle.room.gravity);
-                                        if (self.oracle.room.GetTilePosition(player.mainBodyChunk.pos) == new IntVector2(28, 32) && player.enteringShortCut == null)
+                                        player.mainBodyChunk.vel += Custom.DirVec(player.mainBodyChunk.pos, self.oracle.room.MiddleOfTile(28, 32)) *
+                                            0.6f * (1f - self.oracle.room.gravity);
+                                        if (self.oracle.room.GetTilePosition(player.mainBodyChunk.pos) == new IntVector2(28, 32) &&
+                                            player.enteringShortCut == null)
                                         {
                                             player.enteringShortCut = new IntVector2?(self.oracle.room.ShortcutLeadingToNode(1).StartTile);
                                         }

@@ -11,9 +11,13 @@ namespace Unbound
         public float lastGetToWork;
 
         public UnboundPebblesSleepover(SSOracleBehavior owner) :
-            base(owner, UnboundEnums.UnbSlumberPartySub, Conversation.ID.None)
+            base(owner, UnboundEnums.UnbSlumberPartySub, UnboundEnums.unbSlumberConv)
         {
             #region Setup Things
+            if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 0)
+            {
+                NCRDebug.Log("Pebbles attempting slumber party too early :(");
+            }
             this.lowGravity = -1f;
             if (!base.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
             {
@@ -33,8 +37,8 @@ namespace Unbound
 
             if (!base.oracle.room.game.rainWorld.ExpeditionMode)
             {
-                NCRDebug.Log("Conversations with Pebbles: " +
-                        base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad.ToString());
+                NCRDebug.Log("SLUMBER PARTY!");
+                
                 #region Alt Ending Things
                 if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts < 100)
                 {
@@ -127,7 +131,6 @@ namespace Unbound
                         "FP: .  .  ."), 0);
                 }
 
-                base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad++;
                 return;
                 #endregion
             }
@@ -157,7 +160,6 @@ namespace Unbound
         {
             base.Activate(oldAction, newAction);
         }
-
 
         public override void NewAction(SSOracleBehavior.Action oldAction, SSOracleBehavior.Action newAction)
         {

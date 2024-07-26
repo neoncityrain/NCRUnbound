@@ -20,6 +20,8 @@ namespace Unbound
             public int UnbCyanjumpCountdown;
             public UnbScales scalefrill;
 
+            public int pebbleskilltries;
+
 
             // remix values
             public float CyJump1Maximum; // base 180

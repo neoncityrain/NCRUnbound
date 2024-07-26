@@ -10,7 +10,8 @@ namespace Unbound
             On.SLOracleBehaviorHasMark.MoonConversation.AddEvents += PearlTalk;
         }
 
-        private static void PearlTalk(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig, SLOracleBehaviorHasMark.MoonConversation self)
+        private static void PearlTalk(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig,
+            SLOracleBehaviorHasMark.MoonConversation self)
         {
             if (self.id != null && self != null && self.myBehavior != null && self.myBehavior.oracle != null && self.myBehavior.player != null &&
                 self.id == UnboundEnums.unbKarmaPearlConv)

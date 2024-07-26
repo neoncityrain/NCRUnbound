@@ -12,21 +12,6 @@ namespace Unbound
             On.Player.StomachGlowLightColor += Player_StomachGlowLightColor;
 
             On.DataPearl.PearlIsNotMisc += NotMisc;
-            On.MoreSlugcats.PersistentObjectTracker.getRepData += RepData;
-        }
-
-        private static string RepData(On.MoreSlugcats.PersistentObjectTracker.orig_getRepData orig, PersistentObjectTracker self,
-            AbstractPhysicalObject abstractObj)
-        {
-            if (abstractObj is DataPearl.AbstractDataPearl &&
-                (abstractObj as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
-            {
-                return "unboundKarmaPearl";
-            }
-            else
-            {
-                return orig(self, abstractObj);
-            }
         }
 
         private static bool NotMisc(On.DataPearl.orig_PearlIsNotMisc orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
