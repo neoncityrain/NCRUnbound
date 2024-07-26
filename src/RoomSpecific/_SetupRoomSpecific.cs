@@ -94,6 +94,7 @@ namespace Unbound
 
                 self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.session is StoryGameSession)
             {
+                AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
                 try
                 {
                     if (!self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon)
@@ -116,7 +117,6 @@ namespace Unbound
                         {
                             try
                             {
-                                AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
                                 gammaoverseer.ignoreCycle = true;
                                 gammaoverseer.creatureTemplate.waterVision = 0;
                                 gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
@@ -143,9 +143,16 @@ namespace Unbound
                     NCRDebug.Log("The intro is fucking up!" + e);
                 }
                 // THINGS FOR GAME SETUP BELOW ------------------------------------------------------------------------------------------------------------
-                
 
 
+                if (gammaoverseer.ignoreCycle != true)
+                {
+                    gammaoverseer.ignoreCycle = true;
+                    gammaoverseer.creatureTemplate.waterVision = 0;
+                    gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+
+                    (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
+                }
 
                 if (self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
                 {
