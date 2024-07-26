@@ -91,7 +91,8 @@ namespace Unbound
         {
             if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
                 self.oracle.ID == Oracle.OracleID.SS && self.oracle != null &&
-                self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 1 &&
+                (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 0 ||
+                self.oracle.room.game.rainWorld.ExpeditionMode) &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 float num = 5f;
@@ -123,19 +124,20 @@ namespace Unbound
                 SSOracleBehavior.SubBehavior.SubBehavID subBehavID = SSOracleBehavior.SubBehavior.SubBehavID.General;
 
                 if (nextAction == UnboundEnums.UnbSlumberParty &&
-                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad >= 1 &&
-                    nextAction != SSOracleBehavior.Action.MeetWhite_Shocked)
+                    ((self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad >= 1 &&
+                    nextAction != SSOracleBehavior.Action.MeetWhite_Shocked) || self.oracle.room.game.rainWorld.ExpeditionMode))
                 {
                     subBehavID = UnboundEnums.UnbSlumberPartySub;
                 }
-                else if (nextAction == SSOracleBehavior.Action.MeetWhite_Curious ||
+                else if ((nextAction == SSOracleBehavior.Action.MeetWhite_Curious ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_Images ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_SecondCurious ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_Shocked ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_Talking ||
                     nextAction == SSOracleBehavior.Action.MeetWhite_Texting ||
                     (nextAction == UnboundEnums.UnbSlumberParty &&
-                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1))
+                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1)) &&
+                    !self.oracle.room.game.rainWorld.ExpeditionMode)
                 {
                     try { subBehavID = UnboundEnums.SSMeetUnboundSub; }
                     catch (Exception e) { NCRDebug.Log("Error meeting Unbound: " + e); }
@@ -883,10 +885,17 @@ namespace Unbound
                                 self.owner.killFac = 0f;
                                 self.owner.player.GetNCRunbound().pebbleskilltries++;
                                 if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Pebbles attempting to kill Unbound"); }
+                                self.player.room.PlaySound(SoundID.Snail_Pop, self.player.mainBodyChunk, false, 1f, 1.5f + UnityEngine.Random.value);
+
                                 if (self.owner.player.GetNCRunbound().pebbleskilltries == 3)
                                 {
+                                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad = 1;
+                                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts = 1;
                                     if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Pebbles failed to kill Unbound 3 times!"); }
+                                    self.owner.SlugcatEnterRoomReaction();
 
+                                    self.owner.NewAction(SSOracleBehavior.Action.General_Idle);
+                                    return;
                                 }
                                 else
                                 {
@@ -945,7 +954,7 @@ namespace Unbound
                             (self.oracle.oracleBehavior as SSOracleBehavior).conversation.Destroy();
                             (self.oracle.oracleBehavior as SSOracleBehavior).conversation = null;
                         }
-                        self.dialogBox.Interrupt(self.Translate(". . . !"), 0);
+                        self.dialogBox.Interrupt(self.Translate("FP: . . . !"), 0);
                     }
                     self.owner.getToWorking = 1f;
                     if (self.player.room != self.oracle.room && !self.player.inShortcut)

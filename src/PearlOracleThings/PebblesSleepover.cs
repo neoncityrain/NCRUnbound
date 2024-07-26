@@ -5,20 +5,11 @@ namespace Unbound
     public class UnboundPebblesSleepover : SSOracleBehavior.ConversationBehavior
     {
         public bool holdPlayer;
-        public bool gravOn;
-        public bool firstMetOnThisCycle;
-        public float lowGravity;
-        public float lastGetToWork;
 
         public UnboundPebblesSleepover(SSOracleBehavior owner) :
             base(owner, UnboundEnums.UnbSlumberPartySub, UnboundEnums.unbSlumberConv)
         {
             #region Setup Things
-            if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 0)
-            {
-                NCRDebug.Log("Pebbles attempting slumber party too early :(");
-            }
-            this.lowGravity = -1f;
             if (!base.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
             {
                 // this should be replaced by another savedata value, as unbound will always have the mark
@@ -31,42 +22,40 @@ namespace Unbound
                 return;
             }
             this.owner.TurnOffSSMusic(true);
-            owner.getToWorking = 1f;
-            this.gravOn = true;
+            if (this.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts == 1) 
+            {
+                // AKA, the first time unbound meets pebbles
+                this.holdPlayer = true;
+
+                this.movementBehavior = SSOracleBehavior.MovementBehavior.KeepDistance;
+                this.dialogBox.NewMessage(this.Translate("FP: . . ."), 20);
+                this.dialogBox.NewMessage(this.Translate(
+                    "FP: Is this some sort of joke to you?"), 20);
+                this.dialogBox.NewMessage(this.Translate(
+                    "FP: You are but an animal, yet you stand here, resisting my every attempt to push you out."), 40);
+                this.dialogBox.NewMessage(this.Translate(
+                    "FP: There was one like you, once. One who is now long since gone.<LINE>" +
+                    "As all things eventually."), 50);
+                this.dialogBox.NewMessage(this.Translate(
+                    "FP: You are no replacement, as I have no use for you."), 20);
+            }
+            if (this.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts > 1)
+            {
+                owner.getToWorking = 1f;
+            }
             #endregion
 
             if (!base.oracle.room.game.rainWorld.ExpeditionMode)
             {
                 NCRDebug.Log("SLUMBER PARTY!");
                 
-                #region Alt Ending Things
-                if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts < 100)
-                {
-                    base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts = 0;
-                    if (base.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.altEnding)
-                    {
-                        // if the alt ending has been achieved
-                        base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts = 100;
-                        base.dialogBox.NewMessage(base.Translate(
-                            ""), 0);
-                        base.dialogBox.NewMessage(base.Translate(
-                            ""), 0);
-                        base.dialogBox.NewMessage(base.Translate(
-                            ""), 0);
-                        if (UnityEngine.Random.value < 0.4f)
-                        {
-                            base.dialogBox.NewMessage(base.Translate(
-                                ""), 0);
-                            return;
-                        }
-                        base.dialogBox.NewMessage(base.Translate(
-                            ""), 0);
-                        return;
-                    }
-                }
-                #endregion
                 #region Intro Text
-                if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 2)
+                if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 1)
+                {
+                    base.dialogBox.NewMessage(base.Translate(
+                        "FP: Do as you want, then. I cannot stop you."), 10);
+                }
+                else if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 2)
                 {
                     base.dialogBox.NewMessage(base.Translate(
                         "FP: What is your purpose in coming here? Are you here to mock me?"), 0);
@@ -179,6 +168,16 @@ namespace Unbound
                 return;
             }
 
+            if (this.holdPlayer && (this.dialogBox == null || this.dialogBox.slatedForDeletion || !this.dialogBox.ShowingAMessage))
+            {
+                this.owner.UnlockShortcuts();
+                this.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts = 2;
+                this.holdPlayer = false;
+                this.owner.getToWorking = 1f;
+
+                this.movementBehavior = SSOracleBehavior.MovementBehavior.Idle;
+            }
+
             if (this.owner.conversation != null && !this.owner.conversation.colorMode) 
             {
                 this.owner.conversation.colorMode = true;
@@ -194,12 +193,6 @@ namespace Unbound
                     Vector2.Distance(base.player.mainBodyChunk.pos, this.holdPlayerPos));
             }
 
-            this.lastGetToWork = this.owner.getToWorking;
-
-            if (this.lowGravity < 0f)
-            {
-                this.lowGravity = 0f;
-            }
             this.owner.SetNewDestination(base.oracle.firstChunk.pos);
 
             if (base.action == SSOracleBehavior.Action.General_GiveMark)
@@ -208,7 +201,7 @@ namespace Unbound
             }
         }
 
-        public Vector2 holdPlayerPos { get { return new Vector2(668f, 268f + Mathf.Sin((float)base.inActionCounter / 70f * 3.1415927f * 2f) * 4f); } }
+        public Vector2 holdPlayerPos { get { return new Vector2(483f, 360f + Mathf.Sin((float)base.inActionCounter / 70f * 3.1415927f * 2f) * 4f); } }
         // end pebblessleepover
     }
 }

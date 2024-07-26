@@ -9,6 +9,7 @@
         // slugcats
         public static Conversation.ID unbKarmaPearlConv;
         public static Conversation.ID unbSlumberConv;
+        public static Conversation.ID unbSSThrowFit;
         // conversations
         public static SSOracleBehavior.Action UnbSlumberParty;
         // pebbsactions
@@ -25,6 +26,7 @@
             // slugcats
             unbKarmaPearlConv = new Conversation.ID("unbKarmaPearlConv", true);
             unbSlumberConv = new Conversation.ID("unbSlumberConv", true);
+            unbSSThrowFit = new Conversation.ID("unbSSThrowFit", true);
             // conversations
             UnbSlumberParty = new SSOracleBehavior.Action("UnbSlumberParty", true);
             UnbSlumberPartySub = new SSOracleBehavior.SubBehavior.SubBehavID("UnbSlumberPartySub", true);
@@ -34,6 +36,7 @@
         public static void FullUnregister()
         {
             // for non-items / non-creatures
+            if (unbSSThrowFit != null) { unbSSThrowFit.Unregister(); unbSSThrowFit = null; }
             if (unbSlumberConv != null) { unbSlumberConv.Unregister(); unbSlumberConv = null; }
             if (SSMeetUnboundSub != null) { SSMeetUnboundSub.Unregister(); SSMeetUnboundSub = null; }
             if (unbKarmaPearlConv != null) { unbKarmaPearlConv.Unregister(); unbKarmaPearlConv = null; }
