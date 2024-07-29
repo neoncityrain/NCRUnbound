@@ -19,7 +19,6 @@ namespace Unbound
             On.RoomSpecificScript.AddRoomSpecificScript += RoomSpecificScripts;
         }
 
-
         private static void RoomSpecificScripts(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
         {
             if (room != null && room.game != null && room.game.session is StoryGameSession && room.world != null &&
@@ -172,6 +171,7 @@ namespace Unbound
                         NCRDebug.Log("Pebbles was killed for some reason and has been revived");
                     }
                 }
+                // end unbound worldstate things
             }
 
             // misc

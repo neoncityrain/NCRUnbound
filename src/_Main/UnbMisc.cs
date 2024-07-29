@@ -1,4 +1,5 @@
 ﻿using System;
+using SlugBase;
 
 namespace Unbound
 {
@@ -44,6 +45,8 @@ namespace Unbound
             On.Player.Update += DamageTracking;
 
             On.OracleSwarmer.BitByPlayer += noGlow;
+
+            
         }
 
         private static void noGlow(On.OracleSwarmer.orig_BitByPlayer orig, OracleSwarmer self, Creature.Grasp grasp, bool eu)

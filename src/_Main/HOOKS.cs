@@ -30,7 +30,6 @@ namespace Unbound
 
                 UnboundEnums.RegisterValues();
 
-                UnboundSlugcatStats.Init();
                 UnbMisc.Init();
                 UnbGraphics.Init();
                 // _Main
@@ -47,6 +46,15 @@ namespace Unbound
                 // iterators
                 SetupRoomSpecific.Init();
                 // room specific
+
+                if (ModManager.Expedition)
+                {
+                    UnbExpedition.Init();
+                }
+                else
+                {
+                    NCRDebug.Log("Expedition not enabled. Unbound's expedition code not triggering");
+                }
 
 
                 On.RainWorldGame.ShutDownProcess += RainWorldGameOnShutDownProcess;

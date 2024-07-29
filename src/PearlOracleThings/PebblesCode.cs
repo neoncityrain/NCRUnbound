@@ -17,10 +17,10 @@ namespace Unbound
             On.SSOracleBehavior.storedPearlOrbitLocation += storedPearlOrbitLocation;
             On.SSOracleBehavior.ctor += SSctor;
             On.SSOracleBehavior.UpdateStoryPearlCollection += StoryPearl;
-            On.SSOracleBehavior.InitateConversation += InitateConversation;
+            On.SSOracleBehavior.InitateConversation += EnableColourmode;
         }
 
-        private static void InitateConversation(On.SSOracleBehavior.orig_InitateConversation orig, SSOracleBehavior self, Conversation.ID convoId, SSOracleBehavior.ConversationBehavior convBehav)
+        private static void EnableColourmode(On.SSOracleBehavior.orig_InitateConversation orig, SSOracleBehavior self, Conversation.ID convoId, SSOracleBehavior.ConversationBehavior convBehav)
         {
             orig(self, convoId, convBehav);
             if (self.player.room.game.session.characterStats.name.value == "NCRunbound")
@@ -91,8 +91,6 @@ namespace Unbound
         {
             if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
                 self.oracle.ID == Oracle.OracleID.SS && self.oracle != null &&
-                (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 0 ||
-                self.oracle.room.game.rainWorld.ExpeditionMode) &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 float num = 5f;
