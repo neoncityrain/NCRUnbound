@@ -191,6 +191,7 @@ namespace Unbound
                     Mathf.Lerp(0.5f, Custom.LerpMap(Vector2.Distance(base.player.mainBodyChunk.pos, this.holdPlayerPos), 30f, 150f, 2.5f, 7f),
                     base.oracle.room.gravity) * Mathf.InverseLerp(0f, 10f, (float)base.inActionCounter) * Mathf.InverseLerp(0f, 30f,
                     Vector2.Distance(base.player.mainBodyChunk.pos, this.holdPlayerPos));
+                this.player.Stun(15);
             }
 
             this.owner.SetNewDestination(base.oracle.firstChunk.pos);

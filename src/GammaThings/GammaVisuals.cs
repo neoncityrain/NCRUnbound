@@ -20,7 +20,6 @@ namespace Unbound
             On.OverseerGraphics.InitiateSprites -= OverseerGraphics_RemoveSprites;
             On.CoralBrain.Mycelium.UpdateColor += Mycelium_UpdateColor;
 
-
             On.WorldLoader.GeneratePopulation += GammaID;
         }
 

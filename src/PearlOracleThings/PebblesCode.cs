@@ -1,13 +1,11 @@
 ﻿using System;
 using JollyCoop;
 using System.Linq;
-using System.Diagnostics.Eventing.Reader;
 
 namespace Unbound
 {
     internal class PebblesCode
     {
-
         public static void Init()
         {
             On.SSOracleBehavior.ThrowOutBehavior.Update += ThrowOutToSleepover;
@@ -18,6 +16,88 @@ namespace Unbound
             On.SSOracleBehavior.ctor += SSctor;
             On.SSOracleBehavior.UpdateStoryPearlCollection += StoryPearl;
             On.SSOracleBehavior.InitateConversation += EnableColourmode;
+
+            On.SSOracleBehavior.StartItemConversation += PearlConversations;
+        }
+
+        private static void PearlConversations(On.SSOracleBehavior.orig_StartItemConversation orig, SSOracleBehavior self, DataPearl item)
+        {
+            if (self != null && self.player != null &&
+                self.player.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                SLOrcacleState sloracleState = self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SLOracleState;
+                self.isRepeatedDiscussion = false;
+
+                #region Discussions that aren't important nor relevant
+                if (item.AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Misc || 
+                    item.AbstractPearl.dataPearlType.Index == -1)
+                {
+                    self.pearlConversation = new SLOracleBehaviorHasMark.MoonConversation(Conversation.ID.Moon_Pearl_Misc, self, 
+                        SLOracleBehaviorHasMark.MiscItemType.NA);
+                }
+                else if (item.AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Misc2)
+                {
+                    self.pearlConversation = new SLOracleBehaviorHasMark.MoonConversation(Conversation.ID.Moon_Pearl_Misc2, 
+                        self, SLOracleBehaviorHasMark.MiscItemType.NA);
+                }
+                else if (ModManager.MSC && item.AbstractPearl.dataPearlType == MoreSlugcatsEnums.DataPearlType.BroadcastMisc)
+                {
+                    self.pearlConversation = new SLOracleBehaviorHasMark.MoonConversation(
+                        MoreSlugcatsEnums.ConversationID.Moon_Pearl_BroadcastMisc, self, SLOracleBehaviorHasMark.MiscItemType.NA);
+                }
+                else
+                {
+                    if (self.pearlConversation != null)
+                    {
+                        self.pearlConversation.Interrupt("FP: ...", 0);
+                        self.pearlConversation.Destroy();
+                        self.pearlConversation = null;
+                    }
+                    #endregion
+
+                    Conversation.ID id = Conversation.DataPearlToConversation(item.AbstractPearl.dataPearlType);
+                    if (!sloracleState.significantPearls.Contains(item.AbstractPearl.dataPearlType))
+                    {
+                        sloracleState.significantPearls.Add(item.AbstractPearl.dataPearlType);
+                    }
+
+                    try 
+                    {
+                        if (UnboundEnums.decipheredPearlsUnboundSession != null)
+                        {
+                            self.isRepeatedDiscussion = (item.AbstractPearl.dataPearlType != null &&
+                            UnboundEnums.decipheredPearlsUnboundSession.Contains(item.AbstractPearl.dataPearlType));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        NCRDebug.Log("Issue deciphering pearl:" + e);
+                    }
+                    try
+                    {
+                        MSCOnly.SetPearlDecipheredUnbound(item.AbstractPearl.dataPearlType,
+                            self.oracle.room.game.rainWorld.progression.miscProgressionData);
+                    }
+                    catch (Exception e)
+                    {
+                        NCRDebug.Log("Issue setting pearl as deciphered:" + e);
+                    }
+
+
+                    self.pearlConversation = new SLOracleBehaviorHasMark.MoonConversation(id, self, SLOracleBehaviorHasMark.MiscItemType.NA);
+                    sloracleState.totalPearlsBrought++;
+                }
+                if (!self.isRepeatedDiscussion)
+                {
+                    sloracleState.totalItemsBrought++;
+                    sloracleState.AddItemToAlreadyTalkedAbout(item.abstractPhysicalObject.ID);
+                }
+                self.talkedAboutThisSession.Add(item.abstractPhysicalObject.ID);
+            }
+            else
+            {
+                orig(self, item);
+            }
         }
 
         private static void EnableColourmode(On.SSOracleBehavior.orig_InitateConversation orig, SSOracleBehavior self, Conversation.ID convoId, SSOracleBehavior.ConversationBehavior convBehav)
@@ -31,7 +111,7 @@ namespace Unbound
 
         private static void StoryPearl(On.SSOracleBehavior.orig_UpdateStoryPearlCollection orig, SSOracleBehavior self)
         {
-            if (self != null && self.player != null &&
+            if (self != null && self.player != null && self.readDataPearlOrbits != null &&
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 List<DataPearl.AbstractDataPearl> list = new List<DataPearl.AbstractDataPearl>();
@@ -73,12 +153,12 @@ namespace Unbound
                         }
                     }
                 }
-                foreach (DataPearl.AbstractDataPearl abstractDataPearl2 in list)
+                foreach (DataPearl.AbstractDataPearl storedPearl in list)
                 {
-                    NCRDebug.Log("stored pearl grabbed, releasing from storage " + abstractDataPearl2);
-                    self.readPearlGlyphs[abstractDataPearl2].Destroy();
-                    self.readPearlGlyphs.Remove(abstractDataPearl2);
-                    self.readDataPearlOrbits.Remove(abstractDataPearl2);
+                    NCRDebug.Log("stored pearl grabbed, releasing from storage " + storedPearl);
+                    self.readPearlGlyphs[storedPearl].Destroy();
+                    self.readPearlGlyphs.Remove(storedPearl);
+                    self.readDataPearlOrbits.Remove(storedPearl);
                 }
             }
             else
@@ -89,9 +169,8 @@ namespace Unbound
 
         private static Vector2 storedPearlOrbitLocation(On.SSOracleBehavior.orig_storedPearlOrbitLocation orig, SSOracleBehavior self, int index)
         {
-            if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
-                self.oracle.ID == Oracle.OracleID.SS && self.oracle != null &&
-                self.player.room.game.session.characterStats.name.value == "NCRunbound")
+            if (self.player.room.game.session.characterStats.name.value == "NCRunbound" ||
+                self.oracle.room.game.StoryCharacter == UnboundEnums.NCRUnbound)
             {
                 float num = 5f;
                 float num2 = (float)index % num;
@@ -332,7 +411,7 @@ namespace Unbound
         private static void UpdateBehavior(On.SSOracleBehavior.orig_Update orig, SSOracleBehavior self, bool eu)
         {
             if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
-                self.oracle.ID == Oracle.OracleID.SS && self.oracle != null &&
+                self.oracle.ID == Oracle.OracleID.SS && self.oracle != null && 
                 self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 if (self.player.dead && self.currSubBehavior.ID != SSOracleBehavior.SubBehavior.SubBehavID.ThrowOut)
@@ -344,15 +423,7 @@ namespace Unbound
                 if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 1 &&
                     self.inspectPearl != null)
                 {
-                    if (self.inspectPearl.AbstractPearl.dataPearlType == UnboundEnums.unboundKarmaPearl)
-                    {
-                        self.movementBehavior = SSOracleBehavior.MovementBehavior.Talk;
-                    }
-                    else
-                    {
-                        self.movementBehavior = SSOracleBehavior.MovementBehavior.Meditate;
-                    }
-
+                    self.movementBehavior = SSOracleBehavior.MovementBehavior.Meditate;
                     if (self.inspectPearl.grabbedBy.Count > 0)
                     {
                         for (int i = 0; i < self.inspectPearl.grabbedBy.Count; i++)
@@ -390,9 +461,6 @@ namespace Unbound
                     {
                         self.StartItemConversation(self.inspectPearl);
                     }
-
-
-                    // should the pearl update be here instead?
                 }
                 self.UpdateStoryPearlCollection();
 
@@ -407,15 +475,12 @@ namespace Unbound
                     self.action == SSOracleBehavior.Action.ThrowOut_Polite_ThrowOut))
                 {
                     bool PebbsPearl = false;
-                    if (self.player != null)
+                    for (int k = 0; k < self.player.grasps.Length; k++)
                     {
-                        for (int k = 0; k < self.player.grasps.Length; k++)
+                        if (self.player.grasps[k] != null && self.player.grasps[k].grabbed is PebblesPearl)
                         {
-                            if (self.player.grasps[k] != null && self.player.grasps[k].grabbed is PebblesPearl)
-                            {
-                                PebbsPearl = true;
-                                break;
-                            }
+                            PebbsPearl = true;
+                            break;
                         }
                     }
 
@@ -688,7 +753,7 @@ namespace Unbound
                     }
                 }
 
-                if (self.player.room == self.oracle.room)
+                if (self.player.room == self.oracle.room && self.oracle.room.physicalObjects != null)
                 {
                     List<PhysicalObject>[] physicalObjects = self.oracle.room.physicalObjects;
                     for (int ObjLength = 0; ObjLength < physicalObjects.Length; ObjLength++)

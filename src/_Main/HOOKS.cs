@@ -1,4 +1,5 @@
 ﻿using System;
+using Unbound.PearlOracleThings;
 
 namespace Unbound
 {
@@ -43,17 +44,19 @@ namespace Unbound
                 PearlConversations.Init();
                 PebblesDialogue.Init();
                 PebblesCode.Init();
+                GeneralOracleThings.Init();
                 // iterators
                 SetupRoomSpecific.Init();
                 // room specific
+
 
                 if (ModManager.Expedition)
                 {
                     UnbExpedition.Init();
                 }
-                else
+                if (ModManager.MSC)
                 {
-                    NCRDebug.Log("Expedition not enabled. Unbound's expedition code not triggering");
+                    MSCOnly.Init();
                 }
 
 

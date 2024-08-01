@@ -13,26 +13,29 @@ namespace Unbound
         private static void PearlTalk(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig,
             SLOracleBehaviorHasMark.MoonConversation self)
         {
-            if (self.id != null && self != null && self.myBehavior != null && self.myBehavior.oracle != null && self.myBehavior.player != null &&
+            if (self.id != null && self != null && self.myBehavior != null && self.myBehavior.oracle != null && self.myBehavior.oracle.ID != null && 
+                self.myBehavior.player != null &&
                 self.id == UnboundEnums.unbKarmaPearlConv)
             {
                 if (self.myBehavior.oracle.ID == Oracle.OracleID.SL)
                 {
-                    // leave this, as it should probably be tweaked for moon?
+                    // this should probably be tweaked in the future
                     self.PearlIntro();
                     self.LoadEventsFromFile(1431821);
                     return;
                 }
-                else if (self.myBehavior.oracle.ID == Oracle.OracleID.SS && self.myBehavior.player.GetNCRunbound().IsUnbound)
+                else if (self.myBehavior.oracle.ID == Oracle.OracleID.SS &&
+                    self.myBehavior.oracle.room.world.game.session.characterStats.name.value == "NCRunbound")
                 {
                     if (self.myBehavior.isRepeatedDiscussion)
                     { 
                         self.PearlIntro();
-                        self.LoadEventsFromFile(1431821); // change this
+                        self.LoadEventsFromFile(1431821); // pearl reread dialogue
                     }
                     else
                     {
-                        self.dialogBox.NewMessage(self.Translate("FP: . . ."), 10);
+                        self.PearlIntro();
+                        self.LoadEventsFromFile(1431821); // CHANGE THIS
                     }
                     return;
                 }
