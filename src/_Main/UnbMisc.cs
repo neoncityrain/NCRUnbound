@@ -7,16 +7,6 @@ namespace Unbound
     {
         public static void Init()
         {
-            if (ModManager.MSC)
-            {
-                // msc specific things
-                On.MoreSlugcats.StowawayBugState.AwakeThisCycle += AwakenMyPsionicWarriors;
-                // rerolls if a stowaway is awake or not. it should result in a bit over a 1/3 chance that it will be awake each cycle
-
-                On.SeedCob.HitByWeapon += SeedAllergy;
-                // SEED COB ALLERGYYYYYY
-            }
-
             On.Player.Jump += MadHopsBro;
             // increases unbounds base jump by 1f
 
@@ -406,36 +396,6 @@ namespace Unbound
             else return orig(ghostID, karma, karmaCap, ghostPreviouslyEncountered, playingAsRed);
         }
 
-        private static void SeedAllergy(On.SeedCob.orig_HitByWeapon orig, SeedCob self, Weapon weapon)
-        {
-            if (self != null &&
-                !(weapon == null || self.room == null || self.room.roomSettings == null) &&
-                self.room.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
-            {
-                if (self.room.roomSettings.DangerType == MoreSlugcats.MoreSlugcatsEnums.RoomRainDangerType.Blizzard &&
-                    weapon.firstChunk.vel.magnitude < 20f)
-                {
-                    if (UnityEngine.Random.Range(0.5f, 0.8f) < self.freezingCounter)
-                    {
-                        self.spawnUtilityFoods();
-                    }
-                    return;
-                }
-                if (weapon.thrownBy != null && weapon.thrownBy is Player && ((weapon.thrownBy as Player).slugcatStats.name ==
-                    MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Spear || (weapon.thrownBy as Player).SlugCatClass ==
-                    MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Saint))
-                {
-                    return;
-                }
-                self.spawnUtilityFoods();
-                return;
-            }
-            else
-            {
-                orig(self, weapon);
-            }
-        }
-
         private static void MadHopsBro(On.Player.orig_Jump orig, Player self)
         {
             orig(self);
@@ -447,29 +407,6 @@ namespace Unbound
             }
         }
 
-        private static bool AwakenMyPsionicWarriors(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig,
-            MoreSlugcats.StowawayBugState self, int cycle)
-        {
-            if (self != null && self.creature != null && self.creature.Room != null &&
-                self.creature.world.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
-            {
-                NCRDebug.Log("Unbound world, rerolling stowawake (because life is a fucking nightmare)");
-                System.Random rd = new System.Random();
-                int rand_num = rd.Next(1, 3);
-                if (rand_num == 1)
-                {
-                    NCRDebug.Log("Congrats! Stowaway awoken (because life is a fucking nightmare)");
-                    return true;
-                    // if random number is 1, awaken stowaway
-                }
-                else
-                {
-                    NCRDebug.Log("Stowaway state defaulting to normal");
-                    return orig(self, cycle);
-                    // if the random number isnt 1, refer to the original code
-                }
-            }
-            else return orig(self, cycle);
-        }
+        // end unbmisc
     }
 }
