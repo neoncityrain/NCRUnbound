@@ -1,0 +1,13 @@
+Template: NONE
+WaveSpeed: 0.4786884
+WaveLength: 0.9352509
+WaveAmplitude: 0.02651549
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Grime: 0.1057971
+Palette: 34
+EffectColorA: 0
+EffectColorB: 6
+PlacedObjects: BubbleGrass><180.6577><177.8752><0~0~4~9, BubbleGrass><149.684><182.0441><0~0~4~9, 
+AmbientSounds: OMNI><SO_WAT-LilDrips.ogg><489.8696><520.0312><0.3531408><1, OMNI><SO_WAT-MoreDrips.ogg><584.9573><445.2946><0.3067634><1, 
+FadePalette: 35, 0.2874394

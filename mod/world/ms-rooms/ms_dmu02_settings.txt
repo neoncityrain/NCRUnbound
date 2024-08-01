@@ -1,0 +1,7 @@
+Template: MS_SettingsTemplate_Vents
+RumbleIntensity: 0.3369565
+Clouds: 1
+Effects: WaterDepth-0-276-24, ElectricDeath-0.8043478-279-81, BrokenZeroG-0.3152174-288-139, 
+PlacedObjects: LightFixture><866.3245><1214.596><RedSubmersible~17.32051~-10~61, LightFixture><642.9127><691.4712><RedSubmersible~-51.78119~-65.96844~0, LightFixture><-0.5603933><91.22639><RedSubmersible~17.32051~-10~48, LightFixture><480.7607><1257.596><RedSubmersible~17.32051~-10~0, LightFixture><-6.916297><863.0801><RedSubmersible~17.32051~-10~100, LightFixture><594.447><2083.216><RedSubmersible~17.32051~-10~23, LightFixture><716.386><1835.103><RedSubmersible~17.32051~-10~32, LightSource><1075.49><499.4269><0.01490021~EffectColor1~176.0209~-59.82224~50~86.60254~1~0~Flash~0.02319999~0, LightFixture><1211.784><1434.819><RedLight~17.32051~-10~21, LightFixture><1795.234><1240.706><RedLight~17.32051~-10~86, LightSource><2020.09><569.8295><0.5978712~EffectColor1~-421.1833~1.866669~-699.8771~-212.0641~0~0~Flash~0.01546644~0, LightFixture><1168.156><742.8201><RedLight~17.32051~-10~63, LightFixture><1897.184><464.2289><RedLight~17.32051~-10~31, 
+AmbientSounds: OMNI><MSC-HeavyCreaking.ogg><438.8279><645.0658><0.2069514><0.3901556, OMNI><MSC-LowGroans.ogg><423.8135><565.0983><0.07201156><0.1648104, OMNI><MSC-UnrelentingBreakage.ogg><624.9498><647.2405><0.1957431><0.4344632, OMNI><MSC-StructureStrain.ogg><625.3441><563.3235><0.2276605><0.262249, 
+FadePalette: 35, 0.09782609, 0.05434782, 0, 0

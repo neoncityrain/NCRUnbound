@@ -1,0 +1,15 @@
+Template: NONE
+WaveSpeed: 0.4898552
+WaveLength: 1
+WaveAmplitude: 0.3091782
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.324638
+Grime: 0.3531401
+Palette: 13
+EffectColorA: 2
+EffectColorB: 6
+Effects: RockFlea-0.1855071-259.6444-303.7333, WaterGlowworm-0.1405796-20.35559-61.5556, BorderPushBack-1-273.3556-74.51109, Fog-0.5565219-39.9111-133.7778, ElectricDeath-0.01545881-298.0445-130.9333, 
+PlacedObjects: JellyFish><2024.454><42.28802><0~0~2~3, JellyFish><1296.458><35.80354><0~0~2~3, JellyFish><2905.356><36.77167><0~0~2~3, NoLeviathanStrandingZone><565.4835><-57.86931><310.9073~196.7583, 
+AmbientSounds: OMNI><AM_ENV-LightWind.ogg><167.9049><534.7828><0.6082658><1, OMNI><AM_WAT-Sea02.ogg><176.9758><444.4251><0.2680027><1, OMNI><AM_WAT-Sea01.ogg><180.319><367.9125><0.2602698><1, 
+FadePalette: 35, 0.3393719, 0.3393721, 0.3393721, 0.3393721

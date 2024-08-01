@@ -1,0 +1,4 @@
+DangerType: None
+PlacedObjects: LightSource><751.7023><348.7849><0.1086107~Environment~-162~-304~-148~123.6025~1~0~None~0~0, LightFixture><115.6693><460.9124><RedLight~17.32051~-10~40, LightFixture><614.6201><471.5653><RedLight~17.32051~-10~10, 
+AmbientSounds: OMNI><AM_IND-SuperStructure.ogg><851.639><632.1062><0.423913><1, OMNI><AM_RAIN-RollingThunder.ogg><752.4443><405.0476><0.173913><1, 
+FadePalette: 45, 0.8987772

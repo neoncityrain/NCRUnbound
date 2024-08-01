@@ -1,0 +1,18 @@
+Template: NONE
+DangerType: None
+CeilingDrips: 0
+WaveSpeed: 0.5053993
+WaveLength: 0.9973003
+WaveAmplitude: 8.144188E-06
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 1
+Grime: 0
+BkgDroneVolume: 0
+RandomItemDensity: 0
+Palette: 23
+EffectColorA: 18
+Effects: SunBlock-1-14-118, SSMusic-0.2173913-19-8, BrokenZeroG-1-20-47, ProjectedScanLines-1-233-64, Hue-0.5217391-20-20, 
+PlacedObjects: LightSource><233.8286><618.934><1~EffectColor1~522~-534~-391~-20.39746~0~0~Fade~0.2065217~0, LightSource><763.3002><78.24152><1~EffectColor1~-504~527~80~175.6025~0~0~Fade~0.2065217~0, LightSource><219.0621><74.3183><1~EffectColor1~531~506~50~86.60254~0~0~Fade~0.2065217~0, LightSource><760.9443><616.9521><1~EffectColor1~-520~-512~107~16.60254~0~0~Fade~0.2065217~0, LightFixture><104.6329><470.3995><RedLight~-219.6795~35~97, LightFixture><854.26><570.8003><RedLight~17.32051~-10~58, LightFixture><854.8979><165.422><RedLight~17.32051~-10~34, 
+AmbientSounds: OMNI><AM_IND-SuperStructure.ogg><840.1998><522.0092><0.5869565><0.7456522, OMNI><AM_WIN-StrongWnd2.ogg><649.244><654.55><0.1956522><1, OMNI><SO_SFX-DataTrans2.ogg><828.8108><578.3148><0.3586957><0.8434783, OMNI><AM_IND-ElectricHum01.ogg><863.5577><624.4449><0.2608696><0.55, OMNI><AM_IND-ElectricHum03.ogg><874.6733><628.1503><0.1956522><0.8826087, 
+FadePalette: 10, 0

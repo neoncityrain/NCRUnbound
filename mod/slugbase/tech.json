@@ -1,0 +1,44 @@
+{
+	"id": "NCRtech",
+	"name": "=)",
+	"description": "If you are seeing this, something went very wrong.",
+	"features": {
+		"custom_colors": [
+			{
+				"name": "Body",
+				"story": "E2C999"
+			},
+			{
+				"name": "Eyes",
+				"story": "12324F"
+			},
+			{
+				"name": "Patterns",
+				"story": "DE6455"
+			}
+		],
+		
+		"can_maul": true,
+		"expedition_enabled": false,
+		"maul_blacklist": [ "SlugNPC", "CyanLizard" ],
+		"maul_damage": 3,
+		"karma": 0,
+		"karma_cap": 2,
+		"guide_overseer": 4,
+
+		"select_menu_scene": "",
+		"select_menu_scene_ascended": "",
+		"sleep_scene": "",
+		
+		"weight": 0.5,
+		"tunnel_speed": 1,
+		"climb_speed": 1.2,
+		"walk_speed": 1.1,
+		"crouch_stealth": 1.2,
+		"throw_skill": 1,
+		"loudness": 0.9,
+		"auto_grab_batflies": false,
+		"the_glow": false,
+		"the_mark": false
+	}
+}

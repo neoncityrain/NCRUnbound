@@ -18,12 +18,13 @@
 			}
 		],
 		
+		"expedition_enabled": true,
 		"can_maul": true,
 		"maul_blacklist": [ "SlugNPC", "CyanLizard" ],
 		"maul_damage": 3,
 		"karma": 0,
 		"karma_cap": 2,
-		"guide_overseer": 4,
+		"guide_overseer": 2,
 
 		"select_menu_scene": "unbselect",
 		"select_menu_scene_ascended": "unbghost",
@@ -79,7 +80,7 @@
 		"food_min": 6,
 		"food_max": 7,
 		"auto_grab_batflies": false,
-		"the_glow": true,
+		"the_glow": false,
 		"the_mark": true,
 
 		"alignments": {

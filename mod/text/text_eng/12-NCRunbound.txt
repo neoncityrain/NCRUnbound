@@ -1,10 +1,8 @@
 ﻿0-12-NCRunbound
-FP: This is a production log from a facility on the surface. It has been a very long time since I've cared about<LINE>reading one, but the name... roughly translates as Side House. I remember the shipments of holy ash I used to receive from there.
+FP: This is a production log from a facility on the surface. It has been a very long time since I've cared about<LINE>reading one. This one provided shipments of holy ash. Not that there was much use for such trinkets.
 
-FP: I don't know how I would gain access to holy ash in the present day, not that I have much use for it. Despite all<LINE>the independent power of my machinery, the relationship I had with my creators was a mutually symbiotic one.
+FP: I was built to provide for those who lived upon my cities. Yet, it was not only them benefitting from the arrangement.
 
-FP: I was built to provide for them, but there was also much I relied on them to provide to me.
-
-FP: Their absence has made things harder. I suppose the only gifts I receive now are pearls and such from your kind.
+FP: As they are no longer around, the only gifts I recieve now are from beasts such as you.
 
 FP: I certainly found more use in the ashes.

@@ -4,4 +4,4 @@ playerGuideOverseerSpawnChance: 1
 earlyCycleChance: 0.04
 earlyCycleFloodChance: 0.5
 pupSpawnChance: 0.0
-Broken Shelters: Artificer: MS_S04
+Broken Shelters: NCRunbound : MS_S04

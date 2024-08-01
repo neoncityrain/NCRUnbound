@@ -1,0 +1,16 @@
+Palette: 13
+waterColorOverride: 0.11, 0.51, 0.21
+overseersSpawnChance: 1
+overseersMin: 0
+overseersMax: 1
+playerGuideOverseerSpawnChance: 1
+earlyCycleChance: 0.03
+earlyCycleFloodChance: 0.001
+pupSpawnChance: 0.0
+Subregion: Memory of a Corpse
+Subregion: Silent Heart
+Subregion: Auxiliary Transmission Array
+Subregion: Arteries
+Subregion: Bitter Aerie
+Room Setting Templates: Deep, Artery, Array, Vents, Sewers, Aerie
+Room_Attr: MS_DMU01: Snail-Forbidden,Vulture-Forbidden,JetFish-Avoid,BigEel-Forbidden,Scavenger-Forbidden,KingVulture-Forbidden,MirosVulture-Forbidden,

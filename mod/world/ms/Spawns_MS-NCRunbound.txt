@@ -1,0 +1,79 @@
+// ah shit here we go again
+
+// start --------------------------------------
+OFFSCREEN : 0-Scavenger-13, 0-Miros Vulture-1, 0-Vulture-3, 0-Vulture-{AlternateForm}
+//----- scavs slightly more common than usual in ms due to artificer violence not reaching moon
+MS_FARSIDE : 7-Jetfish, 9-Jetfish
+//----- usually there are more leeches. however ive elected to be nice. also unbound cannot handle leeches or water so.
+
+// memory arrays --------------------------------------
+MS_MEMENTRANCE : 3-White-1
+//----- added a lizard
+// MS_MEM01 : 2-
+//----- possibly add an inspector...? unsure yet
+MS_MEM04 : 5-Tentacle Plant
+//----- why so many tentacle plants?? removed most
+MS_MEM05 : 2-Snail-1, 3-Spider-4, 6-BigSpider-2
+//----- way fewer snails, some spiders
+MS_MEMOUTSIDE : 5-Tentacle Plant, 7-Sea Leech-4, 9-Sea Leech-3
+//----- WAY less leeches, no jetfish yet
+
+// vents --------------------------------------
+MS_VENT01 : 8-Tentacle Plant, 12-Tentacle Plant, 10-Jetfish
+//-----
+MS_VENT08 : 8-Lantern Mouse-1
+//----- water is nearly absent, no reason to have jetfish. instead, lantern mice starting to vanish here
+MS_VENT09 : 7-MotherSpider
+//----- aquapede is usually in this room. no reason to have it, replaced by spider
+MS_VENT17 : 3-Leech-2, 7-Leech-3
+//----- fewer leeches
+MS_CAPI04 : 3-Cyan-1
+//----- one cyan
+
+// more named parts --------------------------------------
+MS_CORTEX : 9-Mimic-{12}
+//----- not enough water for jetfish to comfortably spawn. added a mimic cause i hate fun
+MS_M03 : 2-Spider-3, 4-Spider-5
+//----- coalescapedes from moon pre-collapse. spawn mostly at the top to give player some time
+MS_LAB12 : 4-Snail-2, 5-CicadaA-1, 6-CicadaB-2
+//----- 
+MS_LAB1 : 4-Tentacle Plant
+//----- 
+MS_LAB6 : 5-Eel
+//----- 
+MS_LAB9 : 4-Snail-3
+//----- 
+MS_LAB13 : 5-Snail-2, 6-CicadaB-3, 7-CicadaA-2
+//----- 
+MS_EAST03 : 5-Snail-3
+//----- 
+
+// letter names --------------------------------------
+MS_I01 : 4-Spider-5, 5-SpitterSpider, 7-Spider-2
+//----- no room for an aquapede, replaced by some spiders
+// MS_I02 : 
+//----- 
+MS_I08 : 5-Snail-2
+//----- 
+MS_I11 : 4-Eel
+//----- 
+MS_I12 : 4-Leech-10
+//----- 
+
+// bitter aerie --------------------------------------
+MS_COMMS : 2-Yellow-4, 6-Yellow-2
+//----- das a lotta yellows
+MS_bitteraerie1 : 5-White-{Winter}
+//----- 
+MS_bitteraeriepipeu : 4-CicadaB-3, 4-CicadaA-2
+//----- 
+MS_bitteraerie5 : 2-Blue-{Winter}
+//----- 
+MS_splitsewers : 11-Tentacle Plant
+//----- 
+MS_bitterpipe : 3-Eel
+//----- 
+MS_bitterentrance : 5-Tentacle Plant, 10-Blue-{Winter}, 9-CicadaB-3, 9-CicadaA-2
+//----- 
+MS_X02 : 3-Tentacle Plant
+//----- 

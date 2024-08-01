@@ -1,0 +1,8 @@
+Template: MS_SettingsTemplate_Vents
+DangerType: Rain
+RainIntensity: 0
+RumbleIntensity: 0.1086956
+Effects: ElectricDeath-0.07608695-273-17, WaterDepth-0.06521739-270-74, 
+PlacedObjects: LightFixture><730.7288><1227.301><RedLight~17.32051~-10~36, LightSource><480.8805><948.9016><0.2173913~EffectColor2~119~209~50~86.60254~0~0~None~0~0, LightSource><1359.435><898.5767><0.2717391~EffectColor2~-130~544~-435~-43.39746~0~0~None~0~0, LightSource><1962.348><1006.63><0.1956522~EffectColor2~-567~295~-411~19.60254~0~0~None~0~0, LightSource><2132.195><1101.043><0.1304348~EffectColor2~515~295~50~86.60254~0~0~None~0~0, LightSource><2452.083><166.61><0.2173913~EffectColor2~1267~738~50~86.60254~0~0~None~0~0, BubbleGrass><2814.884><372.4128><0~0~4~9, BubbleGrass><2845.01><389.0502><0~0~4~9, DevToken><2761.95><380.6937><9~86~51~179~0~~~0~0~0~1~0~0~0~1~0~0~0~1, 
+AmbientSounds: SPOT><AM_WIN-SubWnd.ogg><806.1664><601.1108><0.3695652><1><2625.167><707.1108><-528.3553><108.6447><0><0.6434784, SPOT><waterGurgleLOOP1.wav><703.444><367.0484><0.5><0.8630434><63.44403><989.0485><272.6447><-7.355347><0><0.3173914, SPOT><SO_WAT-TubWater.ogg><699.4623><253.6964><0.2826087><1><106.4623><865.6964><180.6447><-93.35535><0><0.2847827, 
+FadePalette: 5, 0.2934783, 0.3369565, 0.3478261, 0.3804348

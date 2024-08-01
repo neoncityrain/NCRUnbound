@@ -1,0 +1,94 @@
+﻿0-38-NCRunbound
+FP: This is a movement acceptance invoice. It is nothing important.
+
+FP: This is just a useless diamond sphere. Regardless of that, the light of my chamber shining through it is pleasing.
+
+FP: "...through the mists of memory, your image dances, like the motes of dust, in a ray of sunlight, that pierces a dark room."<LINE>A line of verse from the ancient farmer-poet Pel. I have many of his works archived.
+
+FP: This is an examination on various dilutions and chemical ratios for liquid mediums, and their<LINE>resulting operating efficiencies when utilized to drive fluid-powered machinery. Not of interest to you at all I'm sure.
+
+FP: Damaged and useless. Did you take this from the scavengers? Or perhaps you broke it getting it here.
+
+FP: It is a historical document containing information on various swords and other weaponry. These were not<LINE>used in combat, but were rather utilized in a variety of routine rituals and spiritual festivals.
+
+FP: This is the schematic for a purposed organism. A refuse reclamation automaton. There is little<LINE>a simple thing like you would understand if I explained it.
+
+FP: It's a collection of photographs showcasing a group of monks contorting their bodies in various ways. Most amusing...
+
+FP: A description of a manually coded language developed late into the Yellow hegemonic dynasty. It utilized<LINE>sequences of gestures and facial expressions to describe concepts to those incapable of speech. Too bad I cannot use this with you.
+
+FP: Such savagery. This pearl has been carved through as decoration. While the information within is not of any<LINE>particular importance, the primitive methods used to drill through this pearl could have easily destroyed something more complex.<LINE>It is a shame to see them desecrate history for the sake of shiny trinkets.
+
+FP: This is blank.
+
+FP: It is empty.
+
+FP: There is nothing here.
+
+FP: It has faded, and is unreadable.
+
+FP: ...Why did you bring this to me? It is completely blank.
+
+FP: This one has been cracked.
+
+FP: It is damaged and unreadable.
+
+FP: The data on this one is clear and uncorrupted, but it is not in any recognizable format.<LINE>The inscriptions within the lattice form a very intricate and deliberate pattern.
+
+FP: Could it be? This pearl contains the solution to the Big Problem in its entirety. My work is finally finished! At least that's<LINE>what a dim-witted junkyard dweller like you seems to think will happen by bringing these to me. These pearls are a distraction.
+
+FP: This data has been scrambled intentionally. It was likely used to store confidential information.
+
+FP: The surface of this pearl has been scratched thousands of times over by some sharp object. Its contents are faded as well.
+
+FP: There is an image of banners on this, but it has been faded to the point of corruption.
+
+FP: Nothing is left, it is too faded to read.
+
+FP: It is growing instructions for the skeleton of a creature, nothing you would understand.
+
+FP: This one contains a numerical sequence encoding all of the registered<LINE>identification numbers for those who dwelled in my city.
+
+FP: Part of a number series. This was likely used as a cipher.
+
+FP: This pearl is filled to capacity, a tremendous feat. However, it only appears to<LINE>contain a single excessively large image, which happens to be completely blank.
+
+FP: Strange, a singular number "8" has been written to this and nothing else.
+
+FP: It is an old blueprint for construction supports.
+
+FP: This is a very early research journal, equating void fluid to antimatter. While that comparison<LINE>works metaphorically, it fundamentally misunderstands the true nature of the fluid.
+
+FP: A maintenance log of a routine inspection of my superstructure. No problems to report.<LINE>After all, I was still brand new when this log was written.
+
+FP: This is incomplete source code for a complex simulation of our world, known as The World Machine.<LINE>However, public ascension concluded long before it could be finished by its author.
+
+FP: It is a drawing by a young child, depicting the likeness of an iterator puppet. Specifically, I presume<LINE>this is meant to represent my puppet, but the drawing is too crude to tell for sure. How awful.
+
+FP: This reads like someone attempting to copy a book from their memory alone.<LINE>Many chapters are only partially written, and some do not exist.
+
+FP: A classical hymn from an early dynasty. It is very short and repetitive,<LINE>but its archiving will please me greatly.
+
+FP: It's a log from a sensor monitoring conditions on the surface. The log ends abruptly<LINE>after some time, as the sensor suffered irreparable damage from the heavy rainfall.
+
+FP: There are 71 numbers listed on this pearl, and they are some of the most unlucky numbers I have ever seen.
+
+FP: "Dear diary..." and then nothing.
+
+FP: A model of a fluid carrying pipe section. The joints are designed to promote self-sealing.
+
+FP: It is a catalog of many types of teas, and their brewing techniques. I do not<LINE>possess the ability to drink tea, so this is of no use to me. You can keep it.
+
+FP: It's the blueprint for a small incense purification filter. An<LINE>understandable necessity before the departure of my creators.
+
+FP: An image of five bottles of water, standing upon a surface of filter feeding plants.<LINE>A reflection of desire for something denied. A painting from the late Red literary<LINE>dynasty by the famed painter Twenty-One Spokes of a Stone Wheel, a true visionary!
+
+FP: I would prefer not to speak of the contents recorded in this pearl.<LINE>Some things are best left unknown.
+
+FP: Old schematics for a gas filtration machine, very rough and unoptimized.
+
+FP: This pearl contains a series of puzzles designed to exercise the mind. However, I've already<LINE>solved them all in the time it took me to say these sentences aloud to you.
+
+FP: This is a malicious pearl. The data is meaningless, but the way it is formatted would cause older machinery<LINE>to get stuck in an infinite recursion trying to read it. Luckily, I am more sophisticated than that.
+
+FP: This contains the image of a pearl... and within that the same image. This is either<LINE>a joke, or a method of testing a pearl's recursive density.

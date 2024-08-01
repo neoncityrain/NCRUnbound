@@ -1,5 +1,5 @@
 slugPupSpawnChance: 0
-earlyCycleChance: 0.1
-earlyCycleFloodChance: 0.5
+earlyCycleChance: 0.01
+earlyCycleFloodChance: 0
 
 Subregion: Star That Guides
