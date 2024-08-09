@@ -3,10 +3,12 @@
 namespace Unbound
 {
     [BepInPlugin("NCR.theunbound", "unbound", "2.2.1")]
+
     [BepInDependency("MoreSlugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("MSC", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("fakeachievements", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("dressmyslugcat", BepInDependency.DependencyFlags.SoftDependency)]
 
     public partial class NCRUnbound : BaseUnityPlugin
     {

@@ -1,5 +1,6 @@
 ﻿using Menu;
 using System;
+using System.Linq;
 
 namespace Unbound
 {
@@ -18,10 +19,11 @@ namespace Unbound
         static FAtlas unblegs;
         #endregion
         #region sLeaser Sprite Variables
-        static int unbSocksNum = ModManager.MSC ? 13 : 12;
         static int unbJumprings1Num = ModManager.MSC ? 14 : 13;
+        static int unbJumprings2Num = ModManager.MSC ? 13 : 12;
+
+        static int unbSocksNum = ModManager.MSC ? 16 : 15;
         static int unbFreckleNum = ModManager.MSC ? 15 : 14;
-        static int unbJumprings2Num = ModManager.MSC ? 16 : 15;
         static int unbEarTips = ModManager.MSC ? 17 : 16;
         static int unbLeftMittens = ModManager.MSC ? 18 : 17;
         static int unbRightMittens = ModManager.MSC ? 19 : 18;
@@ -31,6 +33,7 @@ namespace Unbound
 
         static int ThisIsTheLengthOfMyMadness = 10; // update when adding more to above
         #endregion
+        static bool DMSactive = (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat"));
 
         public static void Init()
         {
@@ -80,7 +83,8 @@ namespace Unbound
             orig(self, sLeaser, rCam, timeStacker, camPos);
             //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
+            if (!DMSactive &&
+                !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null &&
                 (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
@@ -103,183 +107,183 @@ namespace Unbound
                 #region Adding / Replacing Atlases
                 // ADDING / REPLACING ATLAS THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+                bool DMSIsActive = ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat");
 
                 //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-                // LEG THINGS
-                string lego = sLeaser.sprites[4]?.element?.name;
-                if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    unbmittenlegs == null)
-                {
-                    NCRDebug.Log("Unbound Socks sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    lego != null && lego.StartsWith("Legs") &&
-                    unbmittenlegs._elementsByName.TryGetValue("unbmitten" + lego, out var leggy))
-                {
-                    sLeaser.sprites[unbSocksNum].element = leggy;
-                }
-                if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    unblegs == null)
-                {
-                    NCRDebug.Log("Unbound Leg sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    lego != null && lego.StartsWith("Legs") &&
-                    unblegs._elementsByName.TryGetValue("unb" + lego, out var leggie))
-                {
-                    sLeaser.sprites[4].element = leggie;
-                }
 
-                // HEAD THINGS
-                string head = sLeaser.sprites[3]?.element?.name;
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbearhead == null)
-                {
-                    NCRDebug.Log("Unbound Eartip sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    head != null && head.StartsWith("Head") &&
-                    unbearhead._elementsByName.TryGetValue("unbear" + head, out var eartip))
-                {
-                    sLeaser.sprites[unbEarTips].element = eartip;
-                }
-                // eartips
-                if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    unbhead == null)
-                {
-                    NCRDebug.Log("Unbound Head sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    head != null && head.StartsWith("Head") &&
-                    unbhead._elementsByName.TryGetValue("unb" + head, out var headreplace))
-                {
-                    sLeaser.sprites[3].element = headreplace;
-                }
-
-                // ARM THINGS
-                string larm = sLeaser.sprites[5]?.element?.name;
-                string rarm = sLeaser.sprites[6]?.element?.name;
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm == null)
-                {
-                    NCRDebug.Log("Unbound Arm sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
-                    unbarm._elementsByName.TryGetValue("unb" + larm, out var leftreplace))
-                {
-                    sLeaser.sprites[5].element = leftreplace;
-                }
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
-                    unbarm._elementsByName.TryGetValue("unb" + rarm, out var rightreplace))
-                {
-                    sLeaser.sprites[6].element = rightreplace;
-                }
-                // arm replacements
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbsleevesarm == null)
-                {
-                    NCRDebug.Log("Unbound Mitten sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
-                    unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var larmreplace))
-                {
-                    sLeaser.sprites[unbLeftMittens].element = larmreplace;
-                }
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
-                    unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var rarmreplace))
-                {
-                    sLeaser.sprites[unbRightMittens].element = rarmreplace;
-                }
-
-
-                // HAND THINGS
-                string lhand = sLeaser.sprites[7]?.element?.name;
-                string rhand = sLeaser.sprites[8]?.element?.name;
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
-                    unbarm._elementsByName.TryGetValue("unb" + lhand, out var lhandreplace))
-                {
-                    sLeaser.sprites[7].element = lhandreplace;
-                }
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rhand != null && rhand.StartsWith("OnTopOf") &&
-                    unbarm._elementsByName.TryGetValue("unb" + rhand, out var rhandreplace))
-                {
-                    sLeaser.sprites[8].element = rhandreplace;
-                }
-
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbsleevesarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
-                    unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + lhand, out var lsleeve))
-                {
-                    sLeaser.sprites[unbLeftToes].element = lsleeve;
-                }
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbsleevesarm != null && rhand != null && rhand.StartsWith("OnTopOf") &&
-                    unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + rhand, out var rsleeve))
-                {
-                    sLeaser.sprites[unbRightToes].element = rsleeve;
-                }
-
-                // HIPS THINGS
                 string hipwthekids = sLeaser.sprites[1]?.element?.name;
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbfrecklehips == null)
-                {
-                    NCRDebug.Log("Unbound Freckle sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    hipwthekids != null && hipwthekids.StartsWith("Hips") &&
-                    unbfrecklehips._elementsByName.TryGetValue("unbfreckle" + hipwthekids, out var freck))
-                {
-                    sLeaser.sprites[unbFreckleNum].element = freck;
-                }
-                // body freckles
 
-                if (!self.player.GetNCRunbound().RingsDisabled && unbjumphips == null)
+                // LEG THINGS
+                if (!DMSIsActive && !self.player.GetNCRunbound().GraphicsDisabled)
                 {
-                    NCRDebug.Log("Unbound LOWER Jumpring sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().RingsDisabled && hipwthekids != null && hipwthekids.StartsWith("Hips") &&
-                    unbjumphips._elementsByName.TryGetValue("unbjump" + hipwthekids, out var jumprings))
-                {
-                    sLeaser.sprites[unbJumprings1Num].element = jumprings;
-                }
-                // lower jumprings
+                    string lego = sLeaser.sprites[4]?.element?.name;
+                    if (unbmittenlegs == null)
+                    {
+                        NCRDebug.Log("Unbound Socks sprites missing!");
+                    }
+                    else if (lego != null && lego.StartsWith("Legs") &&
+                        unbmittenlegs._elementsByName.TryGetValue("unbmitten" + lego, out var leggy))
+                    {
+                        sLeaser.sprites[unbSocksNum].element = leggy;
+                    }
+                    if (unblegs == null)
+                    {
+                        NCRDebug.Log("Unbound Leg sprites missing!");
+                    }
+                    else if (lego != null && lego.StartsWith("Legs") &&
+                        unblegs._elementsByName.TryGetValue("unb" + lego, out var leggie))
+                    {
+                        sLeaser.sprites[4].element = leggie;
+                    }
 
-                // BODY THINGS
-                string bodyget = sLeaser.sprites[0]?.element?.name;
-                if (!self.player.GetNCRunbound().RingsDisabled && unbjumpbody == null)
-                {
-                    NCRDebug.Log("Unbound UPPER Jumpring sprites missing!");
-                }
-                else if (!self.player.GetNCRunbound().RingsDisabled && bodyget != null && bodyget.StartsWith("Body") &&
-                    unbjumpbody._elementsByName.TryGetValue("unbjump" + bodyget, out var jumprings2))
-                {
-                    sLeaser.sprites[unbJumprings2Num].element = jumprings2;
-                }
-                // upper jumprings
+                    // HEAD THINGS
+                    string head = sLeaser.sprites[3]?.element?.name;
+                    if (unbearhead == null)
+                    {
+                        NCRDebug.Log("Unbound Eartip sprites missing!");
+                    }
+                    else if (head != null && head.StartsWith("Head") &&
+                        unbearhead._elementsByName.TryGetValue("unbear" + head, out var eartip))
+                    {
+                        sLeaser.sprites[unbEarTips].element = eartip;
+                    }
+                    // eartips
+                    if (unbhead == null)
+                    {
+                        NCRDebug.Log("Unbound Head sprites missing!");
+                    }
+                    else if (head != null && head.StartsWith("Head") &&
+                        unbhead._elementsByName.TryGetValue("unb" + head, out var headreplace))
+                    {
+                        sLeaser.sprites[3].element = headreplace;
+                    }
 
-                // FACE THINGS
-                string faceget = sLeaser.sprites[9]?.element?.name;
-                if (!self.player.GetNCRunbound().RingsDisabled &&
-                    unbpupface == null)
-                {
-                    NCRDebug.Log("Unbound Pupil sprites missing!");
+                    // ARM THINGS
+                    string larm = sLeaser.sprites[5]?.element?.name;
+                    string rarm = sLeaser.sprites[6]?.element?.name;
+                    if (unbarm == null)
+                    {
+                        NCRDebug.Log("Unbound Arm sprites missing!");
+                    }
+                    else if (larm != null && larm.StartsWith("PlayerArm") &&
+                        unbarm._elementsByName.TryGetValue("unb" + larm, out var leftreplace))
+                    {
+                        sLeaser.sprites[5].element = leftreplace;
+                    }
+                    if (unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
+                        unbarm._elementsByName.TryGetValue("unb" + rarm, out var rightreplace))
+                    {
+                        sLeaser.sprites[6].element = rightreplace;
+                    }
+                    // arm replacements
+                    if (unbsleevesarm == null)
+                    {
+                        NCRDebug.Log("Unbound Mitten sprites missing!");
+                    }
+                    else if (larm != null && larm.StartsWith("PlayerArm") &&
+                        unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var larmreplace))
+                    {
+                        sLeaser.sprites[unbLeftMittens].element = larmreplace;
+                    }
+                    if (unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
+                        unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var rarmreplace))
+                    {
+                        sLeaser.sprites[unbRightMittens].element = rarmreplace;
+                    }
+
+
+                    // HAND THINGS
+                    string lhand = sLeaser.sprites[7]?.element?.name;
+                    string rhand = sLeaser.sprites[8]?.element?.name;
+                    if (unbarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
+                        unbarm._elementsByName.TryGetValue("unb" + lhand, out var lhandreplace))
+                    {
+                        sLeaser.sprites[7].element = lhandreplace;
+                    }
+                    if (unbarm != null && rhand != null && rhand.StartsWith("OnTopOf") &&
+                        unbarm._elementsByName.TryGetValue("unb" + rhand, out var rhandreplace))
+                    {
+                        sLeaser.sprites[8].element = rhandreplace;
+                    }
+
+                    if (unbsleevesarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
+                        unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + lhand, out var lsleeve))
+                    {
+                        sLeaser.sprites[unbLeftToes].element = lsleeve;
+                    }
+                    if (unbsleevesarm != null && rhand != null && rhand.StartsWith("OnTopOf") &&
+                        unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + rhand, out var rsleeve))
+                    {
+                        sLeaser.sprites[unbRightToes].element = rsleeve;
+                    }
+                    if (unbfrecklehips == null)
+                    {
+                        NCRDebug.Log("Unbound Freckle sprites missing!");
+                    }
+                    else if (hipwthekids != null && hipwthekids.StartsWith("Hips") &&
+                        unbfrecklehips._elementsByName.TryGetValue("unbfreckle" + hipwthekids, out var freck))
+                    {
+                        sLeaser.sprites[unbFreckleNum].element = freck;
+                    }
+                    // body freckles
+                    string faceget = sLeaser.sprites[9]?.element?.name;
+                    if (unbpupface == null)
+                    {
+                        NCRDebug.Log("Unbound Pupil sprites missing!");
+                    }
+                    else if (faceget != null && faceget.StartsWith("Face") &&
+                        unbpupface._elementsByName.TryGetValue("unbpup" + faceget, out var pupils))
+                    {
+                        sLeaser.sprites[unbPupils].element = pupils;
+                    }
+                    // pupils
+
+                    // end general graphics
                 }
-                else if (!self.player.GetNCRunbound().RingsDisabled &&
-                    faceget != null && faceget.StartsWith("Face") &&
-                    unbpupface._elementsByName.TryGetValue("unbpup" + faceget, out var pupils))
+
+                if (!self.player.GetNCRunbound().RingsDisabled)
                 {
-                    sLeaser.sprites[unbPupils].element = pupils;
+                    if (unbjumphips == null)
+                    {
+                        NCRDebug.Log("Unbound LOWER Jumpring sprites missing!");
+                    }
+                    else if (hipwthekids != null && hipwthekids.StartsWith("Hips") &&
+                        unbjumphips._elementsByName.TryGetValue("unbjump" + hipwthekids, out var jumprings))
+                    {
+                        sLeaser.sprites[unbJumprings1Num].element = jumprings;
+                    }
+                    // lower jumprings
+
+                    // BODY THINGS
+                    string bodyget = sLeaser.sprites[0]?.element?.name;
+                    if (unbjumpbody == null)
+                    {
+                        NCRDebug.Log("Unbound UPPER Jumpring sprites missing!");
+                    }
+                    else if (bodyget != null && bodyget.StartsWith("Body") &&
+                        unbjumpbody._elementsByName.TryGetValue("unbjump" + bodyget, out var jumprings2))
+                    {
+                        sLeaser.sprites[unbJumprings2Num].element = jumprings2;
+                    }
+                    // upper jumprings
                 }
-                // pupils
+
                 #endregion
                 #region Vanilla Tweaks
                 // VANILLA TWEAKING THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                if (!self.player.GetNCRunbound().GraphicsDisabled)
+                if (!self.player.GetNCRunbound().GraphicsDisabled && !DMSactive)
                 {
                     sLeaser.sprites[1].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
                     sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * bodyhipscenterish, 0.15f,
                         self.player.sleepCurlUp);
                     // makes unbound thinner
+
                     sLeaser.sprites[10].alpha = 0f;
                     sLeaser.sprites[11].alpha = 0f;
                     // removes the mark and the marks glow
+
                     if (self.player.stun > 0)
                     {
                         sLeaser.sprites[4].isVisible = false;
@@ -289,16 +293,23 @@ namespace Unbound
                 #endregion
                 #region Mirroring
                 //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
-                MirrorSprite(sLeaser.sprites[unbJumprings2Num], sLeaser.sprites[0]);
-                MirrorSprite(sLeaser.sprites[unbJumprings1Num], sLeaser.sprites[1]);
-                MirrorSprite(sLeaser.sprites[unbFreckleNum], sLeaser.sprites[1]);
-                MirrorSprite(sLeaser.sprites[unbEarTips], sLeaser.sprites[3]);
-                MirrorSprite(sLeaser.sprites[unbSocksNum], sLeaser.sprites[4]);
-                MirrorSprite(sLeaser.sprites[unbLeftMittens], sLeaser.sprites[5]);
-                MirrorSprite(sLeaser.sprites[unbRightMittens], sLeaser.sprites[6]);
-                MirrorSprite(sLeaser.sprites[unbLeftToes], sLeaser.sprites[7]);
-                MirrorSprite(sLeaser.sprites[unbRightToes], sLeaser.sprites[8]);
-                MirrorSprite(sLeaser.sprites[unbPupils], sLeaser.sprites[9]);
+                if (!self.player.GetNCRunbound().RingsDisabled)
+                {
+                    MirrorSprite(sLeaser.sprites[unbJumprings2Num], sLeaser.sprites[0]);
+                    MirrorSprite(sLeaser.sprites[unbJumprings1Num], sLeaser.sprites[1]);
+                }
+
+                if (!DMSIsActive && !self.player.GetNCRunbound().GraphicsDisabled)
+                {
+                    MirrorSprite(sLeaser.sprites[unbFreckleNum], sLeaser.sprites[1]);
+                    MirrorSprite(sLeaser.sprites[unbEarTips], sLeaser.sprites[3]);
+                    MirrorSprite(sLeaser.sprites[unbSocksNum], sLeaser.sprites[4]);
+                    MirrorSprite(sLeaser.sprites[unbLeftMittens], sLeaser.sprites[5]);
+                    MirrorSprite(sLeaser.sprites[unbRightMittens], sLeaser.sprites[6]);
+                    MirrorSprite(sLeaser.sprites[unbLeftToes], sLeaser.sprites[7]);
+                    MirrorSprite(sLeaser.sprites[unbRightToes], sLeaser.sprites[8]);
+                    MirrorSprite(sLeaser.sprites[unbPupils], sLeaser.sprites[9]);
+                }
                 #endregion
                 #region Colours
                 // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -321,7 +332,7 @@ namespace Unbound
                     bodycol = PlayerGraphics.CustomColorSafety(0);
                 }
 
-                if (!self.player.GetNCRunbound().GraphicsDisabled)
+                if (!self.player.GetNCRunbound().GraphicsDisabled && !DMSIsActive)
                 {
                     sLeaser.sprites[unbFreckleNum].color = self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol; // freckles
                     sLeaser.sprites[unbEarTips].color = self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol; // head
@@ -429,7 +440,6 @@ namespace Unbound
                 }
                 #endregion
 
-                
                 // end drawsprites
             }
         }
@@ -437,7 +447,8 @@ namespace Unbound
         private static void AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
             RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
-            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
+            if (!DMSactive &&
+                !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && rCam != null && sLeaser != null &&
                 (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
@@ -465,58 +476,69 @@ namespace Unbound
                     }
                     //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-                    if (i == unbPupils)
+                    if (!self.player.GetNCRunbound().GraphicsDisabled && !DMSactive &&
+                        (i == unbPupils || i == unbFreckleNum || i == unbSocksNum ||
+                        i == unbEarTips || i == unbLeftMittens || i == unbRightMittens ||
+                        i == unbRightToes || i == unbLeftToes))
                     {
-                        // pupils
-                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
-                        (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[9]);
-                        // move in front of face sprite
+                        if (i == unbPupils)
+                        {
+                            // pupils
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
+                            (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[9]);
+                            // move in front of face sprite
+                        }
+                        else if (i == unbFreckleNum || i == unbSocksNum)
+                        {
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
+                            (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[4]);
+                            // in front of legs
+                        }
+                        else if (i == unbEarTips)
+                        {
+                            // eartips
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
+                            (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[3]);
+                            // move in front of head sprite
+                        }
+                        else if (i == unbLeftMittens)
+                        {
+                            // arm sleeves
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
+                            (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[5]);
+                            // move in front of arm sprites
+                        }
+                        else if (i == unbRightMittens)
+                        {
+                            // arm sleeves
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
+                            (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[6]);
+                            // move in front of arm sprites
+                        }
+                        else if (i == unbLeftToes)
+                        {
+                            // arm sleeves
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
+                            (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[7]);
+                            // move in front of hand sprites
+                        }
+                        else if (i == unbRightToes)
+                        {
+                            // arm sleeves
+                            rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
+                            (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[8]);
+                            // move in front of hand sprites
+                        }
+                        // end graphics not disabled
                     }
-                    else if (i == unbJumprings1Num || i == unbFreckleNum || i == unbJumprings2Num ||
-                        i == unbSocksNum)
+                    else if (!self.player.GetNCRunbound().RingsDisabled &&
+                        (i == unbJumprings1Num || i == unbJumprings2Num))
                     {
                         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
                         (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[4]);
                         // in front of legs
                     }
-                    else if (i == unbEarTips)
-                    {
-                        // eartips
-                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
-                        (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[3]);
-                        // move in front of head sprite
-                    }
-                    else if (i == unbLeftMittens)
-                    {
-                        // arm sleeves
-                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
-                        (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[5]);
-                        // move in front of arm sprites
-                    }
-                    else if (i == unbRightMittens)
-                    {
-                        // arm sleeves
-                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
-                        (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[6]);
-                        // move in front of arm sprites
-                    }
-                    else if (i == unbLeftToes)
-                    {
-                        // arm sleeves
-                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
-                        (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[7]);
-                        // move in front of hand sprites
-                    }
-                    else if (i == unbRightToes)
-                    {
-                        // arm sleeves
-                        rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
-                        (sLeaser.sprites[i]).MoveInFrontOfOtherNode(sLeaser.sprites[8]);
-                        // move in front of hand sprites
-                    }
-
-
-
+                    
                     // VANILLA ---------------------------------------------------------------------
                     else if ((i <= 6 || i >= 9) && i <= 9)
                     {
@@ -529,16 +551,19 @@ namespace Unbound
                 }
 
 
+
+
                 if (sLeaser.sprites.Length < 14)
                 {
                     try
                     {
-                        Array.Resize(ref sLeaser.sprites, (ModManager.MSC ? 13 : 12) + ThisIsTheLengthOfMyMadness);
+                        Array.Resize(ref sLeaser.sprites, (ModManager.MSC ? 13 : 12) + 
+                            ThisIsTheLengthOfMyMadness
+                            );
                         if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Array resize success!"); }
                     }
                     catch (Exception e)
                     {
-
                         NCRDebug.Log("Couldn't resize array: " + e);
                     }
                 }
@@ -555,7 +580,8 @@ namespace Unbound
         {
             orig(self, sLeaser, rCam);
 
-            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
+            if (!DMSactive &&
+                !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
                 (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
@@ -563,43 +589,48 @@ namespace Unbound
                 #region Unbound Exclusive
                 try
                 {
-                    sLeaser.sprites[unbSocksNum] = new FSprite("unbLegsA0", true);
-                    sLeaser.sprites[unbSocksNum].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    sLeaser.sprites[unbSocksNum].anchorY = 0.25f;
-                    // leggy
+                    if (!DMSactive && !self.player.GetNCRunbound().GraphicsDisabled)
+                    {
+                        sLeaser.sprites[unbSocksNum] = new FSprite("unbLegsA0", true);
+                        sLeaser.sprites[unbSocksNum].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        sLeaser.sprites[unbSocksNum].anchorY = 0.25f;
+                        // leggy
+                        sLeaser.sprites[unbFreckleNum] = new FSprite("unbfreckleHipsA", true);
+                        sLeaser.sprites[unbFreckleNum].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        // hips
 
-                    sLeaser.sprites[unbJumprings1Num] = new FSprite("unbjumpHipsA", true);
-                    sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    sLeaser.sprites[unbFreckleNum] = new FSprite("unbfreckleHipsA", true);
-                    sLeaser.sprites[unbFreckleNum].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    // hips
+                        sLeaser.sprites[unbEarTips] = new FSprite("unbearHeadA0", true);
+                        sLeaser.sprites[unbEarTips].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        // head
 
-                    sLeaser.sprites[unbJumprings2Num] = new FSprite("unbjumpBodyA", true);
-                    sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    // body
+                        sLeaser.sprites[unbLeftMittens] = new FSprite("unbsleevesPlayerArm0", true);
+                        sLeaser.sprites[unbLeftMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        sLeaser.sprites[unbLeftMittens].anchorX = 0.9f;
+                        sLeaser.sprites[unbLeftMittens].scaleY = -1f;
+                        sLeaser.sprites[unbRightMittens] = new FSprite("unbsleevesPlayerArm0", true);
+                        sLeaser.sprites[unbRightMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        sLeaser.sprites[unbRightMittens].anchorX = 0.9f;
+                        sLeaser.sprites[unbLeftToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
+                        sLeaser.sprites[unbLeftToes].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        sLeaser.sprites[unbRightToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
+                        sLeaser.sprites[unbRightToes].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        sLeaser.sprites[unbRightToes].scaleX = -1f;
+                        // mittens, including anchors and base scales
 
-                    sLeaser.sprites[unbEarTips] = new FSprite("unbearHeadA0", true);
-                    sLeaser.sprites[unbEarTips].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    // head
+                        sLeaser.sprites[unbPupils] = new FSprite("unbpupFaceA0", true);
+                        sLeaser.sprites[unbPupils].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        // pupils
+                    }
 
-                    sLeaser.sprites[unbLeftMittens] = new FSprite("unbsleevesPlayerArm0", true);
-                    sLeaser.sprites[unbLeftMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    sLeaser.sprites[unbLeftMittens].anchorX = 0.9f;
-                    sLeaser.sprites[unbLeftMittens].scaleY = -1f;
-                    sLeaser.sprites[unbRightMittens] = new FSprite("unbsleevesPlayerArm0", true);
-                    sLeaser.sprites[unbRightMittens].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    sLeaser.sprites[unbRightMittens].anchorX = 0.9f;
-                    sLeaser.sprites[unbLeftToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
-                    sLeaser.sprites[unbLeftToes].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    sLeaser.sprites[unbRightToes] = new FSprite("unbsleevesOnTopOfTerrainHand", true);
-                    sLeaser.sprites[unbRightToes].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    sLeaser.sprites[unbRightToes].scaleX = -1f;
-                    // mittens, including anchors and base scales
-
-                    sLeaser.sprites[unbPupils] = new FSprite("unbpupFaceA0", true);
-                    sLeaser.sprites[unbPupils].shader = rCam.game.rainWorld.Shaders["Basic"];
-                    // pupils
-                    
+                    if (!self.player.GetNCRunbound().RingsDisabled)
+                    {
+                        sLeaser.sprites[unbJumprings1Num] = new FSprite("unbjumpHipsA", true);
+                        sLeaser.sprites[unbJumprings1Num].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        // lower jumprings
+                        sLeaser.sprites[unbJumprings2Num] = new FSprite("unbjumpBodyA", true);
+                        sLeaser.sprites[unbJumprings2Num].shader = rCam.game.rainWorld.Shaders["Basic"];
+                        // upper jumprings
+                    }
 
                     // DONT FORGET TO RESIZE THE ARRAY
                     self.AddToContainer(sLeaser, rCam, null);
@@ -610,8 +641,10 @@ namespace Unbound
                 }
 
                 #endregion
-                // end unbgraphics
             }
         }
+
+
+        // end unbgraphics
     }
 }
