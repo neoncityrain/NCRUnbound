@@ -8,13 +8,13 @@ namespace Unbound
     {
         public static void Init()
         {
-            On.SSOracleBehavior.ThrowOutBehavior.Update += ThrowOutToSleepover;
+            // On.SSOracleBehavior.ThrowOutBehavior.Update += ThrowOutToSleepover;
+            // On.SSOracleBehavior.NewAction += NewAction;
+
             On.SSOracleBehavior.Update += UpdateBehavior;
             On.SSOracleBehavior.SeePlayer += SeeUnbound;
-            On.SSOracleBehavior.NewAction += NewAction;
             On.SSOracleBehavior.storedPearlOrbitLocation += storedPearlOrbitLocation;
             On.SSOracleBehavior.ctor += SSctor;
-            On.SSOracleBehavior.UpdateStoryPearlCollection += StoryPearl;
             On.SSOracleBehavior.InitateConversation += EnableColourmode;
 
             On.SSOracleBehavior.StartItemConversation += PearlConversations;
@@ -106,64 +106,6 @@ namespace Unbound
             if (self.player.room.game.session.characterStats.name.value == "NCRunbound")
             {
                 self.conversation.colorMode = true;
-            }
-        }
-
-        private static void StoryPearl(On.SSOracleBehavior.orig_UpdateStoryPearlCollection orig, SSOracleBehavior self)
-        {
-            if (self != null && self.player != null && self.readDataPearlOrbits != null &&
-                self.player.room.game.session.characterStats.name.value == "NCRunbound")
-            {
-                List<DataPearl.AbstractDataPearl> list = new List<DataPearl.AbstractDataPearl>();
-                int num = 0;
-                foreach (DataPearl.AbstractDataPearl abstractDataPearl in self.readDataPearlOrbits)
-                {
-                    if (abstractDataPearl.realizedObject != null)
-                    {
-                        if (abstractDataPearl.realizedObject.grabbedBy.Count > 0)
-                        {
-                            list.Add(abstractDataPearl);
-                        }
-                        else
-                        {
-                            if (!self.readPearlGlyphs.ContainsKey(abstractDataPearl))
-                            {
-                                try
-                                {
-                                    self.readPearlGlyphs.Add(abstractDataPearl, new
-                                    GlyphLabel(abstractDataPearl.realizedObject.firstChunk.pos, GlyphLabel.RandomString(1, 1, 12842 +
-                                    (((abstractDataPearl as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl) ? 4 :
-                                    abstractDataPearl.dataPearlType.Index), false)));
-                                    self.oracle.room.AddObject(self.readPearlGlyphs[abstractDataPearl]);
-                                }
-                                catch (Exception e)
-                                {
-                                    NCRDebug.Log("Error with glyphs: " + e);
-                                }
-                                
-                            }
-                            else
-                            {
-                                self.readPearlGlyphs[abstractDataPearl].setPos = new Vector2?(abstractDataPearl.realizedObject.firstChunk.pos);
-                            }
-                            abstractDataPearl.realizedObject.firstChunk.pos = Custom.MoveTowards(abstractDataPearl.realizedObject.firstChunk.pos,
-                                self.storedPearlOrbitLocation(num), 2.5f);
-                            abstractDataPearl.realizedObject.firstChunk.vel *= 0.99f;
-                            num++;
-                        }
-                    }
-                }
-                foreach (DataPearl.AbstractDataPearl storedPearl in list)
-                {
-                    NCRDebug.Log("stored pearl grabbed, releasing from storage " + storedPearl);
-                    self.readPearlGlyphs[storedPearl].Destroy();
-                    self.readPearlGlyphs.Remove(storedPearl);
-                    self.readDataPearlOrbits.Remove(storedPearl);
-                }
-            }
-            else
-            {
-                orig(self);
             }
         }
 
@@ -381,7 +323,7 @@ namespace Unbound
                     {
                         NCRDebug.Log("Pebbles seeing Unbound again!");
                     }
-                    self.NewAction(UnboundEnums.UnbSlumberParty);
+                    // self.NewAction(UnboundEnums.UnbSlumberParty);
                 }
                 else if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1)
                 {
@@ -421,6 +363,7 @@ namespace Unbound
                 }
 
                 if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad > 1 &&
+                    self.inspectPearl == null && // so it never triggers
                     self.inspectPearl != null)
                 {
                     self.movementBehavior = SSOracleBehavior.MovementBehavior.Meditate;

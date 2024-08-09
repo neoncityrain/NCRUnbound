@@ -465,14 +465,6 @@ namespace Unbound
                     }
                     //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-                    //if (i == unbFrillStarts)
-                    //{
-                        // wingscales!
-                        //rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[i]);
-                        //(sLeaser.sprites[i]).MoveBehindOtherNode(sLeaser.sprites[0]);
-                        // move behind all other sprites
-                    //}
-                    //else 
                     if (i == unbPupils)
                     {
                         // pupils

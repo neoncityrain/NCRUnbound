@@ -46,7 +46,7 @@ namespace Unbound
                 GeneralOracleThings.Init();
                 // iterators
                 SetupRoomSpecific.Init();
-                STGKTB.Init();
+                // STGKTB.Init(); (KEEP DISABLED FOR NOW)
                 // room specific
 
 

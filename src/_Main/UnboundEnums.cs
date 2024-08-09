@@ -20,6 +20,9 @@
         public static Oracle.OracleID NCRKTB;
         public static Oracle.OracleID NCRSTG;
         // oracles
+        public static Region stgRegion;
+        public static Region ktbRegion;
+        // regions
 
         public static void RegisterValues()
         {
@@ -38,6 +41,7 @@
             UnbSlumberParty = new SSOracleBehavior.Action("UnbSlumberParty", true);
             UnbSlumberPartySub = new SSOracleBehavior.SubBehavior.SubBehavID("UnbSlumberPartySub", true);
             SSMeetUnboundSub = new SSOracleBehavior.SubBehavior.SubBehavID("SSMeetUnboundSub", true);
+            // behaviours
         }
 
         public static void FullUnregister()
@@ -60,6 +64,7 @@
             // for items, creatures, ect that may break the game if unregistered during actual gameplay
             if (unboundKarmaPearl != null) { unboundKarmaPearl.Unregister(); unboundKarmaPearl = null; }
             if (MSCOnly.UnbPebbles != null) { MSCOnly.UnbPebbles.Unregister(); MSCOnly.UnbPebbles = null; }
+            if (stgRegion != null) { stgRegion = null; }
         }
 
         // end enums

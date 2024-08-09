@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Noise;
 
 namespace Unbound
 {
@@ -64,8 +64,6 @@ namespace Unbound
                     self.GetNCRunbound().DidTripleCyanJump = false;
                 }
 
-
-
                 if (self.GetNCRunbound().UnbCyanjumpCountdown < 0)
                 {
                     self.GetNCRunbound().UnbCyanjumpCountdown = 0;
@@ -79,6 +77,7 @@ namespace Unbound
                     if (!self.GetNCRunbound().holdingJumpkey)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, self.mainBodyChunk);
+                        self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 500f, self, 1f));
                     }
                     self.room.AddObject(new UnbJumplight(self.bodyChunks[1].pos, 0.4f, self));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
@@ -157,6 +156,7 @@ namespace Unbound
                     if (!self.GetNCRunbound().holdingJumpkey)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Powerful_Jump, self.mainBodyChunk);
+                        self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 2000f, self, 1f));
                     }
                     self.room.AddObject(new UnbJumplight(self.bodyChunks[1].pos, 0.4f, self));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
@@ -221,6 +221,7 @@ namespace Unbound
 
 
                     self.room.PlaySound(SoundID.Cyan_Lizard_Small_Jump, self.mainBodyChunk);
+                    self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 150f, self, 0.5f));
                     self.room.AddObject(new UnbJumplight(self.bodyChunks[1].pos, 0.4f, self));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
                     // grants a cyan-like distortion effect and sparks
@@ -291,7 +292,8 @@ namespace Unbound
                     self.GetNCRunbound().UnbCyanjumpCountdown += 5;
                     // regardless, locks cyanjump for 5 frames
                     self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, self.mainBodyChunk);
-                    self.jumpBoost += 3;
+                    self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 250f, self, 1f));
+                    self.jumpBoost += 5;
                     // has a decent extra boost with a standard cyanjump noise
 
                     self.GetNCRunbound().holdingJumpkey = true;
