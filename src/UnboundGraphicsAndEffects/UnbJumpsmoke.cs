@@ -132,7 +132,7 @@ namespace Unbound
                 }
                 float num = Mathf.Lerp(lastLife, life, timeStacker);
 
-                Color color;
+                Color color = new Color();
 
 
 
@@ -179,7 +179,32 @@ namespace Unbound
                 }
                 else
                 {
-                    if (ModManager.JollyCoop)
+                    if (rCam.room.game.IsArenaSession && !player.GetNCRunbound().IsTechnician)
+                    {
+                        switch (player.playerState.playerNumber)
+                        {
+                            case 0:
+                                if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType != MoreSlugcatsEnums.GameTypeID.Challenge)
+                                {
+                                    color = Color.Lerp(new Color(0.42f, 0.31f, 0.78f), fadeColor, Mathf.InverseLerp(1f, 0.25f, num) * 0.5f);
+                                }
+                                else
+                                {
+                                    color = Color.Lerp(new Color(0.8f, 0.1f, 0.1f), fadeColor, Mathf.InverseLerp(1f, 0.25f, num) * 0.5f);
+                                }
+                                break;
+                            case 1:
+                                color = Color.Lerp(new Color(0.11f, 0.74f, 0.58f), fadeColor, Mathf.InverseLerp(1f, 0.25f, num) * 0.5f);
+                                break;
+                            case 2:
+                                color = Color.Lerp(new Color(0.84f, 0.08f, 0.3f), fadeColor, Mathf.InverseLerp(1f, 0.25f, num) * 0.5f);
+                                break;
+                            case 3:
+                                color = Color.Lerp(new Color(0.86f, 0.23f, 0.93f), fadeColor, Mathf.InverseLerp(1f, 0.25f, num) * 0.5f);
+                                break;
+                        }
+                    }
+                    else if (ModManager.JollyCoop)
                     {
                         color = Color.Lerp(PlayerGraphics.JollyColor(player.playerState.playerNumber, 2), fadeColor, Mathf.InverseLerp(1f, 0.25f, num) * 0.5f);
                     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Unbound
 {
@@ -33,11 +34,10 @@ namespace Unbound
                 UnboundEnums.RegisterValues();
 
                 UnbMisc.Init();
-                UnbGraphics.Init();
                 // _Main
                 CyanJump.Init();
                 // cyanjumps
-                GammaAI.Init();
+                GammaAITweaks.Init();
                 GammaVisuals.Init();
                 TutorialroomKill.Init();
                 // gamma
@@ -50,7 +50,17 @@ namespace Unbound
                 SetupRoomSpecific.Init();
                 // STGKTB.Init(); (KEEP DISABLED FOR NOW)
                 // room specific
+                UnbCatStats.Init();
+                // slugcatstats exclusive things
 
+                if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat"))
+                {
+                    DMSUnboundTime.Init();
+                }
+                else
+                {
+                    UnbGraphics.Init();
+                }
 
                 if (ModManager.Expedition)
                 {
@@ -60,7 +70,10 @@ namespace Unbound
                 {
                     MSCOnly.Init();
                 }
-
+                if (ModManager.JollyCoop)
+                {
+                    UnbJolly.Init();
+                }
 
                 On.RainWorldGame.ShutDownProcess += RainWorldGameOnShutDownProcess;
                 On.GameSession.ctor += GameSessionOnctor;

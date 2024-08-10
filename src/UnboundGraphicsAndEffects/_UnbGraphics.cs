@@ -1,8 +1,4 @@
-﻿using Menu;
-using System;
-using System.Linq;
-
-namespace Unbound
+﻿namespace Unbound
 {
     internal static class UnbGraphics
     {
@@ -32,7 +28,6 @@ namespace Unbound
 
         static int ThisIsTheLengthOfMyMadness = 10; // update when adding more to above
         #endregion
-        static bool DMSactive = (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat"));
 
         public static void Init()
         {
@@ -82,8 +77,7 @@ namespace Unbound
             orig(self, sLeaser, rCam, timeStacker, camPos);
             //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-            if (!DMSactive &&
-                !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
+            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null &&
                 (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
@@ -340,12 +334,7 @@ namespace Unbound
                             break;
                     }
                 }
-
-
-
-
-
-                if (self.useJollyColor)
+                else if (self.useJollyColor)
                 {
                     effectcol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 2);
                     eyecol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 1);
@@ -466,7 +455,6 @@ namespace Unbound
                 }
                 #endregion
 
-                
                 // end drawsprites
             }
         }
@@ -474,7 +462,7 @@ namespace Unbound
         private static void AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
             RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
-            if (!DMSactive && !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
+            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && rCam != null && sLeaser != null &&
                 (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
@@ -553,10 +541,13 @@ namespace Unbound
                     }
 
 
-
                     // VANILLA ---------------------------------------------------------------------
                     else if ((i <= 6 || i >= 9) && i <= 9)
                     {
+                        if (i == 4)
+                        {
+                            sLeaser.sprites[4].MoveBehindOtherNode(sLeaser.sprites[0]);
+                        }
                         newContatiner.AddChild(sLeaser.sprites[i]);
                     }
                     else
@@ -592,7 +583,7 @@ namespace Unbound
         {
             orig(self, sLeaser, rCam);
 
-            if (!DMSactive && !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
+            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
                 (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {

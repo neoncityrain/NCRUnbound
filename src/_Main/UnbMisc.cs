@@ -16,7 +16,7 @@ namespace Unbound
             On.GhostWorldPresence.SpawnGhost += KarmaUnderThreeGhost;
             // fixes being unable to encounter echos under 5 karma, since unbound has a max of 3 initially
 
-            On.Player.Grabability += NoEatingFromMoon;
+            On.Player.Grabability += NoGrab;
             // prevents taking neurons from moon
 
             On.Player.CanBeSwallowed += PickyBastard;
@@ -30,12 +30,12 @@ namespace Unbound
             On.ZapCoil.Update += unbZapped;
             // centishock resistance
 
-            On.SlugcatStats.HiddenOrUnplayableSlugcat += smil;
-
             On.Player.Update += DamageTracking;
 
             On.OracleSwarmer.BitByPlayer += noGlow;
         }
+
+        
 
         private static void noGlow(On.OracleSwarmer.orig_BitByPlayer orig, OracleSwarmer self, Creature.Grasp grasp, bool eu)
         {
@@ -328,14 +328,16 @@ namespace Unbound
             return orig(self, dRelation);
         }
 
-        private static Player.ObjectGrabability NoEatingFromMoon(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        private static Player.ObjectGrabability NoGrab(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
             if (self != null && self.room != null && obj != null &&
                 self.GetNCRunbound().IsUnbound)
             {
-                if (obj is SLOracleSwarmer)
+                if (obj is Creature && !(obj as Creature).dead && obj is Overseer && (obj as Overseer).PlayerGuide &&
+                    self.room.game.session.characterStats.name.value == "NCRunbound")
                 {
                     return Player.ObjectGrabability.CantGrab;
+                    // cant grab gamma
                 }
             }
             return orig(self, obj);
@@ -371,15 +373,6 @@ namespace Unbound
                     self.waterFriction -= 0.025f;
                 }
             }
-        }
-
-        private static bool smil(On.SlugcatStats.orig_HiddenOrUnplayableSlugcat orig, SlugcatStats.Name i)
-        {
-            if (i.value == "NCRtech")
-            {
-                return true;
-            }
-            else return orig(i);
         }
 
         private static bool KarmaUnderThreeGhost(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)

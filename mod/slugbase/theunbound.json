@@ -6,15 +6,18 @@
 		"custom_colors": [
 			{
 				"name": "Body",
-				"story": "E2C999"
+				"story": "E2C999",
+				"arena": [ "F4F3F9", "F8D672", "F99362", "0F1B3E" ]
 			},
 			{
 				"name": "Eyes",
-				"story": "12324F"
+				"story": "12324F",
+				"arena": [ "380E16", "7A2412", "1F3646", "9DC0F7" ]
 			},
 			{
 				"name": "Patterns",
-				"story": "DE6455"
+				"story": "DE6455",
+				"arena": [ "6B50C8", "1CBC95", "D5154D", "DB3BEC" ]
 			}
 		],
 		
@@ -34,6 +37,8 @@
 		"cycle_length_min": 7,
 		"cycle_length_max": 14,
 		"start_room": [ "MS_FARSIDE", "SL_A06" ],
+		"timeline_before": "Red",
+		"timeline_after": "Artificer",
 		
 		"diet": {
 			"base": "White",
