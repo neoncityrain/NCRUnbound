@@ -10,6 +10,8 @@ namespace Unbound
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("fakeachievements", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("dressmyslugcat", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("Pupbase", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("randombuff", BepInDependency.DependencyFlags.SoftDependency)]
 
     public partial class NCRUnbound : BaseUnityPlugin
     {

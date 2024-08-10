@@ -88,8 +88,9 @@ namespace Unbound
         private static void Initial(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-            if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null && world != null &&
-                world.region != null && world.region.name != null && self.room.game.GetStorySession != null && abstractCreature != null &&
+            if (self.room.game.IsStorySession && self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
+                world != null && world.region != null && world.region.name != null && self.room.game.GetStorySession != null && 
+                abstractCreature != null &&
 
                 self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.session is StoryGameSession)
             {

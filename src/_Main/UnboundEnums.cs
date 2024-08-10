@@ -51,8 +51,6 @@
             if (unbSlumberConv != null) { unbSlumberConv.Unregister(); unbSlumberConv = null; }
             if (SSMeetUnboundSub != null) { SSMeetUnboundSub.Unregister(); SSMeetUnboundSub = null; }
             if (unbKarmaPearlConv != null) { unbKarmaPearlConv.Unregister(); unbKarmaPearlConv = null; }
-            if (NCRTechnician != null) { NCRTechnician.Unregister(); NCRTechnician = null; }
-            if (NCRUnbound != null) { NCRUnbound.Unregister(); NCRUnbound = null; }
             if (UnbSlumberParty != null) { UnbSlumberParty.Unregister(); UnbSlumberParty = null; }
             if (UnbSlumberPartySub != null) { UnbSlumberPartySub.Unregister(); UnbSlumberPartySub = null; }
             if (NCRKTB != null) { NCRKTB.Unregister(); NCRKTB = null; }

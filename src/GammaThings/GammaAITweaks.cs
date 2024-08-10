@@ -13,6 +13,170 @@ namespace Unbound
             On.OverseerAbstractAI.HowInterestingIsCreature += InterestInUnbound;
 
             On.OverseerAI.Update += GammaAIUpdate;
+            On.OverseerAI.HoverScoreOfTile += HoverScore;
+
+            On.Overseer.Die += DontRespawnImmediately;
+        }
+
+        private static void DontRespawnImmediately(On.Overseer.orig_Die orig, Overseer self)
+        {
+            if (!self.SafariOverseer && self != null && !self.dead &&
+                self.PlayerGuide && self.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                // should ONLY respawn in the next cycle
+                if (self.hologram != null)
+                {
+                    self.hologram.Destroy();
+                    self.hologram = null;
+                }
+
+                #region Base.Die
+                Custom.LogImportant(new string[]
+                    {
+                        "Gamma Die!"
+                    });
+                if (self.killTag != null && self.killTag.realizedCreature != null)
+                {
+                    Room room = self.room;
+                    if (room == null)
+                    {
+                        room = self.abstractCreature.Room.realizedRoom;
+                    }
+                    if (room != null && room.socialEventRecognizer != null)
+                    {
+                        room.socialEventRecognizer.Killing(self.killTag.realizedCreature, self);
+                    }
+                }
+                self.dead = true;
+                self.LoseAllGrasps();
+                self.abstractCreature.Die();
+                #endregion
+            }
+            else
+            {
+                orig(self);
+            }
+        }
+
+        private static float HoverScore(On.OverseerAI.orig_HoverScoreOfTile orig, OverseerAI self, IntVector2 testTile)
+        {
+            if (!(testTile.x < 0 || testTile.y < 0 || testTile.x >= self.overseer.room.TileWidth || testTile.y >= self.overseer.room.TileHeight) &&
+                self != null && self.overseer != null &&
+                self.overseer.PlayerGuide &&
+                self.overseer.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                if (self.overseer.room.GetTile(testTile).Solid)
+                {
+                    return float.MaxValue;
+                }
+                if (self.overseer.room.aimap.getTerrainProximity(testTile) > (int)(6f * self.overseer.size))
+                {
+                    return float.MaxValue;
+                }
+                float num = 0f;
+                if (self.overseer.hologram != null)
+                {
+                    num += Mathf.Abs(100f - Vector2.Distance(self.overseer.room.MiddleOfTile(testTile),
+                        self.overseer.room.MiddleOfTile(self.overseer.hologram.displayTile))) * 2f;
+                    if (Custom.DistLess(self.overseer.room.MiddleOfTile(testTile),
+                        self.overseer.room.MiddleOfTile(self.overseer.hologram.displayTile), 500f))
+                    {
+                        if (self.overseer.room.VisualContact(testTile, self.overseer.hologram.displayTile))
+                        {
+                            num -= 500f;
+                        }
+                    }
+                    else
+                    {
+                        num += 1000f;
+                    }
+                    num = self.overseer.hologram.InfluenceHoverScoreOfTile(testTile, num);
+                }
+                else
+                {
+                    num += Mathf.Abs(300f - Vector2.Distance(self.overseer.room.MiddleOfTile(testTile), self.lookAt));
+                    if (Custom.DistLess(self.overseer.room.MiddleOfTile(testTile), self.lookAt, 1000f) &&
+                        self.overseer.room.VisualContact(testTile, self.overseer.room.GetTilePosition(self.lookAt)))
+                    {
+                        num -= 100f;
+                    }
+                    for (int i = 0; i < self.avoidPositions.Count; i++)
+                    {
+                        if (self.avoidPositions[i].FloatDist(testTile) < 15f)
+                        {
+                            num += Custom.LerpMap(self.avoidPositions[i].FloatDist(testTile), 10f, 15f, 50f, 0f);
+                        }
+                    }
+                }
+                for (int j = 0; j < self.overseer.room.abstractRoom.creatures.Count; j++)
+                {
+                    if (self.overseer.room.abstractRoom.creatures[j].realizedCreature != null &&
+                        self.overseer.room.abstractRoom.creatures[j].realizedCreature.room == self.overseer.room)
+                    {
+                        if (self.overseer.room.abstractRoom.creatures[j].creatureTemplate.type != CreatureTemplate.Type.Overseer)
+                        {
+                            if ((self.overseer.room.abstractRoom.creatures[j].creatureTemplate.type != CreatureTemplate.Type.Slugcat ||
+                                // either not a slugcat
+                                (self.overseer.room.abstractRoom.creatures[j].realizedCreature is Player &&
+                                (self.overseer.room.abstractRoom.creatures[j].realizedCreature as Player).GetNCRunbound().IsUnbound)) &&
+                                // or just not unbound
+                                !self.overseer.room.abstractRoom.creatures[j].creatureTemplate.smallCreature &&
+                                !self.overseer.room.abstractRoom.creatures[j].realizedCreature.dead &&
+                                Custom.DistLess(self.overseer.room.MiddleOfTile(testTile),
+                                self.overseer.room.abstractRoom.creatures[j].realizedCreature.DangerPos, self.scaredDistance + 10f))
+                            {
+                                return float.MaxValue;
+                            }
+                            num += Custom.LerpMap(Vector2.Distance(self.overseer.room.MiddleOfTile(testTile),
+                                self.overseer.room.abstractRoom.creatures[j].realizedCreature.DangerPos),
+                                40f, Mathf.Clamp(self.overseer.room.abstractRoom.creatures[j].creatureTemplate.bodySize *
+                                600f, 60f, 800f), self.overseer.room.abstractRoom.creatures[j].creatureTemplate.bodySize * 100f, 0f);
+                        }
+                        else if (self.overseer.room.abstractRoom.creatures[j] != self.overseer.abstractCreature &&
+                            !self.DoIWantToTalkToThisOverSeer(self.overseer.room.abstractRoom.creatures[j].realizedCreature as Overseer))
+                        {
+                            num += Custom.LerpMap((self.overseer.room.abstractRoom.creatures[j].realizedCreature as Overseer).
+                                hoverTile.FloatDist(testTile), 0f, 3f, 250f, 0f);
+                            num += Custom.LerpMap((self.overseer.room.abstractRoom.creatures[j].realizedCreature as Overseer).
+                                nextHoverTile.FloatDist(testTile), 0f, 3f, 250f, 0f);
+                        }
+                    }
+                }
+                if (self.overseer.room.aimap.getAItile(testTile).narrowSpace)
+                {
+                    num += 200f;
+                }
+                num -= (float)self.overseer.room.aimap.getTerrainProximity(testTile) * 10f;
+                if (testTile.y <= self.overseer.room.defaultWaterLevel)
+                {
+                    num += 10000f;
+                }
+                if (self.overseer.SandboxOverseer && !self.overseer.editCursor.menuMode)
+                {
+                    num += Mathf.Max(0f, Vector2.Distance(self.overseer.room.MiddleOfTile(testTile), self.overseer.editCursor.pos) - 250f) * 30f;
+                }
+                if (ModManager.MMF && self.overseer.PlayerGuide && (self.overseer.abstractCreature.abstractAI as OverseerAbstractAI).goToPlayer && 
+                    self.overseer.AI.communication.GuideState.handHolding > 0.5f && self.overseer.AI.communication.player != null && 
+                    self.overseer.room != null)
+                {
+                    int num2 = self.overseer.room.CameraViewingPoint(self.overseer.room.MiddleOfTile(testTile));
+                    if (num2 < 0)
+                    {
+                        num2 = 0;
+                    }
+                    if (num2 >= self.overseer.room.cameraPositions.Length)
+                    {
+                        num2 = self.overseer.room.cameraPositions.Length - 1;
+                    }
+                    num = Mathf.Pow(Vector2.Distance(self.overseer.room.cameraPositions[num2], self.overseer.AI.communication.player.firstChunk.pos), 4f);
+                }
+                if (self.tutorialBehavior != null)
+                {
+                    num = self.tutorialBehavior.InfluenceHoverScoreOfTile(testTile, num);
+                }
+                return num;
+            }
+            return orig(self, testTile);
         }
 
         private static void GammaAIUpdate(On.OverseerAI.orig_Update orig, OverseerAI self)
@@ -21,8 +185,6 @@ namespace Unbound
                 self.overseer.PlayerGuide &&
                 self.overseer.room.game.session.characterStats.name.value == "NCRunbound")
             {
-                NCRDebug.Log("OOO GAMMA TIME");
-
                 #region Base.Update
                 self.timeInRoom++;
                 for (int i = 0; i < self.modules.Count; i++)
@@ -52,6 +214,8 @@ namespace Unbound
                     }
                 }
                 #endregion
+
+                self.scaredDistance = 100f;
 
                 self.slowLookAt = Vector2.Lerp(Custom.MoveTowards(self.slowLookAt, self.lookAt, 60f), self.lookAt, 0.02f);
                 if (UnityEngine.Random.value < 0.015f) // slightly more likely than usual to swap casual interests
@@ -156,13 +320,15 @@ namespace Unbound
                             if (!abstractCreature.creatureTemplate.smallCreature &&
                                 // not a small thang
                                 ((abstractCreature.realizedCreature is Player &&
-                                !(abstractCreature.realizedCreature as Player).GetNCRunbound().IsUnbound) ||
+                                !((abstractCreature.realizedCreature as Player).GetNCRunbound().IsUnbound ||
+                                (abstractCreature.realizedCreature as Player).slugcatStats.name.value == "NCRunbound" ||
+                                (abstractCreature.realizedCreature as Player).slugcatStats.name == UnboundEnums.NCRUnbound)) ||
                                 // if its IS a player, but it ISNT unbound
                                 !(abstractCreature.realizedCreature is Player)) &&
                                 // or if its not a player
                                 !abstractCreature.realizedCreature.dead && 
                                 // not dead
-                                Custom.DistLess(self.overseer.rootPos, abstractCreature.realizedCreature.DangerPos, self.scaredDistance - 10f))
+                                Custom.DistLess(self.overseer.rootPos, abstractCreature.realizedCreature.DangerPos, self.scaredDistance))
                                 // is inside the fear distance
                             {
                                 self.casualInterestCreature = abstractCreature;
@@ -184,10 +350,10 @@ namespace Unbound
                             }
                         }
                         else if (abstractCreature.creatureTemplate.type == CreatureTemplate.Type.Scavenger && 
-                            (self.creature.abstractAI as OverseerAbstractAI).goToPlayer)
+                            ((self.creature.abstractAI as OverseerAbstractAI).goToPlayer || UnityEngine.Random.value < 0.006))
                         {
                             (self.creature.abstractAI as OverseerAbstractAI).PlayerGuideGoAway(UnityEngine.Random.Range(200, 1200));
-                            NCRDebug.Log("player guide leaving because scavs in room");
+                            if ((abstractCreature.realizedCreature as Player).GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma left because of Scavs!"); }
                         }
                         else if (self.overseer.mode != Overseer.Mode.Projecting && self.overseer.conversationDelay == 0)
                         {

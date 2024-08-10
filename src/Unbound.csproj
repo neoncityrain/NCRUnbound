@@ -24,6 +24,9 @@
         <Reference Include="..\lib\UnityEngine.dll">
           <Private>false</Private>
         </Reference>
+        <Reference Include="BuiltinBuffs">
+          <HintPath>..\lib\BuiltinBuffs.dll</HintPath>
+        </Reference>
         <Reference Include="HOOKS-Assembly-CSharp">
           <HintPath>..\lib\HOOKS-Assembly-CSharp.dll</HintPath>
         </Reference>
