@@ -1,4 +1,6 @@
-﻿namespace Unbound
+﻿using System.Linq;
+
+namespace Unbound
 {
     internal static class UnbGraphics
     {
@@ -50,8 +52,8 @@
             }
         }
 
-        public static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam,
-            float timeStacker, Vector2 camPos)
+        public static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, 
+            RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
             //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
@@ -558,7 +560,8 @@
             }
         }
 
-        public static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        public static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, 
+            RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
 

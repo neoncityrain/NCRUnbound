@@ -1,5 +1,6 @@
 ﻿using DressMySlugcat;
 using DressMySlugcat.Hooks;
+using System.Linq;
 
 namespace Unbound
 {
@@ -8,71 +9,42 @@ namespace Unbound
         #region FAtlases
         static FAtlas unbjumphips;
         static FAtlas unbjumpbody;
-
-        static FAtlas unbsleevesarm;
-        static FAtlas unbearhead;
-        static FAtlas unbpupface;
-        static FAtlas unbfrecklehips;
-        static FAtlas unbhead;
-        static FAtlas unbarm;
-        static FAtlas unbmittenlegs;
-        static FAtlas unblegs;
         #endregion
-        static bool InitDMS;
 
         public static void Init()
         {
-            On.PlayerGraphics.InitiateSprites += InitiateSprites;
-            On.PlayerGraphics.AddToContainer += AddToContainer;
-            On.PlayerGraphics.DrawSprites += DrawSprites;
-            On.PlayerGraphics.ApplyPalette += Coloor;
-
             #region LoadAtlases
             unbjumphips ??= Futile.atlasManager.LoadAtlas("atlases/unbjumphips");
             unbjumpbody ??= Futile.atlasManager.LoadAtlas("atlases/unbjumpbody");
-
-            unbsleevesarm ??= Futile.atlasManager.LoadAtlas("atlases/unbsleevesarm");
-            unbarm ??= Futile.atlasManager.LoadAtlas("atlases/unbarm");
-            unbpupface ??= Futile.atlasManager.LoadAtlas("atlases/unbpupface");
-            unbfrecklehips ??= Futile.atlasManager.LoadAtlas("atlases/unbfrecklehips");
-            unbearhead ??= Futile.atlasManager.LoadAtlas("atlases/unbearhead");
-            unbhead ??= Futile.atlasManager.LoadAtlas("atlases/unbhead");
-            unblegs ??= Futile.atlasManager.LoadAtlas("atlases/unblegs");
-            unbmittenlegs ??= Futile.atlasManager.LoadAtlas("atlases/unbmittenlegs");
             // initiating atlases
             #endregion
-
-            if (!InitDMS)
+            #region DMS Setup
+            SpriteDefinitions.AvailableSprites.Add(new SpriteDefinitions.AvailableSprite
             {
-                #region DMS Setup
-                InitDMS = true;
-
-                SpriteDefinitions.AvailableSprites.Add(new SpriteDefinitions.AvailableSprite
-                {
-                    Name = "UNBOUNDRINGS1",
-                    Description = "Upper Rings",
-                    GallerySprite = "unbjumpHipsA",
-                    RequiredSprites = new List<string> { "unbjumpHipsA" },
-                    Slugcats = new List<string> { "NCRunbound", "NCRtech" }
-                });
-                SpriteDefinitions.AvailableSprites.Add(new SpriteDefinitions.AvailableSprite
-                {
-                    Name = "UNBOUNDRINGS2",
-                    Description = "Lower Rings",
-                    GallerySprite = "unbjumpBodyA",
-                    RequiredSprites = new List<string> { "unbjumpBodyA" },
-                    Slugcats = new List<string> { "NCRunbound", "NCRtech" }
-                });
-                # endregion
-            }
+                Name = "UNBOUNDRINGS1",
+                Description = "Upper Rings",
+                GallerySprite = "unbjumpHipsA",
+                RequiredSprites = new List<string> { "unbjumpHipsA" },
+                Slugcats = new List<string> { "NCRunbound", "NCRtech" }
+            });
+            SpriteDefinitions.AvailableSprites.Add(new SpriteDefinitions.AvailableSprite
+            {
+                Name = "UNBOUNDRINGS2",
+                Description = "Lower Rings",
+                GallerySprite = "unbjumpBodyA",
+                RequiredSprites = new List<string> { "unbjumpBodyA" },
+                Slugcats = new List<string> { "NCRunbound", "NCRtech" }
+            });
+            #endregion
         }
 
-        private static void Coloor(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        public static void Coloor(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, 
+            RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
 
             if (self.player.room != null && self.player != null && self != null && self.player.room.game != null &&
-            (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
+                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
                 try
                 {
@@ -184,28 +156,8 @@ namespace Unbound
             }
         }
 
-        public static void MirrorSprite(this FSprite addon, FSprite original)
-        {
-            addon.SetPosition(original.GetPosition());
-            addon.rotation = original.rotation;
-            addon.scaleX = original.scaleX;
-            addon.scaleY = original.scaleY;
-            addon.alpha = original.alpha;
-            addon.anchorX = original.anchorX;
-            addon.anchorY = original.anchorY;
-
-            if (original == null)
-            {
-                addon = null;
-            }
-            if ((original.isVisible && !addon.isVisible) || (addon.isVisible && !original.isVisible))
-            {
-                addon.isVisible = original.isVisible;
-            }
-        }
-
-        private static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam,
-            float timeStacker, Vector2 camPos)
+        public static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, 
+            RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
             //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
@@ -250,15 +202,15 @@ namespace Unbound
                 #endregion
                 #region Mirroring
                 //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
-                MirrorSprite(sLeaser.sprites[sLeaser.sprites.Length - 2], sLeaser.sprites[0]);
-                MirrorSprite(sLeaser.sprites[sLeaser.sprites.Length - 1], sLeaser.sprites[1]);
+                UnbGraphics.MirrorSprite(sLeaser.sprites[sLeaser.sprites.Length - 2], sLeaser.sprites[0]);
+                UnbGraphics.MirrorSprite(sLeaser.sprites[sLeaser.sprites.Length - 1], sLeaser.sprites[1]);
                 #endregion
 
                 // end drawsprites
             }
         }
 
-        private static void AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
+        public static void AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
             RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
             if (!(self.player.GetNCRunbound().RingsDisabled) &&
@@ -329,7 +281,8 @@ namespace Unbound
             }
         }
 
-        private static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        public static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, 
+            RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
 

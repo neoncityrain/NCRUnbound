@@ -5,20 +5,7 @@ namespace Unbound
 {
     internal class GammaAITweaks
     {
-        public static void Init()
-        {
-            On.Overseer.TryAddHologram += HologramTweaks;
-            On.OverseerAbstractAI.RoomAllowed += RoomAllowed;
-            On.OverseerCommunicationModule.FoodDelicousScore += StopLeadingToFoodUnboundCantEat;
-            On.OverseerAbstractAI.HowInterestingIsCreature += InterestInUnbound;
-
-            On.OverseerAI.Update += GammaAIUpdate;
-            On.OverseerAI.HoverScoreOfTile += HoverScore;
-
-            On.Overseer.Die += DontRespawnImmediately;
-        }
-
-        private static void DontRespawnImmediately(On.Overseer.orig_Die orig, Overseer self)
+        public static void DontRespawnImmediately(On.Overseer.orig_Die orig, Overseer self)
         {
             if (!self.SafariOverseer && self != null && !self.dead &&
                 self.PlayerGuide && self.room.game.session.characterStats.name.value == "NCRunbound")
@@ -58,7 +45,7 @@ namespace Unbound
             }
         }
 
-        private static float HoverScore(On.OverseerAI.orig_HoverScoreOfTile orig, OverseerAI self, IntVector2 testTile)
+        public static float HoverScore(On.OverseerAI.orig_HoverScoreOfTile orig, OverseerAI self, IntVector2 testTile)
         {
             if (!(testTile.x < 0 || testTile.y < 0 || testTile.x >= self.overseer.room.TileWidth || testTile.y >= self.overseer.room.TileHeight) &&
                 self != null && self.overseer != null &&
@@ -179,7 +166,7 @@ namespace Unbound
             return orig(self, testTile);
         }
 
-        private static void GammaAIUpdate(On.OverseerAI.orig_Update orig, OverseerAI self)
+        public static void GammaAIUpdate(On.OverseerAI.orig_Update orig, OverseerAI self)
         {
             if (self != null && self.overseer != null &&
                 self.overseer.PlayerGuide &&
@@ -415,7 +402,7 @@ namespace Unbound
             }
         }
 
-        private static float InterestInUnbound(On.OverseerAbstractAI.orig_HowInterestingIsCreature orig, OverseerAbstractAI self, 
+        public static float InterestInUnbound(On.OverseerAbstractAI.orig_HowInterestingIsCreature orig, OverseerAbstractAI self, 
             AbstractCreature testCrit)
         {
             if (self != null && self.world != null && !self.world.game.IsArenaSession && self.isPlayerGuide &&
@@ -554,7 +541,8 @@ namespace Unbound
             }
         }
 
-        private static float StopLeadingToFoodUnboundCantEat(On.OverseerCommunicationModule.orig_FoodDelicousScore orig, OverseerCommunicationModule self, AbstractPhysicalObject foodObject, Player player)
+        public static float StopLeadingToFoodUnboundCantEat(On.OverseerCommunicationModule.orig_FoodDelicousScore orig, 
+            OverseerCommunicationModule self, AbstractPhysicalObject foodObject, Player player)
         {
             if (self != null && self.overseerAI != null && self.overseerAI.overseer != null && self.overseerAI.overseer.room != null &&
                 self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRunbound")
@@ -600,7 +588,7 @@ namespace Unbound
             else return orig(self, foodObject, player);
         }
 
-        private static bool RoomAllowed(On.OverseerAbstractAI.orig_RoomAllowed orig, OverseerAbstractAI self, int room)
+        public static bool RoomAllowed(On.OverseerAbstractAI.orig_RoomAllowed orig, OverseerAbstractAI self, int room)
         {
             if (self != null && self.world != null && self.RelevantPlayer != null &&
                 self.world.game.session.characterStats.name.value == "NCRunbound" && self.playerGuide)
@@ -629,7 +617,8 @@ namespace Unbound
             return orig(self, room);
         }
 
-        private static void HologramTweaks(On.Overseer.orig_TryAddHologram orig, Overseer self, OverseerHolograms.OverseerHologram.Message message, Creature communicateWith, float importance)
+        public static void HologramTweaks(On.Overseer.orig_TryAddHologram orig, Overseer self, OverseerHologram.Message message, 
+            Creature communicateWith, float importance)
         {
             if (self != null && self.room != null && !self.dead &&
                 self.room.game.session.characterStats.name.value == "NCRunbound" && self.PlayerGuide)

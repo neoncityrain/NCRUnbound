@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using static Unbound.GammaVisuals;
 
 namespace Unbound;
 internal class HooksOnly
@@ -7,8 +8,8 @@ internal class HooksOnly
     {
         // UNB JUMPS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.MovementUpdate += CyanJump.SetupJumps; // base +1f increase
-        On.Player.WallJump += CyanJump.SetupWalljumps;
-        On.Player.Update += CyanJump.UnboundCyanJumps;
+        On.Player.WallJump += CyanJump.SetupWalljumps; // walljumping gets faster and more efficient the more it's done
+        On.Player.Update += CyanJump.UnboundCyanJumps; // cyan jump code
 
         // UNB MISC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.Jump += UnbMisc.MadHopsBro; // increases unbounds base jump by 1f
@@ -21,13 +22,37 @@ internal class HooksOnly
         On.Player.Update += UnbMisc.DamageTracking; // misc damage tracking
         On.OracleSwarmer.BitByPlayer += UnbMisc.noGlow; // glow is not handled via oracle swarmers
         On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += UnbMisc.TreatedAsCyan; // cyan relationship to unbound
-        
 
+        // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        On.Player.ctor += SetupRoomSpecific.Initial;// setup and intro
+        On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
+        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenUpdate; // antigravity scripts
+        On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
+        On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.RoomSpecificScripts; // listing all rooms for SRS
 
+        // GAMMA =============================================================================================
+        // AI TWEAKS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        On.Overseer.TryAddHologram += GammaAITweaks.HologramTweaks;
+        On.OverseerAbstractAI.RoomAllowed += GammaAITweaks.RoomAllowed;
+        On.OverseerCommunicationModule.FoodDelicousScore += GammaAITweaks.StopLeadingToFoodUnboundCantEat;
+        On.OverseerAbstractAI.HowInterestingIsCreature += GammaAITweaks.InterestInUnbound;
+        On.OverseerAI.Update += GammaAITweaks.GammaAIUpdate;
+        On.OverseerAI.HoverScoreOfTile += GammaAITweaks.HoverScore;
+        On.Overseer.Die += GammaAITweaks.DontRespawnImmediately; // gamma does not revive when killed by non-slugcat creatures
 
-        GammaAITweaks.Init();
-        GammaVisuals.Init();
-        TutorialroomKill.Init();
+        // VISUALS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        On.OverseerGraphics.ColorOfSegment += GammaVisuals.GammaColouringSegments;
+        On.OverseerGraphics.DrawSprites += GammaVisuals.EyeWhitesForGamma;
+        On.OverseerGraphics.DrawSprites -= GammaVisuals.RemoveEyewhites;
+        On.OverseerGraphics.InitiateSprites += GammaVisuals.PupilcodeForGamma;
+        On.OverseerGraphics.InitiateSprites -= GammaVisuals.RemovePupilcode;
+        On.CoralBrain.Mycelium.UpdateColor += GammaVisuals.GammaMycelium;
+        Hook ktbmain = new Hook(typeof(global::OverseerGraphics).GetProperty("MainColor", BindingFlags.Instance |
+                BindingFlags.Public).GetGetMethod(), new Func<orig_OverseerMainColor,
+                OverseerGraphics, Color>(GammaVisuals.GetGammaCol));
+        // TUTORIALS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        TutorialroomKill.Init(); // leave this in case it is needed later
+
         // gamma
         Pearl.Init();
         PearlConversations.Init();
@@ -42,47 +67,15 @@ internal class HooksOnly
 
 
 
-        // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        On.Player.ctor += SetupRoomSpecific.Initial;// setup and intro
-        On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
-        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenUpdate; // antigravity scripts
-        On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
-        On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.RoomSpecificScripts; // listing all rooms for SRS
-
+        
+        // MOD EXCLUSIVE =============================================================================================
         // MORE SLUGCATS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        if (ModManager.MSC)
-        {
-            MSCOnly.Init();
-        }
+        MSCOnly.Init();
 
         // EXPEDITION -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        if (ModManager.Expedition)
-        {
-            On.Expedition.PearlDeliveryChallenge.UpdateDescription += UnbExpedition.Description;
-            On.Expedition.PearlDeliveryChallenge.Update += UnbExpedition.Update;
-            On.Expedition.NeuronDeliveryChallenge.ValidForThisSlugcat += UnbExpedition.Invalid;
-            On.Expedition.ExpeditionGame.ExpeditionRandomStarts += UnbExpedition.UnbRandomStarts;
-        }
-
-        // RANDOM BUFF -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "randombuff"))
-        {
-            NCRDebug.Log("Random Buffs detected! Not applying Unbound's regular graphics in order to prevent errors. Please disable RB if you want to play using his normal graphics.");
-            On.Player.ctor += RandomBuffThings.TailTracking;
-        }
-        // DRESS MY SLUGCAT -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        else if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat"))
-        {
-            NCRDebug.Log("Unbound is proceeding with DMS graphics hooking");
-            DMSUnboundTime.Init();
-        }
-        // REGULAR UNBOUND GRAPHICS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        else
-        {
-            On.PlayerGraphics.InitiateSprites += UnbGraphics.InitiateSprites;
-            On.PlayerGraphics.AddToContainer += UnbGraphics.AddToContainer;
-            On.PlayerGraphics.DrawSprites += UnbGraphics.DrawSprites;
-            // STANDARD unbound graphics
-        }
+        On.Expedition.PearlDeliveryChallenge.UpdateDescription += UnbExpedition.Description;
+        On.Expedition.PearlDeliveryChallenge.Update += UnbExpedition.Update;
+        On.Expedition.NeuronDeliveryChallenge.ValidForThisSlugcat += UnbExpedition.Invalid;
+        On.Expedition.ExpeditionGame.ExpeditionRandomStarts += UnbExpedition.UnbRandomStarts;
     }
 }

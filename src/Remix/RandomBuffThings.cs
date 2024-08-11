@@ -5,7 +5,6 @@ namespace Unbound
 {
     internal class RandomBuffThings
     {
-
         public static void TailTracking(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);

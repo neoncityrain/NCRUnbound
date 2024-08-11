@@ -8,8 +8,8 @@ namespace Unbound
     {
         public static void Init()
         {
-            // On.SSOracleBehavior.ThrowOutBehavior.Update += ThrowOutToSleepover;
-            // On.SSOracleBehavior.NewAction += NewAction;
+            On.SSOracleBehavior.ThrowOutBehavior.Update += ThrowOutToSleepover;
+            On.SSOracleBehavior.NewAction += NewAction;
 
             On.SSOracleBehavior.Update += UpdateBehavior;
             On.SSOracleBehavior.SeePlayer += SeeUnbound;
@@ -323,7 +323,7 @@ namespace Unbound
                     {
                         NCRDebug.Log("Pebbles seeing Unbound again!");
                     }
-                    // self.NewAction(UnboundEnums.UnbSlumberParty);
+                    self.NewAction(UnboundEnums.UnbSlumberParty);
                 }
                 else if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1)
                 {
