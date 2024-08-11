@@ -23,6 +23,9 @@ namespace Unbound
             public int pebbleskilltries;
 
 
+            public bool LostTail; // for random buffs
+
+
             // remix values
             public float CyJump1Maximum; // base 180
             public float CyJump2Maximum; // base 400

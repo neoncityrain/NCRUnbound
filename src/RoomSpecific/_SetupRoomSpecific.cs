@@ -1,25 +1,8 @@
-﻿using System;
-
-namespace Unbound
+﻿namespace Unbound
 {
     internal class SetupRoomSpecific
     {
-
-        public static void Init()
-        {
-            On.Player.ctor += Initial;
-            // setup and intro
-            On.RegionGate.customKarmaGateRequirements += CustomKarmaGates;
-            // custom gate tweaks- allows for exiting MS
-
-            On.AntiGravity.BrokenAntiGravity.Update += BrokenUpdate;
-            On.AntiGravity.BrokenAntiGravity.ctor += BrokenAntiGravityctor;
-            // antigravity scripts
-
-            On.RoomSpecificScript.AddRoomSpecificScript += RoomSpecificScripts;
-        }
-
-        private static void RoomSpecificScripts(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
+        public static void RoomSpecificScripts(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
         {
             if (room != null && room.game != null && room.game.session is StoryGameSession && room.world != null &&
                 room.game.session.characterStats.name.value == "NCRunbound")
@@ -59,12 +42,26 @@ namespace Unbound
                     }
                 }
                 #endregion
-                #region Submerged Superstructure
-                else if (room.world.name == "MS")
+
+                if (ModManager.MSC)
                 {
-                    
+                    #region Submerged Superstructure
+                    if (room.world.name == "MS")
+                    {
+
+                    }
+                    #endregion
+                    #region Outer Expanse
+                    if (name == "OE_PUMP01")
+                    {
+                        room.AddObject(new MSCRoomSpecificScript.OE_PUMP01_pusher());
+                    }
+                    if (name == "OE_CAVE03")
+                    {
+                        room.AddObject(new MSCRoomSpecificScript.OE_CAVE03_warp());
+                    }
+                    #endregion
                 }
-                #endregion
             }
             else
             {
@@ -72,7 +69,7 @@ namespace Unbound
             }
         }
 
-        private static void CustomKarmaGates(On.RegionGate.orig_customKarmaGateRequirements orig, RegionGate self)
+        public static void CustomKarmaGates(On.RegionGate.orig_customKarmaGateRequirements orig, RegionGate self)
         {
             if (self != null && self.room != null &&
                 self.room.game.session.characterStats.name.value == "NCRunbound")
@@ -81,17 +78,20 @@ namespace Unbound
                 {
                     self.karmaRequirements[1] = RegionGate.GateRequirement.OneKarma; // karma requirement to leave submerged and enter shoreline
                 }
+                else if (self.room.abstractRoom.name == "GATE_SB_OE")
+                {
+                    self.karmaRequirements[0] = RegionGate.GateRequirement.OneKarma; // karma requirement to leave outer expanse and enter subter
+                }
             }
             orig(self);
         }
 
-        private static void Initial(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
+        public static void Initial(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
             if (self.room.game.IsStorySession && self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
-                world != null && world.region != null && world.region.name != null && self.room.game.GetStorySession != null && 
+                world != null && world.region != null && world.region.name != null && self.room.game.GetStorySession != null &&
                 abstractCreature != null &&
-
                 self.room.game.session.characterStats.name.value == "NCRunbound" && self.room.game.session is StoryGameSession)
             {
                 AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
@@ -99,12 +99,14 @@ namespace Unbound
                 {
                     if (!self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon)
                     {
-                        if (world.region.name == "MS" && ModManager.MSC)
+                        if (world.region.name == "MS" && ModManager.MSC &&
+                            !(ModManager.Expedition && Custom.rainWorld.ExpeditionMode))
                         {
                             NCRDebug.Log("Unbound's MS start detected, triggering intro!");
                             self.room.AddObject(new UnboundIntro());
                         }
-                        else if (world.region.name == "SL" && !ModManager.MSC)
+                        else if (world.region.name == "SL" && !ModManager.MSC &&
+                            !(ModManager.Expedition && Custom.rainWorld.ExpeditionMode))
                         {
                             NCRDebug.Log("Unbound's SL start detected! Remind me to set up a non-MSC intro :<");
                             self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
@@ -140,9 +142,9 @@ namespace Unbound
                 }
                 catch (Exception e)
                 {
-                    NCRDebug.Log("The intro is fucking up!" + e);
+                    NCRDebug.Log("The intro is fucking up: " + e);
                 }
-                // THINGS FOR GAME SETUP BELOW ------------------------------------------------------------------------------------------------------------
+                // THINGS FOR GAME SETUP BELOW ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
                 if (gammaoverseer.ignoreCycle != true)
@@ -207,7 +209,7 @@ namespace Unbound
             }
         }
 
-        private static void BrokenAntiGravityctor(On.AntiGravity.BrokenAntiGravity.orig_ctor orig, AntiGravity.BrokenAntiGravity self, int cycleMin, int cycleMax, RainWorldGame game)
+        public static void BrokenAntiGravityctor(On.AntiGravity.BrokenAntiGravity.orig_ctor orig, AntiGravity.BrokenAntiGravity self, int cycleMin, int cycleMax, RainWorldGame game)
         {
             orig(self, cycleMin, cycleMax, game);
             if (self != null && self.game != null && self.game.world != null &&
@@ -229,7 +231,7 @@ namespace Unbound
             }
         }
 
-        private static void BrokenUpdate(On.AntiGravity.BrokenAntiGravity.orig_Update orig, AntiGravity.BrokenAntiGravity self)
+        public static void BrokenUpdate(On.AntiGravity.BrokenAntiGravity.orig_Update orig, AntiGravity.BrokenAntiGravity self)
         {
             if (self != null && self.game != null && self.game.world != null &&
                 self.game.session.characterStats.name.value == "NCRunbound")

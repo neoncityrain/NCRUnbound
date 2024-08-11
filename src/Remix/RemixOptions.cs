@@ -2,7 +2,7 @@
 
 namespace Unbound
 {
-    public partial class NCRUnbound
+    public partial class UnbSetupThings
     {
         private void PlayerOnctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractcreature, World world)
         {

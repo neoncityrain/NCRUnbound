@@ -6,7 +6,7 @@ namespace Unbound
 {
     internal class MSCOnly
     {
-        public static CollectionsMenu.PearlReadContext UnbPebbles = new ("UnbPebbles", true);
+        public static CollectionsMenu.PearlReadContext UnbPebbles = new("UnbPebbles", true);
 
         public static void Init()
         {
@@ -22,7 +22,7 @@ namespace Unbound
         }
 
         private static bool AwakenMyPsionicWarriors(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig,
-            MoreSlugcats.StowawayBugState self, int cycle)
+            StowawayBugState self, int cycle)
         {
             if (self != null && self.creature != null && self.creature.Room != null &&
                 self.creature.world.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
@@ -52,7 +52,7 @@ namespace Unbound
                 !(weapon == null || self.room == null || self.room.roomSettings == null) &&
                 self.room.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
             {
-                if (self.room.roomSettings.DangerType == MoreSlugcats.MoreSlugcatsEnums.RoomRainDangerType.Blizzard &&
+                if (self.room.roomSettings.DangerType == MoreSlugcatsEnums.RoomRainDangerType.Blizzard &&
                     weapon.firstChunk.vel.magnitude < 20f)
                 {
                     if (UnityEngine.Random.Range(0.5f, 0.8f) < self.freezingCounter)
@@ -62,8 +62,8 @@ namespace Unbound
                     return;
                 }
                 if (weapon.thrownBy != null && weapon.thrownBy is Player && ((weapon.thrownBy as Player).slugcatStats.name ==
-                    MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Spear || (weapon.thrownBy as Player).SlugCatClass ==
-                    MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Saint))
+                    MoreSlugcatsEnums.SlugcatStatsName.Spear || (weapon.thrownBy as Player).SlugCatClass ==
+                    MoreSlugcatsEnums.SlugcatStatsName.Saint))
                 {
                     return;
                 }
@@ -86,15 +86,15 @@ namespace Unbound
             else return orig(type);
         }
 
-        private static void AddUnbound(On.MoreSlugcats.CollectionsMenu.orig_Singal orig, CollectionsMenu self, 
-            Menu.MenuObject sender, string message)
+        private static void AddUnbound(On.MoreSlugcats.CollectionsMenu.orig_Singal orig, CollectionsMenu self,
+            MenuObject sender, string message)
         {
             orig(self, sender, message);
             if (message.Contains("PEARL") || message.Contains("TYPE"))
             {
                 DataPearl.AbstractDataPearl.DataPearlType dataPearlType = self.usedPearlTypes[self.selectedPearlInd];
                 int DataPearlToFileID = CollectionsMenu.DataPearlToFileID(dataPearlType);
-                
+
                 CollectionsMenu.PearlReadContext a = null;
                 for (int m = 0; m < self.iteratorButtons.Length; m++)
                 {
@@ -123,7 +123,7 @@ namespace Unbound
                     return self.SetPearlDeciphered(pearlType);
                 }
             }
-            if (pearlType == null || (pearlType != null && UnboundEnums.decipheredPearlsUnboundSession.Contains(pearlType)))
+            if (pearlType == null || pearlType != null && UnboundEnums.decipheredPearlsUnboundSession.Contains(pearlType))
             {
                 return false;
             }

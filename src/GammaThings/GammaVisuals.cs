@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Unbound
+﻿namespace Unbound
 {
     internal class GammaVisuals
     {
@@ -25,41 +23,34 @@ namespace Unbound
 
         private static void GammaID(On.WorldLoader.orig_GeneratePopulation orig, WorldLoader self, bool fresh)
         {
+            orig(self, fresh);
             if (self != null && self.world != null &&
                 self.world.game.session.characterStats.name.value == "NCRunbound" &&
-                (self.OverseerSpawnConditions(self.playerCharacter) || self.world.region.name == "UW" ||
+                (self.OverseerSpawnConditions(UnboundEnums.NCRUnbound) || self.world.region.name == "UW" ||
                 (ModManager.MSC && (self.world.region.name == "LC" || self.world.region.name == "LM")) ||
                     // places that always spawn overseers, OR
                     (UnityEngine.Random.value < self.world.region.regionParams.overseersSpawnChance *
                     Mathf.InverseLerp(2f, 21f, (float)(self.game.session as StoryGameSession).saveState.cycleNumber + 10) &&
                     (self.game.session as StoryGameSession).saveState.cycleNumber != 0)))
             {
-                if (self.OverseerSpawnConditions(self.playerCharacter))
+                WorldCoordinate offscreenden = new WorldCoordinate(self.world.offScreenDen.index, -1, -1, 0);
+                AbstractCreature gammaguide = new AbstractCreature(self.world,
+                    StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Overseer), null, offscreenden, new EntityID(-1, -7113131)); // gamma
+
+                if (self.world.GetAbstractRoom(offscreenden).offScreenDen)
                 {
-                    WorldCoordinate offscreenden = new WorldCoordinate(self.world.offScreenDen.index, -1, -1, 0);
-                    if (self.world.region.name == "SU")
-                    {
-                        offscreenden = new WorldCoordinate(self.world.GetAbstractRoom("SU_C04").index, 137, 17, 0);
-                    }
-
-                    AbstractCreature gammaguide = new AbstractCreature(self.world,
-                        StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Overseer), null, offscreenden, new EntityID(-1, -7113131)); // gamma
-
-
-                    if (self.world.GetAbstractRoom(offscreenden).offScreenDen)
-                    {
-                        self.world.GetAbstractRoom(offscreenden).entitiesInDens.Add(gammaguide);
-                    }
-                    else
-                    {
-                        self.world.GetAbstractRoom(offscreenden).AddEntity(gammaguide);
-                    }
-                    int owner = 4;
-                    (gammaguide.abstractAI as OverseerAbstractAI).SetAsPlayerGuide(owner);
+                    self.world.GetAbstractRoom(offscreenden).entitiesInDens.Add(gammaguide);
                 }
+                else
+                {
+                    self.world.GetAbstractRoom(offscreenden).AddEntity(gammaguide);
+                }
+                int owner = 4;
+                (gammaguide.abstractAI as OverseerAbstractAI).SetAsPlayerGuide(owner);
+
                 if (self.world.region.name == "UW" || (ModManager.MSC && (self.world.region.name == "LC" || self.world.region.name == "LM")) ||
                     // places that always spawn overseers, OR
-                    (UnityEngine.Random.value < self.world.region.regionParams.overseersSpawnChance * 
+                    (UnityEngine.Random.value < self.world.region.regionParams.overseersSpawnChance *
                     Mathf.InverseLerp(2f, 21f, (float)(self.game.session as StoryGameSession).saveState.cycleNumber + 10) &&
                     (self.game.session as StoryGameSession).saveState.cycleNumber != 0)
                     // its not cycle one and the random value is LESS THAN the overseer spawn chance * cyclenumbermathstuff
@@ -69,14 +60,10 @@ namespace Unbound
                     for (int num3 = 0; num3 < num2; num3++)
                     {
                         self.world.offScreenDen.entitiesInDens.Add(new AbstractCreature(
-                            self.world, StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Overseer), 
+                            self.world, StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Overseer),
                             null, new WorldCoordinate(self.world.offScreenDen.index, -1, -1, 0), self.game.GetNewID()));
                     }
                 }
-            }
-            else
-            {
-                orig(self, fresh);
             }
         }
 

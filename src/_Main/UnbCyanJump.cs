@@ -4,15 +4,7 @@ namespace Unbound
 {
     internal class CyanJump
     {
-        public static void Init()
-        {
-            On.Player.MovementUpdate += SetupJumps;
-            On.Player.WallJump += SetupWalljumps;
-
-            On.Player.Update += UnboundCyanJumps;
-        }
-
-        private static void UnboundCyanJumps(On.Player.orig_Update orig, Player self, bool eu)
+        public static void UnboundCyanJumps(On.Player.orig_Update orig, Player self, bool eu)
         {
             if (self != null && self.room != null &&
                 self.GetNCRunbound().IsUnbound)
@@ -49,7 +41,7 @@ namespace Unbound
                         }
                         if (UnityEngine.Random.value < 0.02f)
                         {
-                            Color color = new Color();
+                            Color color;
                             if (ModManager.JollyCoop) { color = PlayerGraphics.JollyColor(self.playerState.playerNumber, 2); }
                             else if (PlayerGraphics.customColors != null && !ModManager.JollyCoop) { color = PlayerGraphics.CustomColorSafety(2); }
                             else { color = new Color(0.8f, 0.1f, 0.1f); }
@@ -207,10 +199,11 @@ namespace Unbound
             orig(self, eu);
         }
 
-        private static void SetupWalljumps(On.Player.orig_WallJump orig, Player self, int direction)
+        public static void SetupWalljumps(On.Player.orig_WallJump orig, Player self, int direction)
         {
             orig(self, direction);
-            if (self != null && self.room != null &&
+            if (!self.GetNCRunbound().LostTail &&
+                self != null && self.room != null &&
                 self.GetNCRunbound().IsUnbound)
             {
                 self.GetNCRunbound().UnbChainjumpsCount += 1;
@@ -256,7 +249,7 @@ namespace Unbound
             }
         }
 
-        private static void SetupJumps(On.Player.orig_MovementUpdate orig, Player self, bool eu)
+        public static void SetupJumps(On.Player.orig_MovementUpdate orig, Player self, bool eu)
         {
             orig(self, eu);
 
@@ -275,19 +268,15 @@ namespace Unbound
 
                 if (self.simulateHoldJumpButton == 0 && self.GetNCRunbound().holdingJumpkey)
                 {
-                    // this checks if sound is playing so it doesnt made the worst sound known to god
                     self.GetNCRunbound().holdingJumpkey = false;
-                    // if playingsound is true but the jump button isnt being held, set it to false. this isnt perfect obviously but shrug
-                    // this assumes there is room for error in the player movements, as generally to make a terrible noise it would need to
-                    // be clicked very, very rapidly
                 }
 
-
-
-                if (self.simulateHoldJumpButton > 0 && !self.GetNCRunbound().holdingJumpkey &&
+                if (!self.GetNCRunbound().LostTail &&
+                    self.simulateHoldJumpButton > 0 && !self.GetNCRunbound().holdingJumpkey &&
                     self.goIntoCorridorClimb <= 0 && self.room.gravity != 0f)
                 {
                     // if jump is being held and it ISNT playing sound, AKA a longjump
+                    // also prevents him from doing so when tailless
 
                     self.GetNCRunbound().UnbCyanjumpCountdown += 5;
                     // regardless, locks cyanjump for 5 frames
@@ -400,11 +389,14 @@ namespace Unbound
                         self.GetNCRunbound().didLongjump == true &&
 
                         self.animation != Player.AnimationIndex.GrapplingSwing &&
-                        (self.grasps[0] == null || !(self.grasps[0].grabbed is TubeWorm)) &&
+                        (self.grasps[0] == null || (self.grasps[0].grabbed is not TubeWorm)) &&
                         // prevents triggering if using a grapple worm
 
-                        self.EffectiveRoomGravity != 0f
+                        self.EffectiveRoomGravity != 0f &&
                         // prevents usage in 0g
+
+                        !self.GetNCRunbound().LostTail
+                        // can only triple jump if he has a tail (random buffs)
                     )
                     {
                         self.GetNCRunbound().CanTripleCyanJump = true;

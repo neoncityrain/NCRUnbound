@@ -13,7 +13,7 @@ namespace Unbound
 
             On.SSOracleBehavior.Update += UpdateBehavior;
             On.SSOracleBehavior.SeePlayer += SeeUnbound;
-            On.SSOracleBehavior.storedPearlOrbitLocation += storedPearlOrbitLocation;
+            On.SSOracleBehavior.storedPearlOrbitLocation += StoredPearlOrbitLocation;
             On.SSOracleBehavior.ctor += SSctor;
             On.SSOracleBehavior.InitateConversation += EnableColourmode;
 
@@ -109,7 +109,7 @@ namespace Unbound
             }
         }
 
-        private static Vector2 storedPearlOrbitLocation(On.SSOracleBehavior.orig_storedPearlOrbitLocation orig, SSOracleBehavior self, int index)
+        private static Vector2 StoredPearlOrbitLocation(On.SSOracleBehavior.orig_storedPearlOrbitLocation orig, SSOracleBehavior self, int index)
         {
             if (self.player.room.game.session.characterStats.name.value == "NCRunbound" ||
                 self.oracle.room.game.StoryCharacter == UnboundEnums.NCRUnbound)

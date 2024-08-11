@@ -29,27 +29,6 @@
         static int ThisIsTheLengthOfMyMadness = 10; // update when adding more to above
         #endregion
 
-        public static void Init()
-        {
-            On.PlayerGraphics.InitiateSprites += InitiateSprites;
-            On.PlayerGraphics.AddToContainer += AddToContainer;
-            On.PlayerGraphics.DrawSprites += DrawSprites;
-            // unbound jumpring graphics, 1-4
-
-            #region LoadAtlases
-            unbsleevesarm ??= Futile.atlasManager.LoadAtlas("atlases/unbsleevesarm");
-            unbarm ??= Futile.atlasManager.LoadAtlas("atlases/unbarm");
-            unbpupface ??= Futile.atlasManager.LoadAtlas("atlases/unbpupface");
-            unbfrecklehips ??= Futile.atlasManager.LoadAtlas("atlases/unbfrecklehips");
-            unbjumphips ??= Futile.atlasManager.LoadAtlas("atlases/unbjumphips");
-            unbjumpbody ??= Futile.atlasManager.LoadAtlas("atlases/unbjumpbody");
-            unbearhead ??= Futile.atlasManager.LoadAtlas("atlases/unbearhead");
-            unbhead ??= Futile.atlasManager.LoadAtlas("atlases/unbhead");
-            unblegs ??= Futile.atlasManager.LoadAtlas("atlases/unblegs");
-            unbmittenlegs ??= Futile.atlasManager.LoadAtlas("atlases/unbmittenlegs");
-            // initiating atlases
-            #endregion
-        }
 
         public static void MirrorSprite(this FSprite addon, FSprite original)
         {
@@ -71,7 +50,7 @@
             }
         }
 
-        private static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam,
+        public static void DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam,
             float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
@@ -459,7 +438,7 @@
             }
         }
 
-        private static void AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
+        public static void AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
             RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
@@ -579,7 +558,7 @@
             }
         }
 
-        private static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        public static void InitiateSprites(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
 
@@ -640,6 +619,24 @@
                 #endregion
                 // end unbgraphics
             }
+        }
+
+
+        public static void Init()
+        {
+            #region LoadAtlases
+            unbsleevesarm ??= Futile.atlasManager.LoadAtlas("atlases/unbsleevesarm");
+            unbarm ??= Futile.atlasManager.LoadAtlas("atlases/unbarm");
+            unbpupface ??= Futile.atlasManager.LoadAtlas("atlases/unbpupface");
+            unbfrecklehips ??= Futile.atlasManager.LoadAtlas("atlases/unbfrecklehips");
+            unbjumphips ??= Futile.atlasManager.LoadAtlas("atlases/unbjumphips");
+            unbjumpbody ??= Futile.atlasManager.LoadAtlas("atlases/unbjumpbody");
+            unbearhead ??= Futile.atlasManager.LoadAtlas("atlases/unbearhead");
+            unbhead ??= Futile.atlasManager.LoadAtlas("atlases/unbhead");
+            unblegs ??= Futile.atlasManager.LoadAtlas("atlases/unblegs");
+            unbmittenlegs ??= Futile.atlasManager.LoadAtlas("atlases/unbmittenlegs");
+            // initiating atlases
+            #endregion
         }
     }
 }

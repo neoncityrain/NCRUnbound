@@ -3,41 +3,9 @@ using SlugBase;
 
 namespace Unbound
 {
-    internal class UnbMisc
+    public class UnbMisc
     {
-        public static void Init()
-        {
-            On.Player.Jump += MadHopsBro;
-            // increases unbounds base jump by 1f
-
-            On.Player.UpdateAnimation += SwimspeedTweak;
-            // swim speed code
-
-            On.GhostWorldPresence.SpawnGhost += KarmaUnderThreeGhost;
-            // fixes being unable to encounter echos under 5 karma, since unbound has a max of 3 initially
-
-            On.Player.Grabability += NoGrab;
-            // prevents taking neurons from moon
-
-            On.Player.CanBeSwallowed += PickyBastard;
-            // cannot swallow items
-
-            On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += TreatedAsCyan;
-            // cyans consider unbound to be a cyan / are territorial rather than aggressive as long as hes alive
-            // keeps them a bit more aggro than they are to one another BUT its not eating him so shrug
-
-            On.Centipede.Shock += ShockResistant;
-            On.ZapCoil.Update += unbZapped;
-            // centishock resistance
-
-            On.Player.Update += DamageTracking;
-
-            On.OracleSwarmer.BitByPlayer += noGlow;
-        }
-
-        
-
-        private static void noGlow(On.OracleSwarmer.orig_BitByPlayer orig, OracleSwarmer self, Creature.Grasp grasp, bool eu)
+        public static void noGlow(On.OracleSwarmer.orig_BitByPlayer orig, OracleSwarmer self, Creature.Grasp grasp, bool eu)
         {
             if (self != null && grasp != null && grasp.grabber != null && grasp.grabber is Player &&
                 (!ModManager.MSC || !(grasp.grabber as Player).isNPC) && (grasp.grabber as Player).GetNCRunbound().IsUnbound)
@@ -58,7 +26,7 @@ namespace Unbound
             }
         }
 
-        private static void DamageTracking(On.Player.orig_Update orig, Player self, bool eu)
+        public static void DamageTracking(On.Player.orig_Update orig, Player self, bool eu)
         { 
             orig(self, eu);
             if (self.GetNCRunbound().IsUnbound && self.Wounded)
@@ -75,7 +43,7 @@ namespace Unbound
             }
         }
 
-        private static void unbZapped(On.ZapCoil.orig_Update orig, ZapCoil self, bool eu)
+        public static void unbZapped(On.ZapCoil.orig_Update orig, ZapCoil self, bool eu)
         {
             if (self != null && self.room != null && !self.slatedForDeletetion &&
                 self.room.world.game.session.characterStats.name.value == "NCRunbound")
@@ -224,7 +192,7 @@ namespace Unbound
         #endregion
         }
 
-        private static void ShockResistant(On.Centipede.orig_Shock orig, Centipede self, PhysicalObject shockObj)
+        public static void ShockResistant(On.Centipede.orig_Shock orig, Centipede self, PhysicalObject shockObj)
         {
             if (self != null && self.room != null && shockObj != null &&
                 shockObj is Creature && (shockObj is Player && (shockObj as Player).GetNCRunbound().IsUnbound))
@@ -309,9 +277,10 @@ namespace Unbound
             }
         }
 
-        private static CreatureTemplate.Relationship TreatedAsCyan(On.LizardAI.orig_IUseARelationshipTracker_UpdateDynamicRelationship orig, LizardAI self, RelationshipTracker.DynamicRelationship dRelation)
+        public static CreatureTemplate.Relationship TreatedAsCyan(On.LizardAI.orig_IUseARelationshipTracker_UpdateDynamicRelationship orig, LizardAI self, RelationshipTracker.DynamicRelationship dRelation)
         {
-
+            // cyans consider unbound to be a cyan / are territorial rather than aggressive as long as hes alive
+            // keeps them a bit more aggro than they are to one another BUT its not eating him so shrug
             if (self != null && dRelation != null && self.creature != null &&
                 dRelation.trackerRep.representedCreature.realizedCreature != null && dRelation.state != null &&
                 // making sure things arent null
@@ -328,7 +297,7 @@ namespace Unbound
             return orig(self, dRelation);
         }
 
-        private static Player.ObjectGrabability NoGrab(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        public static Player.ObjectGrabability NoGrab(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
             if (self != null && self.room != null && obj != null &&
                 self.GetNCRunbound().IsUnbound)
@@ -343,7 +312,7 @@ namespace Unbound
             return orig(self, obj);
         }
 
-        private static bool PickyBastard(On.Player.orig_CanBeSwallowed orig, Player self, PhysicalObject testObj)
+        public static bool PickyBastard(On.Player.orig_CanBeSwallowed orig, Player self, PhysicalObject testObj)
         {
             if (!self.GetNCRunbound().Unpicky &&
                 self != null && self.room != null && testObj != null &&
@@ -354,7 +323,7 @@ namespace Unbound
             else return orig(self, testObj);
         }
 
-        private static void SwimspeedTweak(On.Player.orig_UpdateAnimation orig, Player self)
+        public static void SwimspeedTweak(On.Player.orig_UpdateAnimation orig, Player self)
         {
             // swimming code
             orig(self);
@@ -375,7 +344,7 @@ namespace Unbound
             }
         }
 
-        private static bool KarmaUnderThreeGhost(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)
+        public static bool KarmaUnderThreeGhost(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)
         {
             if (ghostID != null &&
                 Custom.rainWorld.progression.PlayingAsSlugcat.value == "NCRunbound" &&
@@ -389,7 +358,7 @@ namespace Unbound
             else return orig(ghostID, karma, karmaCap, ghostPreviouslyEncountered, playingAsRed);
         }
 
-        private static void MadHopsBro(On.Player.orig_Jump orig, Player self)
+        public static void MadHopsBro(On.Player.orig_Jump orig, Player self)
         {
             orig(self);
             if (self != null && self.room != null &&

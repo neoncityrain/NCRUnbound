@@ -2,19 +2,19 @@
 
 namespace Unbound
 {
-public class UnbRemInterface : OptionInterface
-{
-    private readonly ManualLogSource Logger;
-
-    public UnbRemInterface(NCRUnbound modInstance, ManualLogSource loggerSource)
+    public class UnbRemInterface : OptionInterface
     {
+        private readonly ManualLogSource Logger;
+
+        public UnbRemInterface(UnbSetupThings modInstance, ManualLogSource loggerSource)
+        {
             Logger = loggerSource;
-            CyJumpCharge = this.config.Bind<float>("CyJumpCharge", 180f, new ConfigAcceptableRange<float>(5f, 500f));
-            CyJump2Charge = this.config.Bind<float>("CyJump2Charge", 400f, new ConfigAcceptableRange<float>(25f, 1000f));
-            UnbGraphicsDisabled = this.config.Bind<bool>("UnbGraphicsDisabled", false);
-            UnbRingsDisabled = this.config.Bind<bool>("UnbRingsDisabled", false);
-            UnbUnpicky = this.config.Bind<bool>("UnbUnpicky", false);
-            MoreDebugLogs = this.config.Bind<bool>("MoreDebugLogs", false);
+            CyJumpCharge = config.Bind("CyJumpCharge", 180f, new ConfigAcceptableRange<float>(5f, 500f));
+            CyJump2Charge = config.Bind("CyJump2Charge", 400f, new ConfigAcceptableRange<float>(25f, 1000f));
+            UnbGraphicsDisabled = config.Bind("UnbGraphicsDisabled", false);
+            UnbRingsDisabled = config.Bind("UnbRingsDisabled", false);
+            UnbUnpicky = config.Bind("UnbUnpicky", false);
+            MoreDebugLogs = config.Bind("MoreDebugLogs", false);
         }
 
         public readonly Configurable<float> CyJumpCharge;
@@ -26,16 +26,16 @@ public class UnbRemInterface : OptionInterface
         private UIelement[] UIArrPlayerOptions;
 
 
-    public override void Initialize()
-    {
-        var opTab = new OpTab(this, "Options");
-        this.Tabs = new[]
+        public override void Initialize()
         {
+            var opTab = new OpTab(this, "Options");
+            Tabs = new[]
+            {
             opTab
         };
 
-        UIArrPlayerOptions = new UIelement[]
-        {
+            UIArrPlayerOptions = new UIelement[]
+            {
             new OpLabel(10f, 550f, "Options", true),
 
             // row 1
@@ -59,20 +59,21 @@ public class UnbRemInterface : OptionInterface
 
             new OpLabel(360f, 450f, "More Debug Logs"),
             new OpCheckBox(MoreDebugLogs, new Vector2(390f,420f))
-        };
-        opTab.AddItems(UIArrPlayerOptions);
-    }
-
-    public override void Update()
-    {
-        if (((OpUpdown)UIArrPlayerOptions[2]).GetValueFloat() > 10)
-        {
-            ((OpLabel)UIArrPlayerOptions[3]).Show();
+            };
+            opTab.AddItems(UIArrPlayerOptions);
         }
-        else
-        {
-            ((OpLabel)UIArrPlayerOptions[3]).Hide();
-        }
-    }
 
-}}
+        public override void Update()
+        {
+            if (((OpUpdown)UIArrPlayerOptions[2]).GetValueFloat() > 10)
+            {
+                ((OpLabel)UIArrPlayerOptions[3]).Show();
+            }
+            else
+            {
+                ((OpLabel)UIArrPlayerOptions[3]).Hide();
+            }
+        }
+
+    }
+}
