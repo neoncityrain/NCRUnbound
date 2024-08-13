@@ -24,7 +24,7 @@ internal class HooksOnly
         On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += UnbMisc.TreatedAsCyan; // cyan relationship to unbound
 
         // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        On.Player.ctor += SetupRoomSpecific.Initial;// setup and intro
+        On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup;// setup and intro
         On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
         On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenUpdate; // antigravity scripts
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
@@ -64,9 +64,6 @@ internal class HooksOnly
         // room specific
         UnbCatStats.Init();
         // slugcatstats exclusive things
-
-
-
         
         // MOD EXCLUSIVE =============================================================================================
         // MORE SLUGCATS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------

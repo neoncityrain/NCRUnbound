@@ -542,12 +542,33 @@ namespace Unbound
                 {
                     try
                     {
-                        Array.Resize(ref sLeaser.sprites, (ModManager.MSC ? 13 : 12) + ThisIsTheLengthOfMyMadness);
+                        if (ThisIsTheLengthOfMyMadness != 10) { ThisIsTheLengthOfMyMadness = 10; }
+                        if (self.player.GetNCRunbound().RingsDisabled && !self.player.GetNCRunbound().GraphicsDisabled)
+                        {
+                            ThisIsTheLengthOfMyMadness -= 2;
+                        }
+                        else if (!self.player.GetNCRunbound().RingsDisabled && self.player.GetNCRunbound().GraphicsDisabled)
+                        {
+                            ThisIsTheLengthOfMyMadness -= 8;
+                        }
+
+                        if (ThisIsTheLengthOfMyMadness > 10) { ThisIsTheLengthOfMyMadness = 10; }
+                        else if (ThisIsTheLengthOfMyMadness < 0) 
+                        { 
+                            ThisIsTheLengthOfMyMadness = 0;
+                            self.player.GetNCRunbound().GraphicsDisabled = true;
+                            self.player.GetNCRunbound().RingsDisabled = true;
+                            NCRDebug.Log("ERROR WITH GRAPHICS FOUND, DISABLING THEM");
+                        }
+
+                        var NumberOfBasegameSprites = 13;
+                        if (ModManager.MSC) { NumberOfBasegameSprites += 1; }
+
+                        Array.Resize(ref sLeaser.sprites, NumberOfBasegameSprites + ThisIsTheLengthOfMyMadness);
                         if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Array resize success!"); }
                     }
                     catch (Exception e)
                     {
-
                         NCRDebug.Log("Couldn't resize array: " + e);
                     }
                 }
@@ -623,7 +644,6 @@ namespace Unbound
                 // end unbgraphics
             }
         }
-
 
         public static void Init()
         {

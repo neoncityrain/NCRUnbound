@@ -1,7 +1,7 @@
 ﻿{
 	"id": "NCR.theunbound",
 	"name": "The Unbound Slugcat",
-	"version": "2.2.1",
+	"version": "2.3.0",
 	"authors": "NeonCityRain",
 	"description": "A Cyan Lizard Slugcat with a mission! ...Of sorts. Well, it's not really a cool or impressive one, but it's a mission. Debatably. Okay, well, it's a goal. One that's mediocre, and- are you gonna play or not?",
 	"requirements": [ "slime-cubed.slugbase" ],

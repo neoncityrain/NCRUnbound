@@ -30,7 +30,50 @@ namespace Unbound
             On.GameSession.ctor += GameSessionOnctor;
             // cleanup
 
+            On.RainWorld.PostModsInit += CheckOnMods;
             On.RainWorld.OnModsInit += UnbExtras.WrapInit(LoadResources);
+        }
+
+        private void CheckOnMods(On.RainWorld.orig_PostModsInit orig, RainWorld self)
+        {
+            if (!SecondaryCommit)
+            {
+                SecondaryCommit = true;
+                if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat") ||
+                        ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "DressMySlugcat"))
+                {
+                    if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "randombuff"))
+                    {
+                        NCRDebug.Log("Random Buffs enabled, disabling Unbound graphics");
+                        On.Player.ctor += RandomBuffThings.TailTracking;
+                    }
+                    else
+                    {
+                        NCRDebug.Log("DMS enabled, proceeding to load DMS Unbound graphics");
+                        DMSUnboundTime.Init();
+
+                        On.PlayerGraphics.InitiateSprites += DMSUnboundTime.InitiateSprites;
+                        On.PlayerGraphics.AddToContainer += DMSUnboundTime.AddToContainer;
+                        On.PlayerGraphics.DrawSprites += DMSUnboundTime.DrawSprites;
+                        On.PlayerGraphics.ApplyPalette += DMSUnboundTime.Coloor;
+                    }
+                }
+                else if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "randombuff"))
+                {
+                    NCRDebug.Log("Random Buffs enabled, disabling Unbound graphics");
+                    On.Player.ctor += RandomBuffThings.TailTracking;
+                }
+                else
+                {
+                    NCRDebug.Log("DMS and Random Buffs not enabled, proceeding to load normal Unbound graphics");
+                    UnbGraphics.Init();
+
+                    On.PlayerGraphics.InitiateSprites += UnbGraphics.InitiateSprites;
+                    On.PlayerGraphics.AddToContainer += UnbGraphics.AddToContainer;
+                    On.PlayerGraphics.DrawSprites += UnbGraphics.DrawSprites;
+                }
+            }
+            orig(self);
         }
 
         private void LoadResources(RainWorld rainWorld)
@@ -41,35 +84,6 @@ namespace Unbound
                 if (!InitialCommit)
                 {
                     UnboundEnums.RegisterValues();
-
-
-                    if (!(ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "randombuff") &&
-                        !(ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat"))))
-                    {
-                        NCRDebug.Log("DMS and Random Buffs not enabled, proceeding to load normal Unbound graphics");
-                        UnbGraphics.Init();
-
-                        On.PlayerGraphics.InitiateSprites += UnbGraphics.InitiateSprites;
-                        On.PlayerGraphics.AddToContainer += UnbGraphics.AddToContainer;
-                        On.PlayerGraphics.DrawSprites += UnbGraphics.DrawSprites;
-                    }
-                    else if ((ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat")) &&
-                        !(ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "randombuff")))
-                    {
-                        NCRDebug.Log("DMS enabled, proceeding to load DMS Unbound graphics");
-                        DMSUnboundTime.Init();
-
-                        On.PlayerGraphics.InitiateSprites += DMSUnboundTime.InitiateSprites;
-                        On.PlayerGraphics.AddToContainer += DMSUnboundTime.AddToContainer;
-                        On.PlayerGraphics.DrawSprites += DMSUnboundTime.DrawSprites;
-                        On.PlayerGraphics.ApplyPalette += DMSUnboundTime.Coloor;
-                    }
-                    else
-                    {
-                        NCRDebug.Log("Random Buffs enabled, disabling Unbound graphics");
-                        On.Player.ctor += RandomBuffThings.TailTracking;
-                    }
-
 
                     MachineConnector.SetRegisteredOI("NCR.theunbound", UnbOptions);
                     InitialCommit = true;

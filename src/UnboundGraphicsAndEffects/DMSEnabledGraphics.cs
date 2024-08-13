@@ -268,7 +268,6 @@ namespace Unbound
                     }
                     catch (Exception e)
                     {
-
                         NCRDebug.Log("Couldn't resize array: " + e);
                     }
                 }

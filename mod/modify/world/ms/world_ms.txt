@@ -40,8 +40,10 @@ END CONDITIONAL LINKS
 
 ROOMS
 
+
+MS_UNBEXITDREAM : DISCONNECTED
 // ----------------------------------------------------------------------------------------------------------------------
-MS_DMU02: MS_I03, MS_U03, MS_VENT02, MS_DMS02, MS_DMU04
+MS_DMU02 : MS_I03, MS_U03, MS_VENT02, MS_DMS02, MS_DMU04
 // connection five heads downwards, to what used to be DM_U04
 MS_DMS02 : MS_DMU02 : SHELTER
 // fun fact! these connections start at 0, but conditional links start at 1. givin me a headache out here

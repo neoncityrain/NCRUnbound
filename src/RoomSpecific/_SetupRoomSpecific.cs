@@ -86,7 +86,7 @@
             orig(self);
         }
 
-        public static void Initial(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
+        public static void UnboundFirstBootup(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
             if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
@@ -104,7 +104,8 @@
                 }
                 try
                 {
-                    if (self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
+                    if (self.room.game.GetStorySession.saveState.cycleNumber == 0 &&
+                        self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
                         self.room.game.Players.Count > 0)
                     {
                         if (!(ModManager.Expedition && Custom.rainWorld.ExpeditionMode))
@@ -243,6 +244,13 @@
                     {
                         NCRDebug.Log("Old save detected, fixing game- moon has been re-killed! Sorry, women");
                     }
+                }
+                if (self.room.game.GetStorySession.saveState.cycleNumber == 0 &&
+                    self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
+                    self.room.game.Players.Count > 0) 
+                {
+                    NCRDebug.Log("Unbound's death persistent save data fucked up! Attempting to fix it...");
+                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
                 }
                 if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles == true)
                 {

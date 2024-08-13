@@ -15,5 +15,7 @@ namespace Unbound
             }
             else { self.GetNCRunbound().LostTail = false; }
         }
+
+        // end random buff exclusive
     }
 }

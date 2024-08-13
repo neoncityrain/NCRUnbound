@@ -36,7 +36,7 @@
 		"world_state": ["NCRunbound", "NCRflicker", "Red", "Artificer" ],
 		"cycle_length_min": 7,
 		"cycle_length_max": 14,
-		"start_room": [ "MS_FARSIDE", "SL_A06" ],
+		"start_room": [ "MS_FARSIDE", "SL_LMS06" ],
 		"timeline_before": "Red",
 		"timeline_after": "Artificer",
 		
