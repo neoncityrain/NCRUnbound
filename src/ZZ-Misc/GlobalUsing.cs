@@ -9,6 +9,7 @@ global using MonoMod.RuntimeDetour;
 global using System.Reflection;
 global using System.Collections.Generic;
 global using MoreSlugcats;
+global using Noise;
 global using NCRDebug = UnityEngine.Debug;
 
 namespace Unbound;

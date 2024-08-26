@@ -5,6 +5,14 @@
         public delegate Color orig_OverseerMainColor(global::OverseerGraphics self);
         // 0.29f, 0.39f, 0.47f is the main colour, 0.2f, 0.56f, 0.47f is the tendril colour, 0.13f, 0.15f, 0.18f is the eye colour
         // adjust as needed to look not like shit
+        public static void RBGUpdate(On.Overseer.orig_Update orig, Overseer self, bool eu)
+        {
+            if (self != null && !self.slatedForDeletetion && self.GetGamma().RGBMode)
+            {
+                self.GetGamma().GammaRGBCounter++;
+            }
+            orig(self, eu);
+        }
 
         public static void GammaMycelium(On.CoralBrain.Mycelium.orig_UpdateColor orig, CoralBrain.Mycelium self, Color newColor, float gradientStart, int spr, RoomCamera.SpriteLeaser sLeaser)
         {
@@ -23,7 +31,9 @@
                     for (int j = 1; j < 3; j++)
                     {
                         (sLeaser.sprites[spr] as TriangleMesh).verticeColors[(sLeaser.sprites[spr] as TriangleMesh).verticeColors.Length - j] =
-                            new Color(0.2f, 0.76f, 0.57f);
+                            (self.owner as OverseerGraphics).overseer.GetGamma().RGBMode ? new HSLColor
+                            (Mathf.Sin((self.owner as OverseerGraphics).overseer.GetGamma().GammaRGBCounter / 190f), 1f, 0.75f).rgb
+                            : new Color(0.2f, 0.76f, 0.57f);
                     }
                 }
                 else
@@ -102,6 +112,11 @@
                 self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" &&
                 self.overseer.PlayerGuide)
             {
+                if (self.overseer.GetGamma().RGBMode)
+                {
+                    return new HSLColor(Mathf.Sin(self.overseer.GetGamma().GammaRGBCounter / 200f), 1f, 0.75f).rgb;
+                }
+
                 return new Color(0.29f, 0.59f, 0.87f);
             }
             else

@@ -604,15 +604,15 @@ namespace Unbound
                         return true;
                     }
                 }
-                return (self.world.region.name == "MS" || self.world.GetAbstractRoom(room).gate ||
-                    // can always show up in MS, can enter gate rooms
+                return (self.world.region.name == "SS" || self.world.GetAbstractRoom(room).gate ||
+                    // can always show up in Five Pebbles, can enter gate rooms
                     !(self.world.GetAbstractRoom(room).AttractionForCreature(self.parent.creatureTemplate.type) ==
                     AbstractRoom.CreatureRoomAttraction.Forbidden) ||
                     // if the room is not forbidden
                     !self.world.GetAbstractRoom(room).scavengerOutpost || !self.world.GetAbstractRoom(room).scavengerTrader) ||
                     // if the room is not a scav outpost / scav trader
                     self.world.GetAbstractRoom(room).shelter;
-                // or if the room IS a shelter (enabling the guide to come inside the shelter with the player)
+                    // or if the room IS a shelter (enabling the guide to come inside the shelter with the player)
             }
             return orig(self, room);
         }

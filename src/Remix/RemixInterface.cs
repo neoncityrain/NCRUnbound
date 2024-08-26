@@ -15,6 +15,7 @@ namespace Unbound
             UnbRingsDisabled = config.Bind("UnbRingsDisabled", false);
             UnbUnpicky = config.Bind("UnbUnpicky", false);
             MoreDebugLogs = config.Bind("MoreDebugLogs", false);
+            RGBRings = config.Bind("RGBRings", false);
         }
 
         public readonly Configurable<float> CyJumpCharge;
@@ -23,6 +24,7 @@ namespace Unbound
         public readonly Configurable<bool> UnbRingsDisabled;
         public readonly Configurable<bool> UnbUnpicky;
         public readonly Configurable<bool> MoreDebugLogs;
+        public readonly Configurable<bool> RGBRings;
         private UIelement[] UIArrPlayerOptions;
 
 
@@ -58,7 +60,12 @@ namespace Unbound
             new OpCheckBox(UnbUnpicky, new Vector2(230f,420f)),
 
             new OpLabel(360f, 450f, "More Debug Logs"),
-            new OpCheckBox(MoreDebugLogs, new Vector2(390f,420f))
+            new OpCheckBox(MoreDebugLogs, new Vector2(390f,420f)),
+
+            // row 3
+            
+            new OpLabel(10f, 320f, "Party Button!"),
+            new OpCheckBox(RGBRings, new Vector2(30f,350f))
             };
             opTab.AddItems(UIArrPlayerOptions);
         }

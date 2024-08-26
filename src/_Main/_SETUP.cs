@@ -2,7 +2,7 @@
 
 namespace Unbound
 {
-    [BepInPlugin("NCR.theunbound", "unbound", "2.3.0")]
+    [BepInPlugin("NCR.theunbound", "unbound", "2.3.2")]
 
     [BepInDependency("moreslugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
@@ -22,6 +22,7 @@ namespace Unbound
         public void OnEnable()
         {
             On.Player.ctor += PlayerOnctor;
+            On.Overseer.ctor += RemixSet;
             // remix triggers
 
             HooksOnly.HookIn();
@@ -46,6 +47,7 @@ namespace Unbound
                     {
                         NCRDebug.Log("Random Buffs enabled, disabling Unbound graphics");
                         On.Player.ctor += RandomBuffThings.TailTracking;
+                        On.PlayerGraphics.DrawSprites += RandomBuffThings.SetUpRGBForRB;
                     }
                     else
                     {
@@ -62,6 +64,7 @@ namespace Unbound
                 {
                     NCRDebug.Log("Random Buffs enabled, disabling Unbound graphics");
                     On.Player.ctor += RandomBuffThings.TailTracking;
+                    On.PlayerGraphics.DrawSprites += RandomBuffThings.SetUpRGBForRB;
                 }
                 else
                 {
@@ -71,6 +74,7 @@ namespace Unbound
                     On.PlayerGraphics.InitiateSprites += UnbGraphics.InitiateSprites;
                     On.PlayerGraphics.AddToContainer += UnbGraphics.AddToContainer;
                     On.PlayerGraphics.DrawSprites += UnbGraphics.DrawSprites;
+                    On.PlayerGraphics.ctor += UnbGraphics.TailThangs;
                 }
             }
             orig(self);

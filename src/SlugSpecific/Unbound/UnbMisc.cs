@@ -11,7 +11,7 @@ namespace Unbound
                 (!ModManager.MSC || !(grasp.grabber as Player).isNPC) && (grasp.grabber as Player).GetNCRunbound().IsUnbound)
             {
                 self.bites--;
-                self.room.PlaySound((self.bites == 0) ? SoundID.Slugcat_Eat_Swarmer : SoundID.Slugcat_Bite_Swarmer, self.firstChunk.pos);
+                self.room.PlaySound(self.bites == 0 ? SoundID.Slugcat_Eat_Swarmer : SoundID.Slugcat_Bite_Swarmer, self.firstChunk.pos);
                 self.firstChunk.MoveFromOutsideMyUpdate(eu, grasp.grabber.mainBodyChunk.pos);
                 if (self.bites < 1)
                 {
@@ -27,7 +27,13 @@ namespace Unbound
         }
 
         public static void DamageTracking(On.Player.orig_Update orig, Player self, bool eu)
-        { 
+        {
+            if (self != null && self.room != null && self.abstractCreature != null &&
+                self.GetNCRunbound().IsNCRUnbModcat == true && self.GetNCRunbound().IsOracle == false &&
+                self.GetNCRunbound().RGBRings)
+            {
+                self.GetNCRunbound().RGBCounter++;
+            }
             orig(self, eu);
             if (self.GetNCRunbound().IsUnbound && self.Wounded)
             {
@@ -40,6 +46,7 @@ namespace Unbound
                     }
                     self.GetNCRunbound().damagesmoke.EmitSmoke(self.firstChunk.pos, Custom.RNV(), true, 30f);
                 }
+                self.Blink(100);
             }
         }
 
@@ -60,8 +67,8 @@ namespace Unbound
                         {
                             for (int k = 0; k < self.room.physicalObjects[i][j].bodyChunks.Length; k++)
                             {
-                                if ((self.horizontalAlignment && self.room.physicalObjects[i][j].bodyChunks[k].ContactPoint.y != 0) ||
-                                    (!self.horizontalAlignment && self.room.physicalObjects[i][j].bodyChunks[k].ContactPoint.x != 0))
+                                if (self.horizontalAlignment && self.room.physicalObjects[i][j].bodyChunks[k].ContactPoint.y != 0 ||
+                                    !self.horizontalAlignment && self.room.physicalObjects[i][j].bodyChunks[k].ContactPoint.x != 0)
                                 {
                                     Vector2 a = self.room.physicalObjects[i][j].bodyChunks[k].ContactPoint.ToVector2();
                                     Vector2 v = self.room.physicalObjects[i][j].bodyChunks[k].pos + a *
@@ -80,7 +87,7 @@ namespace Unbound
                                             {
                                                 (self.room.physicalObjects[i][j] as Player).Stun(200);
                                                 (self.room.physicalObjects[i][j] as Player).room.AddObject(new
-                                                    CreatureSpasmer((self.room.physicalObjects[i][j] as Player), true, 200));
+                                                    CreatureSpasmer(self.room.physicalObjects[i][j] as Player, true, 200));
                                                 (self.room.physicalObjects[i][j] as Player).playerState.permanentDamageTracking += 0.95f;
 
                                                 if ((self.room.physicalObjects[i][j] as Player).playerState.permanentDamageTracking >= 1)
@@ -89,7 +96,7 @@ namespace Unbound
                                                 }
 
                                                 self.room.physicalObjects[i][j].room.AddObject(new ShockWave((self.room.physicalObjects[i][j] as Player).firstChunk.pos,
-                                                    (self.room.physicalObjects[i][j] as Player).dead ? (float)UnityEngine.Random.Range(30, 140) : (float)UnityEngine.Random.Range(20, 80),
+                                                    (self.room.physicalObjects[i][j] as Player).dead ? UnityEngine.Random.Range(30, 140) : UnityEngine.Random.Range(20, 80),
                                                     0.08f, 7, false));
 
                                                 self.room.physicalObjects[i][j].room.PlaySound(SoundID.Overseer_Death,
@@ -102,100 +109,100 @@ namespace Unbound
                                             {
                                                 (self.room.physicalObjects[i][j] as Creature).Die();
                                             }
-                #region PostUnb
-                                    }
-                                    if (ModManager.MSC && self.room.physicalObjects[i][j] is MoreSlugcats.ElectricSpear)
-                                    {
-                                        (self.room.physicalObjects[i][j] as MoreSlugcats.ElectricSpear).Recharge();
+                                            #region PostUnb
+                                        }
+                                        if (ModManager.MSC && self.room.physicalObjects[i][j] is ElectricSpear)
+                                        {
+                                            (self.room.physicalObjects[i][j] as ElectricSpear).Recharge();
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            self.lastTurnedOn = self.turnedOn;
-            if (UnityEngine.Random.value < 0.005f)
-            {
-                self.disruption = Mathf.Max(self.disruption, UnityEngine.Random.value);
-            }
-            self.disruption = Mathf.Max(0f, self.disruption - 1f / Mathf.Lerp(70f, 300f, UnityEngine.Random.value));
-            self.smoothDisruption = Mathf.Lerp(self.smoothDisruption, self.disruption, 0.2f);
-            float num = Mathf.InverseLerp(0.1f, 1f, self.smoothDisruption);
-            self.soundLoop.Volume = (1f - num) * self.turnedOn;
-            self.disruptedLoop.Volume = num * Mathf.Pow(self.turnedOn, 0.2f);
-
-            for (int l = 0; l < self.flicker.GetLength(0); l++)
-            {
-                self.flicker[l, 1] = self.flicker[l, 0];
-                self.flicker[l, 3] = Mathf.Clamp(self.flicker[l, 3] + Mathf.Lerp(-1f, 1f, UnityEngine.Random.value) / 10f, 0f, 1f);
-                self.flicker[l, 2] += 1f / Mathf.Lerp(70f, 20f, self.flicker[l, 3]);
-                self.flicker[l, 0] = Mathf.Clamp(0.5f + self.smoothDisruption * (Mathf.Lerp(0.2f, 0.1f, self.flicker[l, 3]) * Mathf.Sin(6.2831855f *
-                    self.flicker[l, 2]) + Mathf.Lerp(-1f, 1f, UnityEngine.Random.value) / 20f), 0f, 1f);
-            }
-
-            if (UnityEngine.Random.value < self.disruption && UnityEngine.Random.value < 0.0025f)
-            {
-                self.turnedOffCounter = UnityEngine.Random.Range(10, 100);
-            }
-            if (!self.powered)
-            {
-                self.turnedOn = Mathf.Max(0f, self.turnedOn - 0.1f);
-            }
-            if (self.turnedOffCounter > 0)
-            {
-                self.turnedOffCounter--;
-                if (UnityEngine.Random.value < 0.5f || UnityEngine.Random.value > self.disruption || !self.powered)
+                self.lastTurnedOn = self.turnedOn;
+                if (UnityEngine.Random.value < 0.005f)
                 {
-                    self.turnedOn = 0f;
+                    self.disruption = Mathf.Max(self.disruption, UnityEngine.Random.value);
                 }
-                else
+                self.disruption = Mathf.Max(0f, self.disruption - 1f / Mathf.Lerp(70f, 300f, UnityEngine.Random.value));
+                self.smoothDisruption = Mathf.Lerp(self.smoothDisruption, self.disruption, 0.2f);
+                float num = Mathf.InverseLerp(0.1f, 1f, self.smoothDisruption);
+                self.soundLoop.Volume = (1f - num) * self.turnedOn;
+                self.disruptedLoop.Volume = num * Mathf.Pow(self.turnedOn, 0.2f);
+
+                for (int l = 0; l < self.flicker.GetLength(0); l++)
                 {
-                    self.turnedOn = UnityEngine.Random.value;
+                    self.flicker[l, 1] = self.flicker[l, 0];
+                    self.flicker[l, 3] = Mathf.Clamp(self.flicker[l, 3] + Mathf.Lerp(-1f, 1f, UnityEngine.Random.value) / 10f, 0f, 1f);
+                    self.flicker[l, 2] += 1f / Mathf.Lerp(70f, 20f, self.flicker[l, 3]);
+                    self.flicker[l, 0] = Mathf.Clamp(0.5f + self.smoothDisruption * (Mathf.Lerp(0.2f, 0.1f, self.flicker[l, 3]) * Mathf.Sin(6.2831855f *
+                        self.flicker[l, 2]) + Mathf.Lerp(-1f, 1f, UnityEngine.Random.value) / 20f), 0f, 1f);
                 }
 
-                if (self.powered)
+                if (UnityEngine.Random.value < self.disruption && UnityEngine.Random.value < 0.0025f)
                 {
-                    self.turnedOn = Mathf.Lerp(self.turnedOn, 1f, self.zapLit * UnityEngine.Random.value);
+                    self.turnedOffCounter = UnityEngine.Random.Range(10, 100);
                 }
-
-                self.smoothDisruption = 1f;
-            }
-            else if (self.powered)
-            {
-                self.turnedOn = Mathf.Min(self.turnedOn + UnityEngine.Random.value / 30f, 1f);
-            }
-            self.zapLit = Mathf.Max(0f, self.zapLit - 0.1f);
-            if (self.room.fullyLoaded)
-            {
-                self.disruption = Mathf.Max(self.disruption, self.room.gravity);
-            }
-            if (self.room.roomSettings.GetEffectAmount(RoomSettings.RoomEffect.Type.BrokenZeroG) > 0f)
-            {
-                bool brokenGravityTurnedOff = self.room.world.rainCycle.brokenAntiGrav.to == 1f &&
-                    self.room.world.rainCycle.brokenAntiGrav.progress == 1f;
-                if (!brokenGravityTurnedOff)
+                if (!self.powered)
                 {
-                    self.disruption = 1f;
-                    if (self.powered && UnityEngine.Random.value < 0.2f)
+                    self.turnedOn = Mathf.Max(0f, self.turnedOn - 0.1f);
+                }
+                if (self.turnedOffCounter > 0)
+                {
+                    self.turnedOffCounter--;
+                    if (UnityEngine.Random.value < 0.5f || UnityEngine.Random.value > self.disruption || !self.powered)
                     {
-                        self.powered = false;
+                        self.turnedOn = 0f;
+                    }
+                    else
+                    {
+                        self.turnedOn = UnityEngine.Random.value;
+                    }
+
+                    if (self.powered)
+                    {
+                        self.turnedOn = Mathf.Lerp(self.turnedOn, 1f, self.zapLit * UnityEngine.Random.value);
+                    }
+
+                    self.smoothDisruption = 1f;
+                }
+                else if (self.powered)
+                {
+                    self.turnedOn = Mathf.Min(self.turnedOn + UnityEngine.Random.value / 30f, 1f);
+                }
+                self.zapLit = Mathf.Max(0f, self.zapLit - 0.1f);
+                if (self.room.fullyLoaded)
+                {
+                    self.disruption = Mathf.Max(self.disruption, self.room.gravity);
+                }
+                if (self.room.roomSettings.GetEffectAmount(RoomSettings.RoomEffect.Type.BrokenZeroG) > 0f)
+                {
+                    bool brokenGravityTurnedOff = self.room.world.rainCycle.brokenAntiGrav.to == 1f &&
+                        self.room.world.rainCycle.brokenAntiGrav.progress == 1f;
+                    if (!brokenGravityTurnedOff)
+                    {
+                        self.disruption = 1f;
+                        if (self.powered && UnityEngine.Random.value < 0.2f)
+                        {
+                            self.powered = false;
+                        }
+                    }
+                    if (brokenGravityTurnedOff && !self.powered && UnityEngine.Random.value < 0.025f)
+                    {
+                        self.powered = true;
                     }
                 }
-                if (brokenGravityTurnedOff && !self.powered && UnityEngine.Random.value < 0.025f)
-                {
-                    self.powered = true;
-                }
             }
-        }
-        else { orig(self, eu); }
-        #endregion
+            else { orig(self, eu); }
+            #endregion
         }
 
         public static void ShockResistant(On.Centipede.orig_Shock orig, Centipede self, PhysicalObject shockObj)
         {
             if (self != null && self.room != null && shockObj != null &&
-                shockObj is Creature && (shockObj is Player && (shockObj as Player).GetNCRunbound().IsUnbound))
+                shockObj is Creature && shockObj is Player && (shockObj as Player).GetNCRunbound().IsUnbound)
             {
                 self.room.PlaySound(SoundID.Centipede_Shock, self.mainBodyChunk.pos);
                 if (self.graphicsModule != null)
@@ -318,6 +325,10 @@ namespace Unbound
                 self != null && self.room != null && testObj != null &&
                 self.GetNCRunbound().IsUnbound)
             {
+                if (testObj is DataPearl && (testObj as DataPearl).AbstractPearl.dataPearlType == UnboundEnums.unboundKarmaPearl)
+                {
+                    return true;
+                }
                 return false;
             }
             else return orig(self, testObj);

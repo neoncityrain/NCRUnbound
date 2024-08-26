@@ -98,6 +98,16 @@ namespace Unbound
                         bodycol = PlayerGraphics.CustomColorSafety(0);
                     }
 
+                    if (self.player.GetNCRunbound().RGBRings)
+                    {
+                        effectcol = new HSLColor(Mathf.Sin(self.player.GetNCRunbound().RGBCounter / 200f), 1f, 0.75f).rgb;
+                        pupilcol = effectcol;
+                    }
+                    if (self.player.GetNCRunbound().effectColour == null || self.player.GetNCRunbound().effectColour != effectcol)
+                    {
+                        self.player.GetNCRunbound().effectColour = effectcol;
+                    }
+
                     if (!self.player.GetNCRunbound().RingsDisabled)
                     {
                         // animated colour ------------------------------

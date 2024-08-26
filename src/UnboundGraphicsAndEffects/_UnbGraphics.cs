@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Unbound
 {
@@ -12,15 +13,17 @@ namespace Unbound
         static FAtlas unbjumpbody;
         static FAtlas unbfrecklehips;
         static FAtlas unbhead;
+        static FAtlas rehead;
+        static FAtlas reear;
         static FAtlas unbarm;
         static FAtlas unbmittenlegs;
         static FAtlas unblegs;
         #endregion
         #region sLeaser Sprite Variables
         static int unbSocksNum = ModManager.MSC ? 13 : 12;
-        static int unbJumprings1Num = ModManager.MSC ? 14 : 13;
+        public static int unbJumprings1Num = ModManager.MSC ? 14 : 13;
         static int unbFreckleNum = ModManager.MSC ? 15 : 14;
-        static int unbJumprings2Num = ModManager.MSC ? 16 : 15;
+        public static int unbJumprings2Num = ModManager.MSC ? 16 : 15;
         static int unbEarTips = ModManager.MSC ? 17 : 16;
         static int unbLeftMittens = ModManager.MSC ? 18 : 17;
         static int unbRightMittens = ModManager.MSC ? 19 : 18;
@@ -60,7 +63,7 @@ namespace Unbound
 
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null &&
-                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
+                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
             {
 
                 #region Initiating Variables
@@ -76,6 +79,7 @@ namespace Unbound
                     bodytohips += Custom.DirVec(hipstobody, bodytohips) * Mathf.Lerp(-1f, 1f, breathaltered) *
                         Mathf.InverseLerp(0.5f, 1f, self.player.aerobicLevel) * 0.5f;
                 }
+                bool rev = self.player.GetNCRunbound().Reverb;
                 float bodyhipscenterish = Mathf.InverseLerp(0.3f, 0.5f, Mathf.Abs(Custom.DirVec(hipstobody, bodytohips).y));
                 #endregion
                 #region Adding / Replacing Atlases
@@ -111,27 +115,40 @@ namespace Unbound
 
                 // HEAD THINGS
                 string head = sLeaser.sprites[3]?.element?.name;
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbearhead == null)
+                if (!self.player.GetNCRunbound().GraphicsDisabled &&
+                    (unbearhead == null || reear == null))
                 {
                     NCRDebug.Log("Unbound Eartip sprites missing!");
                 }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
+                else if (!rev && !self.player.GetNCRunbound().GraphicsDisabled &&
                     head != null && head.StartsWith("Head") &&
                     unbearhead._elementsByName.TryGetValue("unbear" + head, out var eartip))
                 {
                     sLeaser.sprites[unbEarTips].element = eartip;
                 }
+                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
+                    head != null && head.StartsWith("Head") &&
+                    reear._elementsByName.TryGetValue("revear" + head, out var earsss))
+                {
+                    sLeaser.sprites[unbEarTips].element = earsss;
+                }
                 // eartips
                 if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    unbhead == null)
+                    (unbhead == null || rehead == null))
                 {
                     NCRDebug.Log("Unbound Head sprites missing!");
                 }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
+                else if (!rev && !self.player.GetNCRunbound().GraphicsDisabled &&
                     head != null && head.StartsWith("Head") &&
                     unbhead._elementsByName.TryGetValue("unb" + head, out var headreplace))
                 {
                     sLeaser.sprites[3].element = headreplace;
+                }
+                else if (!self.player.GetNCRunbound().GraphicsDisabled &&
+                    head != null && head.StartsWith("Head") &&
+                    rehead._elementsByName.TryGetValue("rev" + head, out var hea))
+                {
+                    sLeaser.sprites[3].element = hea;
                 }
 
                 // ARM THINGS
@@ -249,11 +266,12 @@ namespace Unbound
                 #region Vanilla Tweaks
                 // VANILLA TWEAKING THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                if (!self.player.GetNCRunbound().GraphicsDisabled)
+                if (!self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().IsUnbound)
                 {
+                    //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
                     sLeaser.sprites[1].scaleX = 0.8f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
-                    sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * bodyhipscenterish, 0.15f,
-                        self.player.sleepCurlUp);
+                    sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) * 
+                        bodyhipscenterish, 0.15f, self.player.sleepCurlUp);
                     // makes unbound thinner
                     sLeaser.sprites[10].alpha = 0f;
                     sLeaser.sprites[11].alpha = 0f;
@@ -263,6 +281,11 @@ namespace Unbound
                         sLeaser.sprites[4].isVisible = false;
                     }
                     // hides legs when stunned
+                }
+                if (!self.player.GetNCRunbound().GraphicsDisabled && rev)
+                {
+                    sLeaser.sprites[0].scale *= 0.9f;
+                    sLeaser.sprites[1].scale *= 0.9f;
                 }
                 #endregion
                 #region Mirroring
@@ -276,14 +299,17 @@ namespace Unbound
                 MirrorSprite(sLeaser.sprites[unbRightMittens], sLeaser.sprites[6]);
                 MirrorSprite(sLeaser.sprites[unbLeftToes], sLeaser.sprites[7]);
                 MirrorSprite(sLeaser.sprites[unbRightToes], sLeaser.sprites[8]);
-                MirrorSprite(sLeaser.sprites[unbPupils], sLeaser.sprites[9]);
+                if (!rev) { MirrorSprite(sLeaser.sprites[unbPupils], sLeaser.sprites[9]); }
                 #endregion
                 #region Colours
                 // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
 
-                Color effectcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.24f, 0.14f, 0.05f) : new Color(0.87f, 0.39f, 0.33f);
-                Color eyecol = self.player.GetNCRunbound().IsTechnician ? new Color(0.42f, 0.21f, 0.18f) : new Color(0.07f, 0.2f, 0.31f);
-                Color bodycol = self.player.GetNCRunbound().IsTechnician ? new Color(0.91f, 0.8f, 0.53f) : new Color(0.89f, 0.79f, 0.6f);
+                Color effectcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.24f, 0.14f, 0.05f) :
+                    (rev ? new Color(0.72f, 0.6f, 0.6f) : new Color(0.87f, 0.39f, 0.33f));
+                Color eyecol = self.player.GetNCRunbound().IsTechnician ? new Color(0.42f, 0.21f, 0.18f) : 
+                    (rev ? new Color(0.51f, 0.2f, 0.22f) : new Color(0.07f, 0.2f, 0.31f));
+                Color bodycol = self.player.GetNCRunbound().IsTechnician ? new Color(0.91f, 0.8f, 0.53f) : 
+                    (rev ? new Color(0.95f, 0.91f, 0.91f) : new Color(0.89f, 0.79f, 0.6f));
                 Color pupilcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.26f, 0.09f, 0.08f) : effectcol;
 
                 if (self.player.room.game.IsArenaSession && !self.player.GetNCRunbound().IsTechnician)
@@ -293,25 +319,37 @@ namespace Unbound
                         case 0:
                             if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType != MoreSlugcatsEnums.GameTypeID.Challenge)
                             {
-                                effectcol = new Color(0.42f, 0.31f, 0.78f);
-                                eyecol = new Color(0.22f, 0.05f, 0.09f);
-                                bodycol = new Color(0.96f, 0.95f, 0.98f);
+                                if (!rev)
+                                {
+                                    effectcol = new Color(0.42f, 0.31f, 0.78f);
+                                    eyecol = new Color(0.22f, 0.05f, 0.09f);
+                                    bodycol = new Color(0.96f, 0.95f, 0.98f);
+                                }
                             }
                             break;
                         case 1:
-                            effectcol = new Color(0.11f, 0.74f, 0.58f);
-                            eyecol = new Color(0.48f, 14f, 0.07f);
-                            bodycol = new Color(0.97f, 0.84f, 0.45f);
+                            if (!rev)
+                            {
+                                effectcol = new Color(0.11f, 0.74f, 0.58f);
+                                eyecol = new Color(0.48f, 14f, 0.07f);
+                                bodycol = new Color(0.97f, 0.84f, 0.45f);
+                            }
                             break;
                         case 2:
-                            effectcol = new Color(0.84f, 0.08f, 0.3f);
-                            eyecol = new Color(0.12f, 0.21f, 0.27f);
-                            bodycol = new Color(0.98f, 0.58f, 0.38f);
+                            if (!rev)
+                                {
+                                effectcol = new Color(0.84f, 0.08f, 0.3f);
+                                eyecol = new Color(0.12f, 0.21f, 0.27f);
+                                bodycol = new Color(0.98f, 0.58f, 0.38f);
+                            }
                             break;
                         case 3:
-                            effectcol = new Color(0.86f, 0.23f, 0.93f);
-                            eyecol = new Color(0.62f, 0.75f, 0.97f);
-                            bodycol = new Color(0.06f, 0.11f, 0.24f);
+                            if (!rev)
+                            {
+                                effectcol = new Color(0.86f, 0.23f, 0.93f);
+                                eyecol = new Color(0.62f, 0.75f, 0.97f);
+                                bodycol = new Color(0.06f, 0.11f, 0.24f);
+                            }
                             break;
                     }
                 }
@@ -326,6 +364,17 @@ namespace Unbound
                     effectcol = PlayerGraphics.CustomColorSafety(2);
                     eyecol = PlayerGraphics.CustomColorSafety(1);
                     bodycol = PlayerGraphics.CustomColorSafety(0);
+                }
+
+                if (self.player.GetNCRunbound().RGBRings)
+                { 
+                    effectcol = new HSLColor(Mathf.Sin(self.player.GetNCRunbound().RGBCounter / 200f), 1f, 0.75f).rgb;
+                    pupilcol = effectcol;
+                }
+
+                if (self.player.GetNCRunbound().effectColour == null || self.player.GetNCRunbound().effectColour != effectcol)
+                {
+                    self.player.GetNCRunbound().effectColour = effectcol;
                 }
 
                 if (!self.player.GetNCRunbound().GraphicsDisabled)
@@ -372,6 +421,10 @@ namespace Unbound
                         sLeaser.sprites[unbPupils].color = Color.Lerp(pupilcol, self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
                                 self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f);
                     }
+                    if (rev)
+                    {
+                        sLeaser.sprites[unbPupils].alpha = 0f;
+                    }
                 }
 
                 if (!self.player.GetNCRunbound().WingscalesDisabled)
@@ -379,16 +432,15 @@ namespace Unbound
                     // sLeaser.sprites[unbFrillStarts].color = effectcol;
                 }
 
-                if (!self.player.GetNCRunbound().RingsDisabled)
+
+                if (!self.player.GetNCRunbound().RingsDisabled && !rev)
                 {
                     // animated colour ------------------------------
                     if (self.player.GetNCRunbound().UnbCyanjumpCountdown == 0)
                     {
-                        sLeaser.sprites[unbJumprings1Num].color = self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol;
-                        sLeaser.sprites[unbJumprings2Num].color = self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol;
+                        sLeaser.sprites[unbJumprings1Num].color = self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol;
+                        sLeaser.sprites[unbJumprings2Num].color = self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol;
                         // jumprings
-
-                        sLeaser.sprites[unbPupils].color = pupilcol;
 
                         if (sLeaser.sprites[unbJumprings1Num].shader != rCam.game.rainWorld.Shaders["Basic"])
                         {
@@ -403,13 +455,10 @@ namespace Unbound
                     else if (self.player.GetNCRunbound().DidTripleCyanJump)
                     {
                         // if he did a triple jump
-                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
+                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol,
                             self.player.GetNCRunbound().IsUnbound ? eyecol : pupilcol, (self.player.GetNCRunbound().UnbCyanjumpCountdown / 120f));
-                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
+                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol,
                             self.player.GetNCRunbound().IsUnbound ? eyecol : pupilcol, (self.player.GetNCRunbound().UnbCyanjumpCountdown / 130f));
-
-                        sLeaser.sprites[unbPupils].color = Color.Lerp(pupilcol, self.player.GetNCRunbound().IsUnbound ? eyecol : effectcol,
-                                (self.player.GetNCRunbound().UnbCyanjumpCountdown) / 140f);
 
                         if (sLeaser.sprites[unbJumprings1Num].shader == rCam.game.rainWorld.Shaders["Basic"])
                         {
@@ -423,16 +472,20 @@ namespace Unbound
                     }
                     else
                     {
-                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol, bodycol,
+                        sLeaser.sprites[unbJumprings1Num].color = Color.Lerp(self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol, bodycol,
                             (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
-                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol, bodycol,
+                        sLeaser.sprites[unbJumprings2Num].color = Color.Lerp(self.player.GetNCRunbound().IsTechnician ? eyecol : effectcol, bodycol,
                             (self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f));
-
-                        sLeaser.sprites[unbPupils].color = Color.Lerp(pupilcol, self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
-                                self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f);
                     }
                     // gives his jumprings (and eyes) that nice fade effect
 
+                }
+                else if (!self.player.GetNCRunbound().RingsDisabled)
+                {
+                    // for rev only
+
+                    sLeaser.sprites[unbJumprings1Num].color = effectcol;
+                    sLeaser.sprites[unbJumprings2Num].color = effectcol;
                 }
                 #endregion
 
@@ -445,7 +498,7 @@ namespace Unbound
         {
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && rCam != null && sLeaser != null &&
-                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
+                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
             {
 
                 try
@@ -561,10 +614,7 @@ namespace Unbound
                             NCRDebug.Log("ERROR WITH GRAPHICS FOUND, DISABLING THEM");
                         }
 
-                        var NumberOfBasegameSprites = 13;
-                        if (ModManager.MSC) { NumberOfBasegameSprites += 1; }
-
-                        Array.Resize(ref sLeaser.sprites, NumberOfBasegameSprites + ThisIsTheLengthOfMyMadness);
+                        Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + ThisIsTheLengthOfMyMadness);
                         if (self.player.GetNCRunbound().MoreDebug) { NCRDebug.Log("Array resize success!"); }
                     }
                     catch (Exception e)
@@ -588,7 +638,7 @@ namespace Unbound
 
             if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
-                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
+                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
             {
 
                 #region Unbound Exclusive
@@ -645,6 +695,50 @@ namespace Unbound
             }
         }
 
+        public static void TailThangs(On.PlayerGraphics.orig_ctor orig, PlayerGraphics self, PhysicalObject ow)
+        {
+            orig(self, ow);
+            if (self != null && self.owner != null && self.player != null && self.player.room != null &&
+                self.player.GetNCRunbound().IsNCRUnbModcat)
+            {
+                if (self.player.GetNCRunbound().Reverb)
+                {
+                    // owner, rad, connectionrad, connectedsegment, surfacefriction, airfriction, affectprevious, pullinpreviousposition
+                    self.tail[0] = new TailSegment(self, 8f, 2f, null, 0.85f, 0.98f, 1f, true);
+                    self.tail[1] = new TailSegment(self, 6f, 3.5f, self.tail[0], 0.85f, 0.95f, 0.5f, true);
+                    self.tail[2] = new TailSegment(self, 4f, 3.5f, self.tail[1], 0.85f, 0.95f, 0.5f, true);
+                    self.tail[3] = new TailSegment(self, 2f, 3.5f, self.tail[2], 0.85f, 0.93f, 0.5f, true);
+                }
+                else if (self.player.GetNCRunbound().IsOracle)
+                {
+                    // owner, rad, connectionrad, connectedsegment, surfacefriction, airfriction, affectprevious, pullinpreviousposition
+                    self.tail = new TailSegment[5];
+                    self.tail[0] = new TailSegment(self, 6f, 5f, null, 0.85f, 1f, 1f, true);
+                    self.tail[1] = new TailSegment(self, 4f, 8f, self.tail[0], 0.85f, 1f, 0.7f, true);
+                    self.tail[2] = new TailSegment(self, 2.5f, 8f, self.tail[1], 0.85f, 1f, 0.6f, true);
+                    self.tail[3] = new TailSegment(self, 1f, 8f, self.tail[2], 0.85f, 1f, 0.5f, true);
+                    self.tail[4] = new TailSegment(self, 1f, 6f, self.tail[3], 0.80f, 0.4f, 0.3f, true);
+                }
+                else
+                {
+                    if (self.player.playerState.isPup)
+                    {
+                        self.tail[0] = new TailSegment(self, 8f, 2f, null, 0.85f, 1f, 1f, true);
+                        self.tail[1] = new TailSegment(self, 6f, 3.5f, self.tail[0], 0.85f, 1f, 0.5f, true);
+                        self.tail[2] = new TailSegment(self, 4f, 3.5f, self.tail[1], 0.85f, 1f, 0.5f, true);
+                        self.tail[3] = new TailSegment(self, 2f, 3.5f, self.tail[2], 0.85f, 1f, 0.5f, true);
+                    }
+                    else
+                    {
+                        self.tail[0] = new TailSegment(self, 8f, 4f, null, 0.85f, 1f, 1f, true);
+                        self.tail[1] = new TailSegment(self, 6f, 7f, self.tail[0], 0.85f, 1f, 0.5f, true);
+                        self.tail[2] = new TailSegment(self, 4f, 7f, self.tail[1], 0.85f, 1f, 0.5f, true);
+                        self.tail[3] = new TailSegment(self, 2f, 7f, self.tail[2], 0.85f, 1f, 0.5f, true);
+                    }
+                }
+            }
+        }
+
         public static void Init()
         {
             #region LoadAtlases
@@ -655,11 +749,14 @@ namespace Unbound
             unbjumphips ??= Futile.atlasManager.LoadAtlas("atlases/unbjumphips");
             unbjumpbody ??= Futile.atlasManager.LoadAtlas("atlases/unbjumpbody");
             unbearhead ??= Futile.atlasManager.LoadAtlas("atlases/unbearhead");
+            rehead ??= Futile.atlasManager.LoadAtlas("atlases/revhead");
+            reear ??= Futile.atlasManager.LoadAtlas("atlases/revearhead");
             unbhead ??= Futile.atlasManager.LoadAtlas("atlases/unbhead");
             unblegs ??= Futile.atlasManager.LoadAtlas("atlases/unblegs");
             unbmittenlegs ??= Futile.atlasManager.LoadAtlas("atlases/unbmittenlegs");
             // initiating atlases
             #endregion
         }
+
     }
 }

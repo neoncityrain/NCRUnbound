@@ -11,6 +11,9 @@ namespace Unbound
 
             public bool IsTechnician;
             public bool IsUnbound;
+            public bool IsOracle;
+            public bool IsNCRUnbModcat;
+            public bool Reverb;
             public bool holdingJumpkey;
             public bool didLongjump;
             public bool CanDoubleCyanJump;
@@ -18,13 +21,12 @@ namespace Unbound
             public bool DidTripleCyanJump;
             public int UnbChainjumpsCount;
             public int UnbCyanjumpCountdown;
-            public UnbScales scalefrill;
-
             public int pebbleskilltries;
-
+            public float RGBCounter;
 
             public bool LostTail; // for random buffs
 
+            public Color effectColour;
 
             // remix values
             public float CyJump1Maximum; // base 180
@@ -34,6 +36,7 @@ namespace Unbound
             public bool Unpicky;
             public bool MoreDebug;
             public bool WingscalesDisabled;
+            public bool RGBRings;
             // end remix values
 
             public UnboundCat()
@@ -44,5 +47,36 @@ namespace Unbound
 
         private static readonly ConditionalWeakTable<Player, UnboundCat> Unbound = new();
         public static UnboundCat GetNCRunbound(this Player player) => Unbound.GetValue(player, _ => new());
+
+        public class RotSpear
+        {
+            public bool IsRotten;
+            public Vector2[,] dangler;
+            public SharedPhysics.TerrainCollisionData scratchTerrainCollisionData;
+            public Color goldcol;
+
+            public RotSpear()
+            {
+
+            }
+        }
+
+        private static readonly ConditionalWeakTable<AbstractSpear, RotSpear> OracleSpear = new();
+        public static RotSpear GetOracleSpear(this AbstractSpear spear) => OracleSpear.GetValue(spear, _ => new());
+
+
+        public class GammaSeer
+        {
+            public bool RGBMode;
+            public float GammaRGBCounter;
+
+            public GammaSeer()
+            {
+
+            }
+        }
+
+        private static readonly ConditionalWeakTable<Overseer, GammaSeer> Gamma = new();
+        public static GammaSeer GetGamma(this Overseer overseer) => Gamma.GetValue(overseer, _ => new());
     }
 }

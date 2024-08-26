@@ -29,6 +29,7 @@ internal class HooksOnly
         On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenUpdate; // antigravity scripts
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
         On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.RoomSpecificScripts; // listing all rooms for SRS
+        On.Player.ctor += SetupRoomSpecific.MaintainRoomSpecific;
 
         // GAMMA =============================================================================================
         // AI TWEAKS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -50,6 +51,8 @@ internal class HooksOnly
         Hook ktbmain = new Hook(typeof(global::OverseerGraphics).GetProperty("MainColor", BindingFlags.Instance |
                 BindingFlags.Public).GetGetMethod(), new Func<orig_OverseerMainColor,
                 OverseerGraphics, Color>(GammaVisuals.GetGammaCol));
+        On.Overseer.Update += RBGUpdate;
+
         // TUTORIALS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         TutorialroomKill.Init(); // leave this in case it is needed later
 
@@ -62,13 +65,15 @@ internal class HooksOnly
         // iterators
         // STGKTB.Init(); (KEEP DISABLED FOR NOW)
         // room specific
+        Revgen.HookThatThang();
+        FlickMech.MakeFlickerReal();
+        FlickSpearMechanics.Init();
         UnbCatStats.Init();
         // slugcatstats exclusive things
         
         // MOD EXCLUSIVE =============================================================================================
         // MORE SLUGCATS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         MSCOnly.Init();
-
         // EXPEDITION -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Expedition.PearlDeliveryChallenge.UpdateDescription += UnbExpedition.Description;
         On.Expedition.PearlDeliveryChallenge.Update += UnbExpedition.Update;

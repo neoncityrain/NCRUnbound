@@ -115,20 +115,34 @@ namespace Unbound
         public static bool SetPearlDecipheredUnbound(DataPearl.AbstractDataPearl.DataPearlType pearlType,
             PlayerProgression.MiscProgressionData self)
         {
-            if (pearlType != null && self != null && ModManager.MSC)
-            {
-                int num = CollectionsMenu.DataPearlToFileID(pearlType);
-                if (num != -1 && !Conversation.EventsFileExists(self.owner.rainWorld, num, UnboundEnums.NCRUnbound))
+            try { 
+                if (pearlType != null && self != null && ModManager.MSC)
                 {
-                    return self.SetPearlDeciphered(pearlType);
+                    int num = CollectionsMenu.DataPearlToFileID(pearlType);
+                    if (num != -1 && !Conversation.EventsFileExists(self.owner.rainWorld, num, UnboundEnums.NCRUnbound))
+                    {
+                        return self.SetPearlDeciphered(pearlType);
+                    }
                 }
             }
-            if (pearlType == null || pearlType != null && UnboundEnums.decipheredPearlsUnboundSession.Contains(pearlType))
+            catch (Exception e)
             {
-                return false;
+                NCRDebug.Log("Error setting pearl as deciphered via normal route: " + e);
             }
-            UnboundEnums.decipheredPearlsUnboundSession.Add(pearlType);
-            self.owner.SaveProgression(false, true);
+
+            try
+            {
+                if (pearlType == null || pearlType != null && UnboundEnums.decipheredPearlsUnboundSession.Contains(pearlType))
+                {
+                    return false;
+                }
+                UnboundEnums.decipheredPearlsUnboundSession.Add(pearlType);
+                self.owner.SaveProgression(false, true);
+            }
+            catch (Exception e)
+            {
+                NCRDebug.Log("Error setting pearl as deciphered via Unbound Enums: " + e);
+            }
             return true;
         }
         // end collections things

@@ -58,6 +58,10 @@ namespace Unbound
             {
                 return true;
             }
+            if (i.value == "NCRreverb" || i == UnboundEnums.NCRReverb)
+            {
+                return false;
+            }
             else return orig(i);
         }
 

@@ -7,6 +7,8 @@
         // pearls
         public static SlugcatStats.Name NCRTechnician;
         public static SlugcatStats.Name NCRUnbound;
+        public static SlugcatStats.Name NCRReverb;
+        public static SlugcatStats.Name NCROracle;
         // slugcats
         public static Conversation.ID unbKarmaPearlConv;
         public static Conversation.ID unbSlumberConv;
@@ -30,6 +32,8 @@
             // pearls
             NCRUnbound = new SlugcatStats.Name("NCRunbound", false);
             NCRTechnician = new SlugcatStats.Name("NCRtech", false);
+            NCRReverb = new SlugcatStats.Name("NCRreverb", false);
+            NCROracle = new SlugcatStats.Name("NCRoracle", false);
             // slugcats
             NCRKTB = new("NCRKTB", true);
             NCRSTG = new("NCRSTG", true);
@@ -42,6 +46,7 @@
             UnbSlumberPartySub = new SSOracleBehavior.SubBehavior.SubBehavID("UnbSlumberPartySub", true);
             SSMeetUnboundSub = new SSOracleBehavior.SubBehavior.SubBehavID("SSMeetUnboundSub", true);
             // behaviours
+            decipheredPearlsUnboundSession = new List<DataPearl.AbstractDataPearl.DataPearlType>();
         }
 
         public static void FullUnregister()

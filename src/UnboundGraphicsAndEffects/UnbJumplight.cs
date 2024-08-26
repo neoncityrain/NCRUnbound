@@ -60,52 +60,8 @@ namespace Unbound
             sLeaser.sprites[1].scale = num2 / 8f;
             sLeaser.sprites[1].alpha = Mathf.Pow(num, 2f) * (0.4f + 0.4f * intensity);
 
-            if (rCam.room.game.IsArenaSession && !player.GetNCRunbound().IsTechnician)
-            {
-                switch (player.playerState.playerNumber)
-                {
-                    case 0:
-                        if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType != MoreSlugcatsEnums.GameTypeID.Challenge)
-                        {
-                            sLeaser.sprites[0].color = new Color(0.42f, 0.31f, 0.78f);
-                            sLeaser.sprites[1].color = new Color(0.42f, 0.31f, 0.78f);
-                        }
-                        else
-                        {
-                            sLeaser.sprites[0].color = new Color(0.8f, 0.1f, 0.1f);
-                            sLeaser.sprites[1].color = new Color(0.6f, 0.1f, 0.1f);
-                        }
-                        break;
-                    case 1:
-                        sLeaser.sprites[0].color = new Color(0.11f, 0.74f, 0.58f);
-                        sLeaser.sprites[1].color = new Color(0.11f, 0.74f, 0.58f);
-                        break;
-                    case 2:
-                        sLeaser.sprites[0].color = new Color(0.84f, 0.08f, 0.3f);
-                        sLeaser.sprites[1].color = new Color(0.84f, 0.08f, 0.3f);
-                        break;
-                    case 3:
-                        sLeaser.sprites[0].color = new Color(0.86f, 0.23f, 0.93f);
-                        sLeaser.sprites[1].color = new Color(0.86f, 0.23f, 0.93f);
-                        break;
-                }
-            }
-            else if (ModManager.JollyCoop)
-            {
-                sLeaser.sprites[0].color = PlayerGraphics.JollyColor(player.playerState.playerNumber, 2);
-                sLeaser.sprites[1].color = PlayerGraphics.JollyColor(player.playerState.playerNumber, 2);
-            }
-            else if (PlayerGraphics.customColors != null && !ModManager.JollyCoop)
-            {
-                sLeaser.sprites[0].color = PlayerGraphics.CustomColorSafety(2);
-                sLeaser.sprites[1].color = PlayerGraphics.CustomColorSafety(2);
-
-            }
-            else
-            {
-                sLeaser.sprites[0].color = new Color(0.8f, 0.1f, 0.1f);
-                sLeaser.sprites[1].color = new Color(0.6f, 0.1f, 0.1f);
-            }
+            sLeaser.sprites[0].color = player.GetNCRunbound().effectColour;
+            sLeaser.sprites[1].color = player.GetNCRunbound().effectColour;
 
             sLeaser.sprites[2].scale = num2 * Mathf.Lerp(0.4f, 0.8f, UnityEngine.Random.value) / 8f;
             sLeaser.sprites[2].alpha = Mathf.Pow(Mathf.InverseLerp(0.25f, 1f, num), 3f) * intensity;

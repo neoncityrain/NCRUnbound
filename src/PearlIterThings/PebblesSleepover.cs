@@ -53,7 +53,7 @@ namespace Unbound
                 if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 1)
                 {
                     base.dialogBox.NewMessage(base.Translate(
-                        "FP: Do as you want, then. I cannot stop you."), 10);
+                        "FP: Forget this. Giving you attention will only encourage you to stay."), 10);
                 }
                 else if (base.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad == 2)
                 {

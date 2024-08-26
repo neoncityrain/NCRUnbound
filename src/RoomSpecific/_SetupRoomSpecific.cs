@@ -1,7 +1,131 @@
-﻿namespace Unbound
+﻿using Music;
+using System.IO;
+
+namespace Unbound
 {
     internal class SetupRoomSpecific
     {
+        public static void MaintainRoomSpecific(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
+        {
+            orig(self, abstractCreature, world);
+            if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
+                world != null && world.region != null && world.region.name != null &&
+                abstractCreature != null && self.room.game.session.characterStats.name.value == "NCRunbound" &&
+                self.room.game.session is not ArenaGameSession && (!ModManager.MSC || !self.room.game.rainWorld.safariMode)
+                )
+            {
+                try
+                {
+                    if (self.room.world.overseersWorldAI.playerGuide != null)
+                    {
+                        AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
+                        if (gammaoverseer != null &&
+                            gammaoverseer.ID.number != -7113131)
+                        {
+                            if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma ID tweaked!"); }
+                            gammaoverseer.ID.number = -7113131; // sets gamma to always have this id
+                                                                // "7 1 13 13 1", aka "gamma", negative because the positive counterpart has only two mycelia and that looked weird
+                            if (gammaoverseer != null && gammaoverseer.ignoreCycle != true)
+                            {
+                                gammaoverseer.ignoreCycle = true;
+                                gammaoverseer.creatureTemplate.waterVision = -1f;
+                                gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+                                gammaoverseer.creatureTemplate.bodySize = 0.7f;
+
+                                (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
+                                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma settings incorrect, fixed them!"); }
+                            }
+                        }
+                    }
+
+                    if (self.room.game.GetStorySession != null && self.room.game.GetStorySession.saveState != null &&
+                        self.room.game.GetStorySession.saveState.miscWorldSaveData != null)
+                    {
+                        if (self.room.game.GetStorySession != null && self.room.game.GetStorySession.saveState != null &&
+                        self.room.game.GetStorySession.saveState.miscWorldSaveData != null &&
+                        self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+                        {
+                            self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = false;
+                            self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+                            self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
+                            if (self.GetNCRunbound().MoreDebug)
+                            {
+                                NCRDebug.Log("Old save detected, fixing game- moon has been re-killed! Sorry, women");
+                            }
+                        }
+
+                        if (self.room.game.GetStorySession.saveState.cycleNumber != 0 &&
+                        self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
+                        self.room.game.Players.Count > 0)
+                        {
+                            NCRDebug.Log("Unbound's death persistent save data fucked up! Attempting to fix it...");
+                            self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+                        }
+
+                        if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles == true)
+                        {
+                            self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
+                            if (self.GetNCRunbound().MoreDebug)
+                            {
+                                NCRDebug.Log("Pebbles was killed for some reason and has been revived");
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    NCRDebug.Log("Unbound your room specific shit's being an ass again: " + e);
+                }
+                // end unbound worldstate things
+            }
+
+            // misc
+            try
+            {
+                if (self != null && self.room != null && self.abstractCreature != null &&
+                    self.slugcatStats != null && self.slugcatStats.name != null &&
+                    self.slugcatStats.name.value == "NCRunbound")
+                {
+                    self.GetNCRunbound().IsUnbound = true;
+                    self.GetNCRunbound().IsNCRUnbModcat = true;
+                    if (self.slugcatStats.name != UnboundEnums.NCRUnbound) { self.slugcatStats.name = UnboundEnums.NCRUnbound; }
+                }
+                if (self != null && self.room != null && self.abstractCreature != null &&
+                    self.slugcatStats != null && self.slugcatStats.name != null &&
+                self.slugcatStats.name.value == "NCRoracle")
+                {
+                    self.GetNCRunbound().IsOracle = true;
+                    self.GetNCRunbound().IsNCRUnbModcat = true;
+                    if (self.slugcatStats.name != UnboundEnums.NCROracle) { self.slugcatStats.name = UnboundEnums.NCROracle; }
+                }
+                if (self != null && self.room != null && self.abstractCreature != null &&
+                    self.slugcatStats != null && self.slugcatStats.name != null &&
+                self.slugcatStats.name.value == "NCRreverb")
+                {
+                    if (!self.playerState.isPup)
+                    {
+                        self.setPupStatus(true);
+                    }
+                    self.GetNCRunbound().Reverb = true;
+                    self.GetNCRunbound().IsNCRUnbModcat = true;
+                    if (self.slugcatStats.name != UnboundEnums.NCRReverb) { self.slugcatStats.name = UnboundEnums.NCRReverb; }
+                }
+                if (self != null && self.room != null && self.abstractCreature != null &&
+                    self.slugcatStats != null && self.slugcatStats.name != null &&
+                    self.slugcatStats.name.value == "NCRtech")
+                {
+                    self.GetNCRunbound().IsTechnician = true;
+                    self.GetNCRunbound().IsNCRUnbModcat = true;
+                    if (self.slugcatStats.name != UnboundEnums.NCRTechnician) { self.slugcatStats.name = UnboundEnums.NCRTechnician; }
+                }
+
+            }
+            catch (Exception e)
+            {
+                NCRDebug.Log("The character setup for Unbound is fucking up: " + e);
+            }
+        }
+
         public static void RoomSpecificScripts(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
         {
             if (room != null && room.game != null && room.game.session is StoryGameSession && room.world != null &&
@@ -89,213 +213,133 @@
         public static void UnboundFirstBootup(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-            if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
+            try
+            {
+                if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
                 world != null && world.region != null && world.region.name != null &&
                 abstractCreature != null && self.room.game.session.characterStats.name.value == "NCRunbound" &&
-                self.room.game.session is not ArenaGameSession && (!ModManager.MSC || !self.room.game.rainWorld.safariMode))
+                self.room.game.session is not ArenaGameSession && (!ModManager.MSC || !self.room.game.rainWorld.safariMode) &&
+                self.room.game.GetStorySession != null && self.room.game.GetStorySession.saveState != null &&
+                self.room.game.GetStorySession.saveState.cycleNumber == 0 &&
+                self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
+                self.room.game.Players.Count > 0
+                )
             {
-                AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
-                if (gammaoverseer != null &&
-                    gammaoverseer.ID.number != -7113131)
-                {
-                    if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma ID tweaked!"); }
-                    gammaoverseer.ID.number = -7113131; // sets gamma to always have this id
-                    // "7 1 13 13 1", aka "gamma", negative because the positive counterpart has only two mycelia and that looked weird
-                }
-                try
-                {
-                    if (self.room.game.GetStorySession.saveState.cycleNumber == 0 &&
-                        self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
-                        self.room.game.Players.Count > 0)
+                    if (!ModManager.Expedition || !Custom.rainWorld.ExpeditionMode)
                     {
-                        if (!(ModManager.Expedition && Custom.rainWorld.ExpeditionMode))
+                        if (world.region.name == "MS" && ModManager.MSC)
                         {
-                            if (world.region.name == "MS" && ModManager.MSC)
-                            {
-                                NCRDebug.Log("Unbound's MS start detected, triggering intro!");
-                                self.room.AddObject(new UnboundIntro());
-                            }
-                            else if (world.region.name == "SL")
-                            {
-                                NCRDebug.Log("Unbound's SL start detected! Remind me to set up a non-MSC intro :<");
-                                self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
-                                    AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
-                                    new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
-                                    UnboundEnums.unboundKarmaPearl);
-                            }
+                            NCRDebug.Log("Unbound's MS start detected, triggering intro!");
+                            self.room.AddObject(new UnboundIntro());
                         }
-                        else
+                        else if (world.region.name == "SL")
                         {
-                            if (self.room.abstractRoom.name == "SU_A12")
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(32, 21));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(32, 22));
-                            }
-                            if (self.room.abstractRoom.name == "SU_A40")
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(47, 30));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(46, 30));
-                            }
-                            if (self.room.abstractRoom.name == "SS_LAB14")
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(24, 17));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(25, 18));
-                            }
-                            if (self.room.abstractRoom.name == "LF_A03")
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(15, 29));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(14, 29));
-                            }
-                            if (self.room.abstractRoom.name == "LF_A17")
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(15, 14));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(14, 14));
-                            }
-                            if (self.room.abstractRoom.name == "UW_A05")
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(35, 27));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(36, 27));
-                            }
-                            if (self.room.abstractRoom.name == "SL_LMS06")
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(14, 26));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(13, 26));
-                            }
-
-                            if (self.room.abstractRoom.name == "MS_CORE" && ModManager.MSC)
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(23, 11));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(23, 12));
-                            }
-                            if (self.room.abstractRoom.name == "MS_AIR01" && ModManager.MSC)
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(34, 13));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(33, 13));
-                            }
-                            if (self.room.abstractRoom.name == "MS_bitteraerie6" && ModManager.MSC)
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(148, 32));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(147, 32));
-                            }
-                            if (self.room.abstractRoom.name == "MS_bitteraerie5" && ModManager.MSC)
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(76, 36));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(75, 36));
-                            }
-                            if (self.room.abstractRoom.name == "MS_DMU04" && ModManager.MSC)
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(32, 35));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(33, 35));
-                            }
-                            if (self.room.abstractRoom.name == "SL_WALL06" && ModManager.MSC)
-                            {
-                                self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(35, 45));
-                                self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(36, 45));
-                            }
-                        }
-
-                        if (self.room.world.overseersWorldAI.playerGuide != null && self.room.world.overseersWorldAI != null)
-                        {
-                            try
-                            {
-                                gammaoverseer.ignoreCycle = true;
-                                gammaoverseer.creatureTemplate.waterVision = 0;
-                                gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
-
-                                (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
-                                (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
-                            }
-                            catch (Exception e)
-                            {
-                                NCRDebug.Log("Gamma missing! Error: " + e);
-                            }
-                        }
-
-                        self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
-                        if (self.GetNCRunbound().MoreDebug)
-                        {
-                            NCRDebug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
+                            NCRDebug.Log("Unbound's SL start detected! Remind me to set up a non-MSC intro :<");
+                            self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
+                                AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
+                                new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
+                                UnboundEnums.unboundKarmaPearl);
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    NCRDebug.Log("The intro is fucking up: " + e);
-                }
-                // THINGS FOR GAME SETUP BELOW ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                    else
+                    {
+                        if (self.room.abstractRoom.name == "SU_A12")
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(32, 21));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(32, 22));
+                        }
+                        if (self.room.abstractRoom.name == "SU_A40")
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(47, 30));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(46, 30));
+                        }
+                        if (self.room.abstractRoom.name == "SS_LAB14")
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(24, 17));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(25, 18));
+                        }
+                        if (self.room.abstractRoom.name == "LF_A03")
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(15, 29));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(14, 29));
+                        }
+                        if (self.room.abstractRoom.name == "LF_A17")
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(15, 14));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(14, 14));
+                        }
+                        if (self.room.abstractRoom.name == "UW_A05")
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(35, 27));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(36, 27));
+                        }
+                        if (self.room.abstractRoom.name == "SL_LMS06")
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(14, 26));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(13, 26));
+                        }
 
+                        if (self.room.abstractRoom.name == "MS_CORE" && ModManager.MSC)
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(23, 11));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(23, 12));
+                        }
+                        if (self.room.abstractRoom.name == "MS_AIR01" && ModManager.MSC)
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(34, 13));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(33, 13));
+                        }
+                        if (self.room.abstractRoom.name == "MS_bitteraerie6" && ModManager.MSC)
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(148, 32));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(147, 32));
+                        }
+                        if (self.room.abstractRoom.name == "MS_bitteraerie5" && ModManager.MSC)
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(76, 36));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(75, 36));
+                        }
+                        if (self.room.abstractRoom.name == "MS_DMU04" && ModManager.MSC)
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(32, 35));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(33, 35));
+                        }
+                        if (self.room.abstractRoom.name == "SL_WALL06" && ModManager.MSC)
+                        {
+                            self.bodyChunks[0].HardSetPosition(self.room.MiddleOfTile(35, 45));
+                            self.bodyChunks[1].HardSetPosition(self.room.MiddleOfTile(36, 45));
+                        }
+                    }
 
-                if (gammaoverseer != null && gammaoverseer.ignoreCycle != true)
-                {
-                    gammaoverseer.ignoreCycle = true;
-                    gammaoverseer.creatureTemplate.waterVision = -1f;
-                    gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+                    if (self.room.world.overseersWorldAI.playerGuide != null && self.room.world.overseersWorldAI != null &&
+                        self.room.world.overseersWorldAI.playerGuide.creatureTemplate != null)
+                    {
+                        try
+                        {
+                            AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
+                            gammaoverseer.ignoreCycle = true;
+                            gammaoverseer.creatureTemplate.waterVision = 0;
+                            gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
 
-                    (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
-                    if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma settings incorrect, fixed them!"); }
-                }
+                            (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
+                            (self.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.likesPlayer += 1f;
+                        }
+                        catch (Exception e)
+                        {
+                            NCRDebug.Log("Gamma missing! Error: " + e);
+                        }
+                    }
 
-                if (self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
-                {
-                    self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = false;
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
-                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
                     if (self.GetNCRunbound().MoreDebug)
                     {
-                        NCRDebug.Log("Old save detected, fixing game- moon has been re-killed! Sorry, women");
+                        NCRDebug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
                     }
-                }
-                if (self.room.game.GetStorySession.saveState.cycleNumber == 0 &&
-                    self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
-                    self.room.game.Players.Count > 0) 
-                {
-                    NCRDebug.Log("Unbound's death persistent save data fucked up! Attempting to fix it...");
-                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
-                }
-                if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles == true)
-                {
-                    self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
-                    if (self.GetNCRunbound().MoreDebug)
-                    {
-                        NCRDebug.Log("Pebbles was killed for some reason and has been revived");
-                    }
-                }
-                // end unbound worldstate things
-            }
-
-            // misc
-            if (self != null && self.room != null && self.abstractCreature != null &&
-                self.slugcatStats.name.value == "NCRunbound")
-            {
-                try
-                {
-                    self.GetNCRunbound().IsUnbound = true;
-
-                    if (self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] != 1.5f)
-                    {
-                        self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
-                    }
-
-                    if (self.room.game.session.characterStats.name.value == "NCRunbound" && 
-                        (self.room.game.session is StoryGameSession || (ModManager.Expedition && Custom.rainWorld.ExpeditionMode)) &&
-                        self.glowing == false)
-                    {
-                        self.glowing = true;
-                    }
-                }
-                catch (Exception e)
-                {
-                    NCRDebug.Log("The character setup for Unbound is fucking up!" + e);
                 }
             }
-            else if (self != null && self.room != null &&
-                self.slugcatStats.name.value == "NCRtech")
+            catch (Exception e)
             {
-                self.GetNCRunbound().IsTechnician = true;
-                if (self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] != 1.5f)
-                {
-                    self.abstractCreature.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
-                }
+                NCRDebug.Log("The intro is fucking up: " + e);
             }
         }
 
