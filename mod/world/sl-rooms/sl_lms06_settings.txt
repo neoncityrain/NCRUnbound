@@ -1,5 +1,15 @@
-Template: SL_SettingsTemplate_Sewer
+Template: NONE
+DangerType: Flood
+CeilingDrips: 1
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.05845447
+SecondWaveLength: 0.1666668
+SecondWaveAmplitude: 0
 Clouds: 0.703725
-Palette: 35
-PlacedObjects: BrokenShelterWaterLevel><327.092><303.4568><, 
-FadePalette: 6, 0.173913
+BkgDroneVolume: 0
+Palette: 19
+Effects: Darkness-0.2474637-21.42294-100.3556, Fog-0.3093298-20-20, Desaturation-0.2391304-47-70, 
+PlacedObjects: BrokenShelterWaterLevel><375.4712><321.9457><, 
+AmbientSounds: OMNI><AM_ENV-WallHum.ogg><766.2769><432.1921><0.4458671><0.3736073, OMNI><AM_IND-Welder.ogg><754.8887><365.7121><0.2138705><0.1139192, OMNI><AM_SUB-MysticCave1.ogg><794.8394><545.2856><0.5205383><0.1278396, OMNI><AM_IND-Warehouse01.ogg><734.8085><413.6791><0.7602692><0.7355232, 
+FadePalette: 10, 0.6418591

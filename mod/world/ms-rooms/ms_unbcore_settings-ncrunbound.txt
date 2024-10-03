@@ -1,0 +1,2 @@
+Template: MS_SettingsTemplate_Vents
+FadePalette: 27, 0.3478261

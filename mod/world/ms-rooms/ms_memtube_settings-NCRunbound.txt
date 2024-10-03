@@ -1,0 +1,4 @@
+DangerType: Flood
+Grime: 0
+Effects: LightBurn-0.1413043-258-68, ElectricDeath-0-260-178, BrokenZeroG-0.1413043-258-126, 
+FadePalette: 45, 0.4021739, 0.4021739, 0.4021739

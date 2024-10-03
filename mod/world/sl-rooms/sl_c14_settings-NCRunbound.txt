@@ -1,6 +1,6 @@
 Template: SL_SettingsTemplate_Sewer
 Clouds: 1
 Palette: 34
-Effects: WaterFluxMinLevel-0.2616849-215-54, WaterFluxMaxLevel-0.269418-64-83, 
-PlacedObjects: LightFixture><108.9332><574.4197><RedSubmersible~17.32051~-10~2, LightFixture><786.6558><603.6763><RedSubmersible~17.3205~-10~52, GlowWeed><429.9018><535.8766><-592~36~2~3, GlowWeed><545.7015><360.9117><-580~95~2~3, 
-FadePalette: 10, 0.6521739, 0.8586956, 1
+Effects: WaterFluxMinLevel-0.1611526-69.09064-87.55556, WaterFluxMaxLevel-0.1611524-70.5531-123.8667, 
+PlacedObjects: LightFixture><108.9332><574.4197><RedSubmersible~17.32051~-10~2, LightFixture><786.6558><603.6763><RedSubmersible~17.3205~-10~52, GlowWeed><461.9018><299.8766><-592~36~2~3, GlowWeed><522.7015><214.9117><-580~95~2~3, 
+FadePalette: 10, 0.8223053, 0.9437612, 1

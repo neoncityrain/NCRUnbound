@@ -1,0 +1,4 @@
+Template: MS_SettingsTemplate_Vents
+Effects: ZeroGSpecks-0.3152174-30-30, BrokenZeroG-0.2173913-40-40, 
+PlacedObjects: ZapCoil><272.2444><268.5501><33~224, ZapCoil><271.9194><625.8562><37~170, LightFixture><297.3987><664.3838><ZapCoilLight~17.32051~-10~30, LightFixture><270.1314><370.4008><ZapCoilLight~17.32051~-10~94, LightFixture><195.0037><1969.7><RedLight~17.32051~-10~76, LightFixture><122><1689><RedLight~17.32051~-10~76, LightFixture><885><2078><RedLight~17.32051~-10~76, LightFixture><511><187><RedLight~17.32051~-10~76, LightFixture><267.6997><1255.739><RedLight~17.32051~-10~76, LightFixture><882.1495><1031.117><RedLight~17.32051~-10~23, LightFixture><394.8164><892.8293><RedLight~17.32051~-10~80, LightFixture><73.61816><259.6613><RedLight~17.32051~-10~11, GravityDisruptor><473.4287><1898.813><, 
+FadePalette: 35, 0.5, 0.5, 0.5

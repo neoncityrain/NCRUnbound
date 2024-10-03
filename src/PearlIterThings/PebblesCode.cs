@@ -318,9 +318,12 @@ namespace Unbound
                     }
                     else
                     {
-                        PearlConversations.PebblesUnbKarmaPearl(self, item, self.oracle.room.game.GetStorySession.saveState);
+                        Conversation.ID id = UnboundEnums.unbKarmaPearlConv;
+                        self.pearlConversation = new SLOracleBehaviorHasMark.MoonConversation(id, self, SLOracleBehaviorHasMark.MiscItemType.NA);
+                        sloracleState.totalPearlsBrought++;
                     }
                 }
+
                 if (!self.isRepeatedDiscussion)
                 {
                     sloracleState.totalItemsBrought++;

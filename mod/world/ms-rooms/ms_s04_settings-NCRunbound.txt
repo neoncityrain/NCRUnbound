@@ -2,4 +2,4 @@ Clouds: 0.2826087
 Grime: 0.09782609
 Effects: BrokenZeroG-0-278-6, ZeroG-0.01086957-271-55, WaterDepth-0-272-119, ElectricDeath-0.01086957-269-177, 
 PlacedObjects: SuperStructureFuses><430.9144><89.73936><117~57, SuperStructureFuses><298.9072><350.6799><220~70, BrokenShelterWaterLevel><341.9878><227.7159><, 
-FadePalette: 8, 0.2717391
+FadePalette: 45, 0.4782609

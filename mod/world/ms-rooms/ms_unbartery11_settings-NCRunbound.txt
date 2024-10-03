@@ -1,0 +1,8 @@
+Template: MS_SettingsTemplate_Artery
+RumbleIntensity: 0.3369565
+RandomItemDensity: 0.06521739
+Effects: ElectricDeath-0.5108696-272-71, BrokenZeroG-0.3586957-21-22, SilenceWater-1-294.6625-31.42222, WaterDepth-0-293.2792-138.8444, 
+PlacedObjects: LightFixture><589.5907><60.11812><RedSubmersible~17.32051~-10~15, LightSource><466.4468><466.411><0.2123645~EffectColor1~2191~572~124.9962~-123.4089~0~0~None~0~0, LightSource><2663.7><1465.505><0.1737883~EffectColor1~-3316~-984~-378~-288.3975~0~0~None~0~0, LightFixture><1943.942><629.0151><RedSubmersible~17.32051~-10~0, LightFixture><2479.873><1571.838><RedLight~17.32051~-10~0, 
+AmbientSounds: OMNI><SO_SFX-Heartbeat1.ogg><809.8287><400.6467><0.6304348><0.2565217, OMNI><SO_SFX-Heartbeat2.ogg><761.7458><282.05><0.7282609><0.2565217, 
+FadePalette: 27, 0.173913, 0.173913, 0.1847826, 0.1847826, 0.1956522
+RoomSpecificScriptActive: ON

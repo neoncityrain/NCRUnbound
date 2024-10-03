@@ -23,6 +23,8 @@ namespace Unbound
             public int UnbCyanjumpCountdown;
             public int pebbleskilltries;
             public float RGBCounter;
+            public bool dontForceChangeEffectCol;
+            public bool recheckColour;
 
             public bool LostTail; // for random buffs
 
@@ -78,5 +80,52 @@ namespace Unbound
 
         private static readonly ConditionalWeakTable<Overseer, GammaSeer> Gamma = new();
         public static GammaSeer GetGamma(this Overseer overseer) => Gamma.GetValue(overseer, _ => new());
+
+
+
+        public class GetNCRSave
+        {
+            public bool IsGammaInMyShelter;
+            public bool sweetDream;
+            public bool nightmare;
+
+            public GetNCRSave()
+            {
+
+            }
+        }
+
+        private static readonly ConditionalWeakTable<RainWorld, GetNCRSave> rwgame = new();
+        public static GetNCRSave GetNCRModSaveData(this RainWorld game) => rwgame.GetValue(game, _ => new());
+
+
+        public class GetRoom
+        {
+            public float atmosphereFloat;
+
+            public GetRoom()
+            {
+
+            }
+        }
+
+        private static readonly ConditionalWeakTable<Room, GetRoom> thisroom = new();
+        public static GetRoom GetNCRRoom(this Room room) => thisroom.GetValue(room, _ => new());
+
+
+        public class GetCoral
+        {
+            public bool ShiftToEffectCol;
+            public Color unboundCopy;
+
+            public GetCoral()
+            {
+
+            }
+        }
+
+        private static readonly ConditionalWeakTable<CoralBrain.CoralCircuit, GetCoral> thiscircuit = new();
+        public static GetCoral GetNCRCirc(this CoralBrain.CoralCircuit circuit) => thiscircuit.GetValue(circuit, _ => new());
+        // end cwts
     }
 }

@@ -19,6 +19,7 @@ namespace Unbound
 
             On.SeedCob.HitByWeapon += SeedAllergy;
             // SEED COB ALLERGYYYYYY
+
         }
 
         private static bool AwakenMyPsionicWarriors(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig,

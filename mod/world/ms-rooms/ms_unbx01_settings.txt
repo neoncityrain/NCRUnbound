@@ -1,0 +1,5 @@
+Template: MS_SettingsTemplate_Sewers
+Clouds: 0.6304348
+Palette: 25
+Effects: BrokenZeroG-0.2391304-262-147, 
+FadePalette: 45, 0.4400248

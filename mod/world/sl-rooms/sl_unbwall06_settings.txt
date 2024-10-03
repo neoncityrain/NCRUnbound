@@ -1,0 +1,5 @@
+Clouds: 0.7717391
+EffectColorA: 12
+EffectColorB: 6
+PlacedObjects: DangleFruit><1187.839><5116.369><0~0~2~3, DangleFruit><1268.209><5050.304><0~0~2~3, 
+FadePalette: 10, 0.6956522, 0.6956522, 0.6956522, 0.7173913, 0.6956522, 0.7065217, 0.7065217, 0.7173913

@@ -7,6 +7,7 @@ WaveAmplitude: 0.01775008
 SecondWaveLength: 0.1666667
 SecondWaveAmplitude: 0
 Clouds: 1
+Grime: 0.173913
 RandomItemDensity: 0
 RandomItemSpearChance: 0
 Palette: 40

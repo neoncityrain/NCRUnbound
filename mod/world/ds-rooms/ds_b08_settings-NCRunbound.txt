@@ -1,0 +1,9 @@
+Template: NONE
+DangerType: Flood
+Clouds: 0.7608696
+Grime: 0.3478261
+Palette: 4
+Effects: WaterFluxMaxDelay-0.3-20-20, WaterFluxMinDelay-0.1304348-26-76, WaterFluxMaxLevel-0.3695652-28-128, WaterFluxMinLevel-0.2391304-286-70, WaterFluxFrequency-0.1195652-282-14, WaterFluxSpeed-0.1413043-30-30, 
+PlacedObjects: InsectGroup><562.828><909.684><0~100~0~0~RockFlea~0.5, LightFixture><340.6159><100.2264><RedSubmersible~17.32051~-10~91, 
+AmbientSounds: OMNI><SO_WAT-DripTap.ogg><827.0363><637.9467><0.25><1, OMNI><SO_WAT-LilDrips.ogg><648.3156><637.689><0.4021739><1, DIR><AM_IND-Factory01.ogg><757.3595><215.6674><0.4782609><1><-180><0, 
+FadePalette: 8, 0.173913, 0.2065217

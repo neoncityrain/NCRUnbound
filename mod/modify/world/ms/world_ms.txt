@@ -1,5 +1,18 @@
 [MERGE]
 CONDITIONAL LINKS
+
+NCRunbound : REPLACEROOM : MS_FARSIDE : MS_UNBFARSIDE
+NCRunbound : REPLACEROOM : MS_aeriestart : MS_unbaeriestart
+NCRunbound : REPLACEROOM : MS_AI : MS_unbAI
+NCRunbound : REPLACEROOM : MS_CORTEX : MS_UNBCORTEX
+NCRunbound : REPLACEROOM : MS_HEART : MS_UNBHEART
+NCRunbound : REPLACEROOM : MS_ARTERY12 : MS_UNBARTERY12
+NCRunbound : REPLACEROOM : MS_ARTERY11 : MS_UNBARTERY11
+NCRunbound : REPLACEROOM : MS_bitteraccess : MS_unbbitteraccess
+NCRunbound : REPLACEROOM : MS_bitterentrance : MS_unbbitterentrance
+NCRunbound : REPLACEROOM : MS_U03 : MS_UNBU03
+NCRunbound : REPLACEROOM : MS_I01 : MS_UNBI01
+
 NCRunbound : EXCLUSIVEROOM : MS_ARTERY12
 NCRunbound : EXCLUSIVEROOM : MS_CAPI04
 NCRunbound : MS_MEM06 : 1 : MS_ARTERY12
@@ -8,47 +21,131 @@ NCRunbound : MS_CAPI04 : 1 : MS_bitteraccess
 NCRunbound : MS_bitteraccess : 1 : MS_CAPI04
 // access to bitter aerie via saints route
 
-
 NCRunbound : EXCLUSIVEROOM : MS_DMU02
-NCRunbound : EXCLUSIVEROOM : MS_DMS02
 NCRunbound : EXCLUSIVEROOM : MS_DMU04
+// prevents other slugcats from accessing the DM rooms
+
+NCRunbound : EXCLUSIVEROOM : MS_UNBSTART
+NCRunbound : EXCLUSIVEROOM : MS_UNBTUT
+NCRunbound : EXCLUSIVEROOM : MS_UNBI06
+// unbound exclusive rooms
+
+NCRunbound : MS_UNBX02 : 1 : MS_bittersafe
+NCRunbound : MS_bittersafe : MS_X02 : MS_UNBX02
+
+NCRunbound : MS_AIR02 : MS_VENT10 : MS_UNBVENT10
+NCRunbound : MS_VENT09 : MS_VENT10 : MS_UNBVENT10
+NCRunbound : MS_UNBVENT10 : 1 : MS_AIR02
+NCRunbound : MS_UNBVENT10 : 2 : MS_VENT09
+
+NCRunbound : MS_UNBI06 : 1 : MS_MEM04
+NCRunbound : MS_UNBI06 : 2 : MS_VENT03
+NCRunbound : MS_UNBI06 : 3 : MS_I13
+NCRunbound : MS_MEM04 : MS_I06 : MS_UNBI06
+NCRunbound : MS_VENT03 : MS_AIR01 : MS_UNBI06
+NCRunbound : MS_I13 : MS_I06 : MS_UNBI06
+
+NCRunbound : MS_UNBI07 : 1 : MS_S03
+NCRunbound : MS_S03 : MS_I07 : MS_UNBI07
+NCRunbound : MS_UNBI07 : 2 : MS_I08
+NCRunbound : MS_I08 : MS_I07 : MS_UNBI07
+NCRunbound : MS_UNBI07 : 3 : MS_VENT07
+NCRunbound : MS_VENT07 : MS_I07 : MS_UNBI07
 
 NCRunbound : MS_U03 : MS_VENT01 : MS_DMU02
 NCRunbound : MS_I03 : MS_VENT01 : MS_DMU02
 NCRunbound : MS_VENT02 : MS_VENT01 : MS_DMU02
 // replaces VENT01 with DMU02
 
+NCRunbound : MS_S06 : MS_VENT04 : MS_DMU02
+// connects the shelter to u02 rather than vent04
+
 NCRunbound : MS_AIR02 : MS_VENT04 : MS_DMU04
 NCRunbound : MS_VENT09 : MS_VENT04 : MS_DMU04
 NCRunbound : MS_VENT05 : MS_VENT04 : MS_DMU04
+NCRunbound : MS_VENT02 : MS_VENT04 : MS_DMU04
 // replaces vent04 with DMU04
 
+NCRunbound : MS_FARSIDE : MS_ARTERY05 : MS_UNBTUT
+NCRunbound : MS_FARSIDE : 1 : MS_ARTERY05
+NCRunbound : MS_UNBTUT : 1 : MS_FARSIDE
+
+NCRunbound : MS_UNBDMI09 : 1 : MS_I11
+NCRunbound : MS_I11 : MS_VENT17 : MS_UNBDMI09
+NCRunbound : MS_UNBDMI09 : 2 : MS_EAST07
+NCRunbound : MS_EAST07 : MS_VENT16 : MS_UNBDMI09
+NCRunbound : MS_UNBDMI09 : 3 : MS_I08
+NCRunbound : MS_I08 : MS_VENT16 : MS_UNBDMI09
+NCRunbound : MS_UNBCORE : 1 : MS_HEART
+
+
+
+// ----------------------------------------------------------------------------------------------------------------------
+// msheart fix
+NCRunbound : MS_HEART : MS_CORE : DISCONNECTED
+NCRunbound : MS_HEART : 2 : MS_unbbitterstart
+NCRunbound : MS_HEART : 3 : MS_UNBCORE
+NCRunbound : MS_unbbitterstart : 1 : MS_HEART
+
+// ----------------------------------------------------------------------------------------------------------------------
 NCRunbound : MS_VENT01 : MS_I03 : DISCONNECTED
 NCRunbound : MS_VENT01 : MS_U03 : DISCONNECTED
-
-NCRunbound : MS_VENT02 : MS_VENT04 : DISCONNECTED
+NCRunbound : MS_VENT01 : MS_VENT02 : DISCONNECTED
 
 NCRunbound : MS_VENT04 : MS_VENT05 : DISCONNECTED
 NCRunbound : MS_VENT04 : MS_VENT02 : DISCONNECTED
 NCRunbound : MS_VENT04 : MS_AIR02 : DISCONNECTED
 // disconnecting vanilla rooms
 
+// ----------------------------------------------------------------------------------------------------------------------
+NCRunbound : MS_DMU02 : 1 : MS_I03
+NCRunbound : MS_DMU02 : 2 : MS_U03
+NCRunbound : MS_DMU02 : 3 : MS_VENT02
+NCRunbound : MS_DMU02 : 4 : MS_S06
+
+NCRunbound : MS_DMU04 : 1 : MS_VENT05
+NCRunbound : MS_DMU04 : 2 : MS_VENT02
+NCRunbound : MS_DMU04 : 3 : MS_VENT09
+NCRunbound : MS_DMU04 : 4 : MS_AIR02
+// connecting unbound rooms to vanilla because room connections are little bastards
+// ----------------------------------------------------------------------------------------------------------------------
+
+NCRunbound : MS_O03 : 1 : MS_DMO01
+NCRunbound : MS_DMO01 : 2 : MS_O03
+
 NCRunbound : HIDEROOM : MS_VENT01
+NCRunbound : HIDEROOM : MS_AIR01
+NCRunbound : HIDEROOM : MS_I06
 NCRunbound : HIDEROOM : MS_VENT04
 END CONDITIONAL LINKS
 
 
+// ================================================================================================================================================================
+
 ROOMS
-
-
-MS_UNBEXITDREAM : DISCONNECTED
 // ----------------------------------------------------------------------------------------------------------------------
-MS_DMU02 : MS_I03, MS_U03, MS_VENT02, MS_DMS02, MS_DMU04
+MS_DMU02 : DISCONNECTED, DISCONNECTED, DISCONNECTED, DISCONNECTED, MS_DMU04
+// MS_DMU02 : MS_I03, MS_U03, MS_VENT02, MS_DMS02, MS_DMU04
 // connection five heads downwards, to what used to be DM_U04
-MS_DMS02 : MS_DMU02 : SHELTER
-// fun fact! these connections start at 0, but conditional links start at 1. givin me a headache out here
-// s06 is the technical "right" shelter, BUT i like mine better so.
-MS_DMU04 : MS_DMU02, MS_VENT05, DISCONNECTED, MS_VENT09, MS_AIR02 : PERF_HEAVY
+MS_DMU04 : MS_DMU02, DISCONNECTED, DISCONNECTED, DISCONNECTED, DISCONNECTED, DISCONNECTED : PERF_HEAVY
+// MS_DMU04 : MS_DMU02, MS_VENT05, DISCONNECTED, MS_VENT09, MS_AIR02 : PERF_HEAVY
+MS_UNBI06 : DISCONNECTED, DISCONNECTED, MS_UNBI07, DISCONNECTED
+MS_UNBI07 : DISCONNECTED, MS_UNBI06, MS_UNBDMI09, DISCONNECTED, DISCONNECTED
+MS_UNBDMI09 : DISCONNECTED, MS_UNBI07, DISCONNECTED, DISCONNECTED
 
+MS_UNBSTART : DISCONNECTED, MS_UNBTUT
+MS_UNBTUT : DISCONNECTED, MS_UNBSTART : SWARMROOM
+MS_UNBCORE : DISCONNECTED : SHELTER
+MS_unbbitterstart : MS_UNBX02, DISCONNECTED
+MS_DMLEG07 : MS_UNBVENT10, DISCONNECTED
+MS_UNBVENT10 : DISCONNECTED, DISCONNECTED, MS_DMLEG07
+MS_UNBX01 : DISCONNECTED, DISCONNECTED, MS_UNBX02
+MS_UNBX02 : MS_UNBX01, MS_unbbitterstart, DISCONNECTED
+MS_DMO01 : DISCONNECTED, DISCONNECTED
 END ROOMS
+
+BAT MIGRATION BLOCKAGES
+MS_UNBSTART
+MS_FARSIDE
+END BAT MIGRATION BLOCKAGES
 [ENDMERGE]

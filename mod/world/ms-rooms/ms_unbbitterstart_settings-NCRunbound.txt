@@ -1,0 +1,15 @@
+Template: MS_SettingsTemplate_Sewers
+DangerType: Flood
+RainIntensity: 1
+WaveSpeed: 0.4920662
+WaveLength: 0.9308355
+WaveAmplitude: 0.04397587
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.3695652
+Palette: 32
+EffectColorA: 11
+EffectColorB: 8
+Effects: Darkness-0.5108696-21-131, WaterFluxMaxLevel-0.1391985-30-30, WaterFluxMinLevel-0.123732-20-20, BrokenZeroG-0.05413271-40-40, 
+PlacedObjects: LightFixture><1597.453><395.8946><RedLight~-312.6795~49~4, LightFixture><1879.659><71.69382><RedLight~17.32051~-10~65, LightFixture><2148.382><406.9688><RedLight~17.32051~-10~54, LightSource><1887.061><431.9316><0.08529995~Environment~-651.0594~-398.6889~-157~108.6025~1~0~None~0~0, SteamPipe><1902.245><200.377><-14~92, SteamPipe><1803.286><193.6322><-36~43, SteamPipe><2178.544><493.0048><-31~-34, SteamPipe><2222.6><512.896><11.30835~-27.8667, KarmaFlower><1884.986><152.1443><-493.7521~-95.99998~0~7, LightFixture><2706.082><115.3711><RedLight~17.32051~-10~79, SteamPipe><1969.082><199.2444><3.86145~49.20001, 
+FadePalette: 45, 0.8913044, 0.8695652, 0.8695652

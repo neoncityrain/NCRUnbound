@@ -1,0 +1,4 @@
+Grime: 0
+Effects: LightBurn-0.07608695-265-191, BrokenZeroG-0.25-268-137, Moth-0.06521739-268-74, ElectricDeath-0-277-18, Darkness-0.2826087-20-20, 
+PlacedObjects: LightSource><429.4871><417.8013><0.3914151~Environment~-647~125~452~-353.3975~1~0~None~0~0, SuperStructureFuses><124.6995><427.0127><19~138, SuperStructureFuses><828.3633><505.8539><72~140, SuperStructureFuses><809.4975><284.8605><20~111, 
+FadePalette: 45, 0.2608696

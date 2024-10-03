@@ -1,0 +1,61 @@
+[MERGE]
+CONDITIONAL LINKS
+NCRunbound : REPLACEROOM : GW_C06 : GW_UNBC06
+{MSC}NCRunbound : REPLACEROOM : GW_TOWER14 : GW_UNBTOWER14
+
+NCRunbound : EXCLUSIVEROOM : GW_A11_unb
+NCRunbound : EXCLUSIVEROOM : GW_TOWER14
+NCRunbound : EXCLUSIVEROOM : GW_TOWER08
+NCRunbound : EXCLUSIVEROOM : GW_TOWER09
+NCRunbound : EXCLUSIVEROOM : GW_TOWER15
+NCRunbound : HIDEROOM : GW_A11
+
+// disconnecting non-used rooms
+NCRunbound : GW_A11 : GW_A13 : DISCONNECTED
+NCRunbound : GW_A11 : GW_S08 : DISCONNECTED
+NCRunbound : GW_A11 : GW_A19 : DISCONNECTED
+NCRunbound : GW_TOWER06 : GW_TOWER08 : DISCONNECTED
+NCRunbound : GW_C04_PAST : GW_TOWER09 : DISCONNECTED
+
+// disconnecting non-accessible towers
+NCRunbound : GW_TOWER08 : GW_TOWER06 : DISCONNECTED
+NCRunbound : GW_TOWER09 : GW_C04_PAST : DISCONNECTED
+
+// connecting unbroom to vanilla
+NCRunbound : GW_A11_unb : 1 : GW_TOWER14
+NCRunbound : GW_A11_unb : 2 : GW_A19
+NCRunbound : GW_A11_unb : 3 : GW_A13
+NCRunbound : GW_A11_unb : 4 : GW_S08
+
+// connecting vanilla to unbroom
+NCRunbound : GW_S08 : GW_A11 : GW_A11_unb
+NCRunbound : GW_A13 : GW_A11 : GW_A11_unb
+NCRunbound : GW_A19 : GW_A11 : GW_A11_unb
+NCRunbound : GW_TOWER14 : GW_A11_PAST : GW_A11_unb
+
+// pipe07
+NCRunbound : GW_PIPE07_unb : 2 : GW_A06
+NCRunbound : GW_A06 : GW_A07 : GW_PIPE07_unb
+NCRunbound : GW_A07 : GW_A06 : GW_PIPE07_unb
+NCRunbound : GW_PIPE07_unb : 3 : GW_A07
+
+// pipe02
+NCRunbound : GW_PIPE02_unb : 3 : GW_B09
+NCRunbound : GW_B09 : GW_D02 : GW_PIPE02_unb
+NCRunbound : GW_D02 : GW_B09 : DISCONNECTED
+NCRunbound : GW_PIPE02_unb : 2 : GW_C10
+NCRunbound : GW_C10 : GW_D02 : GW_PIPE02_unb
+NCRunbound : GW_D02 : GW_C10 : DISCONNECTED
+NCRunbound : GW_C07 : GW_D02 : GW_PIPE02_unb
+NCRunbound : GW_D02 : GW_C07 : DISCONNECTED
+NCRunbound : GW_PIPE02_unb : 1 : GW_C07
+
+END CONDITIONAL LINKS
+
+ROOMS
+GW_A11_unb : DISCONNECTED, DISCONNECTED, DISCONNECTED, DISCONNECTED
+GW_PIPE07_unb : DISCONNECTED, DISCONNECTED, DISCONNECTED, GW_PIPE09_unb
+GW_PIPE09_unb : GW_PIPE07_unb, GW_PIPE02_unb
+GW_PIPE02_unb : GW_PIPE09_unb, DISCONNECTED, DISCONNECTED, DISCONNECTED
+END ROOMS
+[ENDMERGE]

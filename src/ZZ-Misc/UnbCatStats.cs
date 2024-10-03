@@ -58,9 +58,13 @@ namespace Unbound
             {
                 return true;
             }
+            if (i.value == "NCRoracle" || i == UnboundEnums.NCROracle)
+            {
+                return true;
+            }
             if (i.value == "NCRreverb" || i == UnboundEnums.NCRReverb)
             {
-                return false;
+                return true;
             }
             else return orig(i);
         }

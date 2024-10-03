@@ -1,5 +1,6 @@
 DangerType: FloodAndRain
 Clouds: 0.8478261
+BkgDroneVolume: 0.3530433
 WaterReflectionAlpha: 0.4782609
 Palette: 35
 EffectColorB: 6

@@ -2,7 +2,7 @@
 
 namespace Unbound
 {
-    [BepInPlugin("NCR.theunbound", "unbound", "2.3.2")]
+    [BepInPlugin("NCR.theunbound", "unbound", "2.3.5")]
 
     [BepInDependency("moreslugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
@@ -11,6 +11,7 @@ namespace Unbound
     [BepInDependency("Pupbase", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("randombuff", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("expedition", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("DetailedIcon", BepInDependency.DependencyFlags.SoftDependency)]
 
 
     public partial class UnbSetupThings : BaseUnityPlugin
@@ -26,6 +27,7 @@ namespace Unbound
             // remix triggers
 
             HooksOnly.HookIn();
+            thinAtmosphere.Init(); // sets up effects
 
             On.RainWorldGame.ShutDownProcess += RainWorldGameOnShutDownProcess;
             On.GameSession.ctor += GameSessionOnctor;
@@ -80,6 +82,7 @@ namespace Unbound
             orig(self);
         }
 
+
         private void LoadResources(RainWorld rainWorld)
         {
             // Futile.atlasManager.LoadImage("");
@@ -90,6 +93,9 @@ namespace Unbound
                     UnboundEnums.RegisterValues();
 
                     MachineConnector.SetRegisteredOI("NCR.theunbound", UnbOptions);
+
+                    Futile.atlasManager.LoadAtlas("atlases/icons/Kill_Slugcat_NCRunbound");
+                    Futile.atlasManager.LoadAtlas("atlases/icons/Multiplayer_Death_NCRunbound");
                     InitialCommit = true;
                 }
             }

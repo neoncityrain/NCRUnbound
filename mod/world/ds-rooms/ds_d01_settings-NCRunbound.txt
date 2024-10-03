@@ -1,0 +1,13 @@
+Template: NONE
+DangerType: Flood
+WaveSpeed: 0.6521739
+WaveLength: 0.7173913
+WaveAmplitude: 0.1956522
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+BkgDroneVolume: 0
+Palette: 4
+Effects: RockFlea-0.3152174-20-20, WaterFluxMaxDelay-0.2673914-28-74, WaterFluxMinDelay-0.3804348-34-124, WaterFluxMaxLevel-0.508261-298-138, WaterFluxMinLevel-0.4347826-288-78, WaterFluxFrequency-0.1956522-288-18, WaterFluxSpeed-0.2282609-397-242, 
+PlacedObjects: WaterNut><1898.197><449.3073><-1~104~3~5, WaterNut><1742.55><427.9963><139~39~3~4, WaterNut><2647.052><432.0281><0~0~3~5, DataPearl><1701.891><405.6676><0~0~0~0~DS~1, BubbleGrass><2442.194><418.7972><0~0~4~9, BubbleGrass><2413.608><416.6686><0~0~4~9, Filter><2423.898><390.3849><-62~23~7~-224~Red|Rivulet|Artificer|NCRunbound, LightFixture><54.06311><248.3213><RedSubmersible~17.32051~-10~72, LightFixture><3958.837><251.6341><RedSubmersible~-340.6795~26~40, 
+AmbientSounds: SPOT><SO_NAT-LilDrips.ogg><733.9898><565.5502><0.3804348><1><2545.99><427.5502><-193.3553><1.644653><0><0.5347828, SPOT><SO_WAT-LilDrips.ogg><401.5674><576.9183><0.2934784><1><1975.567><460.9183><-146.3553><64.64465><0><0.3391306, DIR><AM_IND-Factory01.ogg><749.6286><220.909><0.7826087><1><-9.317513><0, SPOT><SO_IND-Generator.ogg><747.5537><314.7884><0.5652174><1><-136.4463><266.7884><226.6447><-9.355347><0><1, SPOT><SO_IND-Generator.ogg><770.3163><87.06129><0.5434783><1><1287.316><447.0613><-35.35534><-35.35534><0><0.252174, 
+FadePalette: 8, 0.2065217, 0.1956522, 0.2065217, 0.2173913

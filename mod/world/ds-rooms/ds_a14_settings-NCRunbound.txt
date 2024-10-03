@@ -1,0 +1,14 @@
+Template: NONE
+DangerType: Flood
+CeilingDrips: 0.9456522
+WaveSpeed: 0.5760869
+WaveLength: 0.7717391
+WaveAmplitude: 0.173913
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+BkgDroneVolume: 0
+Palette: 4
+EffectColorA: 2
+Effects: WaterFluxMaxDelay-0.3-20-20, WaterFluxMinDelay-0.06521739-286-140, WaterFluxMaxLevel-0.3586957-26-80, WaterFluxMinLevel-0.2934783-286-80, WaterFluxFrequency-0.1304348-280-22, 
+AmbientSounds: OMNI><SO_WAT-OpenFlow.ogg><837.3613><652.3942><0.3152174><1, SPOT><SO_WAT-RunningWater.ogg><57.34906><495.1737><0.423913><1><237.3491><320.1737><-139.3553><-49.35535><0><0.2304349, SPOT><SO_WAT-LightFlow.ogg><777.6958><295.7908><0.5326087><1><223.6958><642.7908><-49.35535><-56.35535><0><0.1760871, DIR><AM_IND-Factory01.ogg><778.9378><192.3099><0.5217391><1><125.9187><0, SPOT><SO_IND-Generator.ogg><781.9304><420.6636><0.6086956><1><997.9304><634.6636><-35.35534><-35.35534><0><0.5130436, SPOT><SO_IND-HeatDuct.ogg><792.4941><53.94991><0.3695652><1><256.4941><639.9499><132.6447><-91.35535><0><1, 
+FadePalette: 8, 0.1847826

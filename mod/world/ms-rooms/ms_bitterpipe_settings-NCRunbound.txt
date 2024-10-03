@@ -1,0 +1,14 @@
+Template: MS_SettingsTemplate_Sewers
+DangerType: Rain
+RainIntensity: 1
+WaveSpeed: 0.5
+WaveLength: 1
+WaveAmplitude: 5.605194E-45
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Grime: 0.3695652
+EffectColorA: 11
+EffectColorB: 8
+Effects: BrokenZeroG-0.01086957-24-136, 
+PlacedObjects: LightFixture><641.4491><401.7312><RedLight~17.32051~-10~0, LightFixture><354.2755><413.8016><RedLight~17.32051~-10~33, ExitSymbolHidden><634.6899><355.8445><, 
+FadePalette: 45, 0.7391304

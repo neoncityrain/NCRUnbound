@@ -7,9 +7,9 @@ internal class HooksOnly
     public static void HookIn()
     {
         // UNB JUMPS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        On.Player.MovementUpdate += CyanJump.SetupJumps; // base +1f increase
-        On.Player.WallJump += CyanJump.SetupWalljumps; // walljumping gets faster and more efficient the more it's done
-        On.Player.Update += CyanJump.UnboundCyanJumps; // cyan jump code
+        On.Player.MovementUpdate += UnbMovement.SetupJumps; // base +1f increase
+        On.Player.WallJump += UnbMovement.SetupWalljumps; // walljumping gets faster and more efficient the more it's done
+        On.Player.Update += UnbMovement.UnboundCyanJumps; // cyan jump code
 
         // UNB MISC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.Jump += UnbMisc.MadHopsBro; // increases unbounds base jump by 1f
@@ -22,14 +22,18 @@ internal class HooksOnly
         On.Player.Update += UnbMisc.DamageTracking; // misc damage tracking
         On.OracleSwarmer.BitByPlayer += UnbMisc.noGlow; // glow is not handled via oracle swarmers
         On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += UnbMisc.TreatedAsCyan; // cyan relationship to unbound
+        On.Lizard.DamageAttack += UnbMisc.BiteUnb;
+        On.PlayerGraphics.Update += UnbMisc.UpdateTheGlow;
+        On.SSOracleSwarmer.DrawSprites += UnbMisc.NeuronColourShift;
 
         // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup;// setup and intro
         On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
-        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenUpdate; // antigravity scripts
+        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenGravUpdate; // antigravity scripts
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
         On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.RoomSpecificScripts; // listing all rooms for SRS
         On.Player.ctor += SetupRoomSpecific.MaintainRoomSpecific;
+        On.Player.Update += SetupRoomSpecific.IsGammaInMyShelter;
 
         // GAMMA =============================================================================================
         // AI TWEAKS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -56,6 +60,7 @@ internal class HooksOnly
         // TUTORIALS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         TutorialroomKill.Init(); // leave this in case it is needed later
 
+        Scenes.Init();
         // gamma
         Pearl.Init();
         PearlConversations.Init();
@@ -69,6 +74,7 @@ internal class HooksOnly
         FlickMech.MakeFlickerReal();
         FlickSpearMechanics.Init();
         UnbCatStats.Init();
+        EndUnb.Init();
         // slugcatstats exclusive things
         
         // MOD EXCLUSIVE =============================================================================================

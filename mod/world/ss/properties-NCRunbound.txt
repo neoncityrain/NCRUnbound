@@ -1,0 +1,15 @@
+Palette: 23
+batDepleteCyclesMin: 2
+batDepleteCyclesMax: 7
+batDepleteCyclesMaxIfLessThanTwoLeft: 3
+batDepleteCyclesMaxIfLessThanFiveLeft: 4
+overseersSpawnChance: 1.0
+overseersMin: 1
+overseersMax: 1
+Subregion: Five Pebbles
+Subregion: Five Pebbles (Memory Conflux)
+Subregion: Five Pebbles (Recursive Transform Array)
+Subregion: Five Pebbles (Unfortunate Development)
+Subregion: Five Pebbles (General Systems Bus)
+playerGuideOverseerSpawnChance: 1
+Room Setting Templates: Mech, Corrupt, Comp

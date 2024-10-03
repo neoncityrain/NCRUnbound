@@ -1,0 +1,5 @@
+DangerType: Flood
+Effects: Darkness-0.2065217-270-66, BrokenZeroG-0.1413043-261-117, ElectricDeath-0.01086957-275-6, 
+PlacedObjects: SuperStructureFuses><719.558><87.71761><30~262, SuperStructureFuses><626.684><89.67169><49~263, VoidSpawnEgg><230.0573><485.6915><0~0~2~3~1, VoidSpawnEgg><373.8431><483.5306><0~0~2~3~1, LightSource><189.8533><434.6671><0.06508935~Environment~423~-259~94~-311.3975~1~1~None~0~0, 
+AmbientSounds: SPOT><SO_WAT-OpenFlow.ogg><731.8084><487.5587><0.3369565><1><-162.1611><148.5275><263.6447><-3.355347><0><0.2086958, 
+FadePalette: 10, 0.2826087

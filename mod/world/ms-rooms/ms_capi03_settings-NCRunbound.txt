@@ -1,0 +1,12 @@
+Template: MS_SettingsTemplate_Artery
+RumbleIntensity: 0.3369565
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.05156663
+SecondWaveLength: 0.1775363
+SecondWaveAmplitude: 0
+Clouds: 1
+Effects: WaterDepth-0-286-17, ElectricDeath-0.2826087-282-72, 
+PlacedObjects: LightFixture><272.2048><71.80901><RedSubmersible~17.32051~-10~0, LightFixture><751.5202><308.335><RedSubmersible~17.32051~-10~0, 
+AmbientSounds: OMNI><SO_SFX-Heartbeat1.ogg><809.8287><400.6467><0.1413043><0.1, 
+FadePalette: 35, 0.3369565

@@ -1,0 +1,7 @@
+Template: SL_SettingsTemplate_Sewer
+Clouds: 1
+Palette: 34
+Effects: Darkness-0.1237319-20-20, DarkenLights-0.09279881-20.03958-106.0889, 
+PlacedObjects: LightFixture><229.7224><691.511><RedLight~-573.9014~-88.22229~69, LightFixture><529.4658><152.1325><RedSubmersible~-344.6795~241~89, 
+AmbientSounds: OMNI><MSC-WetConduits.ogg><91.22926><541.2549><0.4536002><1, 
+FadePalette: 10, 0.8506567

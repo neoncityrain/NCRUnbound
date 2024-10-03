@@ -1,0 +1,16 @@
+Template: NONE
+WaveSpeed: 0.5760869
+WaveLength: 0.8043478
+WaveAmplitude: 0.3152174
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 1
+Grime: 0.2826087
+Palette: 5
+EffectColorA: 2
+EffectColorB: 6
+Effects: WaterDepth-0-31-70, Fog-0.9673913-30-30, Flies-0.1086956-49-88, RockFlea-0.1956522-24-130, WaterGlowworm-0.1521739-286-19, BrokenZeroG-0.01546661-20-20, Darkness-0.4175952-269.8011-288.1778, Brightness-0-40-40, 
+PlacedObjects: GlowWeed><1287.906><632.8749><0~0~3~5, WallSteamer><2519.726><1829.699><-1~49, DataPearl><2627.943><1730.303><-533~39~0~0~Misc~1, LightSource><738.9424><353.2355><0.2112095~Environment~428.298~-8.088867~50~86.60254~1~0~None~0~0, LightFixture><930.2374><298.2217><RedSubmersible~-272.9545~-34.17776~95, GlowWeed><1332.64><379.6038><0~0~2~3, GlowWeed><1801.341><879.3917><0~0~2~3, GlowWeed><671.1539><756.1475><0~0~2~3, LightFixture><1146.692><423.0222><RedSubmersible~-272.9545~-34.17776~43, JellyFish><1205.271><1013.879><0~0~2~3, JellyFish><1753.358><1013.328><0~0~2~3, 
+AmbientSounds: OMNI><AM_ENV-LightWind.ogg><865.944><653.4514><0.5978261><0.8826087, OMNI><AM_WAT-Sea01.ogg><690.0419><656.5544><0.2391304><1, SPOT><AM_WAT-Lakeside.ogg><733.4498><200.5079><0.4891304><1><2475.45><1652.508><-553.3553><-331.3553><0><1, 
+Triggers: PreRegionBump<tA>event<tB>MusicEvent<eA>songName<eB>RW_75 - Onto A New Dawn<eA>vol<eB>0.2021737<eA>prio<eB>0.5<eA>mxThrt<eB>1<eA>loop<eB>0<eA>droneTol<eB>0<eA>rooms<eB>-1<eA>rest<eB>5<eA>fadeIn<eB>0<eA>oneSongPerCycle<eB>0<eA>stopAtDeath<eB>0<eA>stopAtGate<eB>0<tA>multiUse<tB>0<tA>toCycle<tB>-1<tA>fromCycle<tB>0<tA>delay<tB>0<tA>panPos<tB>773.5847<tB>467.8874<tA>fireChance<tB>1<tA>entrance<tB>-1<tA>karma<tB>0<tA>slugcats<tB>, 
+FadePalette: 45, 0.4565217, 0.5869565, 0.4456522, 0.5543478, 0.5543478, 0.4673913

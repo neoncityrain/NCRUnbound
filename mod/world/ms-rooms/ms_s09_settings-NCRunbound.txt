@@ -1,0 +1,9 @@
+WaveSpeed: 0.514497
+WaveLength: 0.9927515
+WaveAmplitude: 0.07826156
+SecondWaveLength: 0.1775363
+SecondWaveAmplitude: 0
+Grime: 0.1521739
+Effects: Darkness-0.1630435-257-67, BrokenZeroG-0.1413043-256-123, ElectricDeath-0.01086957-249-12, 
+PlacedObjects: LightSource><95.38011><454.1167><0.03169781~Environment~441~-242~-55.99997~-308.3975~1~1~None~0~0, SuperStructureFuses><289.6906><592.7187><419~54, SuperStructureFuses><289.8598><449.7995><273~47, 
+FadePalette: 45, 0.423913

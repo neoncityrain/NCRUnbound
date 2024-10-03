@@ -1,0 +1,12 @@
+Template: NONE
+DangerType: Flood
+WaveSpeed: 0.6195652
+WaveLength: 0.7173913
+WaveAmplitude: 0.3043478
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Palette: 4
+Effects: RockFlea-0.5652174-20-20, WaterFluxMaxDelay-0.3-309-139, WaterFluxMinDelay-0.1304348-58-94, WaterFluxMaxLevel-0.4647827-560-140, WaterFluxMinLevel-0.4347826-550-82, WaterFluxFrequency-0.1956522-307-221, WaterFluxSpeed-0.1086956-30-30, 
+PlacedObjects: InsectGroup><187.8901><250.3329><51~100~0~0~RockFlea~0.9456522, LightFixture><691.3536><422.3863><RedSubmersible~17.32051~-10~38, LightFixture><3137.58><393.4335><RedSubmersible~17.32051~-10~33, 
+AmbientSounds: DIR><AM_IND-Factory01.ogg><736.0558><222.9523><0.7173913><1.195652><41.91><0, SPOT><SO_IND-HVAC.ogg><740.6416><106.1088><0.5434783><1><692.6416><402.1088><960.6447><-59.35535><0><1, SPOT><SO_IND-Fridge.ogg><744.5502><322.7597><0.2608696><1><3851.55><525.7598><-191.3553><-83.35535><0><0.5565219, 
+FadePalette: 8, 0.5, 0.5, 0.5, 0.5

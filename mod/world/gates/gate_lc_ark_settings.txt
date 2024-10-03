@@ -1,0 +1,5 @@
+RandomItemDensity: 0
+RandomItemSpearChance: 0
+Effects: Fog-0.4586729-247.6667-69.06667, Contrast-0.02319983-284.7021-122.4444, WaterDepth-1-20-20, 
+PlacedObjects: CommonGateData><616.9291><407.063><-515~-350~False~False~False~False~False~False~False~False~0~1~1, 
+FadePalette: 42, 0.2938631

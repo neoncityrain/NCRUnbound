@@ -5,6 +5,80 @@ namespace Unbound
 {
     public class UnbMisc
     {
+        public static void NeuronColourShift(On.SSOracleSwarmer.orig_DrawSprites orig, SSOracleSwarmer self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+        {
+            orig(self, sLeaser, rCam, timeStacker, camPos);
+            if (self != null && self.room != null && self.room.game != null)
+            {
+                foreach (AbstractCreature otherCreature in self.room.abstractRoom.creatures)
+                {
+                    if (otherCreature.realizedCreature != null && otherCreature.realizedCreature is Player &&
+                        otherCreature.realizedCreature.room != null &&
+                        (otherCreature.realizedCreature as Player).GetNCRunbound().IsUnbound)
+                    {
+                        if (otherCreature.realizedCreature.room != self.room)
+                        {
+                            if ((otherCreature.realizedCreature as Player).GetNCRunbound().dontForceChangeEffectCol)
+                            {
+                                (otherCreature.realizedCreature as Player).GetNCRunbound().dontForceChangeEffectCol = false;
+                                (otherCreature.realizedCreature as Player).GetNCRunbound().recheckColour = true;
+                            }
+                            return;
+                        }
+                        if (!(otherCreature.realizedCreature as Player).GetNCRunbound().dontForceChangeEffectCol)
+                        {
+                            (otherCreature.realizedCreature as Player).GetNCRunbound().dontForceChangeEffectCol = true;
+                        }
+                        if ((otherCreature.realizedCreature as Player).GetNCRunbound().RGBRings)
+                        {
+                            Color color;
+                            color = (otherCreature.realizedCreature as Player).GetNCRunbound().effectColour;
+                            sLeaser.sprites[4].color = (otherCreature.realizedCreature as Player).GetNCRunbound().effectColour;
+                            for (int i = 0; i < 4; i++)
+                            {
+                                sLeaser.sprites[i].color = color;
+                            }
+                        }
+                        else
+                        {
+                            (otherCreature.realizedCreature as Player).GetNCRunbound().effectColour = sLeaser.sprites[2].color;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void UpdateTheGlow(On.PlayerGraphics.orig_Update orig, PlayerGraphics self)
+        {
+            if (self != null && self.player.room != null && self.player.mainBodyChunk != null &&
+                self.player.GetNCRunbound().effectColour != null && self.player.room.game.session != null &&
+                !self.player.room.game.IsArenaSession && self.player.room.game.IsStorySession &&
+                self.player.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
+                self.player.GetNCRunbound().IsUnbound && !self.player.DreamState)
+            {
+                if (self.lightSource != null)
+                {
+                    self.lightSource.color = Color.Lerp(new Color(1f, 1f, 1f), self.player.GetNCRunbound().effectColour, 0.75f);
+                    self.lightSource.stayAlive = true;
+                    self.lightSource.setPos = new Vector2?(self.player.mainBodyChunk.pos);
+                    if (self.lightSource.slatedForDeletetion)
+                    {
+                        self.lightSource = null;
+                    }
+                }
+                else
+                {
+                    self.lightSource = new LightSource(self.player.mainBodyChunk.pos, false, Color.Lerp(new Color(1f, 1f, 1f),
+                    self.player.GetNCRunbound().effectColour, 0.75f), self.player);
+                    self.lightSource.requireUpKeep = true;
+                    self.lightSource.setRad = new float?(250f);
+                    self.lightSource.setAlpha = new float?(0.97f);
+                    self.player.room.AddObject(self.lightSource);
+                }
+            }
+            orig(self);
+        }
+
         public static void noGlow(On.OracleSwarmer.orig_BitByPlayer orig, OracleSwarmer self, Creature.Grasp grasp, bool eu)
         {
             if (self != null && grasp != null && grasp.grabber != null && grasp.grabber is Player &&
@@ -26,6 +100,17 @@ namespace Unbound
             }
         }
 
+        public static void BiteUnb(On.Lizard.orig_DamageAttack orig, Lizard self, BodyChunk chunk, float dmgFac)
+        {
+            if (chunk != null && chunk.owner is Creature && (chunk.owner is Player) &&
+                (chunk.owner as Player).GetNCRunbound().IsUnbound &&
+                self.AI.DynamicRelationship((chunk.owner as Creature).abstractCreature).type == CreatureTemplate.Relationship.Type.AgressiveRival)
+            {
+                (chunk.owner as Player).playerState.permanentDamageTracking = (dmgFac / 10f);
+            }
+            orig(self, chunk, dmgFac);
+        }
+
         public static void DamageTracking(On.Player.orig_Update orig, Player self, bool eu)
         {
             if (self != null && self.room != null && self.abstractCreature != null &&
@@ -35,7 +120,8 @@ namespace Unbound
                 self.GetNCRunbound().RGBCounter++;
             }
             orig(self, eu);
-            if (self.GetNCRunbound().IsUnbound && self.Wounded)
+            if (self != null && self.room != null && self.abstractCreature != null &&
+                self.GetNCRunbound().IsUnbound && self.Wounded)
             {
                 if (UnityEngine.Random.value < Mathf.Lerp(0.004f, 0.02f, (float)(self.State as PlayerState).permanentDamageTracking))
                 {
@@ -299,7 +385,15 @@ namespace Unbound
                 // should still allow making friends with it
                 )
             {
-                return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.AgressiveRival, 0.15f);
+                if (self.LikeOfPlayer(dRelation.trackerRep) > 0.98f)
+                {
+                    return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Ignores, self.LikeOfPlayer(dRelation.trackerRep));
+                }
+                else if (self.LikeOfPlayer(dRelation.trackerRep) < -0.98f)
+                {
+                    return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Attacks, -(self.LikeOfPlayer(dRelation.trackerRep)));
+                }
+                return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.AgressiveRival, 1f + (self.LikeOfPlayer(dRelation.trackerRep)));
             }
             return orig(self, dRelation);
         }
@@ -338,7 +432,9 @@ namespace Unbound
         {
             // swimming code
             orig(self);
-            if (self != null && self.room != null &&
+            if (self != null && self.room != null && (self.room.roomSettings.GetEffect(RoomSettings.RoomEffect.Type.VoidSea) == null ||
+                self.room.roomSettings.GetEffect(RoomSettings.RoomEffect.Type.VoidSea) != null &&
+                self.room.roomSettings.GetEffect(RoomSettings.RoomEffect.Type.VoidSea).amount > 0f) &&
                 self.GetNCRunbound().IsUnbound)
             {
                 if (!self.submerged && !(self.grasps[0] != null && self.grasps[0].grabbed is JetFish &&

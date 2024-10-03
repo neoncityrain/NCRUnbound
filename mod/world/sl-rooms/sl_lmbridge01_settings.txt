@@ -1,12 +1,13 @@
+Template: NONE
 RainIntensity: 0.8478261
 RumbleIntensity: 0.8478261
-Clouds: 0.7608696
-Grime: 0.3804348
+Clouds: 0.7065217
+Grime: 0.3572351
 BkgDroneVolume: 0
-Palette: 6
+Palette: 45
 EffectColorA: 2
 EffectColorB: 21
-Effects: Fog-0.5760869-4-132, GreenSparks-0.1304348-264-212, Flies-0.1304348-264-276, Darkness-0-262-324, PixelShift-0.5-32-65, AboveCloudsView-1-20-20, ElectricDeath-0.01086957-261-85, 
-PlacedObjects: DeadSeedCob><400.41><491.0714><, DeadSeedCob><620.6143><507.4141><, SeedCob><537.0029><537.55><0~0~7~10, WallSteamer><580.1583><710.3723><-49~7, WallSteamer><664.8046><631.2074><57~60, WallSteamer><581.8418><650.3724><41~35, WallSteamer><531.0911><658.072><-80~72, WallSteamer><374.885><643.0864><35~55, DevToken><1811.102><239.616><0~-76~0~0~0~~~0~0~0~1, 
-AmbientSounds: OMNI><AM_WAT-Sea01.ogg><826.1245><479.5935><0.01086957><1, OMNI><AM_ENV-WallHum.ogg><826.4205><564.0665><0.5543478><1, SPOT><AM_WIN-MedWind.ogg><478.5016><518.05><0.6739131><1><2174.501><200.05><-713.3553><4.644653><0><1, 
-FadePalette: 15, 0.2282609, 0.173913, 0.423913, 0.423913, 0.4130435, 0.4021739, 0.423913
+Effects: Fog-1-4-132, Flies-0.1304348-264-276, PixelShift-0.5-32-65, ElectricDeath-0.01086957-261-85, Darkness-0.1778647-291-23, 
+PlacedObjects: DeadSeedCob><400.41><491.0714><, DeadSeedCob><620.6143><507.4141><, SeedCob><537.0029><537.55><0~0~7~10, WallSteamer><580.1583><710.3723><-49~7, WallSteamer><664.8046><631.2074><57~60, WallSteamer><581.8418><650.3724><41~35, WallSteamer><531.0911><658.072><-80~72, WallSteamer><374.885><643.0864><35~55, WallSteamer><1590.506><197.9962><0~33.15555, 
+AmbientSounds: OMNI><AM_WAT-Sea01.ogg><826.1245><479.5935><0.01546644><1, OMNI><AM_ENV-WallHum.ogg><826.4205><564.0665><0.523415><1, SPOT><AM_WIN-MedWind.ogg><478.5016><518.05><0.6275137><0.9164812><2174.501><200.05><-713.3553><4.644653><0><1, SPOT><AM_SUB-CaveTone.ogg><190.3073><259.8447><1><0.8468816><2218.328><-47.26636><-490.6887><52.11133><0.3325295><1, SPOT><AM_IND-Warehouse01.ogg><659.1653><396.8366><0.8685349><0.6380841><2211.932><-46.80782><-489.9772><145.978><0><1, 
+FadePalette: 35, 0.533639, 0.5829597

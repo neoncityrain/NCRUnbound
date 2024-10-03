@@ -86,6 +86,12 @@ namespace Unbound
                 // ADDING / REPLACING ATLAS THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+                if (self.player.room.GetNCRRoom().atmosphereFloat > 0f && (self.player.airInLungs < 0.2f || self.player.Hypothermia > 0.8f) &&
+                    self.player.Consious)
+                {
+                    sLeaser.sprites[9].element = Futile.atlasManager.GetElementWithName("FaceStunned");
+                }
+
                 //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
                 // LEG THINGS
@@ -372,9 +378,15 @@ namespace Unbound
                     pupilcol = effectcol;
                 }
 
-                if (self.player.GetNCRunbound().effectColour == null || self.player.GetNCRunbound().effectColour != effectcol)
+                if (((self.player.GetNCRunbound().effectColour == null || self.player.GetNCRunbound().effectColour != effectcol) &&
+                    !self.player.GetNCRunbound().dontForceChangeEffectCol) || self.player.GetNCRunbound().recheckColour)
                 {
                     self.player.GetNCRunbound().effectColour = effectcol;
+                    if (self.player.GetNCRunbound().recheckColour) { self.player.GetNCRunbound().recheckColour = false; }
+                }
+                else
+                {
+                    effectcol = self.player.GetNCRunbound().effectColour;
                 }
 
                 if (!self.player.GetNCRunbound().GraphicsDisabled)
@@ -699,7 +711,7 @@ namespace Unbound
         {
             orig(self, ow);
             if (self != null && self.owner != null && self.player != null && self.player.room != null &&
-                self.player.GetNCRunbound().IsNCRUnbModcat)
+                self.player.GetNCRunbound().IsNCRUnbModcat && self.tail != null)
             {
                 if (self.player.GetNCRunbound().Reverb)
                 {
@@ -717,23 +729,25 @@ namespace Unbound
                     self.tail[1] = new TailSegment(self, 4f, 8f, self.tail[0], 0.85f, 1f, 0.7f, true);
                     self.tail[2] = new TailSegment(self, 2.5f, 8f, self.tail[1], 0.85f, 1f, 0.6f, true);
                     self.tail[3] = new TailSegment(self, 1f, 8f, self.tail[2], 0.85f, 1f, 0.5f, true);
-                    self.tail[4] = new TailSegment(self, 1f, 6f, self.tail[3], 0.80f, 0.4f, 0.3f, true);
+                    self.tail[4] = new TailSegment(self, 1f, 6f, self.tail[3], 0.80f, 0.4f, 0.8f, true);
                 }
                 else
                 {
+                    // owner, rad, connectionrad, connectedsegment, surfacefriction, airfriction, affectprevious, pullinpreviousposition
+                    // affectprevious is reversed, so higher numbers affect less... i think?
                     if (self.player.playerState.isPup)
                     {
-                        self.tail[0] = new TailSegment(self, 8f, 2f, null, 0.85f, 1f, 1f, true);
-                        self.tail[1] = new TailSegment(self, 6f, 3.5f, self.tail[0], 0.85f, 1f, 0.5f, true);
-                        self.tail[2] = new TailSegment(self, 4f, 3.5f, self.tail[1], 0.85f, 1f, 0.5f, true);
-                        self.tail[3] = new TailSegment(self, 2f, 3.5f, self.tail[2], 0.85f, 1f, 0.5f, true);
+                        self.tail[0] = new TailSegment(self, 4f, 2f, null, 0.8f, 1f, 1f, true);
+                        self.tail[1] = new TailSegment(self, 6f, 3.5f, self.tail[0], 0.75f, 1f, 0.7f, true);
+                        self.tail[2] = new TailSegment(self, 4f, 4f, self.tail[1], 0.75f, 0.97f, 0.5f, true);
+                        self.tail[3] = new TailSegment(self, 2f, 4f, self.tail[2], 0.7f, 0.9f, 0.4f, true);
                     }
                     else
                     {
-                        self.tail[0] = new TailSegment(self, 8f, 4f, null, 0.85f, 1f, 1f, true);
-                        self.tail[1] = new TailSegment(self, 6f, 7f, self.tail[0], 0.85f, 1f, 0.5f, true);
-                        self.tail[2] = new TailSegment(self, 4f, 7f, self.tail[1], 0.85f, 1f, 0.5f, true);
-                        self.tail[3] = new TailSegment(self, 2f, 7f, self.tail[2], 0.85f, 1f, 0.5f, true);
+                        self.tail[0] = new TailSegment(self, 6f, 2.5f, null, 0.85f, 1f, 1f, true);
+                        self.tail[1] = new TailSegment(self, 7f, 7f, self.tail[0], 0.8f, 1f, 0.7f, true);
+                        self.tail[2] = new TailSegment(self, 5f, 6f, self.tail[1], 0.8f, 0.99f, 0.5f, true);
+                        self.tail[3] = new TailSegment(self, 3f, 6f, self.tail[2], 0.75f, 0.97f, 0.4f, true);
                     }
                 }
             }

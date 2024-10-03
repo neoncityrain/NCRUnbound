@@ -1,0 +1,5 @@
+Clouds: 0.8260869
+Palette: 45
+Effects: Fog-0.7173913-301-13, 
+PlacedObjects: LightFixture><310.1511><348.5762><RedLight~17.32051~-10~31, LightFixture><699.2847><186.053><RedSubmersible~17.32051~-10~13, LightFixture><514.6195><0.08966064><RedSubmersible~-314.6795~98~57, LightFixture><3488.148><647.5778><RedLight~17.32051~-10~57, LightFixture><3993.597><661.9247><RedLight~17.32051~-10~54, LightFixture><3352.346><366.6272><RedLight~17.32051~-10~62, LightFixture><3090.393><536.6392><RedLight~17.32051~-10~6, LightFixture><1112.45><485.0132><RedLight~-55.67949~156~99, LightFixture><1280.429><264.4371><RedSubmersible~17.32051~-10~46, LightFixture><1510.604><653.6129><RedLight~17.32051~-10~35, LightFixture><1884.308><759.5573><RedLight~17.32051~-10~27, LightFixture><2324.188><732.8181><RedLight~17.32051~-10~92, LightFixture><2657.566><689.4206><RedLight~17.32051~-10~71, LightFixture><2138.973><708.4481><RedLight~17.32051~-10~57, LightFixture><2712.621><300.5908><RedLight~17.32051~-10~64, 
+FadePalette: 35, 0.326087, 0.3478261, 0.3586957, 0.3804348

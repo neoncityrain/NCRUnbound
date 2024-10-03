@@ -1,0 +1,7 @@
+Template: MS_SettingsTemplate_Vents
+RumbleIntensity: 0.8152174
+Clouds: 1
+Effects: WaterDepth-0.1086956-266-14, BrokenZeroG-0.8478261-259-69, ElectricDeath-0.4021739-264-132, 
+PlacedObjects: LightFixture><124.6978><586.9706><RedLight~17.32051~-10~0, LightSource><656.5317><176.0526><0.3478254~EffectColor2~-542~393~33~-153.3975~0~0~None~0~0, GravityDisruptor><1132.398><189.9219><, PlayerPushback><1129.593><190.2955><-2~105, LightSource><1437.182><239.6673><0.1845172~EffectColor2~-421~414~50~86.60254~0~0~None~0~0, 
+AmbientSounds: SPOT><SO_SFX-AlphaWaves.ogg><753.655><194.3737><0.326087><0.55><1057.725><195.3378><-200.3553><-63.35535><1><0.6217393, 
+FadePalette: 35, 0.3152174, 0.3152174

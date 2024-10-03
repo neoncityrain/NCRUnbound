@@ -1,0 +1,21 @@
+{"frames": {
+
+"Kill_Slugcat_NCRunbound.png":
+{
+	"frame": {"x":0,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "Kill_Slugcat_NCRunbound.png",
+	"format": "RGBA8888",
+	"size": {"w":24,"h":24},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a5dcb111db2cef8e7da4a9e345d12b34:3c22c5c6f002cf4c509477f233194111:f699c9d2dd5a2752ed2bdcd51e996631$"
+}
+}

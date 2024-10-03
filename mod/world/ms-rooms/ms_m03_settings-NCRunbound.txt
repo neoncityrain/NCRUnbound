@@ -1,0 +1,9 @@
+Template: MS_SettingsTemplate_Vents
+CeilingDrips: 0.8478261
+RumbleIntensity: 0.8043478
+Clouds: 1
+EffectColorA: 18
+Effects: ElectricDeath-0.3804348-278-24, 
+PlacedObjects: LightFixture><699.827><1797.613><RedLight~17.32051~-10~0, LightFixture><336.1193><1595.652><RedLight~17.32051~-10~0, LightFixture><608.9323><1221.583><RedLight~17.32051~-10~31, LightFixture><859.6847><502.2289><RedLight~17.32051~-10~0, LightFixture><72.58142><293.2949><RedLight~17.32051~-10~0, DangleFruit><637.1484><1728.078><-555.8708~-17.0061~2~4, DangleFruit><411.451><1899.292><-482.9213~56.96143~2~4, DangleFruit><609.0861><1765.866><-611.0544~-64.92944~2~6, DangleFruit><353.5184><1769.737><-485~41~2~6, LightSource><220.4113><2011.43><0.4891304~Environment~166~-149~-238.9857~-192.3987~1~0~None~0~0, LightSource><763.3343><1506.819><0.1737127~Environment~-294~7~50~86.60254~1~0~None~0~0, LightSource><149.8229><293.8448><0.3596512~EffectColor1~769~1203~50~86.60254~0~0~Fade~0~0, 
+AmbientSounds: OMNI><SO_WAT-ProperDrips.ogg><24.18951><213.9361><0.4130435><1, OMNI><SO_WAT-MoreDrips.ogg><14.97827><293.3012><0.423913><1, SPOT><AM_IND-DeepHum.ogg><23.51538><97.8006><0.3152174><1><148.5154><2246.801><220.6447><-297.3553><0><0.6434784, SPOT><SO_IND-HeatDuct.ogg><864.9473><20.9675><0.1956522><1><1095.004><1965.985><-44.35535><-396.3553><0><1, SPOT><SO_WAT-LilDrips.ogg><863.902><139.5756><0.6086956><1><662.9021><2019.575><-206.3553><-5.355347><0><0.404348, 
+FadePalette: 9, 0.4021739, 0.423913, 0.4782609

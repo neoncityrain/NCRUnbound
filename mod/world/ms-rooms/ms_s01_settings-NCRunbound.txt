@@ -1,0 +1,13 @@
+Template: MS_SettingsTemplate_Vents
+WaveSpeed: 0.5
+WaveAmplitude: 0
+SecondWaveAmplitude: 0
+Clouds: 1
+Grime: 0.1413043
+RandomItemDensity: 0
+RandomItemSpearChance: 0
+EffectColorA: 12
+EffectColorB: 7
+Effects: BrokenZeroG-0.01086957-20-20, Darkness-0.3913043-299-81, SilenceWater-0.6847826-291-141, ElectricDeath-0.01086957-289-22, 
+PlacedObjects: ZapCoil><364.92><532.6054><225~32, LightFixture><474.3157><552.3111><ZapCoilLight~29.3205~-166~49, LightFixture><259.0208><253.0245><RedLight~17.32051~-10~0, LightFixture><773.0153><270.07><RedLight~17.32051~-10~93, LightFixture><752.83><610.8552><RedLight~17.32051~-10~81, BrokenShelterWaterLevel><487.3392><351.321><, ZapCoil><358><186><260~43, LightFixture><454><209><ZapCoilLight~29.3205~-166~80, LightFixture><479><713><ZapCoilLight~29.3205~-166~90, ZapCoil><370><692><226~44, 
+FadePalette: 35, 0.4673913

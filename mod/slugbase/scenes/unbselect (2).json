@@ -1,0 +1,18 @@
+{
+	"id": "unbselectrev",
+	"scene_folder": "scenes/unbselect",
+	"images": [
+		{ "name": "0- shaded", "pos": [200, 200], "depth": 3.4, "shader": "Basic" },
+		{ "name": "1- snow", "pos": [200, 200], "depth": 3.0, "shader": "Basic" },
+		{ "name": "2- lizbody", "pos": [200, 200], "depth": 2.0, "shader": "Basic" },
+		{ "name": "3- lizhead", "pos": [200, 200], "depth": 1.8, "shader": "Basic" },
+		{ "name": "4- lizbubble", "pos": [200, 200], "depth": 1.7, "shader": "Basic" },
+		{ "name": "5- extrashadow", "pos": [190, 200], "depth": 1.5, "shader": "Basic" },
+		{ "name": "6- deepsurround", "pos": [180, 180], "depth": 1.4, "shader": "Basic" }
+	],
+	"idle_depths": [ 3.5 ],
+	"glow_pos": [-1000, -1000],
+	"mark_pos": [-1000, -1000],
+	"select_menu_pos": [0, 0],
+	"slugcat_depth": 3.5
+}

@@ -1,0 +1,22 @@
+{
+	"custom_meows": [
+		{
+			"slugcat_id": "NCRunbound",
+			"short_meow_soundid": "NCRCyanMeowmicHappy",
+			"long_meow_soundid": "NCRCyanMeowmic",
+			"volume_multiplier": 0.90
+		},
+		{
+			"slugcat_id": "NCRreverb",
+			"short_meow_soundid": "NCRRevMeowmicHappy",
+			"long_meow_soundid": "NCRYellowMeowmic",
+			"volume_multiplier": 0.90
+		},
+		{
+			"slugcat_id": "NCRoracle",
+			"short_meow_soundid": "NCRRedMeowmicHappy",
+			"long_meow_soundid": "NCRRedMeowmic",
+			"volume_multiplier": 0.88
+		}
+	]
+}

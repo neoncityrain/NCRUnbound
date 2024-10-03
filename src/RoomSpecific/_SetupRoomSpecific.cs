@@ -1,31 +1,75 @@
 ﻿using Music;
 using System.IO;
+using System.Linq;
 
 namespace Unbound
 {
     internal class SetupRoomSpecific
     {
+        public static void IsGammaInMyShelter(On.Player.orig_Update orig, Player self, bool eu)
+        {
+            orig(self, eu);
+            if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null && self.room.abstractRoom != null &&
+                self.room.abstractRoom.creatures != null && self.room.abstractRoom.creatures.Count > 0 && self.room.abstractRoom.shelter &&
+                self.room.game.session.characterStats.name.value == "NCRunbound")
+            {
+                List<AbstractCreature> overseersInRoom = new List<AbstractCreature>();
+                if (self.room.abstractRoom.creatures.Count > 1)
+                {
+                    for (int j = 0; j < self.room.abstractRoom.creatures.Count; j++)
+                    {
+                        if (self.room.abstractRoom.creatures[j].creatureTemplate.type == CreatureTemplate.Type.Overseer &&
+                            self.room.abstractRoom.creatures[j].Room == self.room.abstractRoom &&
+                            self.room.abstractRoom.creatures[j].creatureTemplate.type != CreatureTemplate.Type.Slugcat)
+                        {
+                            overseersInRoom.Add(self.room.abstractRoom.creatures[j]);
+                        }
+                    }
+                }
+
+                if (overseersInRoom.Count == 1 && !self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
+                {
+                    if (self.GetNCRunbound().MoreDebug)
+                    {
+                        NCRDebug.Log("Gamma in shelter Unbound is in!");
+                    }
+                    self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter = true;
+                }
+
+                if (overseersInRoom.Count != 1 && self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
+                {
+                    if (self.GetNCRunbound().MoreDebug)
+                    {
+                        NCRDebug.Log("Gamma no longer in shelter Unbound is in!");
+                    }
+                    self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter = false;
+                }
+
+                overseersInRoom.Clear();
+            }
+        }
+
         public static void MaintainRoomSpecific(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
             if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
-                world != null && world.region != null && world.region.name != null &&
+                world != null && world.region != null && world.region.name != null && 
                 abstractCreature != null && self.room.game.session.characterStats.name.value == "NCRunbound" &&
                 self.room.game.session is not ArenaGameSession && (!ModManager.MSC || !self.room.game.rainWorld.safariMode)
                 )
             {
                 try
                 {
-                    if (self.room.world.overseersWorldAI.playerGuide != null)
+                    if (self.room.world != null && self.room.world.overseersWorldAI != null && self.room.world.overseersWorldAI.playerGuide != null)
                     {
                         AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
-                        if (gammaoverseer != null &&
+                        if (gammaoverseer != null && gammaoverseer.ID != null &&
                             gammaoverseer.ID.number != -7113131)
                         {
                             if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma ID tweaked!"); }
                             gammaoverseer.ID.number = -7113131; // sets gamma to always have this id
-                                                                // "7 1 13 13 1", aka "gamma", negative because the positive counterpart has only two mycelia and that looked weird
-                            if (gammaoverseer != null && gammaoverseer.ignoreCycle != true)
+                            // "7 1 13 13 1", aka "gamma", negative because the positive counterpart has only two mycelia and that looked weird
+                            if (gammaoverseer.ignoreCycle != true)
                             {
                                 gammaoverseer.ignoreCycle = true;
                                 gammaoverseer.creatureTemplate.waterVision = -1f;
@@ -33,7 +77,7 @@ namespace Unbound
                                 gammaoverseer.creatureTemplate.bodySize = 0.7f;
 
                                 (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
-                                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma settings incorrect, fixed them!"); }
+                                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma settings incorrect, fixed them and called Gamma!"); }
                             }
                         }
                     }
@@ -54,9 +98,11 @@ namespace Unbound
                             }
                         }
 
+
+
                         if (self.room.game.GetStorySession.saveState.cycleNumber != 0 &&
                         self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
-                        self.room.game.Players.Count > 0)
+                        self.room.game.Players != null && self.room.game.Players.Count > 0)
                         {
                             NCRDebug.Log("Unbound's death persistent save data fucked up! Attempting to fix it...");
                             self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
@@ -365,7 +411,7 @@ namespace Unbound
             }
         }
 
-        public static void BrokenUpdate(On.AntiGravity.BrokenAntiGravity.orig_Update orig, AntiGravity.BrokenAntiGravity self)
+        public static void BrokenGravUpdate(On.AntiGravity.BrokenAntiGravity.orig_Update orig, AntiGravity.BrokenAntiGravity self)
         {
             if (self != null && self.game != null && self.game.world != null &&
                 self.game.session.characterStats.name.value == "NCRunbound")

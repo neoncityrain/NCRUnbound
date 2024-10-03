@@ -1,0 +1,4 @@
+Template: MS_SettingsTemplate_Vents
+Effects: ElectricDeath-0.01086957-25-143, 
+PlacedObjects: BrokenShelterWaterLevel><285.4132><715.3881><, LightFixture><434.1225><256.1639><RedLight~17.32051~-10~0, LightFixture><74.82378><483.1378><RedLight~17.32051~-10~60, LightFixture><708.3301><491.3167><RedLight~17.32051~-10~58, BrokenShelterWaterLevel><501.9164><347.6108><, 
+FadePalette: 11, 0.4456522

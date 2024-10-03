@@ -8,6 +8,6 @@ WaveAmplitude: 4.508545E-12
 SecondWaveLength: 0.1666667
 SecondWaveAmplitude: 0
 Clouds: 0
-Effects: ElectricDeath-0.08841705-230.0739-96.73332, WaterFluxMaxLevel-0.3015964-30-30, WaterFluxMinLevel-0.3093298-40-40, 
-PlacedObjects: LightSource><871.0325><565.1567><0.2065217~EffectColor2~1279~734~50~86.60254~0~0~None~0~0, LightSource><2549.617><254.8034><0.2499894~EffectColor2~-2833~635~50~86.60254~0~0~None~0~0, LightSource><1843.352><304.3655><0.1522774~EffectColor2~587~536~209~314.6025~0~0~None~0~0, 
-FadePalette: 13, 0.2065217, 0.173913, 0.1847826
+Effects: ElectricDeath-0.08841705-230.0739-96.73332, WaterFluxMaxLevel-0.3015964-30-30, WaterFluxMinLevel-0.3093298-40-40, SilenceWater-0.5326087-36-61, WaterDepth-0.0326087-20-20, 
+PlacedObjects: LightSource><871.0325><565.1567><0.1304348~EffectColor2~1279~734~50~86.60254~0~0~None~0~0, LightSource><2549.617><254.8034><0.1195546~EffectColor2~-2833~635~50~86.60254~0~0~None~0~0, LightSource><1843.352><304.3655><0.04358175~EffectColor2~587~536~209~314.6025~0~0~None~0~0, 
+FadePalette: 35, 0.2065217, 0.173913, 0.1847826

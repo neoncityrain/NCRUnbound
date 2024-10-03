@@ -1,0 +1,6 @@
+Template: NONE
+DangerType: Flood
+Palette: 4
+Effects: WaterFluxMaxDelay-0.4021739-20-20, WaterFluxMinDelay-0.1304348-280-142, WaterFluxMaxLevel-0.4021739-24-84, WaterFluxMinLevel-0.326087-284-86, WaterFluxFrequency-0.09782609-282-24, 
+PlacedObjects: CustomDecal><9.974487><236.1984><-16~129~733~155~716~-24~-170~104~0.0326087~1~0~DirtyWaterLine~0.5434783~1~1~1~0.1521739~1~0.09782609~1, 
+FadePalette: 8, 0.1847826
