@@ -22,9 +22,9 @@ internal class HooksOnly
         On.Player.Update += UnbMisc.DamageTracking; // misc damage tracking
         On.OracleSwarmer.BitByPlayer += UnbMisc.noGlow; // glow is not handled via oracle swarmers
         On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += UnbMisc.TreatedAsCyan; // cyan relationship to unbound
-        On.Lizard.DamageAttack += UnbMisc.BiteUnb;
-        On.PlayerGraphics.Update += UnbMisc.UpdateTheGlow;
-        On.SSOracleSwarmer.DrawSprites += UnbMisc.NeuronColourShift;
+        On.Lizard.DamageAttack += UnbMisc.BiteUnb; // cyan bites do damage rather than autostun
+        On.PlayerGraphics.Update += UnbMisc.UpdateTheGlow; // glow can change colour
+        On.SSOracleSwarmer.DrawSprites += UnbMisc.NeuronColourShift; // when in a room with a neuron, rings change to be the neuron colour
 
         // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup;// setup and intro
