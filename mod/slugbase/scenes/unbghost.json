@@ -1,13 +1,19 @@
 {
 	"id": "unbghost",
-	"scene_folder": "scenes/unbghost",
+	"scene_folder": "scenes/unblowkarma menu",
 	"images": [
-		{ "name": "Slugcat", "pos": [492, 297], "depth": 3.7, "shader": "Basic" },
-		{ "name": "Shaders",    "pos": [446, 283], "depth": 2.0, "shader": "Basic" }
+		{ "name": "bottomredbubbles", "pos": [0, 0], "depth": 3.7, "shader": "Basic" },
+		{ "name": "backrings",    "pos": [0, 0], "depth": 3.6, "shader": "Basic" },
+		{ "name": "blackbubbles",    "pos": [0, 0], "depth": 3.5, "shader": "Basic" },
+		{ "name": "wisp1",    "pos": [0, 0], "depth": 3.3, "shader": "Basic" },
+		{ "name": "taill",    "pos": [0, 0], "depth": 3.0, "shader": "Basic" },
+		{ "name": "frontrings",    "pos": [0, 0], "depth": 2.7, "shader": "Basic" },
+		{ "name": "body",    "pos": [0, 0], "depth": 2.0, "shader": "Basic" },
+		{ "name": "topredbubbles",    "pos": [0, 0], "depth": 1.4, "shader": "Basic" }
 	],
-	"idle_depths": [ 3.7 ],
-	"glow_pos": [688, 484],
-	"mark_pos": [689, 583],
+	"idle_depths": [ 2.0 ],
+	"glow_pos": [-1000, -1000],
+	"mark_pos": [-1000, -1000],
 	"select_menu_pos": [0, 0],
-	"slugcat_depth": 3.7
+	"slugcat_depth": 2.0
 }

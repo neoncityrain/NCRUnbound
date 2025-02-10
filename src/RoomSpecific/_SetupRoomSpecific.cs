@@ -9,43 +9,53 @@ namespace Unbound
         public static void IsGammaInMyShelter(On.Player.orig_Update orig, Player self, bool eu)
         {
             orig(self, eu);
-            if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null && self.room.abstractRoom != null &&
-                self.room.abstractRoom.creatures != null && self.room.abstractRoom.creatures.Count > 0 && self.room.abstractRoom.shelter &&
-                self.room.game.session.characterStats.name.value == "NCRunbound")
+            try
             {
-                List<AbstractCreature> overseersInRoom = new List<AbstractCreature>();
-                if (self.room.abstractRoom.creatures.Count > 1)
+                if (self != null &&
+                self.room != null && self.room.game != null && self.abstractCreature != null &&
+                self.room.abstractRoom != null && self.room.game != null && self.room.game.session != null &&
+                self.room.abstractRoom.creatures != null && self.room.abstractRoom.creatures.Count > 0 &&
+                self.room.abstractRoom.shelter && self.room.game.session.characterStats != null &&
+                self.room.game.session.characterStats.name.value == "NCRunbound")
                 {
-                    for (int j = 0; j < self.room.abstractRoom.creatures.Count; j++)
+                    List<AbstractCreature> overseersInRoom = new List<AbstractCreature>();
+                    if (self.room.abstractRoom.creatures.Count > 1)
                     {
-                        if (self.room.abstractRoom.creatures[j].creatureTemplate.type == CreatureTemplate.Type.Overseer &&
-                            self.room.abstractRoom.creatures[j].Room == self.room.abstractRoom &&
-                            self.room.abstractRoom.creatures[j].creatureTemplate.type != CreatureTemplate.Type.Slugcat)
+                        for (int j = 0; j < self.room.abstractRoom.creatures.Count; j++)
                         {
-                            overseersInRoom.Add(self.room.abstractRoom.creatures[j]);
+                            if (self.room.abstractRoom.creatures[j].creatureTemplate.type == CreatureTemplate.Type.Overseer &&
+                                self.room.abstractRoom.creatures[j].Room == self.room.abstractRoom &&
+                                self.room.abstractRoom.creatures[j].creatureTemplate.type != CreatureTemplate.Type.Slugcat)
+                            {
+                                overseersInRoom.Add(self.room.abstractRoom.creatures[j]);
+                            }
                         }
                     }
-                }
 
-                if (overseersInRoom.Count == 1 && !self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
-                {
-                    if (self.GetNCRunbound().MoreDebug)
+                    if (overseersInRoom.Count == 1 && !self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
                     {
-                        NCRDebug.Log("Gamma in shelter Unbound is in!");
+                        if (self.GetNCRunbound().MoreDebug)
+                        {
+                            NCRDebug.Log("Gamma in shelter Unbound is in!");
+                        }
+                        self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter = true;
                     }
-                    self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter = true;
-                }
 
-                if (overseersInRoom.Count != 1 && self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
-                {
-                    if (self.GetNCRunbound().MoreDebug)
+                    if (overseersInRoom.Count != 1 && self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
                     {
-                        NCRDebug.Log("Gamma no longer in shelter Unbound is in!");
+                        if (self.GetNCRunbound().MoreDebug)
+                        {
+                            NCRDebug.Log("Gamma no longer in shelter Unbound is in!");
+                        }
+                        self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter = false;
                     }
-                    self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter = false;
-                }
 
-                overseersInRoom.Clear();
+                    overseersInRoom.Clear();
+                }
+            }
+            catch (Exception e)
+            {
+                NCRDebug.Log("Hi this is Unbound I love throwing tantrums: " + e);
             }
         }
 
@@ -169,73 +179,6 @@ namespace Unbound
             catch (Exception e)
             {
                 NCRDebug.Log("The character setup for Unbound is fucking up: " + e);
-            }
-        }
-
-        public static void RoomSpecificScripts(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
-        {
-            if (room != null && room.game != null && room.game.session is StoryGameSession && room.world != null &&
-                room.game.session.characterStats.name.value == "NCRunbound")
-            {
-                orig(room);
-                string name = room.abstractRoom.name;
-
-                if (name == "deathPit")
-                {
-                    room.AddObject(new RoomSpecificScript.DeathPit(room));
-                }
-
-                #region Five Pebbles
-                if (room.world.name == "SS")
-                {
-                    if (name == "SS_E08") // five pebbles gravity gradient room
-                    {
-                        room.AddObject(new RoomSpecificScript.SS_E08GradientGravity(room));
-                    }
-                }
-                #endregion
-                #region Subterranean
-                else if (room.world.name == "SB")
-                {
-                    if (name == "SB_A14") // sub ten karma symbol
-                    {
-                        room.AddObject(new RoomSpecificScript.SB_A14KarmaIncrease(room));
-                    }
-                }
-                #endregion
-                #region Shoreline
-                else if (room.world.name == "SL")
-                {
-                    if (name == "SL_WALL06") //
-                    {
-                        // room.AddObject(new UnbSLWall06(room, rsplayer));
-                    }
-                }
-                #endregion
-
-                if (ModManager.MSC)
-                {
-                    #region Submerged Superstructure
-                    if (room.world.name == "MS")
-                    {
-
-                    }
-                    #endregion
-                    #region Outer Expanse
-                    if (name == "OE_PUMP01")
-                    {
-                        room.AddObject(new MSCRoomSpecificScript.OE_PUMP01_pusher());
-                    }
-                    if (name == "OE_CAVE03")
-                    {
-                        room.AddObject(new MSCRoomSpecificScript.OE_CAVE03_warp());
-                    }
-                    #endregion
-                }
-            }
-            else
-            {
-                orig(room);
             }
         }
 

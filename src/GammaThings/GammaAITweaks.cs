@@ -623,12 +623,9 @@ namespace Unbound
             if (self != null && self.room != null && !self.dead &&
                 self.room.game.session.characterStats.name.value == "NCRunbound" && self.PlayerGuide)
             {
-                if (self.room != null)
+                if (self.room != null && self.room.abstractRoom.name == "SS_AI")
                 {
-                    if (self.room.abstractRoom.name == "SS_AI")
-                    {
-                        return;
-                    }
+                    return;
                     // dont show holograms in pebbles' chamber. this is initially only for MSC- should not trigger for UB either,
                     // at least for now
                 }
@@ -651,8 +648,10 @@ namespace Unbound
                     return;
                     // dont show holograms if not in a room
                 }
+
                 // ordinarily the tutorial holograms are here. this mod goes with the assumption that the player knows how to play,
                 // so those are removed
+
                 if (message == OverseerHologram.Message.Angry)
                 {
                     self.hologram = new AngryHologram(self, message, communicateWith, importance);
@@ -678,10 +677,15 @@ namespace Unbound
                     self.hologram = new OverseerHologram.FoodPointer(self, message, communicateWith, importance);
                 }
 
+                else if (message == OverseerHologram.Message.ProgressionDirection)
+                {
+                    self.hologram = new OverseerHologram.DirectionPointer(self, message, communicateWith, importance);
+                }
+
                 else
                 {
                     return;
-                    // return if it doesnt fit the above (i.e., if its a tutorial or progression direction)
+                    // return if it doesnt fit the above (ex., if its a tutorial)
                 }
                 self.room.AddObject(self.hologram);
             }

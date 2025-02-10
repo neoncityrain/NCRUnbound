@@ -31,9 +31,8 @@ internal class HooksOnly
         On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
         On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenGravUpdate; // antigravity scripts
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
-        On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.RoomSpecificScripts; // listing all rooms for SRS
         On.Player.ctor += SetupRoomSpecific.MaintainRoomSpecific;
-        On.Player.Update += SetupRoomSpecific.IsGammaInMyShelter;
+        // On.Player.Update += SetupRoomSpecific.IsGammaInMyShelter;
 
         // GAMMA =============================================================================================
         // AI TWEAKS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -58,7 +57,7 @@ internal class HooksOnly
         On.Overseer.Update += RBGUpdate;
 
         // TUTORIALS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        TutorialroomKill.Init(); // leave this in case it is needed later
+        // TutorialroomKill.Init(); // leave this in case it is needed later
 
         Scenes.Init();
         // gamma

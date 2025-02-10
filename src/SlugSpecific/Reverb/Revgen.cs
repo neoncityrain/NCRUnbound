@@ -9,7 +9,7 @@ namespace Unbound
         public static void HookThatThang()
         {
             On.FlareBomb.Update += FlarebombStun;
-            On.Water.InitiateSprites += NormalHRWater;
+            // On.Water.InitiateSprites += NormalHRWater;
             On.Player.CanBeSwallowed += NoSwallow;
 
             On.Player.Update += RockSwallow;
@@ -124,17 +124,6 @@ namespace Unbound
                 return false;
             }
             return orig(self, testObj);
-        }
-
-        private static void NormalHRWater(On.Water.orig_InitiateSprites orig, Water self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
-        {
-            orig(self, sLeaser, rCam);
-            if (self != null && self.room != null && self.room.game != null && self.room.game.session != null &&
-                self.room.game.session.characterStats.name.value == "NCRreverb" &&
-                ModManager.MSC && self.room.world.region != null && self.room.world.region.name == "HR")
-            {
-                sLeaser.sprites[0].shader = self.room.game.rainWorld.Shaders["WaterSurface"];
-            }
         }
 
         private static void FlarebombStun(On.FlareBomb.orig_Update orig, FlareBomb self, bool eu)

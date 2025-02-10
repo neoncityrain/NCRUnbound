@@ -208,7 +208,6 @@ namespace Unbound
                 }
                 // upper jumprings
 
-                PlayerGraphicsHooks.InitiateCustomGraphics(self, sLeaser, rCam);
                 #endregion
                 #region Mirroring
                 //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
