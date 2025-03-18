@@ -25,23 +25,25 @@ internal class HooksOnly
         On.Lizard.DamageAttack += UnbMisc.BiteUnb; // cyan bites do damage rather than autostun
         On.PlayerGraphics.Update += UnbMisc.UpdateTheGlow; // glow can change colour
         On.SSOracleSwarmer.DrawSprites += UnbMisc.NeuronColourShift; // when in a room with a neuron, rings change to be the neuron colour
+        On.JellyFish.Collide += UnbMisc.shockMeLess;
 
         // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup;// setup and intro
         On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
         On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenGravUpdate; // antigravity scripts
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
+        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.updateGravity;
         On.Player.ctor += SetupRoomSpecific.MaintainRoomSpecific;
         // On.Player.Update += SetupRoomSpecific.IsGammaInMyShelter;
 
         // GAMMA =============================================================================================
         // AI TWEAKS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        On.Overseer.TryAddHologram += GammaAITweaks.HologramTweaks;
-        On.OverseerAbstractAI.RoomAllowed += GammaAITweaks.RoomAllowed;
-        On.OverseerCommunicationModule.FoodDelicousScore += GammaAITweaks.StopLeadingToFoodUnboundCantEat;
-        On.OverseerAbstractAI.HowInterestingIsCreature += GammaAITweaks.InterestInUnbound;
-        On.OverseerAI.Update += GammaAITweaks.GammaAIUpdate;
-        On.OverseerAI.HoverScoreOfTile += GammaAITweaks.HoverScore;
+        On.Overseer.TryAddHologram += GammaAITweaks.HologramTweaks; // changes the holograms used by gamma + priority
+        On.OverseerAbstractAI.RoomAllowed += GammaAITweaks.RoomAllowed; // allows gamma into shelters
+        On.OverseerCommunicationModule.FoodDelicousScore += GammaAITweaks.StopLeadingToFoodUnboundCantEat; // notes unbounds diet, rather than leading him to anything
+        On.OverseerAbstractAI.HowInterestingIsCreature += GammaAITweaks.InterestInUnbound; // unbound is always interesting
+        On.OverseerAI.Update += GammaAITweaks.GammaAIUpdate; // update gamma ai
+        On.OverseerAI.HoverScoreOfTile += GammaAITweaks.HoverScore; // changes gammas hoverscore on tiles
         On.Overseer.Die += GammaAITweaks.DontRespawnImmediately; // gamma does not revive when killed by non-slugcat creatures
 
         // VISUALS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -75,7 +77,7 @@ internal class HooksOnly
         UnbCatStats.Init();
         EndUnb.Init();
         // slugcatstats exclusive things
-        
+
         // MOD EXCLUSIVE =============================================================================================
         // MORE SLUGCATS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         MSCOnly.Init();

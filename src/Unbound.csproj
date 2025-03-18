@@ -39,6 +39,9 @@
         <Reference Include="Pom">
           <HintPath>..\lib\Pom.dll</HintPath>
         </Reference>
+        <Reference Include="Rain Meadow">
+          <HintPath>..\lib\Rain Meadow.dll</HintPath>
+        </Reference>
         <Reference Include="RandomBuff">
           <HintPath>..\lib\RandomBuff.dll</HintPath>
         </Reference>

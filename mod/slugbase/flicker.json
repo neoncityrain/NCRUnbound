@@ -22,6 +22,7 @@
 		},
 		
 		
+		"expedition_enabled": false,
 		"food_min": 10,
 		"food_max": 15,
 		"auto_grab_batflies": false,

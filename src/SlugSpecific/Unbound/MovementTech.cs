@@ -4,8 +4,8 @@
     {
         public static void UnboundCyanJumps(On.Player.orig_Update orig, Player self, bool eu)
         {
-            if (self != null && self.room != null &&
-                self.GetNCRunbound().IsUnbound)
+            if (self?.room != null &&
+                (self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician))
             {
                 #region Setup and Nullify Unused
                 if (self.GetNCRunbound().unbsmoke != null &&
@@ -267,9 +267,9 @@
         public static void SetupWalljumps(On.Player.orig_WallJump orig, Player self, int direction)
         {
             orig(self, direction);
-            if (!self.GetNCRunbound().LostTail &&
-                self != null && self.room != null &&
-                self.GetNCRunbound().IsUnbound)
+            if (self?.room != null &&
+                !self.GetNCRunbound().LostTail && // for randombuffs
+                (self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician))
             {
                 self.GetNCRunbound().UnbChainjumpsCount += 1;
                 if (self.GetNCRunbound().UnbChainjumpsCount > 1 && !self.GetNCRunbound().DidTripleCyanJump)
@@ -322,8 +322,8 @@
         {
             orig(self, eu);
 
-            if (self != null && self.room != null &&
-                self.GetNCRunbound().IsUnbound)
+            if (self?.room != null &&
+                (self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician))
             {
                 #region Init Variables
                 if (self.lowerBodyFramesOnGround > 1 || self.submerged)

@@ -7,7 +7,8 @@ namespace Unbound
     {
         public static void Init()
         {
-            On.SSOracleBehavior.PebblesConversation.AddEvents += InitialText;
+            On.SSOracleBehavior.PebblesConversation.AddEvents += InitialTextUnbound;
+            On.SSOracleBehavior.PebblesConversation.AddEvents += InitialTextTech;
             On.SSOracleBehavior.CreatureJokeDialog += JokeDialogue; // just adds the prefix to his dialogue. for now.
             On.SSOracleBehavior.InterruptPearlMessagePlayerLeaving += PlayerLeftDuringPearlread;
             On.SSOracleBehavior.ResumePausedPearlConversation += ResumePearlread;
@@ -253,7 +254,7 @@ namespace Unbound
             }
         }
 
-        private static void InitialText(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
+        private static void InitialTextUnbound(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
         {
             if (self != null && self.id != null && self.owner != null && self.owner.oracle != null && self.owner.oracle.room != null &&
                 self.owner.oracle.ID == Oracle.OracleID.SS && self.owner.oracle.room.game != null &&
@@ -303,6 +304,34 @@ namespace Unbound
                 catch (Exception e) 
                 {
                     NCRDebug.Log("Unbound Pebbles conversation Error: " + e);
+                }
+            }
+            else { orig(self); }
+        }
+
+        private static void InitialTextTech(On.SSOracleBehavior.PebblesConversation.orig_AddEvents orig, SSOracleBehavior.PebblesConversation self)
+        {
+            if (self?.id != null && self.owner?.oracle?.room?.game != null &&
+                self.owner.player.room.game.session.characterStats.name.value == "NCRtech")
+            {
+                try
+                {
+                    if (self.owner.oracle.ID == Oracle.OracleID.SS && self.id == Conversation.ID.Pebbles_White)
+                    {
+                        self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 10));
+
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("A small beast, on the floor of my chamber."), 0));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("You do not appear to belong to Suns. What is it you want?"), 0));
+
+                        self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 170));
+
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I do not have time to entertain your antics."), 0));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Please leave."), 0));
+                    }
+                }
+                catch (Exception e)
+                {
+                    NCRDebug.Log("Technician Pebbles/Moon conversation Error: " + e);
                 }
             }
             else { orig(self); }

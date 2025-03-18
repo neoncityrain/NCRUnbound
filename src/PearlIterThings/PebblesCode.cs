@@ -24,11 +24,39 @@ namespace Unbound
             On.SSOracleBehavior.SSOracleMeetWhite.Update += UpdateMeetUnbound;
 
             On.SSOracleBehavior.UpdateStoryPearlCollection += UpdatePearlCollection;
+
+            On.SSOracleBehavior.SSSleepoverBehavior.Update += noPanic;
+        }
+
+        private static void noPanic(On.SSOracleBehavior.SSSleepoverBehavior.orig_Update orig, SSOracleBehavior.SSSleepoverBehavior self)
+        {
+            try
+            {
+                if (self?.oracle?.room?.game?.session != null &&
+                    self.panicTimer > 700 &&
+                    self.oracle.room.game.session.characterStats.name.value == "NCRtech")
+                {
+                    self.panicTimer = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                NCRDebug.Log("Error trying to reset panic timer: " + e);
+            }
+
+            try
+            {
+                orig(self);
+            }
+            catch (Exception e)
+            {
+                NCRDebug.Log("Error in basegame sleepover code...?: " + e);
+            }
         }
 
         private static void UpdatePearlCollection(On.SSOracleBehavior.orig_UpdateStoryPearlCollection orig, SSOracleBehavior self)
         {
-            if (self != null && self.oracle != null && self.oracle.room != null && self.player != null && self.player.room != null &&
+            if (self?.oracle?.room != null && self.player?.room != null &&
                 self.player.room == self.oracle.room && self.readDataPearlOrbits != null && self.readPearlGlyphs != null &&
 
                 !self.player.room.game.rainWorld.safariMode && self.oracle.ID == Oracle.OracleID.SS &&
@@ -468,10 +496,11 @@ namespace Unbound
 
         private static void SeeUnbound(On.SSOracleBehavior.orig_SeePlayer orig, SSOracleBehavior self)
         {
-            if (self != null && self.player != null && self.player.room != null && !self.player.room.game.rainWorld.safariMode &&
-                self.player.room.game.session.characterStats.name.value == "NCRunbound")
+            if (self?.player?.room != null && !self.player.room.game.rainWorld.safariMode &&
+                (self.player.room.game.session.characterStats.name.value == "NCRunbound" ||
+                self.player.room.game.session.characterStats.name.value == "NCRtech"))
             {
-                if (self.conversation != null)
+                if (self.conversation != null && self.player.room.game.session.characterStats.name.value == "NCRunbound")
                 {
                     Conversation.InitalizePrefixColor();
                     self.conversation.colorMode = true;
@@ -554,32 +583,84 @@ namespace Unbound
                 }
                 #endregion
 
-                if (self.action != SSOracleBehavior.Action.MeetWhite_Shocked && self.action != UnboundEnums.UnbSlumberParty
+                if (self.player.room.game.session.characterStats.name.value == "NCRunbound")
+                {
+                    if (self.action != SSOracleBehavior.Action.MeetWhite_Shocked && self.action != UnboundEnums.UnbSlumberParty
                     && self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad >= 1)
-                {
-                    if (self.player.GetNCRunbound().MoreDebug)
                     {
-                        NCRDebug.Log("Pebbles seeing Unbound again!");
+                        if (self.player.GetNCRunbound().MoreDebug)
+                        {
+                            NCRDebug.Log("Pebbles seeing Unbound again!");
+                        }
+                        self.NewAction(UnboundEnums.UnbSlumberParty);
                     }
-                    self.NewAction(UnboundEnums.UnbSlumberParty);
+                    else if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1)
+                    {
+                        self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad = 0;
+                        if (self.player.GetNCRunbound().MoreDebug && self.action != SSOracleBehavior.Action.MeetWhite_Shocked)
+                        { NCRDebug.Log("Pebbles meet Unbound!"); }
+                        self.NewAction(SSOracleBehavior.Action.MeetWhite_Shocked);
+                        self.SlugcatEnterRoomReaction();
+                    }
+
+                    if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad != 0)
+                    {
+                        self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad++;
+                    }
                 }
-                else if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad < 1)
+                else if (self.player.room.game.session.characterStats.name.value == "NCRtech")
                 {
-                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad = 0;
-                    if (self.player.GetNCRunbound().MoreDebug && self.action != SSOracleBehavior.Action.MeetWhite_Shocked)
-                    { NCRDebug.Log("Pebbles meet Unbound!"); }
-                    self.NewAction(SSOracleBehavior.Action.MeetWhite_Shocked);
-                    self.SlugcatEnterRoomReaction();
-                }
-                if (self.player.GetNCRunbound().MoreDebug)
-                {
-                    NCRDebug.Log("Conversations with Pebbles: " +
-                            self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad.ToString());
+                    if (self.oracle.ID == Oracle.OracleID.SS &&
+                        self.action != SSOracleBehavior.Action.MeetWhite_Shocked &&
+                        self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts >= 1)
+                    {
+                        if (self.player.GetNCRunbound().MoreDebug)
+                        {
+                            NCRDebug.Log("Pebbles seeing Technician again! Kicking them out.");
+                        }
+                        if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts > 1)
+                        {
+                            self.NewAction(SSOracleBehavior.Action.ThrowOut_KillOnSight);
+                        }
+                        else
+                        {
+                            self.NewAction(SSOracleBehavior.Action.ThrowOut_SecondThrowOut);
+                            self.SlugcatEnterRoomReaction();
+                        }
+                        self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts++;
+                    }
+                    else if (self.oracle.ID == Oracle.OracleID.SS)
+                    {
+                        self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts = 1;
+                        if (self.player.GetNCRunbound().MoreDebug && self.action != SSOracleBehavior.Action.MeetWhite_Shocked)
+                        { NCRDebug.Log("Pebbles meet Technician!"); }
+                        self.NewAction(SSOracleBehavior.Action.MeetWhite_Shocked);
+                        self.SlugcatEnterRoomReaction();
+                    }
+                    else if (self.oracle.ID == MoreSlugcatsEnums.OracleID.DM)
+                    {
+                        if (self.player.GetNCRunbound().MoreDebug)
+                        {
+                            NCRDebug.Log("Moon seeing Technician!");
+                        }
+                        self.NewAction(MoreSlugcatsEnums.SSOracleBehaviorAction.Moon_SlumberParty);
+                    }
                 }
 
-                if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad != 0)
+                if (self.player.GetNCRunbound().MoreDebug)
                 {
-                    self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad++;
+                    if (self.player.room.game.session.characterStats.name.value == "NCRunbound")
+                    {
+                        NCRDebug.Log("Conversations with Pebbles: " +
+                            self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad.ToString());
+                    }
+                    else // technician
+                    {
+                        NCRDebug.Log("Conversations with Moon: " +
+                            self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad.ToString());
+                        NCRDebug.Log("Conversations with Pebbles: " +
+                            self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiThrowOuts.ToString());
+                    }
                 }
             }
             else
@@ -1139,7 +1220,29 @@ namespace Unbound
                 }
                 else if (self.action == SSOracleBehavior.Action.ThrowOut_KillOnSight)
                 {
-                    if (ModManager.MMF)
+                    if (self.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.SSaiConversationsHad >= 1 &&
+                        self.oracle.room == self.player.room)
+                    {
+                        if ((self.oracle.oracleBehavior as SSOracleBehavior).conversation != null)
+                        {
+                            (self.oracle.oracleBehavior as SSOracleBehavior).conversation.Destroy();
+                            (self.oracle.oracleBehavior as SSOracleBehavior).conversation = null;
+                        }
+                        self.movementBehavior = SSOracleBehavior.MovementBehavior.KeepDistance;
+
+                        self.owner.UnlockShortcuts();
+                        self.player.mainBodyChunk.vel += Custom.DirVec(self.player.mainBodyChunk.pos,
+                            self.oracle.room.MiddleOfTile(28, 32)) * 1.3f;
+                        self.player.mainBodyChunk.pos = Vector2.Lerp(self.player.mainBodyChunk.pos,
+                            self.oracle.room.MiddleOfTile(28, 32), 0.08f);
+                        if (self.player.enteringShortCut == null && self.player.mainBodyChunk.pos.x < 560f &&
+                            self.player.mainBodyChunk.pos.y > 630f)
+                        {
+                            self.player.mainBodyChunk.pos.y = 630f;
+                        }
+                        return;
+                    }
+                    else if (ModManager.MMF)
                     {
                         if (self.player.room == self.oracle.room)
                         {
@@ -1150,7 +1253,7 @@ namespace Unbound
                             self.dialogBox.Interrupt(self.Translate("FP: ..."), 200);
                         }
                     }
-                    if (!ModManager.MMF || self.owner.throwOutCounter >= 200)
+                    else if (!ModManager.MMF || self.owner.throwOutCounter >= 200)
                     {
                         if ((!self.player.dead || self.owner.killFac > 0.5f) && self.player.room == self.oracle.room)
                         {

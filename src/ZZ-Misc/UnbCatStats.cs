@@ -1,4 +1,5 @@
 ﻿using System;
+using JollyCoop;
 
 namespace Unbound
 {
@@ -27,27 +28,39 @@ namespace Unbound
 
         private static float SpawnMod(On.SlugcatStats.orig_SpearSpawnModifier orig, SlugcatStats.Name index, float originalSpearChance)
         {
-            if (index == UnboundEnums.NCRUnbound)
+            if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
             {
                 return Mathf.Pow(originalSpearChance, 0.825f);
+            }
+            if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
+            {
+                return Mathf.Pow(originalSpearChance, 0.9f);
             }
             return orig(index, originalSpearChance);
         }
 
         private static float ExplosiveSpear(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance orig, SlugcatStats.Name index)
         {
-            if (index == UnboundEnums.NCRUnbound)
+            if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
             {
-                return 0.012f;
+                return 0.011f;
+            }
+            if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
+            {
+                return 0.013f;
             }
             return orig(index);
         }
 
         private static float ElectricSpear(On.SlugcatStats.orig_SpearSpawnElectricRandomChance orig, SlugcatStats.Name index)
         {
-            if (ModManager.MSC && index == UnboundEnums.NCRUnbound)
+            if (ModManager.MSC && (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound"))
             {
                 return 0.011f;
+            }
+            else if (ModManager.MSC && (index == UnboundEnums.NCRTechnician || index.value == "NCRtech"))
+            {
+                return 0.09f;
             }
             return orig(index);
         }
@@ -62,20 +75,16 @@ namespace Unbound
             {
                 return true;
             }
-            if (i.value == "NCRreverb" || i == UnboundEnums.NCRReverb)
-            {
-                return false;
-            }
             else return orig(i);
         }
 
         private static string UnbNameLogging(On.SlugcatStats.orig_getSlugcatName orig, SlugcatStats.Name i)
         {
-            if (i != null && i == UnboundEnums.NCRTechnician)
+            if (i != null && (i == UnboundEnums.NCRTechnician || i.value == "NCRtech"))
             {
                 return "Technician";
             }
-            if (i != null && i == UnboundEnums.NCRUnbound)
+            if (i != null && (i == UnboundEnums.NCRUnbound || i.value == "NCRunbound"))
             {
                 return "Unbound";
             }

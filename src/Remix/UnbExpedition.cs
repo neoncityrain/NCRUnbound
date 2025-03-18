@@ -154,7 +154,7 @@ namespace Unbound
         public static bool Invalid(On.Expedition.NeuronDeliveryChallenge.orig_ValidForThisSlugcat orig, NeuronDeliveryChallenge self,
             SlugcatStats.Name slugcat)
         {
-            if (slugcat == UnboundEnums.NCRUnbound || slugcat.value == "NCRunbound")
+            if (slugcat == UnboundEnums.NCRUnbound || slugcat.value == "NCRunbound" || slugcat.value == "NCRtech")
             {
                 return false;
             }

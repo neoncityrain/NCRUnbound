@@ -3,6 +3,7 @@ WaveAmplitude: 0.2173913
 SecondWaveAmplitude: 0
 Clouds: 0.1086956
 Grime: 0
+BkgDroneVolume: 0.5012203
 Palette: 10
 EffectColorA: 12
 Effects: Fog-1-268-79, SkyAndLightBloom-0.08738675-273-115, ElectricDeath-0.1086956-280-27, GreenSparks-0.03866627-20-20, BrokenZeroG-0.2391304-280-142, 

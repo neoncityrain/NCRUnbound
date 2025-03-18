@@ -8,7 +8,9 @@ namespace Unbound
         public static void DontRespawnImmediately(On.Overseer.orig_Die orig, Overseer self)
         {
             if (!self.SafariOverseer && self != null && !self.dead &&
-                self.PlayerGuide && self.room.game.session.characterStats.name.value == "NCRunbound")
+                self.PlayerGuide &&
+                (self.room.game.session.characterStats.name.value == "NCRunbound" ||
+                self.room.game.session.characterStats.name.value == "NCRtech"))
             {
                 // should ONLY respawn in the next cycle
                 if (self.hologram != null)
@@ -168,7 +170,7 @@ namespace Unbound
 
         public static void GammaAIUpdate(On.OverseerAI.orig_Update orig, OverseerAI self)
         {
-            if (self != null && self.overseer != null &&
+            if (self?.overseer != null &&
                 self.overseer.PlayerGuide &&
                 self.overseer.room.game.session.characterStats.name.value == "NCRunbound")
             {
@@ -224,8 +226,7 @@ namespace Unbound
 
                     if (watchingCreature)
                     {
-                        if (self.targetCreature != null && self.targetCreature.realizedCreature != null && self.targetCreature.realizedCreature.room == 
-                            self.overseer.room)
+                        if (self.targetCreature?.realizedCreature?.room == self.overseer.room)
                         {
                             watchingCreature = (self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) + self.casualInterestBonus > 
                                 self.RealizedCreatureInterest(self.targetCreature.realizedCreature));
@@ -300,7 +301,7 @@ namespace Unbound
                     }
                     AbstractCreature abstractCreature = self.overseer.room.abstractRoom.creatures[UnityEngine.Random.Range(0, 
                         self.overseer.room.abstractRoom.creatures.Count)];
-                    if (abstractCreature.realizedCreature != null)
+                    if (abstractCreature?.realizedCreature != null)
                     {
                         if (abstractCreature.creatureTemplate.type != CreatureTemplate.Type.Overseer)
                         {
@@ -405,10 +406,11 @@ namespace Unbound
         public static float InterestInUnbound(On.OverseerAbstractAI.orig_HowInterestingIsCreature orig, OverseerAbstractAI self, 
             AbstractCreature testCrit)
         {
-            if (self != null && self.world != null && !self.world.game.IsArenaSession && self.isPlayerGuide &&
+            if (self?.world != null && !self.world.game.IsArenaSession && self.isPlayerGuide &&
                 testCrit != null &&
                 self.world.game.session.characterStats.name.value == "NCRunbound")
             {
+                // changes how much interest gamma has in various creatures.
                 if (testCrit.creatureTemplate.smallCreature)
                 {
                     return 0.05f;
@@ -544,10 +546,11 @@ namespace Unbound
         public static float StopLeadingToFoodUnboundCantEat(On.OverseerCommunicationModule.orig_FoodDelicousScore orig, 
             OverseerCommunicationModule self, AbstractPhysicalObject foodObject, Player player)
         {
-            if (self != null && self.overseerAI != null && self.overseerAI.overseer != null && self.overseerAI.overseer.room != null &&
-                self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self?.overseerAI?.overseer?.room != null &&
+                (self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" ||
+                self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRtech"))
             {
-                if (foodObject == null || foodObject.realizedObject == null || foodObject.Room != player.abstractCreature.Room ||
+                if (foodObject?.realizedObject == null || foodObject.Room != player.abstractCreature.Room ||
                     foodObject.slatedForDeletion)
                 {
                     return 0f;
@@ -590,7 +593,7 @@ namespace Unbound
 
         public static bool RoomAllowed(On.OverseerAbstractAI.orig_RoomAllowed orig, OverseerAbstractAI self, int room)
         {
-            if (self != null && self.world != null && self.RelevantPlayer != null &&
+            if (self?.world != null && self.RelevantPlayer != null &&
                 self.world.game.session.characterStats.name.value == "NCRunbound" && self.playerGuide)
             {
                 if (room < self.world.firstRoomIndex || room >= self.world.firstRoomIndex + self.world.NumberOfRooms)
@@ -620,14 +623,15 @@ namespace Unbound
         public static void HologramTweaks(On.Overseer.orig_TryAddHologram orig, Overseer self, OverseerHologram.Message message, 
             Creature communicateWith, float importance)
         {
-            if (self != null && self.room != null && !self.dead &&
-                self.room.game.session.characterStats.name.value == "NCRunbound" && self.PlayerGuide)
+            if (self?.room != null && !self.dead &&
+                (self.room.game.session.characterStats.name.value == "NCRunbound" ||
+                self.room.game.session.characterStats.name.value == "NCRtech") && self.PlayerGuide)
             {
                 if (self.room != null && self.room.abstractRoom.name == "SS_AI")
                 {
                     return;
-                    // dont show holograms in pebbles' chamber. this is initially only for MSC- should not trigger for UB either,
-                    // at least for now
+                    // dont show holograms when in pebbles' chamber. this is initially only for MSC- should not trigger for UB either,
+                    // at least for now!
                 }
                 if (self.hologram != null)
                 {
@@ -657,27 +661,29 @@ namespace Unbound
                     self.hologram = new AngryHologram(self, message, communicateWith, importance);
                 }
                 // this is moved to the top, as it is the highest priority.
-                else if (message == OverseerHologram.Message.DangerousCreature)
+                // this SHOULD change to be angry with other creatures if unbound is grabbed
+
+                else if (message == OverseerHologram.Message.DangerousCreature) // danger nearby
                 {
                     self.hologram = new OverseerHologram.CreaturePointer(self, message, communicateWith, importance);
                 }
 
-                else if (message == OverseerHologram.Message.Shelter)
-                {
-                    self.hologram = new OverseerHologram.ShelterPointer(self, message, communicateWith, importance);
-                }
-
-                else if (message == OverseerHologram.Message.Bats)
-                {
-                    self.hologram = new OverseerHologram.BatPointer(self, message, communicateWith, importance);
-                }
-
-                else if (message == OverseerHologram.Message.FoodObject)
+                else if (message == OverseerHologram.Message.FoodObject) // food in room when hungry
                 {
                     self.hologram = new OverseerHologram.FoodPointer(self, message, communicateWith, importance);
                 }
 
-                else if (message == OverseerHologram.Message.ProgressionDirection)
+                else if (message == OverseerHologram.Message.Shelter) // shelter
+                {
+                    self.hologram = new OverseerHologram.ShelterPointer(self, message, communicateWith, importance);
+                }
+
+                else if (message == OverseerHologram.Message.Bats) // bats are okay, but not top priority
+                {
+                    self.hologram = new OverseerHologram.BatPointer(self, message, communicateWith, importance);
+                }
+
+                else if (message == OverseerHologram.Message.ProgressionDirection) // progression is the least important here
                 {
                     self.hologram = new OverseerHologram.DirectionPointer(self, message, communicateWith, importance);
                 }

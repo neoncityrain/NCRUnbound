@@ -1,0 +1,12 @@
+sm1
+none
+
+You're not particularly interested in the standard routes a Slugcat would take.
+You are........ more special than that.............
+You turn your gaze to the sky, but how do you plan to ascend?
+Surely you have some sort of plan?
+
+RESTART
+start.txt
+
+FADE

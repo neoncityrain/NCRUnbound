@@ -6,12 +6,12 @@ namespace Unbound
     {
         public static void Init()
         {
-            On.VoidSea.PlayerGhosts.AddGhost += AddUnbGhost;
+            // On.VoidSea.PlayerGhosts.AddGhost += AddUnbGhost;
         }
 
         private static void AddUnbGhost(On.VoidSea.PlayerGhosts.orig_AddGhost orig, PlayerGhosts self)
         {
-            if (self.originalPlayer.slugcatStats.name.value == "NCRunbound")
+            if (self?.originalPlayer?.slugcatStats?.name?.value == "NCRunbound")
             {
                 Vector2 pos = self.originalPlayer.mainBodyChunk.pos + Custom.RNV() * 2000f;
                 AbstractCreature abstractCreature = new AbstractCreature(self.voidSea.room.world, 

@@ -6,17 +6,17 @@ namespace Unbound
     {
         public static void Init()
         {
-            On.DataPearl.UniquePearlMainColor += DataPearl_UniquePearlMainColor;
-            On.DataPearl.UniquePearlHighLightColor += DataPearl_UniquePearlHighLightColor;
-            On.DataPearl.ApplyPalette += DataPearl_ApplyPalette;
-            On.Player.StomachGlowLightColor += Player_StomachGlowLightColor;
+            On.DataPearl.UniquePearlMainColor += karmaPearlUniqueColour;
+            On.DataPearl.UniquePearlHighLightColor += karmaPearlUniqueHighlight;
+            On.DataPearl.ApplyPalette += applyKarmapearlColour;
+            On.Player.StomachGlowLightColor += karmapearlGlow;
 
             On.DataPearl.PearlIsNotMisc += NotMisc;
         }
 
         private static bool NotMisc(On.DataPearl.orig_PearlIsNotMisc orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
         {
-            if (pearlType == UnboundEnums.unboundKarmaPearl)
+            if (pearlType != null && pearlType == UnboundEnums.unboundKarmaPearl)
             {
                 return true;
             }
@@ -26,27 +26,28 @@ namespace Unbound
             }
         }
 
-        private static Color? DataPearl_UniquePearlHighLightColor(On.DataPearl.orig_UniquePearlHighLightColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
+        private static Color? karmaPearlUniqueHighlight(On.DataPearl.orig_UniquePearlHighLightColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
         {
-            if (pearlType == UnboundEnums.unboundKarmaPearl)
+            if (pearlType != null && pearlType == UnboundEnums.unboundKarmaPearl)
             {
                 return new Color(0.2f, 0f, 0.3f);
             }
             else return orig(pearlType);
         }
 
-        private static Color DataPearl_UniquePearlMainColor(On.DataPearl.orig_UniquePearlMainColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
+        private static Color karmaPearlUniqueColour(On.DataPearl.orig_UniquePearlMainColor orig, DataPearl.AbstractDataPearl.DataPearlType pearlType)
         {
-            if (pearlType == UnboundEnums.unboundKarmaPearl)
+            if (pearlType != null && pearlType == UnboundEnums.unboundKarmaPearl)
             {
                 return new Color(0.4f, 0.1f, 0.5f);
             }
             else return orig(pearlType);
         }
 
-        private static void DataPearl_ApplyPalette(On.DataPearl.orig_ApplyPalette orig, DataPearl self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        private static void applyKarmapearlColour(On.DataPearl.orig_ApplyPalette orig, DataPearl self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
-            if ((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
+            if (self?.abstractPhysicalObject != null &&
+                (self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
             {
                 self.color = DataPearl.UniquePearlMainColor((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType);
                 self.highlightColor = DataPearl.UniquePearlHighLightColor((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType);
@@ -58,26 +59,30 @@ namespace Unbound
             }
         }
 
-        private static Color? Player_StomachGlowLightColor(On.Player.orig_StomachGlowLightColor orig, Player self)
+        private static Color? karmapearlGlow(On.Player.orig_StomachGlowLightColor orig, Player self)
         {
-            AbstractPhysicalObject stomachObject;
-            if (self.AI == null)
+            if (self != null)
             {
-                stomachObject = self.objectInStomach;
-            }
-            else
-            {
-                stomachObject = (self.State as PlayerNPCState).StomachObject;
-            }
-
-            if (stomachObject != null)
-            {
-                if (self.objectInStomach.type == AbstractPhysicalObject.AbstractObjectType.DataPearl &&
-                    (self.objectInStomach as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
+                AbstractPhysicalObject stomachObject;
+                if (self.AI == null)
                 {
-                    return new Color?(new Color(0.8f, 0.1f, 0.9f, 0.25f));
+                    stomachObject = self.objectInStomach;
+                }
+                else
+                {
+                    stomachObject = (self.State as PlayerNPCState).StomachObject;
+                }
+
+                if (stomachObject != null)
+                {
+                    if (self.objectInStomach.type == AbstractPhysicalObject.AbstractObjectType.DataPearl &&
+                        (self.objectInStomach as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
+                    {
+                        return new Color?(new Color(0.8f, 0.1f, 0.9f, 0.25f));
+                    }
                 }
             }
+            
             return orig(self);
         }
         // end pearl

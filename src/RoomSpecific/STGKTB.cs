@@ -9,20 +9,6 @@ namespace Unbound
             On.ZapCoil.InitiateSprites += RedZap;
             On.ZapCoilLight.ctor += RedLight;
             On.ZapCoil.DrawSprites += DrawRedzap;
-            On.Region.RegionColor += Colour;
-        }
-
-        private static Color Colour(On.Region.orig_RegionColor orig, string regionName)
-        {
-            if (Region.EquivalentRegion(regionName, "STG"))
-            {
-                return new Color(0.87f, 0.39f, 0.33f, 1f);
-            }
-            if (Region.EquivalentRegion(regionName, "KTB"))
-            {
-                return new Color(0.29f, 0.39f, 0.47f, 1f);
-            }
-            return orig(regionName);
         }
 
         private static void DrawRedzap(On.ZapCoil.orig_DrawSprites orig, ZapCoil self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
@@ -32,7 +18,7 @@ namespace Unbound
             {
                 string name = self.room.abstractRoom.name;
 
-                if (name == "MS_STGSTARCHAMBER" || self.room.world.name == "STG")
+                if (name == "MS_STGSTARCHAMBER")
                 {
                     float num = Mathf.Lerp(self.lastTurnedOn, self.turnedOn, timeStacker);
                     sLeaser.sprites[0].alpha = num;
@@ -83,16 +69,10 @@ namespace Unbound
                         (sLeaser.sprites[0] as TriangleMesh).MoveVertice(7, a4 - camPos);
                     }
                     sLeaser.sprites[0].color = new Color(1f, Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num, Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num);
-                }
-                else
-                {
-                    orig(self, sLeaser, rCam, timeStacker, camPos);
+                    return;
                 }
             }
-            else
-            {
-                orig(self, sLeaser, rCam, timeStacker, camPos);
-            }
+            orig(self, sLeaser, rCam, timeStacker, camPos);
         }
 
         private static void RedLight(On.ZapCoilLight.orig_ctor orig, ZapCoilLight self, Room placedInRoom, PlacedObject placedObject, PlacedObject.LightFixtureData lightData)
@@ -102,31 +82,27 @@ namespace Unbound
             {
                 string name = self.room.abstractRoom.name;
 
-                if (name == "MS_STGSTARCHAMBER" || self.room.world.name == "STG")
+                if (name == "MS_STGSTARCHAMBER")
                 {
                     self.lightSource = new LightSource(placedObject.pos, false, new Color(1f, 0f, 0f), self);
                     placedInRoom.AddObject(self.lightSource);
                     self.lightSource.setRad = new float?(Mathf.Lerp(100f, 2000f, (float)lightData.randomSeed / 100f));
                     self.lightSource.setAlpha = new float?(1f);
                     self.lightSource.affectedByPaletteDarkness = 0.5f;
+                    return;
                 }
                 else if (self.room.world.name == "MS")
                 {
-                    self.lightSource = new LightSource(placedObject.pos, false, new Color(0f, 0f, 1f), self);
+                    self.lightSource = new LightSource(placedObject.pos, false, new Color(0f, 0f, 0.9f), self);
                     placedInRoom.AddObject(self.lightSource);
                     self.lightSource.setRad = new float?(Mathf.Lerp(100f, 2000f, (float)lightData.randomSeed / 100f));
                     self.lightSource.setAlpha = new float?(1f);
                     self.lightSource.affectedByPaletteDarkness = 0.5f;
+                    return;
                 }
-                else
-                {
-                    orig(self, placedInRoom, placedObject, lightData);
-                }
+                // if not the above, should call orig
             }
-            else
-            {
-                orig(self, placedInRoom, placedObject, lightData);
-            }
+            orig(self, placedInRoom, placedObject, lightData);
         }
 
         private static void RedZap(On.ZapCoil.orig_InitiateSprites orig, ZapCoil self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
@@ -136,7 +112,7 @@ namespace Unbound
             {
                 string name = self.room.abstractRoom.name;
 
-                if (name == "MS_STGSTARCHAMBER" || self.room.world.name == "STG")
+                if (name == "MS_STGSTARCHAMBER")
                 {
                     TriangleMesh.Triangle[] array = new TriangleMesh.Triangle[6];
                     for (int i = 0; i < 6; i++)
@@ -158,16 +134,10 @@ namespace Unbound
                     sLeaser.sprites[0].shader = rCam.room.game.rainWorld.Shaders["FlareBomb"];
                     sLeaser.sprites[0].color = new Color(1f, 0f, 0f);
                     self.AddToContainer(sLeaser, rCam, null);
-                }
-                else
-                {
-                    orig(self, sLeaser, rCam);
+                    return;
                 }
             }
-            else
-            {
-                orig(self, sLeaser, rCam);
-            }
+            orig(self, sLeaser, rCam);
         }
 
         // end stgktb

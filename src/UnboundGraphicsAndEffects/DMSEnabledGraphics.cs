@@ -37,13 +37,20 @@ namespace Unbound
             });
             #endregion
         }
+        public static void DMSHooks()
+        {
+            On.PlayerGraphics.InitiateSprites += InitiateSprites;
+            On.PlayerGraphics.AddToContainer += AddToContainer;
+            On.PlayerGraphics.DrawSprites += DrawSprites;
+            On.PlayerGraphics.ApplyPalette += Coloor;
+        }
 
         public static void Coloor(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, 
             RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
 
-            if (self.player.room != null && self.player != null && self != null && self.player.room.game != null &&
+            if (self?.player?.room?.game != null && // checks if ANY value of those are null. if so, cancel
                 (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
             {
                 try

@@ -1,0 +1,11 @@
+{
+	"id": "unbbatflyreach",
+	"scene_folder": "scenes/colletyee-dreams/batflyreach",
+	"images": [
+		{ "name": "0-bg", "pos": [0, 0], "depth": 3, "shader": "Basic" },
+		{ "name": "1-pole", "pos": [0, 0], "depth": 2.2, "shader": "Basic" },
+		{ "name": "2-pol",    "pos": [0, 0], "depth": 2, "shader": "Basic" },
+		{ "name": "3-shading",    "pos": [0, 0], "depth": 1, "shader": "Multiply" }
+	],
+	"idle_depths": [ 1.2 ]
+}

@@ -1,5 +1,4 @@
 ﻿using EffExt;
-using System.Linq;
 
 namespace Unbound;
 
@@ -104,7 +103,8 @@ internal class thinAtmosphere
     private static void freezingSky(On.Creature.orig_Update orig, Creature self, bool eu)
     {
         orig(self, eu);
-        if (!self.dead && self != null && self.room != null && self.abstractCreature.creatureTemplate.type != CreatureTemplate.Type.Overseer &&
+        if (!self.dead && self != null && self.room != null &&
+            self.abstractCreature.creatureTemplate.type != CreatureTemplate.Type.Overseer &&
             self.newToRoomInvinsibility <= 0 && !self.abstractCreature.world.game.setupValues.invincibility)
         {
             self.HypothermiaGain = 0f;
@@ -286,7 +286,8 @@ internal class thinAtmosphere
 
     private static void atmosphereAir(On.AirBreatherCreature.orig_Update orig, AirBreatherCreature self, bool eu)
     {
-        if (self != null && !self.dead && self.room != null && self.Submersion < 1f &&
+        if (self?.room != null && // first makes sure the creature and room are not null
+            self.Submersion < 1f && !self.dead &&
             self.room.GetNCRRoom().atmosphereFloat > 0f)
         {
             self.lungs = (Mathf.Max(-1f, self.lungs - self.room.GetNCRRoom().atmosphereFloat / self.Template.lungCapacity) / 1.5f);

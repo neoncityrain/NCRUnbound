@@ -33,7 +33,13 @@ namespace Unbound
 
         static int ThisIsTheLengthOfMyMadness = 10; // update when adding more to above
         #endregion
-
+        public static void GraphicsHooks()
+        {
+            On.PlayerGraphics.InitiateSprites += InitiateSprites;
+            On.PlayerGraphics.AddToContainer += AddToContainer;
+            On.PlayerGraphics.DrawSprites += DrawSprites;
+            On.PlayerGraphics.ctor += TailThangs;
+        }
 
         public static void MirrorSprite(this FSprite addon, FSprite original)
         {
@@ -61,51 +67,51 @@ namespace Unbound
             orig(self, sLeaser, rCam, timeStacker, camPos);
             //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
-            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
-                self != null && self.player != null && self.player.room != null &&
+            if (self?.player?.room != null && // checks if ANY value of those are null. if so, cancel
+                !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
+                // if all graphics are disabled, dont even bother
                 self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
             {
-
                 #region Initiating Variables
                 // INITIATING THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
                 float breathaltered = 0.5f + 0.5f * Mathf.Sin(Mathf.Lerp(self.lastBreath, self.breath, timeStacker) * 3.1415927f * 2f); // breath-altered
                 Vector2 bodytohips = Vector2.Lerp(self.drawPositions[0, 1], self.drawPositions[0, 0], timeStacker); // positions from body to hips
                 Vector2 hipstobody = Vector2.Lerp(self.drawPositions[1, 1], self.drawPositions[1, 0], timeStacker); // positions from hips to body
                 // when vector and vector2 are combined, the position should be the exact center of the body
                 if (self.player.aerobicLevel > 0.5f)
                 {
-                    // when exhausted, maybe?
+                    // if exhausted / doing a lot of physical activity
                     bodytohips += Custom.DirVec(hipstobody, bodytohips) * Mathf.Lerp(-1f, 1f, breathaltered) *
                         Mathf.InverseLerp(0.5f, 1f, self.player.aerobicLevel) * 0.5f;
                 }
-                bool rev = self.player.GetNCRunbound().Reverb;
+                bool rev = self.player.GetNCRunbound().Reverb; // check if reverb is being played or not
                 float bodyhipscenterish = Mathf.InverseLerp(0.3f, 0.5f, Mathf.Abs(Custom.DirVec(hipstobody, bodytohips).y));
                 #endregion
                 #region Adding / Replacing Atlases
                 // ADDING / REPLACING ATLAS THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-                if (self.player.room.GetNCRRoom().atmosphereFloat > 0f && (self.player.airInLungs < 0.2f || self.player.Hypothermia > 0.8f) &&
-                    self.player.Consious)
+                if (self.player.room.GetNCRRoom().atmosphereFloat > 0f && (self.player.airInLungs < 0.2f ||
+                    self.player.Hypothermia > 0.8f) && self.player.Consious)
                 {
                     sLeaser.sprites[9].element = Futile.atlasManager.GetElementWithName("FaceStunned");
+                    // this is here for the suffocation effect
                 }
 
                 //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
 
                 // LEG THINGS
-                string lego = sLeaser.sprites[4]?.element?.name;
+                string legSprites = sLeaser.sprites[4]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unbmittenlegs == null)
                 {
                     NCRDebug.Log("Unbound Socks sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    lego != null && lego.StartsWith("Legs") &&
-                    unbmittenlegs._elementsByName.TryGetValue("unbmitten" + lego, out var leggy))
+                    legSprites != null && legSprites.StartsWith("Legs") &&
+                    unbmittenlegs._elementsByName.TryGetValue("unbmitten" + legSprites, out var unbSocks))
                 {
-                    sLeaser.sprites[unbSocksNum].element = leggy;
+                    sLeaser.sprites[unbSocksNum].element = unbSocks;
                 }
                 if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     unblegs == null)
@@ -113,30 +119,30 @@ namespace Unbound
                     NCRDebug.Log("Unbound Leg sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    lego != null && lego.StartsWith("Legs") &&
-                    unblegs._elementsByName.TryGetValue("unb" + lego, out var leggie))
+                    legSprites != null && legSprites.StartsWith("Legs") &&
+                    unblegs._elementsByName.TryGetValue("unb" + legSprites, out var unbLegs))
                 {
-                    sLeaser.sprites[4].element = leggie;
+                    sLeaser.sprites[4].element = unbLegs;
                 }
 
                 // HEAD THINGS
-                string head = sLeaser.sprites[3]?.element?.name;
+                string headSprites = sLeaser.sprites[3]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled &&
                     (unbearhead == null || reear == null))
                 {
                     NCRDebug.Log("Unbound Eartip sprites missing!");
                 }
                 else if (!rev && !self.player.GetNCRunbound().GraphicsDisabled &&
-                    head != null && head.StartsWith("Head") &&
-                    unbearhead._elementsByName.TryGetValue("unbear" + head, out var eartip))
+                    headSprites != null && headSprites.StartsWith("Head") &&
+                    unbearhead._elementsByName.TryGetValue("unbear" + headSprites, out var unbEartip))
                 {
-                    sLeaser.sprites[unbEarTips].element = eartip;
+                    sLeaser.sprites[unbEarTips].element = unbEartip;
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    head != null && head.StartsWith("Head") &&
-                    reear._elementsByName.TryGetValue("revear" + head, out var earsss))
+                    headSprites != null && headSprites.StartsWith("Head") &&
+                    reear._elementsByName.TryGetValue("revear" + headSprites, out var revEartip))
                 {
-                    sLeaser.sprites[unbEarTips].element = earsss;
+                    sLeaser.sprites[unbEarTips].element = revEartip;
                 }
                 // eartips
                 if (!self.player.GetNCRunbound().GraphicsDisabled &&
@@ -145,32 +151,34 @@ namespace Unbound
                     NCRDebug.Log("Unbound Head sprites missing!");
                 }
                 else if (!rev && !self.player.GetNCRunbound().GraphicsDisabled &&
-                    head != null && head.StartsWith("Head") &&
-                    unbhead._elementsByName.TryGetValue("unb" + head, out var headreplace))
+                    headSprites != null && headSprites.StartsWith("Head") &&
+                    unbhead._elementsByName.TryGetValue("unb" + headSprites, out var unbHead))
                 {
-                    sLeaser.sprites[3].element = headreplace;
+                    sLeaser.sprites[3].element = unbHead;
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    head != null && head.StartsWith("Head") &&
-                    rehead._elementsByName.TryGetValue("rev" + head, out var hea))
+                    headSprites != null && headSprites.StartsWith("Head") &&
+                    rehead._elementsByName.TryGetValue("rev" + headSprites, out var revHead))
                 {
-                    sLeaser.sprites[3].element = hea;
+                    sLeaser.sprites[3].element = revHead;
                 }
 
                 // ARM THINGS
-                string larm = sLeaser.sprites[5]?.element?.name;
-                string rarm = sLeaser.sprites[6]?.element?.name;
+                string leftArm = sLeaser.sprites[5]?.element?.name;
+                string rightArm = sLeaser.sprites[6]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm == null)
                 {
                     NCRDebug.Log("Unbound Arm sprites missing!");
                 }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
-                    unbarm._elementsByName.TryGetValue("unb" + larm, out var leftreplace))
+                else if (!self.player.GetNCRunbound().GraphicsDisabled && leftArm != null &&
+                    leftArm.StartsWith("PlayerArm") &&
+                    unbarm._elementsByName.TryGetValue("unb" + leftArm, out var leftreplace))
                 {
                     sLeaser.sprites[5].element = leftreplace;
                 }
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
-                    unbarm._elementsByName.TryGetValue("unb" + rarm, out var rightreplace))
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rightArm != null &&
+                    rightArm.StartsWith("PlayerArm") &&
+                    unbarm._elementsByName.TryGetValue("unb" + rightArm, out var rightreplace))
                 {
                     sLeaser.sprites[6].element = rightreplace;
                 }
@@ -179,19 +187,19 @@ namespace Unbound
                 {
                     NCRDebug.Log("Unbound Mitten sprites missing!");
                 }
-                else if (!self.player.GetNCRunbound().GraphicsDisabled && larm != null && larm.StartsWith("PlayerArm") &&
-                    unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var larmreplace))
+                else if (!self.player.GetNCRunbound().GraphicsDisabled && leftArm != null && leftArm.StartsWith("PlayerArm") &&
+                    unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + leftArm, out var larmreplace))
                 {
                     sLeaser.sprites[unbLeftMittens].element = larmreplace;
                 }
-                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rarm != null && rarm.StartsWith("PlayerArm") &&
-                    unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + larm, out var rarmreplace))
+                if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && rightArm != null && rightArm.StartsWith("PlayerArm") &&
+                    unbsleevesarm._elementsByName.TryGetValue("unbsleeves" + leftArm, out var rarmreplace))
                 {
                     sLeaser.sprites[unbRightMittens].element = rarmreplace;
                 }
 
 
-                // HAND THINGS
+                // HAND THINGS. this does not currently work properly
                 string lhand = sLeaser.sprites[7]?.element?.name;
                 string rhand = sLeaser.sprites[8]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled && unbarm != null && lhand != null && lhand.StartsWith("OnTopOf") &&
@@ -217,16 +225,16 @@ namespace Unbound
                 }
 
                 // HIPS THINGS
-                string hipwthekids = sLeaser.sprites[1]?.element?.name;
+                string hipSprites = sLeaser.sprites[1]?.element?.name;
                 if (!self.player.GetNCRunbound().GraphicsDisabled && unbfrecklehips == null)
                 {
                     NCRDebug.Log("Unbound Freckle sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().GraphicsDisabled &&
-                    hipwthekids != null && hipwthekids.StartsWith("Hips") &&
-                    unbfrecklehips._elementsByName.TryGetValue("unbfreckle" + hipwthekids, out var freck))
+                    hipSprites != null && hipSprites.StartsWith("Hips") &&
+                    unbfrecklehips._elementsByName.TryGetValue("unbfreckle" + hipSprites, out var unbFreckles))
                 {
-                    sLeaser.sprites[unbFreckleNum].element = freck;
+                    sLeaser.sprites[unbFreckleNum].element = unbFreckles;
                 }
                 // body freckles
 
@@ -234,10 +242,10 @@ namespace Unbound
                 {
                     NCRDebug.Log("Unbound LOWER Jumpring sprites missing!");
                 }
-                else if (!self.player.GetNCRunbound().RingsDisabled && hipwthekids != null && hipwthekids.StartsWith("Hips") &&
-                    unbjumphips._elementsByName.TryGetValue("unbjump" + hipwthekids, out var jumprings))
+                else if (!self.player.GetNCRunbound().RingsDisabled && hipSprites != null && hipSprites.StartsWith("Hips") &&
+                    unbjumphips._elementsByName.TryGetValue("unbjump" + hipSprites, out var lowerJumprings))
                 {
-                    sLeaser.sprites[unbJumprings1Num].element = jumprings;
+                    sLeaser.sprites[unbJumprings1Num].element = lowerJumprings;
                 }
                 // lower jumprings
 
@@ -248,24 +256,26 @@ namespace Unbound
                     NCRDebug.Log("Unbound UPPER Jumpring sprites missing!");
                 }
                 else if (!self.player.GetNCRunbound().RingsDisabled && bodyget != null && bodyget.StartsWith("Body") &&
-                    unbjumpbody._elementsByName.TryGetValue("unbjump" + bodyget, out var jumprings2))
+                    unbjumpbody._elementsByName.TryGetValue("unbjump" + bodyget, out var upperJumprings))
                 {
-                    sLeaser.sprites[unbJumprings2Num].element = jumprings2;
+                    sLeaser.sprites[unbJumprings2Num].element = upperJumprings;
                 }
                 // upper jumprings
 
                 // FACE THINGS
-                string faceget = sLeaser.sprites[9]?.element?.name;
-                if (!self.player.GetNCRunbound().RingsDisabled &&
+                string faceSprites = sLeaser.sprites[9]?.element?.name;
+                if (!self.player.GetNCRunbound().IsTechnician &&
+                    !self.player.GetNCRunbound().RingsDisabled &&
                     unbpupface == null)
                 {
                     NCRDebug.Log("Unbound Pupil sprites missing!");
                 }
-                else if (!self.player.GetNCRunbound().RingsDisabled &&
-                    faceget != null && faceget.StartsWith("Face") &&
-                    unbpupface._elementsByName.TryGetValue("unbpup" + faceget, out var pupils))
+                else if (!self.player.GetNCRunbound().IsTechnician &&
+                    !self.player.GetNCRunbound().RingsDisabled &&
+                    faceSprites != null && faceSprites.StartsWith("Face") &&
+                    unbpupface._elementsByName.TryGetValue("unbpup" + faceSprites, out var unbPupils))
                 {
-                    sLeaser.sprites[unbPupils].element = pupils;
+                    sLeaser.sprites[UnbGraphics.unbPupils].element = unbPupils;
                 }
                 // pupils
                 #endregion
@@ -293,6 +303,7 @@ namespace Unbound
                     sLeaser.sprites[0].scale *= 0.9f;
                     sLeaser.sprites[1].scale *= 0.9f;
                 }
+                // makes reverb a lil smaller
                 #endregion
                 #region Mirroring
                 //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
@@ -305,7 +316,7 @@ namespace Unbound
                 MirrorSprite(sLeaser.sprites[unbRightMittens], sLeaser.sprites[6]);
                 MirrorSprite(sLeaser.sprites[unbLeftToes], sLeaser.sprites[7]);
                 MirrorSprite(sLeaser.sprites[unbRightToes], sLeaser.sprites[8]);
-                if (!rev) { MirrorSprite(sLeaser.sprites[unbPupils], sLeaser.sprites[9]); }
+                if (!rev || !self.player.GetNCRunbound().IsTechnician) { MirrorSprite(sLeaser.sprites[unbPupils], sLeaser.sprites[9]); }
                 #endregion
                 #region Colours
                 // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -433,13 +444,13 @@ namespace Unbound
                         sLeaser.sprites[unbPupils].color = Color.Lerp(pupilcol, self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
                                 self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f);
                     }
-                    if (rev)
+                    if (rev || self.player.GetNCRunbound().IsTechnician)
                     {
                         sLeaser.sprites[unbPupils].alpha = 0f;
                     }
                 }
 
-                if (!self.player.GetNCRunbound().WingscalesDisabled)
+                if (!self.player.GetNCRunbound().WingscalesDisabled) // currently does nothing, as he has no wingscales.
                 {
                     // sLeaser.sprites[unbFrillStarts].color = effectcol;
                 }
@@ -508,8 +519,8 @@ namespace Unbound
         public static void AddToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self,
             RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
-            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
-                self != null && self.player != null && self.player.room != null && rCam != null && sLeaser != null &&
+            if (self?.player?.room != null && rCam != null && sLeaser != null &&
+                !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
             {
 
@@ -648,8 +659,8 @@ namespace Unbound
         {
             orig(self, sLeaser, rCam);
 
-            if (!(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
-                self != null && self.player != null && self.player.room != null && sLeaser != null && rCam != null &&
+            if (self?.player?.room != null && sLeaser != null && rCam != null &&
+                !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
             {
 
@@ -710,7 +721,7 @@ namespace Unbound
         public static void TailThangs(On.PlayerGraphics.orig_ctor orig, PlayerGraphics self, PhysicalObject ow)
         {
             orig(self, ow);
-            if (self != null && self.owner != null && self.player != null && self.player.room != null &&
+            if (self?.owner != null && self.player?.room != null &&
                 self.player.GetNCRunbound().IsNCRUnbModcat && self.tail != null)
             {
                 if (self.player.GetNCRunbound().Reverb)

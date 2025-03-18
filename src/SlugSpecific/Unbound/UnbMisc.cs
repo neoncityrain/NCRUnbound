@@ -5,15 +5,46 @@ namespace Unbound
 {
     public class UnbMisc
     {
+        public static void shockMeLess(On.JellyFish.orig_Collide orig, JellyFish self, PhysicalObject otherObject, int myChunk, int otherChunk)
+        {
+            if (self != null && otherObject != null &&
+                otherObject is Creature && otherObject != self.thrownBy && self.Electric &&
+                otherObject is Player && ((otherObject as Player).slugcatStats.name.value == "NCRunbound" ||
+                (otherObject as Player).slugcatStats.name.value == "NCRtech"))
+            {
+                bool isTech = (otherObject as Player).slugcatStats.name.value == "NCRtech";
+                (otherObject as Creature).Violence(self.firstChunk, new Vector2?(Custom.DirVec(self.firstChunk.pos,
+                    otherObject.bodyChunks[otherChunk].pos) * 5f), otherObject.bodyChunks[otherChunk], null,
+                    Creature.DamageType.Electric, 0.1f, isTech ? 30f : 70f);
+                self.room.AddObject(new CreatureSpasmer(otherObject as Creature, false, (otherObject as Creature).stun));
+                self.room.PlaySound(SoundID.Jelly_Fish_Tentacle_Stun, self.firstChunk.pos);
+                self.room.AddObject(new Explosion.ExplosionLight(self.firstChunk.pos, 200f, 1f, 4, new Color(0.7f, 1f, 1f)));
+                if (self.electricCounter > 5)
+                {
+                    for (int i = 0; i < 15; i++)
+                    {
+                        Vector2 vector = Custom.DegToVec(360f * UnityEngine.Random.value);
+                        self.room.AddObject(new MouseSpark(self.firstChunk.pos + vector * 9f, self.firstChunk.vel + vector * 36f *
+                            UnityEngine.Random.value, 20f, new Color(0.7f, 1f, 1f)));
+                    }
+                }
+                self.electricCounter = Math.Min(self.electricCounter, 5);
+            }
+            else
+            {
+                orig(self, otherObject, myChunk, otherChunk);
+            }
+        }
+
         public static void NeuronColourShift(On.SSOracleSwarmer.orig_DrawSprites orig, SSOracleSwarmer self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
-            if (self != null && self.room != null && self.room.game != null)
+            if (self?.room?.game != null)
             {
                 foreach (AbstractCreature otherCreature in self.room.abstractRoom.creatures)
                 {
-                    if (otherCreature.realizedCreature != null && otherCreature.realizedCreature is Player &&
-                        otherCreature.realizedCreature.room != null &&
+                    if (otherCreature?.realizedCreature?.room != null &&
+                        otherCreature.realizedCreature is Player &&
                         (otherCreature.realizedCreature as Player).GetNCRunbound().IsUnbound)
                     {
                         if (otherCreature.realizedCreature.room != self.room)
@@ -50,11 +81,13 @@ namespace Unbound
 
         public static void UpdateTheGlow(On.PlayerGraphics.orig_Update orig, PlayerGraphics self)
         {
-            if (self != null && self.player.room != null && self.player.mainBodyChunk != null &&
-                self.player.GetNCRunbound().effectColour != null && self.player.room.game.session != null &&
+            if (self?.player?.room?.game?.session != null && self.player.mainBodyChunk != null &&
+                self.player.GetNCRunbound().effectColour != null &&
+
                 !self.player.room.game.IsArenaSession && self.player.room.game.IsStorySession &&
                 self.player.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
-                self.player.GetNCRunbound().IsUnbound && !self.player.DreamState)
+                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician) &&
+                !self.player.DreamState)
             {
                 if (self.lightSource != null)
                 {
@@ -81,8 +114,9 @@ namespace Unbound
 
         public static void noGlow(On.OracleSwarmer.orig_BitByPlayer orig, OracleSwarmer self, Creature.Grasp grasp, bool eu)
         {
-            if (self != null && grasp != null && grasp.grabber != null && grasp.grabber is Player &&
-                (!ModManager.MSC || !(grasp.grabber as Player).isNPC) && (grasp.grabber as Player).GetNCRunbound().IsUnbound)
+            if (self != null && grasp?.grabber != null && grasp.grabber is Player &&
+                (!ModManager.MSC || !(grasp.grabber as Player).isNPC) &&
+                ((grasp.grabber as Player).GetNCRunbound().IsUnbound || (grasp.grabber as Player).GetNCRunbound().IsTechnician))
             {
                 self.bites--;
                 self.room.PlaySound(self.bites == 0 ? SoundID.Slugcat_Eat_Swarmer : SoundID.Slugcat_Bite_Swarmer, self.firstChunk.pos);
@@ -102,7 +136,8 @@ namespace Unbound
 
         public static void BiteUnb(On.Lizard.orig_DamageAttack orig, Lizard self, BodyChunk chunk, float dmgFac)
         {
-            if (chunk != null && chunk.owner is Creature && (chunk.owner is Player) &&
+            if (chunk?.owner != null && self?.AI != null &&
+                chunk.owner is Creature && (chunk.owner is Player) &&
                 (chunk.owner as Player).GetNCRunbound().IsUnbound &&
                 self.AI.DynamicRelationship((chunk.owner as Creature).abstractCreature).type == CreatureTemplate.Relationship.Type.AgressiveRival)
             {
@@ -113,15 +148,14 @@ namespace Unbound
 
         public static void DamageTracking(On.Player.orig_Update orig, Player self, bool eu)
         {
-            if (self != null && self.room != null && self.abstractCreature != null &&
-                self.GetNCRunbound().IsNCRUnbModcat == true && self.GetNCRunbound().IsOracle == false &&
+            if (self?.room != null && self.abstractCreature != null &&
                 self.GetNCRunbound().RGBRings)
             {
                 self.GetNCRunbound().RGBCounter++;
             }
             orig(self, eu);
-            if (self != null && self.room != null && self.abstractCreature != null &&
-                self.GetNCRunbound().IsUnbound && self.Wounded)
+            if (self?.room != null && self.abstractCreature != null &&
+                (self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician) && self.Wounded)
             {
                 if (UnityEngine.Random.value < Mathf.Lerp(0.004f, 0.02f, (float)(self.State as PlayerState).permanentDamageTracking))
                 {
@@ -138,8 +172,9 @@ namespace Unbound
 
         public static void unbZapped(On.ZapCoil.orig_Update orig, ZapCoil self, bool eu)
         {
-            if (self != null && self.room != null && !self.slatedForDeletetion &&
-                self.room.world.game.session.characterStats.name.value == "NCRunbound")
+            if (self?.room != null && !self.slatedForDeletetion &&
+                (self.room.world.game.session.characterStats.name.value == "NCRunbound" ||
+                self.room.world.game.session.characterStats.name.value == "NCRtech"))
             {
                 #region PreUnb
                 self.evenUpdate = eu;
@@ -169,12 +204,14 @@ namespace Unbound
                                         {
                                             #endregion
                                             if (self.room.physicalObjects[i][j] is Player &&
-                                                (self.room.physicalObjects[i][j] as Player).GetNCRunbound().IsUnbound)
+                                                ((self.room.physicalObjects[i][j] as Player).GetNCRunbound().IsUnbound ||
+                                                (self.room.physicalObjects[i][j] as Player).GetNCRunbound().IsTechnician))
                                             {
                                                 (self.room.physicalObjects[i][j] as Player).Stun(200);
                                                 (self.room.physicalObjects[i][j] as Player).room.AddObject(new
                                                     CreatureSpasmer(self.room.physicalObjects[i][j] as Player, true, 200));
-                                                (self.room.physicalObjects[i][j] as Player).playerState.permanentDamageTracking += 0.95f;
+                                                (self.room.physicalObjects[i][j] as Player).playerState.permanentDamageTracking +=
+                                                    (self.room.physicalObjects[i][j] as Player).GetNCRunbound().IsUnbound ? 0.95f : 0.4f;
 
                                                 if ((self.room.physicalObjects[i][j] as Player).playerState.permanentDamageTracking >= 1)
                                                 {
@@ -287,8 +324,9 @@ namespace Unbound
 
         public static void ShockResistant(On.Centipede.orig_Shock orig, Centipede self, PhysicalObject shockObj)
         {
-            if (self != null && self.room != null && shockObj != null &&
-                shockObj is Creature && shockObj is Player && (shockObj as Player).GetNCRunbound().IsUnbound)
+            if (self?.room != null && shockObj != null &&
+                shockObj is Creature && shockObj is Player && ((shockObj as Player).GetNCRunbound().IsUnbound ||
+                (shockObj as Player).GetNCRunbound().IsTechnician))
             {
                 self.room.PlaySound(SoundID.Centipede_Shock, self.mainBodyChunk.pos);
                 if (self.graphicsModule != null)
@@ -374,33 +412,34 @@ namespace Unbound
         {
             // cyans consider unbound to be a cyan / are territorial rather than aggressive as long as hes alive
             // keeps them a bit more aggro than they are to one another BUT its not eating him so shrug
-            if (self != null && dRelation != null && self.creature != null &&
-                dRelation.trackerRep.representedCreature.realizedCreature != null && dRelation.state != null &&
+            if (self?.creature != null &&
+                dRelation?.trackerRep?.representedCreature?.realizedCreature != null && dRelation.state != null &&
                 // making sure things arent null
                 self.creature.creatureTemplate.type == CreatureTemplate.Type.CyanLizard &&
                 dRelation.trackerRep.representedCreature.realizedCreature is Player &&
-                (dRelation.trackerRep.representedCreature.realizedCreature as Player).GetNCRunbound().IsUnbound &&
-                // if cyan, if unbound
+                ((dRelation.trackerRep.representedCreature.realizedCreature as Player).GetNCRunbound().IsUnbound ||
+                (dRelation.trackerRep.representedCreature.realizedCreature as Player).GetNCRunbound().IsTechnician) &&
+                // if cyan, if unbound OR tech
                 self.friendTracker.friend != dRelation.trackerRep.representedCreature.realizedCreature
                 // should still allow making friends with it
                 )
             {
-                if (self.LikeOfPlayer(dRelation.trackerRep) > 0.98f)
+                if (self.LikeOfPlayer(dRelation.trackerRep) > 0.95f)
                 {
-                    return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Ignores, self.LikeOfPlayer(dRelation.trackerRep));
+                    return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Pack, self.LikeOfPlayer(dRelation.trackerRep));
                 }
-                else if (self.LikeOfPlayer(dRelation.trackerRep) < -0.98f)
+                else if (self.LikeOfPlayer(dRelation.trackerRep) < -0.95f)
                 {
                     return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Attacks, -(self.LikeOfPlayer(dRelation.trackerRep)));
                 }
-                return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.AgressiveRival, 1f + (self.LikeOfPlayer(dRelation.trackerRep)));
+                return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.AgressiveRival, 1f - (self.LikeOfPlayer(dRelation.trackerRep)));
             }
             return orig(self, dRelation);
         }
 
         public static Player.ObjectGrabability NoGrab(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
-            if (self != null && self.room != null && obj != null &&
+            if (self?.room != null && obj != null &&
                 self.GetNCRunbound().IsUnbound)
             {
                 if (obj is Creature && !(obj as Creature).dead && obj is Overseer && (obj as Overseer).PlayerGuide &&
@@ -415,8 +454,8 @@ namespace Unbound
 
         public static bool PickyBastard(On.Player.orig_CanBeSwallowed orig, Player self, PhysicalObject testObj)
         {
-            if (!self.GetNCRunbound().Unpicky &&
-                self != null && self.room != null && testObj != null &&
+            if (self?.room != null && testObj != null &&
+                !self.GetNCRunbound().Unpicky &&
                 self.GetNCRunbound().IsUnbound)
             {
                 if (testObj is DataPearl && (testObj as DataPearl).AbstractPearl.dataPearlType == UnboundEnums.unboundKarmaPearl)
@@ -432,7 +471,7 @@ namespace Unbound
         {
             // swimming code
             orig(self);
-            if (self != null && self.room != null && (self.room.roomSettings.GetEffect(RoomSettings.RoomEffect.Type.VoidSea) == null ||
+            if (self?.room != null && (self.room.roomSettings.GetEffect(RoomSettings.RoomEffect.Type.VoidSea) == null ||
                 self.room.roomSettings.GetEffect(RoomSettings.RoomEffect.Type.VoidSea) != null &&
                 self.room.roomSettings.GetEffect(RoomSettings.RoomEffect.Type.VoidSea).amount > 0f) &&
                 self.GetNCRunbound().IsUnbound)
@@ -454,7 +493,8 @@ namespace Unbound
         public static bool KarmaUnderThreeGhost(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)
         {
             if (ghostID != null &&
-                Custom.rainWorld.progression.PlayingAsSlugcat.value == "NCRunbound" &&
+                (Custom.rainWorld.progression.PlayingAsSlugcat.value == "NCRunbound" ||
+                Custom.rainWorld.progression.PlayingAsSlugcat.value == "NCRtech") &&
                 !(ModManager.Expedition && Custom.rainWorld.ExpeditionMode && Custom.rainWorld.progression.currentSaveState.cycleNumber == 0)
                 && !Custom.rainWorld.safariMode && karmaCap < 4 && ghostPreviouslyEncountered < 0f)
             {
@@ -468,8 +508,8 @@ namespace Unbound
         public static void MadHopsBro(On.Player.orig_Jump orig, Player self)
         {
             orig(self);
-            if (self != null && self.room != null &&
-                self.GetNCRunbound().IsUnbound)
+            if (self?.room != null &&
+                (self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician))
             {
                 self.jumpBoost += 1f;
                 // has a jump boost of +1 compared to surv

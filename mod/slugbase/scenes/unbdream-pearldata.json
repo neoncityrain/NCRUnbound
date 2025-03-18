@@ -1,0 +1,11 @@
+{
+	"id": "unbpearldata",
+	"scene_folder": "scenes/colletyee-dreams/pearldata",
+	"images": [
+		{ "name": "0-bg", "pos": [0, 0], "depth": 3, "shader": "Basic" },
+		{ "name": "1-pearl", "pos": [0, 0], "depth": 2.2, "shader": "Basic" },
+		{ "name": "2-projection",    "pos": [0, 0], "depth": 2, "shader": "Basic" },
+		{ "name": "3-unbound",    "pos": [0, 0], "depth": 1, "shader": "Basic" }
+	],
+	"idle_depths": [ 2 ]
+}

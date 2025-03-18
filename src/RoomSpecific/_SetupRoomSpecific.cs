@@ -11,12 +11,10 @@ namespace Unbound
             orig(self, eu);
             try
             {
-                if (self != null &&
-                self.room != null && self.room.game != null && self.abstractCreature != null &&
-                self.room.abstractRoom != null && self.room.game != null && self.room.game.session != null &&
-                self.room.abstractRoom.creatures != null && self.room.abstractRoom.creatures.Count > 0 &&
-                self.room.abstractRoom.shelter && self.room.game.session.characterStats != null &&
-                self.room.game.session.characterStats.name.value == "NCRunbound")
+                if (self?.abstractCreature != null &&
+                self.room?.abstractRoom?.creatures != null && self.room.abstractRoom.creatures.Count > 0 &&
+                self.room.abstractRoom.shelter &&
+                self.room.game?.session?.characterStats.name.value == "NCRunbound")
                 {
                     List<AbstractCreature> overseersInRoom = new List<AbstractCreature>();
                     if (self.room.abstractRoom.creatures.Count > 1)
@@ -62,68 +60,92 @@ namespace Unbound
         public static void MaintainRoomSpecific(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-            if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
-                world != null && world.region != null && world.region.name != null && 
-                abstractCreature != null && self.room.game.session.characterStats.name.value == "NCRunbound" &&
+            if (self?.abstractCreature != null && world?.region?.name != null && 
+                abstractCreature != null &&
+                (self?.room?.game?.session?.characterStats?.name.value == "NCRunbound" ||
+                self?.room?.game?.session?.characterStats?.name.value == "NCRtech") &&
                 self.room.game.session is not ArenaGameSession && (!ModManager.MSC || !self.room.game.rainWorld.safariMode)
                 )
             {
                 try
                 {
-                    if (self.room.world != null && self.room.world.overseersWorldAI != null && self.room.world.overseersWorldAI.playerGuide != null)
+                    if (self?.room?.game?.session?.characterStats?.name.value == "NCRunbound")
                     {
-                        AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
-                        if (gammaoverseer != null && gammaoverseer.ID != null &&
-                            gammaoverseer.ID.number != -7113131)
+                        if (self?.room?.world?.overseersWorldAI?.playerGuide != null)
                         {
-                            if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma ID tweaked!"); }
-                            gammaoverseer.ID.number = -7113131; // sets gamma to always have this id
-                            // "7 1 13 13 1", aka "gamma", negative because the positive counterpart has only two mycelia and that looked weird
-                            if (gammaoverseer.ignoreCycle != true)
+                            AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
+                            if (gammaoverseer != null && gammaoverseer.ID != null &&
+                                gammaoverseer.ID.number != -7113131)
                             {
-                                gammaoverseer.ignoreCycle = true;
-                                gammaoverseer.creatureTemplate.waterVision = -1f;
-                                gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
-                                gammaoverseer.creatureTemplate.bodySize = 0.7f;
+                                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma ID tweaked!"); }
+                                gammaoverseer.ID.number = -7113131; // sets gamma to always have this id
+                                                                    // "7 1 13 13 1", aka "gamma", negative because the positive counterpart has only two mycelia and that looked weird
+                                if (gammaoverseer.ignoreCycle != true)
+                                {
+                                    gammaoverseer.ignoreCycle = true;
+                                    gammaoverseer.creatureTemplate.waterVision = -1f;
+                                    gammaoverseer.creatureTemplate.damageRestistances[(int)Creature.DamageType.Electric, 0] = 1.5f;
+                                    gammaoverseer.creatureTemplate.bodySize = 0.7f;
 
-                                (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
-                                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma settings incorrect, fixed them and called Gamma!"); }
+                                    (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
+                                    if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma settings incorrect, fixed them and called Gamma!"); }
+                                }
+                            }
+                        }
+
+                        if (self?.room?.game?.GetStorySession?.saveState?.miscWorldSaveData != null)
+                        {
+                            if (self.room.game.GetStorySession?.saveState?.miscWorldSaveData != null &&
+                            self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+                            {
+                                self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = false;
+                                self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+                                self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
+                                if (self.GetNCRunbound().MoreDebug)
+                                {
+                                    NCRDebug.Log("Old save detected, fixing game- moon has been re-killed! Sorry, women");
+                                }
+                            }
+
+
+
+                            if (self.room.game.GetStorySession.saveState.cycleNumber != 0 &&
+                            self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
+                            self.room.game.Players != null && self.room.game.Players.Count > 0)
+                            {
+                                NCRDebug.Log("Unbound's death persistent save data fucked up! Attempting to fix it...");
+                                self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
+                            }
+
+                            if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles == true)
+                            {
+                                self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
+                                if (self.GetNCRunbound().MoreDebug)
+                                {
+                                    NCRDebug.Log("Pebbles was killed for some reason and has been revived");
+                                }
                             }
                         }
                     }
-
-                    if (self.room.game.GetStorySession != null && self.room.game.GetStorySession.saveState != null &&
-                        self.room.game.GetStorySession.saveState.miscWorldSaveData != null)
+                    else if (self?.room?.game?.session?.characterStats?.name.value == "NCRtech")
                     {
-                        if (self.room.game.GetStorySession != null && self.room.game.GetStorySession.saveState != null &&
-                        self.room.game.GetStorySession.saveState.miscWorldSaveData != null &&
-                        self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived)
+                        if (self?.room?.world?.overseersWorldAI?.playerGuide != null)
                         {
-                            self.room.game.GetStorySession.saveState.miscWorldSaveData.moonRevived = false;
-                            self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
-                            self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
-                            if (self.GetNCRunbound().MoreDebug)
+                            AbstractCreature kochaboverseer = self.room.world.overseersWorldAI.playerGuide;
+                            if (kochaboverseer != null && kochaboverseer.ID != null &&
+                                kochaboverseer.ID.number != -11153812)
                             {
-                                NCRDebug.Log("Old save detected, fixing game- moon has been re-killed! Sorry, women");
-                            }
-                        }
+                                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Kochab ID tweaked!"); }
+                                kochaboverseer.ID.number = -11153812; // sets kochab to always have this id
+                                                                    // "11 15 3 8 1 2", aka "kochab"
+                                if (kochaboverseer.ignoreCycle != true)
+                                {
+                                    kochaboverseer.ignoreCycle = true;
+                                    kochaboverseer.creatureTemplate.bodySize = 0.5f;
 
-
-
-                        if (self.room.game.GetStorySession.saveState.cycleNumber != 0 &&
-                        self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
-                        self.room.game.Players != null && self.room.game.Players.Count > 0)
-                        {
-                            NCRDebug.Log("Unbound's death persistent save data fucked up! Attempting to fix it...");
-                            self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
-                        }
-
-                        if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles == true)
-                        {
-                            self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripPebbles = false;
-                            if (self.GetNCRunbound().MoreDebug)
-                            {
-                                NCRDebug.Log("Pebbles was killed for some reason and has been revived");
+                                    (kochaboverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(self.room.abstractRoom.index);
+                                    if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Kochab settings incorrect, fixed them and called Kochab!"); }
+                                }
                             }
                         }
                     }
@@ -138,25 +160,24 @@ namespace Unbound
             // misc
             try
             {
-                if (self != null && self.room != null && self.abstractCreature != null &&
-                    self.slugcatStats != null && self.slugcatStats.name != null &&
-                    self.slugcatStats.name.value == "NCRunbound")
+                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                    (self.slugcatStats.name.value == "NCRunbound" || self.slugcatStats.name == UnboundEnums.NCRUnbound))
                 {
                     self.GetNCRunbound().IsUnbound = true;
                     self.GetNCRunbound().IsNCRUnbModcat = true;
                     if (self.slugcatStats.name != UnboundEnums.NCRUnbound) { self.slugcatStats.name = UnboundEnums.NCRUnbound; }
+                    if (self.slugcatStats.name.value != "NCRunbound") { self.slugcatStats.name.value = "NCRunbound"; }
                 }
-                if (self != null && self.room != null && self.abstractCreature != null &&
-                    self.slugcatStats != null && self.slugcatStats.name != null &&
-                self.slugcatStats.name.value == "NCRoracle")
+                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                    (self.slugcatStats.name.value == "NCRoracle" || self.slugcatStats.name == UnboundEnums.NCROracle))
                 {
                     self.GetNCRunbound().IsOracle = true;
                     self.GetNCRunbound().IsNCRUnbModcat = true;
                     if (self.slugcatStats.name != UnboundEnums.NCROracle) { self.slugcatStats.name = UnboundEnums.NCROracle; }
+                    if (self.slugcatStats.name.value != "NCRoracle") { self.slugcatStats.name.value = "NCRoracle"; }
                 }
-                if (self != null && self.room != null && self.abstractCreature != null &&
-                    self.slugcatStats != null && self.slugcatStats.name != null &&
-                self.slugcatStats.name.value == "NCRreverb")
+                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                    (self.slugcatStats.name.value == "NCRreverb" || self.slugcatStats.name == UnboundEnums.NCRReverb))
                 {
                     if (!self.playerState.isPup)
                     {
@@ -165,14 +186,15 @@ namespace Unbound
                     self.GetNCRunbound().Reverb = true;
                     self.GetNCRunbound().IsNCRUnbModcat = true;
                     if (self.slugcatStats.name != UnboundEnums.NCRReverb) { self.slugcatStats.name = UnboundEnums.NCRReverb; }
+                    if (self.slugcatStats.name.value != "NCRreverb") { self.slugcatStats.name.value = "NCRreverb"; }
                 }
-                if (self != null && self.room != null && self.abstractCreature != null &&
-                    self.slugcatStats != null && self.slugcatStats.name != null &&
-                    self.slugcatStats.name.value == "NCRtech")
+                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                    (self.slugcatStats.name.value == "NCRtech" || self.slugcatStats.name == UnboundEnums.NCRTechnician))
                 {
                     self.GetNCRunbound().IsTechnician = true;
                     self.GetNCRunbound().IsNCRUnbModcat = true;
                     if (self.slugcatStats.name != UnboundEnums.NCRTechnician) { self.slugcatStats.name = UnboundEnums.NCRTechnician; }
+                    if (self.slugcatStats.name.value != "NCRtech") { self.slugcatStats.name.value = "NCRtech"; }
                 }
 
             }
@@ -189,11 +211,8 @@ namespace Unbound
             {
                 if (self.room.abstractRoom.name == "GATE_SL_MS")
                 {
-                    self.karmaRequirements[1] = RegionGate.GateRequirement.OneKarma; // karma requirement to leave submerged and enter shoreline
-                }
-                else if (self.room.abstractRoom.name == "GATE_SB_OE")
-                {
-                    self.karmaRequirements[0] = RegionGate.GateRequirement.OneKarma; // karma requirement to leave outer expanse and enter subter
+                    self.karmaRequirements[1] = RegionGate.GateRequirement.OneKarma;
+                    // karma requirement to leave submerged and enter shoreline
                 }
             }
             orig(self);
@@ -204,11 +223,12 @@ namespace Unbound
             orig(self, abstractCreature, world);
             try
             {
-                if (self != null && self.room != null && self.room.game != null && self.abstractCreature != null &&
-                world != null && world.region != null && world.region.name != null &&
-                abstractCreature != null && self.room.game.session.characterStats.name.value == "NCRunbound" &&
-                self.room.game.session is not ArenaGameSession && (!ModManager.MSC || !self.room.game.rainWorld.safariMode) &&
-                self.room.game.GetStorySession != null && self.room.game.GetStorySession.saveState != null &&
+                if (self?.abstractCreature != null && world?.region?.name != null &&
+                abstractCreature != null &&
+                self?.room?.game?.session?.characterStats?.name?.value == "NCRunbound" &&
+                self.room.game.session is not ArenaGameSession &&
+                (!ModManager.MSC || !self.room.game.rainWorld.safariMode) &&
+                self.room.game.GetStorySession?.saveState != null &&
                 self.room.game.GetStorySession.saveState.cycleNumber == 0 &&
                 self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
                 self.room.game.Players.Count > 0
@@ -300,8 +320,7 @@ namespace Unbound
                         }
                     }
 
-                    if (self.room.world.overseersWorldAI.playerGuide != null && self.room.world.overseersWorldAI != null &&
-                        self.room.world.overseersWorldAI.playerGuide.creatureTemplate != null)
+                    if (self?.room?.world?.overseersWorldAI?.playerGuide?.creatureTemplate != null)
                     {
                         try
                         {
@@ -411,6 +430,21 @@ namespace Unbound
                         }
                     }
                 }
+            }
+            else
+            {
+                orig(self);
+            }
+        }
+
+        public static void updateGravity(On.AntiGravity.BrokenAntiGravity.orig_Update orig, AntiGravity.BrokenAntiGravity self)
+        {
+            if (self?.game?.world != null && self.game.session != null &&
+                self.game.session.characterStats.name.value == "NCRtech" &&
+                (self.game.world.name == "DM" || self.game.world.name == "LM" || self.game.world.name == "SS"))
+            {
+                self.on = true;
+                self.counter = 0;
             }
             else
             {

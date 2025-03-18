@@ -32,9 +32,10 @@
 		"select_menu_scene": "unbselect",
 		"select_menu_scene_ascended": "unbghost",
 		"title_card": "introroll-unbound",
+		"intro_slideshow": "intro-unbound",
 		"world_state": ["NCRunbound", "NCRflicker", "Red", "Artificer" ],
-		"cycle_length_min": 7,
-		"cycle_length_max": 14,
+		"cycle_length_min": 5.5,
+		"cycle_length_max": 12,
 		"start_room": [ "MS_UNBSTART", "SL_LMS06" ],
 		"timeline_before": "Red",
 		"timeline_after": "Artificer",
@@ -57,6 +58,7 @@
 				"SmallCentipede": 1.5,
 				
 				"Batfly": 0.5,
+				"Fly": 0.5,
 				
 				"LanternMouse": 0.25,
 				"EggBugEgg": 0.25,
@@ -70,7 +72,8 @@
 				"BubbleFruit": -1,
 				"SeedCob": -1,
 				"Seed": -1,
-				"WaterNut": -1
+				"WaterNut": -1,
+				"DandelionPeach": -1
 				}
 			},
 
