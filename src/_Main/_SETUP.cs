@@ -30,7 +30,7 @@ namespace Unbound
             // remix triggers, makes sure all values effect something else in the code
 
             HooksOnly.HookIn(); // redirecting to the main hooks (HooksOnly)
-            thinAtmosphere.Init(); // sets up effects
+            NCRFrigid.Init(); // sets up effects
 
             On.RainWorldGame.ShutDownProcess += RainWorldGameOnShutDownProcess;
             On.GameSession.ctor += GameSessionOnctor;

@@ -149,6 +149,14 @@ namespace Unbound
                             }
                         }
                     }
+
+                    if (self.dontEatExternalFoodSourceCounter != 1)
+                    {
+                        self.eatExternalFoodSourceCounter = 1;
+                        // used exclusively for seedcobs, to determine if the slugcat can eat from them or not.
+                        // unbound and technician are both allergic to them. They shouldn't eat them!
+                        // nice try, jolly co-opers and non-MSC-users. however i am evil
+                    }
                 }
                 catch (Exception e)
                 {
@@ -241,9 +249,17 @@ namespace Unbound
                             NCRDebug.Log("Unbound's MS start detected, triggering intro!");
                             self.room.AddObject(new UnboundIntro());
                         }
-                        else if (world.region.name == "SL")
+                        else if (self.room.abstractRoom.name == "SL_UnbKTBS")
                         {
-                            NCRDebug.Log("Unbound's SL start detected! Remind me to set up a non-MSC intro :<");
+                            NCRDebug.Log("Unbound in KTB Shelter!");
+                            self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
+                            AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
+                            new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
+                            UnboundEnums.unboundKarmaPearl);
+                        }
+                        else
+                        {
+                            NCRDebug.Log("Non-standard Unbound start detected?");
                             self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
                                 AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
                                 new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,

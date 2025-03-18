@@ -1,14 +1,41 @@
 ﻿using System;
+using static Unbound.GammaVisuals;
 
 namespace Unbound
 {
     internal class STGKTB
     {
+        public delegate Color orig_InspectorTrueColor(global::MoreSlugcats.Inspector self);
+        // in general: 0.29f, 0.39f, 0.47f for KTB, 0.87f, 0.39f, 0.33f for STG. adjust as needed
+        // et tu, liberum?
+
         public static void Init()
         {
             On.ZapCoil.InitiateSprites += RedZap;
             On.ZapCoilLight.ctor += RedLight;
             On.ZapCoil.DrawSprites += DrawRedzap;
+
+            Hook inspectorColourChange = new Hook(typeof(global::MoreSlugcats.Inspector).GetProperty("TrueColor", BindingFlags.Instance |
+                BindingFlags.Public).GetGetMethod(), new Func<orig_InspectorTrueColor,
+                Inspector, Color>(InspektaCheka));
+        }
+
+
+        public static Color InspektaCheka(orig_InspectorTrueColor orig, global::MoreSlugcats.Inspector self)
+        {
+            if (self?.room?.abstractRoom != null)
+            {
+                string name = self.room.abstractRoom.name;
+                if (name.StartsWith("SL_UnbSTG"))
+                {
+
+                }
+                else if (name.StartsWith("SL_UnbKTB"))
+                {
+
+                }
+            }
+            return orig(self);
         }
 
         private static void DrawRedzap(On.ZapCoil.orig_DrawSprites orig, ZapCoil self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
@@ -18,7 +45,7 @@ namespace Unbound
             {
                 string name = self.room.abstractRoom.name;
 
-                if (name == "MS_STGSTARCHAMBER")
+                if (name.StartsWith("SL_UnbSTG"))
                 {
                     float num = Mathf.Lerp(self.lastTurnedOn, self.turnedOn, timeStacker);
                     sLeaser.sprites[0].alpha = num;
@@ -71,6 +98,59 @@ namespace Unbound
                     sLeaser.sprites[0].color = new Color(1f, Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num, Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num);
                     return;
                 }
+                if (name.StartsWith("SL_UnbKTB"))
+                {
+                    float num = Mathf.Lerp(self.lastTurnedOn, self.turnedOn, timeStacker);
+                    sLeaser.sprites[0].alpha = num;
+                    Vector2 a = new Vector2((float)self.rect.left * 20f, (float)self.rect.bottom * 20f);
+                    Vector2 a2 = new Vector2((float)(self.rect.right + 1) * 20f, (float)(self.rect.top + 1) * 20f);
+                    Vector2 a3 = new Vector2((float)self.rect.left * 20f, (float)(self.rect.top + 1) * 20f);
+                    Vector2 a4 = new Vector2((float)(self.rect.right + 1) * 20f, (float)self.rect.bottom * 20f);
+                    float num2 = 120f * num;
+                    float num3 = 30f;
+                    float num4 = Mathf.Lerp(self.flicker[0, 1], self.flicker[0, 0], timeStacker);
+                    float num5 = Mathf.Lerp(self.flicker[1, 1], self.flicker[1, 0], timeStacker);
+                    if (self.horizontalAlignment)
+                    {
+                        a.x -= num3;
+                        a3.x -= num3;
+                        a2.x += num3;
+                        a4.x += num3;
+                        a.y -= num2 * num4;
+                        a4.y -= num2 * num5;
+                        a3.y += num2 * num4;
+                        a2.y += num2 * num5;
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(0, a - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(1, a3 - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(2, a + new Vector2(num3, 0f) - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(3, a3 + new Vector2(num3, 0f) - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(4, a4 + new Vector2(-num3, 0f) - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(5, a2 + new Vector2(-num3, 0f) - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(6, a4 - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(7, a2 - camPos);
+                    }
+                    else
+                    {
+                        a.x -= num2 * num4;
+                        a3.x -= num2 * num5;
+                        a2.x += num2 * num5;
+                        a4.x += num2 * num4;
+                        a.y -= num3;
+                        a4.y -= num3;
+                        a3.y += num3;
+                        a2.y += num3;
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(0, a3 - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(1, a2 - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(2, a3 + new Vector2(0f, -num3) - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(3, a2 + new Vector2(0f, -num3) - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(4, a + new Vector2(0f, num3) - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(5, a4 + new Vector2(0f, num3) - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(6, a - camPos);
+                        (sLeaser.sprites[0] as TriangleMesh).MoveVertice(7, a4 - camPos);
+                    }
+                    sLeaser.sprites[0].color = new Color(Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num, Mathf.InverseLerp(0.75f, 1f, self.zapLit) * num, 1f);
+                    return;
+                }
             }
             orig(self, sLeaser, rCam, timeStacker, camPos);
         }
@@ -82,9 +162,18 @@ namespace Unbound
             {
                 string name = self.room.abstractRoom.name;
 
-                if (name == "MS_STGSTARCHAMBER")
+                if (name.StartsWith("SL_UnbSTG"))
                 {
                     self.lightSource = new LightSource(placedObject.pos, false, new Color(1f, 0f, 0f), self);
+                    placedInRoom.AddObject(self.lightSource);
+                    self.lightSource.setRad = new float?(Mathf.Lerp(100f, 2000f, (float)lightData.randomSeed / 100f));
+                    self.lightSource.setAlpha = new float?(1f);
+                    self.lightSource.affectedByPaletteDarkness = 0.5f;
+                    return;
+                }
+                if (name.StartsWith("SL_UnbKTB"))
+                {
+                    self.lightSource = new LightSource(placedObject.pos, false, new Color(0f, 0.75f, 1f), self);
                     placedInRoom.AddObject(self.lightSource);
                     self.lightSource.setRad = new float?(Mathf.Lerp(100f, 2000f, (float)lightData.randomSeed / 100f));
                     self.lightSource.setAlpha = new float?(1f);
@@ -112,7 +201,7 @@ namespace Unbound
             {
                 string name = self.room.abstractRoom.name;
 
-                if (name == "MS_STGSTARCHAMBER")
+                if (name.StartsWith("SL_UnbSTG"))
                 {
                     TriangleMesh.Triangle[] array = new TriangleMesh.Triangle[6];
                     for (int i = 0; i < 6; i++)
@@ -133,6 +222,30 @@ namespace Unbound
                     sLeaser.sprites[0] = triangleMesh;
                     sLeaser.sprites[0].shader = rCam.room.game.rainWorld.Shaders["FlareBomb"];
                     sLeaser.sprites[0].color = new Color(1f, 0f, 0f);
+                    self.AddToContainer(sLeaser, rCam, null);
+                    return;
+                }
+                if (name.StartsWith("SL_UnbKTB"))
+                {
+                    TriangleMesh.Triangle[] array = new TriangleMesh.Triangle[6];
+                    for (int i = 0; i < 6; i++)
+                    {
+                        array[i] = new TriangleMesh.Triangle(i, i + 1, i + 2);
+                    }
+                    TriangleMesh triangleMesh = new TriangleMesh("Futile_White", array, false, false);
+                    float num = 0.4f;
+                    triangleMesh.UVvertices[0] = new Vector2(0f, 0f);
+                    triangleMesh.UVvertices[1] = new Vector2(1f, 0f);
+                    triangleMesh.UVvertices[2] = new Vector2(0f, num);
+                    triangleMesh.UVvertices[3] = new Vector2(1f, num);
+                    triangleMesh.UVvertices[4] = new Vector2(0f, 1f - num);
+                    triangleMesh.UVvertices[5] = new Vector2(1f, 1f - num);
+                    triangleMesh.UVvertices[6] = new Vector2(0f, 1f);
+                    triangleMesh.UVvertices[7] = new Vector2(1f, 1f);
+                    sLeaser.sprites = new FSprite[1];
+                    sLeaser.sprites[0] = triangleMesh;
+                    sLeaser.sprites[0].shader = rCam.room.game.rainWorld.Shaders["FlareBomb"];
+                    sLeaser.sprites[0].color = new Color(0f, 0.75f, 1f);
                     self.AddToContainer(sLeaser, rCam, null);
                     return;
                 }

@@ -69,13 +69,14 @@ internal class HooksOnly
         PebblesCode.Init();
         GeneralOracleThings.Init();
         // iterators
-        // STGKTB.Init(); (KEEP DISABLED FOR NOW)
+        STGKTB.Init();
         // room specific
         Revgen.HookThatThang();
         FlickMech.MakeFlickerReal();
         FlickSpearMechanics.Init();
         UnbCatStats.Init();
         EndUnb.Init();
+        // Techgen.Init(); // breaks the game
         // slugcatstats exclusive things
 
         // MOD EXCLUSIVE =============================================================================================

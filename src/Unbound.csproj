@@ -53,6 +53,10 @@
         </Reference>
     </ItemGroup>
     
+    <ItemGroup>
+      <Folder Include="RoomSpecific\Arkthings\" />
+    </ItemGroup>
+    
     <Target Name="GenerateMod" AfterTargets="PostBuildEvent">
 		<ItemGroup>
 			<RemovePlugins Include="../mod/plugins/*.dll" />

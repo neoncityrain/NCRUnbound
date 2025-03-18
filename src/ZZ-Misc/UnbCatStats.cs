@@ -75,7 +75,7 @@ namespace Unbound
             {
                 return true;
             }
-            else return orig(i);
+            return orig(i);
         }
 
         private static string UnbNameLogging(On.SlugcatStats.orig_getSlugcatName orig, SlugcatStats.Name i)

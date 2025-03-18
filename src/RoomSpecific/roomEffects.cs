@@ -3,47 +3,46 @@
 namespace Unbound;
 
 
-internal class thinAtmosphere
+internal class NCRFrigid
 {
     public static void Init()
     {
-        On.AirBreatherCreature.Update += atmosphereAir;
-        On.Player.LungUpdate += atmosphereLungUpdate;
-        On.PlayerGraphics.Update += noBreathingInLowAtmos;
+        // On.AirBreatherCreature.Update += atmosphereAir;
+        // On.Player.LungUpdate += atmosphereLungUpdate;
+        // On.PlayerGraphics.Update += noBreathingInLowAtmos;
         On.Creature.Update += freezingSky;
 
-        EffectDefinitionBuilder atmosphereEffect = new EffectDefinitionBuilder("Thin Atmosphere");
+        EffectDefinitionBuilder atmosphereEffect = new EffectDefinitionBuilder("NCR Frigid");
 
         atmosphereEffect
-                .AddFloatField("floatfield", 0f, 1f, 0.001f, 0.1f, "Strength")
-                .SetUADFactory((room, data, firstTimeRealized) => new thinAtmosphereData(data))
+                .SetUADFactory((room, data, firstTimeRealized) => new FrigidRoomData(data))
                 .SetCategory("NCR's Effects")
                 .Register();
     }
 
-    internal class thinAtmosphereData : UpdatableAndDeletable
+    internal class FrigidRoomData : UpdatableAndDeletable
     {
 
         public EffectExtraData EffectData { get; }
 
-        public thinAtmosphereData(EffectExtraData effectData)
+        public FrigidRoomData(EffectExtraData effectData)
         {
             EffectData = effectData;
         }
 
         public override void Update(bool eu)
         {
-            room.AddObject(new drawnAtmosphere(this, room));
+            room.AddObject(new DrawFrigidRoom(this, room));
         }
     }
 
     // start low atmosphere object
-    private class drawnAtmosphere : UpdatableAndDeletable, IDrawable
+    private class DrawFrigidRoom : UpdatableAndDeletable, IDrawable
     {
-        private readonly thinAtmosphereData owner;
+        private readonly FrigidRoomData owner;
         public Room affectedRoom;
 
-        public drawnAtmosphere(thinAtmosphereData owner, Room room)
+        public DrawFrigidRoom(FrigidRoomData owner, Room room)
         {
             this.owner = owner;
             this.affectedRoom = room;
@@ -52,11 +51,11 @@ internal class thinAtmosphere
         public override void Update(bool eu)
         {
             base.Update(eu);
-            float strength = this.owner.EffectData.GetFloat("floatfield");
+            float strength = this.owner.EffectData.Amount;
 
-            if (room.GetNCRRoom().atmosphereFloat != strength)
+            if (room.GetNCRRoom().FrigidRoomFloat != strength)
             {
-                room.GetNCRRoom().atmosphereFloat = strength;
+                room.GetNCRRoom().FrigidRoomFloat = strength;
             }
         }
 
@@ -84,7 +83,7 @@ internal class thinAtmosphere
 
         public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
-            //
+            // ?
         }
 
         public void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContatiner)
@@ -109,7 +108,7 @@ internal class thinAtmosphere
         {
             self.HypothermiaGain = 0f;
 
-            if (self.room.GetNCRRoom().atmosphereFloat > 0f)
+            if (self.room.GetNCRRoom().FrigidRoomFloat > 0f)
             {
                 foreach (IProvideWarmth provideWarmth in self.room.blizzardHeatSources)
                 {
@@ -127,11 +126,11 @@ internal class thinAtmosphere
                 if (!self.dead)
                 {
                     self.HypothermiaGain = (Mathf.Lerp(0f, RainWorldGame.DefaultHeatSourceWarmth * 0.08f,
-                        Mathf.InverseLerp(0.05f, 0.8f, self.room.GetNCRRoom().atmosphereFloat)) / 1000f);
+                        Mathf.InverseLerp(0.01f, 0.6f, self.room.GetNCRRoom().FrigidRoomFloat)) / 20000f);
 
                     if (!self.abstractCreature.HypothermiaImmune)
                     {
-                        self.HypothermiaGain += (Mathf.Lerp(0f, 0.9f, self.room.GetNCRRoom().atmosphereFloat) / 30f);
+                        self.HypothermiaGain += (Mathf.Lerp(0f, 0.9f, self.room.GetNCRRoom().FrigidRoomFloat) / 30f);
                         self.HypothermiaGain += (Mathf.Lerp(-self.room.gravity, 0.4f, Mathf.InverseLerp(0f, 0.5f, 1f)) / 45f);
                     }
 
@@ -203,16 +202,16 @@ internal class thinAtmosphere
     {
         orig(self);
         if (!self.player.dead && self != null && self.player != null && self.player.room != null &&
-            self.player.room.GetNCRRoom().atmosphereFloat > 0f)
+            self.player.room.GetNCRRoom().FrigidRoomFloat > 0f)
         {
-            self.breath -= self.player.room.GetNCRRoom().atmosphereFloat / Mathf.Lerp(60f, 15f, Mathf.Pow(self.player.aerobicLevel, 1.5f));
+            self.breath -= self.player.room.GetNCRRoom().FrigidRoomFloat / Mathf.Lerp(60f, 15f, Mathf.Pow(self.player.aerobicLevel, 1.5f));
         }
     }
 
     private static void atmosphereLungUpdate(On.Player.orig_LungUpdate orig, Player self)
     {
         if (self != null && !self.dead && self.room != null && self.Submersion < 1f &&
-            self.room.GetNCRRoom().atmosphereFloat > 0f)
+            self.room.GetNCRRoom().FrigidRoomFloat > 0f)
         {
             self.airInLungs = Mathf.Min(self.airInLungs, 1f - self.rainDeath);
 
@@ -221,7 +220,7 @@ internal class thinAtmosphere
                 float num = self.airInLungs;
                 if (!self.monkAscension)
                 {
-                    self.airInLungs -= (self.room.GetNCRRoom().atmosphereFloat / (40f * (self.lungsExhausted ? 4.5f : 9f) *
+                    self.airInLungs -= (self.room.GetNCRRoom().FrigidRoomFloat / (40f * (self.lungsExhausted ? 4.5f : 9f) *
                         ((self.input[0].y == 1 && self.input[0].x == 0 && self.airInLungs < 0.33333334f) ? 1.5f : 1f) *
                         ((float)self.room.game.setupValues.lungs / 100f)) * self.slugcatStats.lungsFac) / 2f;
                 }
@@ -288,9 +287,9 @@ internal class thinAtmosphere
     {
         if (self?.room != null && // first makes sure the creature and room are not null
             self.Submersion < 1f && !self.dead &&
-            self.room.GetNCRRoom().atmosphereFloat > 0f)
+            self.room.GetNCRRoom().FrigidRoomFloat > 0f)
         {
-            self.lungs = (Mathf.Max(-1f, self.lungs - self.room.GetNCRRoom().atmosphereFloat / self.Template.lungCapacity) / 1.5f);
+            self.lungs = (Mathf.Max(-1f, self.lungs - self.room.GetNCRRoom().FrigidRoomFloat / self.Template.lungCapacity) / 1.5f);
             if (self.lungs < 0.25f)
             {
                 if (UnityEngine.Random.value < 0.02f) // slightly lower chance than water

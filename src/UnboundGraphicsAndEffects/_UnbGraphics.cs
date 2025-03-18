@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using RainMeadow;
 
 namespace Unbound
 {
@@ -91,7 +92,7 @@ namespace Unbound
                 // ADDING / REPLACING ATLAS THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-                if (self.player.room.GetNCRRoom().atmosphereFloat > 0f && (self.player.airInLungs < 0.2f ||
+                if (self.player.room.GetNCRRoom().FrigidRoomFloat > 0f && (self.player.airInLungs < 0.2f ||
                     self.player.Hypothermia > 0.8f) && self.player.Consious)
                 {
                     sLeaser.sprites[9].element = Futile.atlasManager.GetElementWithName("FaceStunned");
@@ -327,7 +328,8 @@ namespace Unbound
                     (rev ? new Color(0.51f, 0.2f, 0.22f) : new Color(0.07f, 0.2f, 0.31f));
                 Color bodycol = self.player.GetNCRunbound().IsTechnician ? new Color(0.91f, 0.8f, 0.53f) : 
                     (rev ? new Color(0.95f, 0.91f, 0.91f) : new Color(0.89f, 0.79f, 0.6f));
-                Color pupilcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.26f, 0.09f, 0.08f) : effectcol;
+
+                Color pupilcol = effectcol;
 
                 if (self.player.room.game.IsArenaSession && !self.player.GetNCRunbound().IsTechnician)
                 {
@@ -381,6 +383,12 @@ namespace Unbound
                     effectcol = PlayerGraphics.CustomColorSafety(2);
                     eyecol = PlayerGraphics.CustomColorSafety(1);
                     bodycol = PlayerGraphics.CustomColorSafety(0);
+                }
+                
+                if(ModManager.ActiveMods.Any(mod => mod.id == "henpemaz_rainmeadow"))
+                {
+                    // hmm. i dont even know where to start lol
+
                 }
 
                 if (self.player.GetNCRunbound().RGBRings)

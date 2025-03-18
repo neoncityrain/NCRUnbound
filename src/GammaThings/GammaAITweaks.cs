@@ -623,9 +623,10 @@ namespace Unbound
         public static void HologramTweaks(On.Overseer.orig_TryAddHologram orig, Overseer self, OverseerHologram.Message message, 
             Creature communicateWith, float importance)
         {
-            if (self?.room != null && !self.dead &&
+            if (self?.room?.abstractRoom != null && !self.dead &&
                 (self.room.game.session.characterStats.name.value == "NCRunbound" ||
-                self.room.game.session.characterStats.name.value == "NCRtech") && self.PlayerGuide)
+                self.room.game.session.characterStats.name.value == "NCRtech") && self.PlayerGuide &&
+                !self.room.abstractRoom.name.StartsWith("SL_UnbKTB"))
             {
                 if (self.room != null && self.room.abstractRoom.name == "SS_AI")
                 {

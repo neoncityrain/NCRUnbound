@@ -101,7 +101,7 @@ namespace Unbound
 
         public class GetRoom
         {
-            public float atmosphereFloat;
+            public float FrigidRoomFloat;
 
             public GetRoom()
             {
