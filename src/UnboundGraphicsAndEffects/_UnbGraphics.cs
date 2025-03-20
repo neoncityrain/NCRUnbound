@@ -265,14 +265,12 @@ namespace Unbound
 
                 // FACE THINGS
                 string faceSprites = sLeaser.sprites[9]?.element?.name;
-                if (!self.player.GetNCRunbound().IsTechnician &&
-                    !self.player.GetNCRunbound().RingsDisabled &&
+                if (!self.player.GetNCRunbound().RingsDisabled &&
                     unbpupface == null)
                 {
                     NCRDebug.Log("Unbound Pupil sprites missing!");
                 }
-                else if (!self.player.GetNCRunbound().IsTechnician &&
-                    !self.player.GetNCRunbound().RingsDisabled &&
+                else if (!self.player.GetNCRunbound().RingsDisabled &&
                     faceSprites != null && faceSprites.StartsWith("Face") &&
                     unbpupface._elementsByName.TryGetValue("unbpup" + faceSprites, out var unbPupils))
                 {
@@ -317,7 +315,7 @@ namespace Unbound
                 MirrorSprite(sLeaser.sprites[unbRightMittens], sLeaser.sprites[6]);
                 MirrorSprite(sLeaser.sprites[unbLeftToes], sLeaser.sprites[7]);
                 MirrorSprite(sLeaser.sprites[unbRightToes], sLeaser.sprites[8]);
-                if (!rev || !self.player.GetNCRunbound().IsTechnician) { MirrorSprite(sLeaser.sprites[unbPupils], sLeaser.sprites[9]); }
+                if (!rev) { MirrorSprite(sLeaser.sprites[unbPupils], sLeaser.sprites[9]); }
                 #endregion
                 #region Colours
                 // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -329,7 +327,8 @@ namespace Unbound
                 Color bodycol = self.player.GetNCRunbound().IsTechnician ? new Color(0.91f, 0.8f, 0.53f) : 
                     (rev ? new Color(0.95f, 0.91f, 0.91f) : new Color(0.89f, 0.79f, 0.6f));
 
-                Color pupilcol = effectcol;
+                Color pupilcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.1f, 0.04f, 0.03f) :
+                    new Color(1f, 0f, 0f);
 
                 if (self.player.room.game.IsArenaSession && !self.player.GetNCRunbound().IsTechnician)
                 {
@@ -343,6 +342,7 @@ namespace Unbound
                                     effectcol = new Color(0.42f, 0.31f, 0.78f);
                                     eyecol = new Color(0.22f, 0.05f, 0.09f);
                                     bodycol = new Color(0.96f, 0.95f, 0.98f);
+                                    pupilcol = new Color(0.18f, 0.11f, 0.78f);
                                 }
                             }
                             break;
@@ -352,6 +352,7 @@ namespace Unbound
                                 effectcol = new Color(0.11f, 0.74f, 0.58f);
                                 eyecol = new Color(0.48f, 14f, 0.07f);
                                 bodycol = new Color(0.97f, 0.84f, 0.45f);
+                                pupilcol = new Color(0.56f, 0.29f, 0.92f);
                             }
                             break;
                         case 2:
@@ -360,6 +361,7 @@ namespace Unbound
                                 effectcol = new Color(0.84f, 0.08f, 0.3f);
                                 eyecol = new Color(0.12f, 0.21f, 0.27f);
                                 bodycol = new Color(0.98f, 0.58f, 0.38f);
+                                pupilcol = new Color(0.36f, 0.95f, 0.72f);
                             }
                             break;
                         case 3:
@@ -368,6 +370,7 @@ namespace Unbound
                                 effectcol = new Color(0.86f, 0.23f, 0.93f);
                                 eyecol = new Color(0.62f, 0.75f, 0.97f);
                                 bodycol = new Color(0.06f, 0.11f, 0.24f);
+                                pupilcol = new Color(0.94f, 0.02f, 0.14f);
                             }
                             break;
                     }
@@ -377,12 +380,14 @@ namespace Unbound
                     effectcol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 2);
                     eyecol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 1);
                     bodycol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 0);
+                    pupilcol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 3);
                 }
                 else if (PlayerGraphics.customColors != null && !ModManager.JollyCoop)
                 {
                     effectcol = PlayerGraphics.CustomColorSafety(2);
                     eyecol = PlayerGraphics.CustomColorSafety(1);
                     bodycol = PlayerGraphics.CustomColorSafety(0);
+                    pupilcol = PlayerGraphics.CustomColorSafety(3);
                 }
                 
                 if(ModManager.ActiveMods.Any(mod => mod.id == "henpemaz_rainmeadow"))
@@ -418,24 +423,6 @@ namespace Unbound
                     sLeaser.sprites[unbRightToes].color = effectcol; // hand
                     sLeaser.sprites[unbSocksNum].color = effectcol; // legs
 
-                    // colour tweaked ------------------------------
-                    if ((pupilcol.r >= pupilcol.b && pupilcol.r >= pupilcol.g) ||
-                        (pupilcol.r == pupilcol.b && pupilcol.b == pupilcol.g && pupilcol.r == pupilcol.g) ||
-                        (pupilcol.g > 0.8 && pupilcol.r > 0.8 && pupilcol.b > 0.8) ||
-                        (pupilcol.g < 0.1 && pupilcol.r < 0.1 && pupilcol.b < 0.1))
-                    {
-                        // itll be red the most often
-                        pupilcol.r = 1f;
-                    }
-                    else if (pupilcol.b > pupilcol.r && pupilcol.b >= pupilcol.g)
-                    {
-                        pupilcol.b = 1f;
-                    }
-                    else
-                    {
-                        pupilcol.g = 1f;
-                    }
-
                     // animated colour ------------------------------
                     if (self.player.GetNCRunbound().UnbCyanjumpCountdown == 0)
                     {
@@ -452,7 +439,7 @@ namespace Unbound
                         sLeaser.sprites[unbPupils].color = Color.Lerp(pupilcol, self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
                                 self.player.GetNCRunbound().UnbCyanjumpCountdown / 100f);
                     }
-                    if (rev || self.player.GetNCRunbound().IsTechnician)
+                    if (rev)
                     {
                         sLeaser.sprites[unbPupils].alpha = 0f;
                     }

@@ -8,7 +8,7 @@ namespace Unbound
         public static void Init()
         {
             On.SlugcatStats.getSlugcatName += UnbNameLogging;
-            On.SlugcatStats.HiddenOrUnplayableSlugcat += smil;
+            // On.SlugcatStats.HiddenOrUnplayableSlugcat += lockedCats;
             On.SlugcatStats.AutoGrabBatflys += NoGrabby;
 
             On.SlugcatStats.SpearSpawnElectricRandomChance += ElectricSpear;
@@ -65,13 +65,17 @@ namespace Unbound
             return orig(index);
         }
 
-        private static bool smil(On.SlugcatStats.orig_HiddenOrUnplayableSlugcat orig, SlugcatStats.Name i)
+        private static bool lockedCats(On.SlugcatStats.orig_HiddenOrUnplayableSlugcat orig, SlugcatStats.Name i)
         {
             if (i.value == "NCRtech" || i == UnboundEnums.NCRTechnician)
             {
                 return true;
             }
             if (i.value == "NCRoracle" || i == UnboundEnums.NCROracle)
+            {
+                return true;
+            }
+            if (i.value == "NCRreverb" || i == UnboundEnums.NCRReverb)
             {
                 return true;
             }

@@ -1,0 +1,17 @@
+Template: NONE
+DangerType: AerieBlizzard
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04999999
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 1
+BkgDroneVolume: 0
+Palette: 10
+EffectColorA: 8
+EffectColorB: 7
+Effects: Lightning-0.4871944-20-20, LightRain-0.4818722-119.6437-110.3555, Coldness-0-26.44272-66.97778, GreenSparks-0.2087976-30-30, 
+PlacedObjects: CustomIggyDirection><487.3416><2258.336><-387.3489~-289.2~1~0~1~True~501.0645^-349.8667~GuidancePebbles, SnowSource><272.5502><1701.524><Radial~60.47394~-8.08889~50~86.60254~0.8840014~0.162398, 
+AmbientSounds: OMNI><AM_RAIN-Rumbles.ogg><450.1494><640.6081><0.5773329><0.6102445, 
+FadePalette: 33, 0.5567934, 0.4639946, 0.3325295
+RoomSpecificScriptActive: ON

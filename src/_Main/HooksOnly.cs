@@ -34,6 +34,7 @@ internal class HooksOnly
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
         On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.updateGravity;
         On.Player.ctor += SetupRoomSpecific.MaintainRoomSpecific;
+        On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.KTBIntroSetup;
         // On.Player.Update += SetupRoomSpecific.IsGammaInMyShelter;
 
         // GAMMA =============================================================================================

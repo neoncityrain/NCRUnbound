@@ -1,0 +1,2 @@
+AmbientSounds: OMNI><AM_WAT-Sea01.ogg><651.2787><594.5046><0.1442712><1, 
+FadePalette: 10, 0.7426518, 0.7706636

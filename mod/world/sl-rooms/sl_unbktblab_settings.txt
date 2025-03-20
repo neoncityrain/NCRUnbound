@@ -1,0 +1,16 @@
+Template: NONE
+DangerType: AerieBlizzard
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04999999
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.7114586
+BkgDroneVolume: 0
+Palette: 5
+EffectColorA: 0
+EffectColorB: 7
+Effects: Darkness-0.6418591-20-20, Lightning-0.1005322-320.9865-41.37778, HeatWave-0.1237319-245.6115-132.4444, Coldness-0-54.98022-102.6222, LightRain-0.3325293-30-30, 
+PlacedObjects: SnowSource><539.9347><305.4894><Radial~182.1333~43.11111~-546.9135~216.0247~0.7602698~0.6186596, SnowSource><494.9012><447.5768><UnSnow~0~100~50~86.60254~1~0, DangleFruit><801.9496><444.4948><-249.7219~80.35556~50~50, DangleFruit><837.3363><496.0411><-261.1052~149.3333~50~50, DangleFruit><716.6538><472.6353><0~0~50~50, WaterNut><226.1804><150.9094><-305.9271~218.3111~2~3, WaterNut><203.3465><172.9092><0~0~2~3, 
+AmbientSounds: OMNI><AM_RAIN-Rumbles.ogg><530.2249><599.2459><0.3504075><0.3179282, 
+FadePalette: 33, 0.8738564

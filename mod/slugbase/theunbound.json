@@ -18,6 +18,11 @@
 				"name": "Patterns",
 				"story": "DE6455",
 				"arena": [ "6B50C8", "1CBC95", "D5154D", "DB3BEC" ]
+			},
+			{
+				"name": "Pupils",
+				"story": "A10719",
+				"arena": [ "2D1BC6", "8E49EA", "5CF2B8", "EF0424" ]
 			}
 		],
 		
@@ -25,18 +30,17 @@
 		"can_maul": true,
 		"maul_blacklist": [ "SlugNPC", "CyanLizard" ],
 		"maul_damage": 3,
-		"karma": 0,
+		"karma": 2,
 		"karma_cap": 2,
 		"guide_overseer": 2,
 
 		"select_menu_scene": "unbselect",
 		"select_menu_scene_ascended": "unbghost",
 		"title_card": "introroll-unbound",
-		"intro_slideshow": "intro-unbound",
 		"world_state": ["NCRunbound", "NCRflicker", "Red", "Artificer" ],
 		"cycle_length_min": 5.5,
 		"cycle_length_max": 12,
-		"start_room": [ "MS_UNBSTART", "SL_LMS06" ],
+		"start_room": [ "SL_UnbKTBS", "SL_A06" ],
 		"timeline_before": "Red",
 		"timeline_after": "Artificer",
 		
@@ -45,9 +49,15 @@
 			"corpses": 0.5,
 			"overrides": {
 				"SSOracleSwarmer": 7,
+				"DendriticNeuron": 7,
 				
 				"RedCentipede": 4,
+				"RedHorror": 4,
 				
+				"Scutigera": 3,
+				"Teuthicada": 3,
+				
+				"Purplewing": 2,
 				"Centipede": 2,
 				"Centiwing": 2,
 				"Aquapede": 2,
@@ -56,14 +66,22 @@
 				"OverseerCarcass": 2,
 				
 				"SmallCentipede": 1.5,
+				"PureCrystal": 1.5,
+				"LizardEgg": 1.5,
 				
 				"Batfly": 0.5,
+				"Seedbat": 0.5,
 				"Fly": 0.5,
+				"LanternMouse": 0.5,
 				
-				"LanternMouse": 0.25,
 				"EggBugEgg": 0.25,
 				"Scavenger": 0.25,
+				"Sporantula": 0.25,
+				"SlimeMold": 0.25,
 				
+				"Honeycomb": 0,
+				
+				"GlowWeed": -1,
 				"Slugcat": -1,
 				"SlugNPC": -1,
 				"CyanLizard": -1,
@@ -73,7 +91,18 @@
 				"SeedCob": -1,
 				"Seed": -1,
 				"WaterNut": -1,
-				"DandelionPeach": -1
+				"DandelionPeach": -1,
+				"WaterBlob": -1,
+				"BlobPiece": -1,
+				"Pumpkin": -1,
+				"CaneSpear": -1,
+				"BouncingMelon": -1,
+				"ThornyStrawberry": -1,
+				"StarLemon": -1,
+				"GummyAnther": -1,
+				"Physalis": -1,
+				"MarineEye": -1,
+				"LittleBalloon": -1
 				}
 			},
 

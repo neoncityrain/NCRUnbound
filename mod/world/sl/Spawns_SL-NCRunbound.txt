@@ -7,6 +7,13 @@ SL_LMB04 : 4-CicadaB-2, 5-CicadaA-1
 //----- squidcadas start to appear
 
 
+// ============================================================================================================
+
+//SL_UnbKTBLab : 2-Inspector
+//SL_UnbSTGch : 3-Inspector
+
+// ============================================================================================================
+
 // named dp rooms  --------------------------------------
 SL_EDGE02 : 3-Dropbug-2, 5-Snail-{PreCycle}-2, 6-Snail-{PreCycle}-3, 3-Snail-2-{PreCycle}, 9-Yellow-3, 8-Yellow-2
 //----- combines hunter + arti into one terrible mess

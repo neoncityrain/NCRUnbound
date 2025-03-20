@@ -1,7 +1,7 @@
 {
 	"id": "NCRtech",
-	"name": "=)",
-	"description": "If you are seeing this, something went very wrong.",
+	"name": "The Technician",
+	"description": "If you are seeing this, something went wrong.",
 	"features": {
 		"custom_colors": [
 			{
@@ -10,7 +10,7 @@
 			},
 			{
 				"name": "Eyes",
-				"story": "12324F"
+				"story": "421814"
 			},
 			{
 				"name": "Patterns",
@@ -19,18 +19,17 @@
 		],
 		
 		"can_maul": true,
-		"expedition_enabled": false,
+		"expedition_enabled": true,
 		"maul_blacklist": [ "SlugNPC", "CyanLizard" ],
-		"maul_damage": 3,
+		"maul_damage": 2,
 		"karma": 0,
 		"karma_cap": 2,
-		"guide_overseer": 4,
 
 		"select_menu_scene": "",
 		"select_menu_scene_ascended": "",
 		"sleep_scene": "",
 		
-		"weight": 0.5,
+		"weight": 1.2,
 		"tunnel_speed": 1,
 		"climb_speed": 1.2,
 		"walk_speed": 1.1,
@@ -39,6 +38,79 @@
 		"loudness": 0.9,
 		"auto_grab_batflies": false,
 		"the_glow": false,
-		"the_mark": false
+		"the_mark": true,
+		
+		"cycle_length_min": 7.5,
+		"cycle_length_max": 15,
+		"guide_overseer": 0,
+		"food_min": 6,
+		"food_max": 10,
+		
+		
+		"start_room": [ "SL_UnbSTGfa" ],
+		"world_state": ["NCRtech", "Spear", "Red" ],
+		"expedition_description": "Smile, for you are alive today.<LINE>A calmer experience than Unbound, but...",
+		
+		"diet": {
+			"base": "White",
+			"corpses": 0.5,
+			"overrides": {
+				"SSOracleSwarmer": 2,
+				"DendriticNeuron": 2,
+				
+				"RedCentipede": 4,
+				"RedHorror": 4,
+				
+				"Scutigera": 3,
+				"Teuthicada": 3,
+				
+				"Purplewing": 2,
+				"Centipede": 2,
+				"Centiwing": 2,
+				"Aquapede": 2,
+				"VultureGrub": 2,
+				"JellyFish": 2,
+				"OverseerCarcass": 2,
+				
+				"SmallCentipede": 1.5,
+				"PureCrystal": 1.5,
+				"LizardEgg": 1.5,
+				
+				"Batfly": 0.5,
+				"Seedbat": 0.5,
+				"Fly": 0.5,
+				"LanternMouse": 0.5,
+				
+				"EggBugEgg": 0.25,
+				"Scavenger": 0.25,
+				"Sporantula": 0.25,
+				"SlimeMold": 0.25,
+				
+				"Honeycomb": 0,
+				
+				"GlowWeed": -1,
+				"Slugcat": -1,
+				"SlugNPC": -1,
+				"CyanLizard": -1,
+				"GooieDuck": -1,
+				"LillyPuck": -1,
+				"BubbleFruit": -1,
+				"SeedCob": -1,
+				"Seed": -1,
+				"WaterNut": -1,
+				"DandelionPeach": -1,
+				"WaterBlob": -1,
+				"BlobPiece": -1,
+				"Pumpkin": -1,
+				"CaneSpear": -1,
+				"BouncingMelon": -1,
+				"ThornyStrawberry": -1,
+				"StarLemon": -1,
+				"GummyAnther": -1,
+				"Physalis": -1,
+				"MarineEye": -1,
+				"LittleBalloon": -1
+				}
+			}
 	}
 }

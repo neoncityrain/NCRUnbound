@@ -1,0 +1,18 @@
+Template: NONE
+DangerType: AerieBlizzard
+CeilingDrips: 0.75
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04999999
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.5955505
+Grime: 0.2989356
+BkgDroneVolume: 0
+Palette: 33
+EffectColorA: 8
+Effects: GreenSparks-0.5232-293.951-14.35556, ElectricDeath-0.2010641-42.76663-89.68893, HeatWave-0.1778647-302.4489-127.3778, LightRain-0.9434554-20-20, Darkness-0.5567936-39.24896-106.0889, Lightning-0.510394-30-30, 
+PlacedObjects: ReliableIggyEntrance><236.5042><418.9724><90.75104^12.80002, ReliableIggyEntrance><386.1604><160.5555><90.75104^12.80002, CustomIggyDirection><988.4624><1205.979><-613.5927~38.62225~0.98~0~1~False~67.07507^283.0222~GuidancePebbles, ColouredLightSource><1949.197><1269.761><-489.799~-258.6223~B2F5CD~-33.4386^-119.1778~0.7602692~False~0.4149342~0.08506576~0.7165309~Always~0~100, ColouredLightSource><1118.828><1260.911><-489.799~-258.6223~B2F5CD~-33.4386^-119.1778~0.7602692~False~0.4149342~0.08506576~0.7165309~Always~0~100, ColouredLightSource><721.1229><1367.578><-489.799~-258.6223~B2F5CD~-33.4386^-119.1778~0.7602692~False~0.4149342~0.08506576~0.7165309~Always~0~100, ColouredLightSource><483.6302><373.1778><-489.799~-258.6223~B2F5CD~-33.4386^-119.1778~0.7602692~False~0.4149342~0.08506576~0.7165309~Always~0~100, ColouredLightSource><712.0083><554.5111><-489.799~-258.6223~B2F5CD~-33.4386^-119.1778~0.7602692~False~0.4149342~0.08506576~0.7165309~Always~0~100, ColouredLightSource><842.2052><415.1333><-489.799~-258.6223~B2F5CD~-33.4386^-119.1778~0.7602692~False~0.4149342~0.08506576~0.7165309~Always~0~100, RectanglePopupTrigger><640.3711><222.2301><-522.5261~168.0444~When a double jump isn't enough%2prepare a longjump instead.~0~6~-1~1~True~True~1~317.4688^511.5555, RectanglePopupTrigger><1535.188><108.8889><-522.5261~168.0444~After a long jump%2he can jump three times%2but use the third carefully.~0~6~-1~1~True~True~1~488.9303^361.511, 
+AmbientSounds: OMNI><AM_RAIN-RollingThunder.ogg><507.932><633.0619><0.1781251><0.6922156, OMNI><AM_WIN-HowlingWnd.ogg><668.0803><615.3168><0.1674705><0.8630434, OMNI><AM_ENV-WallHum.ogg><810.331><621.4239><0.2912027><0.7633628, OMNI><AM_RAIN-Rumbles.ogg><563.1451><561.617><0.5850658><0.8329624, 
+FadePalette: 5, 0.4458671, 0.4690671, 0.4509397, 0.4768002
+RoomSpecificScriptActive: ON

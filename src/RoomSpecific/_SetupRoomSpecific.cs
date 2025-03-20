@@ -6,6 +6,15 @@ namespace Unbound
 {
     internal class SetupRoomSpecific
     {
+        public static void KTBIntroSetup(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
+        {
+            if (room?.abstractRoom?.name != null && room.abstractRoom.name == "SL_UnbKTBfall")
+            {
+                room.AddObject(new KTBIntro(room));
+            }
+            orig(room);
+        }
+
         public static void IsGammaInMyShelter(On.Player.orig_Update orig, Player self, bool eu)
         {
             orig(self, eu);
@@ -246,16 +255,20 @@ namespace Unbound
                     {
                         if (world.region.name == "MS" && ModManager.MSC)
                         {
-                            NCRDebug.Log("Unbound's MS start detected, triggering intro!");
+                            NCRDebug.Log("Unbound's MS start detected, triggering secondary intro!");
                             self.room.AddObject(new UnboundIntro());
                         }
                         else if (self.room.abstractRoom.name == "SL_UnbKTBS")
                         {
                             NCRDebug.Log("Unbound in KTB Shelter!");
+                        }
+                        else if (self.room.abstractRoom.name == "SL_S11")
+                        {
+                            NCRDebug.Log("Unbound in vanilla SL shelter!");
                             self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
-                            AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
-                            new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
-                            UnboundEnums.unboundKarmaPearl);
+                                AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
+                                new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
+                                UnboundEnums.unboundKarmaPearl);
                         }
                         else
                         {
@@ -357,7 +370,7 @@ namespace Unbound
                     self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = true;
                     if (self.GetNCRunbound().MoreDebug)
                     {
-                        NCRDebug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and only trigger once!");
+                        NCRDebug.Log("Unbound start detected! This SHOULD trigger regardless of the cat being actively played, and will trigger twice!");
                     }
                 }
             }

@@ -1,0 +1,11 @@
+Template: NONE
+DangerType: None
+Clouds: 1
+Grime: 0
+BkgDroneVolume: 0.326087
+Palette: 24
+EffectColorB: 21
+Effects: ZeroG-1-20-20, CorruptionSpores-0.6086956-19-76, BrokenZeroG-0-281-20, SSSwarmers-0.4175951-30-30, 
+PlacedObjects: LightFixture><874.933><88.83058><RedLight~17.32051~-10~23, LightFixture><206.9755><25.30151><RedLight~17.32051~-10~44, Corruption><894.2853><527.5968><-78.66351~1.711121, LightSource><372.5113><662.6997><0.5760869~Environment~-130~-79~-329~-326.3975~1~0~None~0~0, LightSource><360.2587><21.19983><0.6413044~Environment~-10~133~50~86.60254~1~0~None~0~0, Filter><-87.48709><307.8504><180~178~-72.01923~-195.0285~White|Yellow|Rivulet|Saint|Gourmand, WallMycelia><64.69489><472.4552><107~25, LightSource><59.8889><218.5453><1~Environment~355~101~-162.0106~-235.4087~1~0~None~0~0, CoralStem><928.9629><293.936><-140.1573~-99.82222, 
+AmbientSounds: OMNI><SO_SFX-Drowning.ogg><830.0258><652.8017><0.5326087><1, SPOT><SO_SFX-Heartbeat2.ogg><66.66846><506.8578><0.3695652><0.9021739><716.9933><333.7257><-241.3553><-130.3553><0><0.2739132, 
+FadePalette: 10, 0.7608696

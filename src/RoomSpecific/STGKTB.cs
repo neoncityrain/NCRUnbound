@@ -26,13 +26,14 @@ namespace Unbound
             if (self?.room?.abstractRoom != null)
             {
                 string name = self.room.abstractRoom.name;
-                if (name.StartsWith("SL_UnbSTG"))
+                if (name.StartsWith("SL_UnbSTG") || name.StartsWith("SL_UnbKTB"))
                 {
-
-                }
-                else if (name.StartsWith("SL_UnbKTB"))
-                {
-
+                    bool stg = name.StartsWith("SL_UnbSTG");
+                    Vector3 iteratorColour = Custom.RGB2HSL(stg ? new Color(0.87f, 0.39f, 0.33f) : new Color(0.29f, 0.39f, 0.47f));
+                    HSLColor hslcolor = new HSLColor(iteratorColour.x, iteratorColour.y, iteratorColour.z);
+                    hslcolor.saturation = 0.9f;
+                    hslcolor.hue += self.room.world.game.SeededRandom(self.abstractCreature.ID.RandomSeed + 20) / 20f;
+                    return hslcolor.rgb;
                 }
             }
             return orig(self);
@@ -148,7 +149,8 @@ namespace Unbound
                         (sLeaser.sprites[0] as TriangleMesh).MoveVertice(6, a - camPos);
                         (sLeaser.sprites[0] as TriangleMesh).MoveVertice(7, a4 - camPos);
                     }
-                    sLeaser.sprites[0].color = new Color(Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num, Mathf.InverseLerp(0.75f, 1f, self.zapLit) * num, 1f);
+                    sLeaser.sprites[0].color = new Color(Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num,
+                        Mathf.InverseLerp(0.75f, 1f, self.zapLit) * num, 1f);
                     return;
                 }
             }
@@ -171,7 +173,7 @@ namespace Unbound
                     self.lightSource.affectedByPaletteDarkness = 0.5f;
                     return;
                 }
-                if (name.StartsWith("SL_UnbKTB"))
+                else if (name.StartsWith("SL_UnbKTB"))
                 {
                     self.lightSource = new LightSource(placedObject.pos, false, new Color(0f, 0.75f, 1f), self);
                     placedInRoom.AddObject(self.lightSource);

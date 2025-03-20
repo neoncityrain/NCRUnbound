@@ -30,7 +30,6 @@
 
 		"select_menu_scene": "unbselectrev",
 		"sleep_scene": "unbsleeprev",
-		"title_card": "introroll-reverb",
 		"world_state": [ "NCRreverb", "Rivulet", "Red" ],
 		"cycle_length_min": 10,
 		"cycle_length_max": 16,

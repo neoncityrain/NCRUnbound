@@ -7,6 +7,12 @@
 			"volume_multiplier": 0.90
 		},
 		{
+			"slugcat_id": "NCRtech",
+			"short_meow_soundid": "NCRCyanMeowmicHappyTech",
+			"long_meow_soundid": "NCRCyanMeowmicTech",
+			"volume_multiplier": 0.80
+		},
+		{
 			"slugcat_id": "NCRreverb",
 			"short_meow_soundid": "NCRRevMeowmicHappy",
 			"long_meow_soundid": "NCRYellowMeowmic",
