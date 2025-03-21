@@ -83,11 +83,6 @@ namespace Unbound
                         }
                         this.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = false;
                         // to 're-trigger' the intro cutscene
-
-                        if (ModManager.ActiveMods.Any(mod => mod.id == "fake_achievements"))
-                        {
-                            AchievementsManager.ShowAchievement("unbtheend");
-                        }
                     }
                 }
             }

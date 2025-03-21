@@ -12,7 +12,7 @@ namespace Unbound
     [BepInDependency("expedition", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("DetailedIcon", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("henpemaz.rainmeadow", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("fakeachievements", BepInDependency.DependencyFlags.SoftDependency)]
+    // [BepInDependency("fakeachievements", BepInDependency.DependencyFlags.SoftDependency)]
 
 
     public partial class UnbSetupThings : BaseUnityPlugin
