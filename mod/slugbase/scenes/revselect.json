@@ -1,6 +1,6 @@
 {
 	"id": "unbselectrev",
-	"scene_folder": "scenes/revselect",
+	"scene_folder": "scenes/select/revselect",
 	"images": [
 		{ "name": "0- shaded", "pos": [200, 200], "depth": 3.4, "shader": "Basic" },
 		{ "name": "1- snow", "pos": [200, 200], "depth": 3.0, "shader": "Basic" },

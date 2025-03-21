@@ -1,6 +1,6 @@
 {
 	"id": "unbselect",
-	"scene_folder": "scenes/unbselect",
+	"scene_folder": "scenes/select/unbselect",
 	"images": [
 		{ "name": "flat", "pos": [200, 200], "depth": 5, "shader": "Basic", "flatmode": true },
 		{ "name": "0-hatch", "pos": [200, 200], "depth": 3.8, "shader": "Basic" },

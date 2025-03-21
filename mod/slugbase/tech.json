@@ -1,7 +1,7 @@
 {
 	"id": "NCRtech",
 	"name": "The Technician",
-	"description": "If you are seeing this, something went wrong.",
+	"description": "...?",
 	"features": {
 		"custom_colors": [
 			{
@@ -25,7 +25,7 @@
 		"karma": 0,
 		"karma_cap": 2,
 
-		"select_menu_scene": "",
+		"select_menu_scene": "techselect",
 		"select_menu_scene_ascended": "",
 		"sleep_scene": "",
 		
