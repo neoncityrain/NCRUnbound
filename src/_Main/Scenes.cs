@@ -55,7 +55,7 @@ namespace Unbound
             if (!self.flatMode)
             {
                 if (self.menu.manager.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
-                    // gamma is logged as resting in the shelter with unbound
+                // gamma is logged as resting in the shelter with unbound
                 {
                     NCRDebug.Log("Gamma in Unbound shelter, drawing Gamma!");
 
@@ -66,7 +66,7 @@ namespace Unbound
                     self.depthIllustrations[self.depthIllustrations.Count - 1].setAlpha = new float?(0.24f);
                     self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "sleep - 4", new Vector2(719f, 127f), 2.2f,
                         MenuDepthIllustration.MenuShader.Normal)); // background darker grass
-                    self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "sleep - 2 (Gamma)", new Vector2(830f, 150f), 2.0f, 
+                    self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "sleep - 2 (Gamma)", new Vector2(830f, 150f), 2.0f,
                         MenuDepthIllustration.MenuShader.Normal)); // gamma
                     self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "sleep - 3 (Unbound)", new Vector2(817f, 112f), 1.7f,
                     MenuDepthIllustration.MenuShader.Normal)); // unbound

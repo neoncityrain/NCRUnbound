@@ -34,6 +34,7 @@ namespace Unbound
 
         static int ThisIsTheLengthOfMyMadness = 10; // update when adding more to above
         #endregion
+        
         public static void GraphicsHooks()
         {
             On.PlayerGraphics.InitiateSprites += InitiateSprites;
@@ -71,7 +72,12 @@ namespace Unbound
             if (self?.player?.room != null && // checks if ANY value of those are null. if so, cancel
                 !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 // if all graphics are disabled, dont even bother
-                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
+                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle &&
+                // is modcat but not oracle
+               ( !self.player.playerState.isGhost ||
+               self.player.playerState.isGhost && self.player.slugcatStats.name == UnboundEnums.NCRTechnician)
+               // either NOT playerghost or IS a technician ghost.
+                )
             {
                 #region Initiating Variables
                 // INITIATING THINGS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -516,7 +522,9 @@ namespace Unbound
         {
             if (self?.player?.room != null && rCam != null && sLeaser != null &&
                 !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
-                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
+                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle &&
+                (!self.player.playerState.isGhost ||
+                self.player.playerState.isGhost && self.player.slugcatStats.name == UnboundEnums.NCRTechnician))
             {
 
                 try
@@ -656,7 +664,9 @@ namespace Unbound
 
             if (self?.player?.room != null && sLeaser != null && rCam != null &&
                 !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
-                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
+                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle &&
+                (!self.player.playerState.isGhost ||
+                self.player.playerState.isGhost && self.player.slugcatStats.name == UnboundEnums.NCRTechnician))
             {
 
                 #region Unbound Exclusive
@@ -717,7 +727,9 @@ namespace Unbound
         {
             orig(self, ow);
             if (self?.owner != null && self.player?.room != null &&
-                self.player.GetNCRunbound().IsNCRUnbModcat && self.tail != null)
+                self.player.GetNCRunbound().IsNCRUnbModcat && self.tail != null &&
+                (!self.player.playerState.isGhost ||
+                self.player.playerState.isGhost && self.player.slugcatStats.name == UnboundEnums.NCRTechnician))
             {
                 if (self.player.GetNCRunbound().Reverb)
                 {

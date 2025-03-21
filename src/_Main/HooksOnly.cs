@@ -25,16 +25,16 @@ internal class HooksOnly
         On.Lizard.DamageAttack += UnbMisc.BiteUnb; // cyan bites do damage rather than autostun
         On.PlayerGraphics.Update += UnbMisc.UpdateTheGlow; // glow can change colour
         On.SSOracleSwarmer.DrawSprites += UnbMisc.NeuronColourShift; // when in a room with a neuron, rings change to be the neuron colour
-        On.JellyFish.Collide += UnbMisc.shockMeLess;
+        On.JellyFish.Collide += UnbMisc.shockMeLess; // reduces stun time upon jellyfish hit
 
         // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup;// setup and intro
         On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
         On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenGravUpdate; // antigravity scripts
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
-        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.updateGravity;
-        On.Player.ctor += SetupRoomSpecific.MaintainRoomSpecific;
-        On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.KTBIntroSetup;
+        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.updateGravity; // as above
+        On.Player.ctor += SetupRoomSpecific.MaintainRoomSpecific; // continues to seek room specific code
+        On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.KTBIntroSetup; // ktb room intro
         // On.Player.Update += SetupRoomSpecific.IsGammaInMyShelter;
 
         // GAMMA =============================================================================================

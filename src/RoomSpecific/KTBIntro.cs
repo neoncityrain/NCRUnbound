@@ -67,18 +67,27 @@ namespace Unbound
                         {
                             NCRDebug.Log("MSC Unbound save! Transferring player to MS_UNBSTART...");
                             RainWorldGame.ForceSaveNewDenLocation(this.room.game, "MS_UNBSTART", true);
-                            this.player.Die();
-                            this.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = false;
-                            // to 're-trigger' the intro cutscene
                         }
                         else
                         {
-                            NCRDebug.Log("MSC Unbound save! Transferring player to SL_S11...");
+                            NCRDebug.Log("Vanilla Unbound save! Transferring player to SL_S11...");
                             RainWorldGame.ForceSaveNewDenLocation(this.room.game, "SL_S11", true);
-                            this.player.Die();
-                            this.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = false;
                         }
-                        
+
+                        IL_killUnbound:
+                        this.player.Die();
+                        if (!this.player.dead)
+                        {
+                            NCRDebug.Log("Unbound failed to die! Re-attempting...");
+                            goto IL_killUnbound;
+                        }
+                        this.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon = false;
+                        // to 're-trigger' the intro cutscene
+
+                        if (ModManager.ActiveMods.Any(mod => mod.id == "fake_achievements"))
+                        {
+                            AchievementsManager.ShowAchievement("unbtheend");
+                        }
                     }
                 }
             }

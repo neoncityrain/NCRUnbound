@@ -8,7 +8,7 @@ namespace Unbound
         public static void Init()
         {
             On.SlugcatStats.getSlugcatName += UnbNameLogging;
-            // On.SlugcatStats.HiddenOrUnplayableSlugcat += lockedCats;
+            On.SlugcatStats.HiddenOrUnplayableSlugcat += lockedCats;
             On.SlugcatStats.AutoGrabBatflys += NoGrabby;
 
             On.SlugcatStats.SpearSpawnElectricRandomChance += ElectricSpear;
@@ -19,7 +19,8 @@ namespace Unbound
 
         private static bool NoGrabby(On.SlugcatStats.orig_AutoGrabBatflys orig, SlugcatStats.Name slugcatNum)
         {
-            if (slugcatNum == UnboundEnums.NCRUnbound)
+            if (slugcatNum != null &&
+                (slugcatNum == UnboundEnums.NCRUnbound || slugcatNum.value == "NCRunbound"))
             {
                 return false;
             }
@@ -28,57 +29,73 @@ namespace Unbound
 
         private static float SpawnMod(On.SlugcatStats.orig_SpearSpawnModifier orig, SlugcatStats.Name index, float originalSpearChance)
         {
-            if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
+            if (index != null)
             {
-                return Mathf.Pow(originalSpearChance, 0.825f);
+                if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
+                {
+                    return Mathf.Pow(originalSpearChance, 0.825f);
+                }
+                if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
+                {
+                    return Mathf.Pow(originalSpearChance, 0.9f);
+                }
             }
-            if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
-            {
-                return Mathf.Pow(originalSpearChance, 0.9f);
-            }
+            
             return orig(index, originalSpearChance);
         }
 
         private static float ExplosiveSpear(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance orig, SlugcatStats.Name index)
         {
-            if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
+            if (index != null)
             {
-                return 0.011f;
+                if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
+                {
+                    return 0.011f;
+                }
+                if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
+                {
+                    return 0.013f;
+                }
             }
-            if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
-            {
-                return 0.013f;
-            }
+            
             return orig(index);
         }
 
         private static float ElectricSpear(On.SlugcatStats.orig_SpearSpawnElectricRandomChance orig, SlugcatStats.Name index)
         {
-            if (ModManager.MSC && (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound"))
+            if (index != null)
             {
-                return 0.011f;
+                if (ModManager.MSC && (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound"))
+                {
+                    return 0.011f;
+                }
+                else if (ModManager.MSC && (index == UnboundEnums.NCRTechnician || index.value == "NCRtech"))
+                {
+                    return 0.09f;
+                }
             }
-            else if (ModManager.MSC && (index == UnboundEnums.NCRTechnician || index.value == "NCRtech"))
-            {
-                return 0.09f;
-            }
+            
             return orig(index);
         }
 
         private static bool lockedCats(On.SlugcatStats.orig_HiddenOrUnplayableSlugcat orig, SlugcatStats.Name i)
         {
-            if (i.value == "NCRtech" || i == UnboundEnums.NCRTechnician)
+            if (i != null)
             {
-                return true;
+                if (i.value == "NCRtech" || i == UnboundEnums.NCRTechnician)
+                {
+                    return true;
+                }
+                if (i.value == "NCRoracle" || i == UnboundEnums.NCROracle)
+                {
+                    return true;
+                }
+                if (i.value == "NCRreverb" || i == UnboundEnums.NCRReverb)
+                {
+                    return true;
+                }
             }
-            if (i.value == "NCRoracle" || i == UnboundEnums.NCROracle)
-            {
-                return true;
-            }
-            if (i.value == "NCRreverb" || i == UnboundEnums.NCRReverb)
-            {
-                return true;
-            }
+            
             return orig(i);
         }
 

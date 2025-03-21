@@ -614,8 +614,11 @@ namespace Unbound
                     // if the room is not forbidden
                     !self.world.GetAbstractRoom(room).scavengerOutpost || !self.world.GetAbstractRoom(room).scavengerTrader) ||
                     // if the room is not a scav outpost / scav trader
-                    self.world.GetAbstractRoom(room).shelter;
+                    self.world.GetAbstractRoom(room).shelter ||
                     // or if the room IS a shelter (enabling the guide to come inside the shelter with the player)
+                    self.world.GetAbstractRoom(room).name == "SB_L01"
+                    // gamma can appear in the voidsea room
+                    ;
             }
             return orig(self, room);
         }

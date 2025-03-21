@@ -6,16 +6,13 @@ namespace Unbound
     [BepInPlugin("NCR.theunbound", "unbound", "2.3.9")]
 
     [BepInDependency("moreslugcats", BepInDependency.DependencyFlags.SoftDependency)]
-    // soft dependency, as 
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("dressmyslugcat", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("randombuff", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("expedition", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("DetailedIcon", BepInDependency.DependencyFlags.SoftDependency)]
-
     [BepInDependency("henpemaz.rainmeadow", BepInDependency.DependencyFlags.SoftDependency)]
-
-    // [BepInDependency("fakeachievements", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("fakeachievements", BepInDependency.DependencyFlags.SoftDependency)]
 
 
     public partial class UnbSetupThings : BaseUnityPlugin

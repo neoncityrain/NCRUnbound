@@ -27,6 +27,9 @@
         <Reference Include="BuiltinBuffs">
           <HintPath>..\lib\BuiltinBuffs.dll</HintPath>
         </Reference>
+        <Reference Include="FakeAchievements">
+          <HintPath>..\lib\FakeAchievements.dll</HintPath>
+        </Reference>
         <Reference Include="HOOKS-Assembly-CSharp">
           <HintPath>..\lib\HOOKS-Assembly-CSharp.dll</HintPath>
         </Reference>

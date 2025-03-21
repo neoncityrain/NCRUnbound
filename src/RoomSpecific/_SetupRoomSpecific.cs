@@ -158,14 +158,6 @@ namespace Unbound
                             }
                         }
                     }
-
-                    if (self.dontEatExternalFoodSourceCounter != 1)
-                    {
-                        self.eatExternalFoodSourceCounter = 1;
-                        // used exclusively for seedcobs, to determine if the slugcat can eat from them or not.
-                        // unbound and technician are both allergic to them. They shouldn't eat them!
-                        // nice try, jolly co-opers and non-MSC-users. however i am evil
-                    }
                 }
                 catch (Exception e)
                 {

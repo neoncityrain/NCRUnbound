@@ -11,5 +11,6 @@ global using System.Collections.Generic;
 global using MoreSlugcats;
 global using Noise;
 global using NCRDebug = UnityEngine.Debug;
+global using FakeAchievements;
 
 namespace Unbound;
