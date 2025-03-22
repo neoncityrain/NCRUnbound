@@ -523,6 +523,7 @@ namespace Unbound
             if (self?.player?.room != null && rCam != null && sLeaser != null &&
                 !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled) &&
                 self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle &&
+
                 (!self.player.playerState.isGhost ||
                 self.player.playerState.isGhost && self.player.slugcatStats.name == UnboundEnums.NCRTechnician))
             {

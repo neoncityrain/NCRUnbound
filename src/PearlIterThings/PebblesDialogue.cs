@@ -272,7 +272,7 @@ namespace Unbound
                         self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: A small beast, on the floor of my chamber."), 0));
                         self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: If you are a messenger, spare me your message."), 0));
                         self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: I do not want any help."), 0));
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: I made that clear to Suns, and if I have to, I will make that clear to whoever sent you."), 0));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: I made that clear to Seven Red Suns, and if I have to, I will make that clear to whoever sent you."), 0));
                         
                         self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 150));
 
@@ -286,7 +286,7 @@ namespace Unbound
                         self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, self.convBehav, 210));
 
                         self.events.Add(new Conversation.TextEvent(self, 0, "FP: .  .  .", 0));
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: That expression really is something. I was unaware your kind could show such strong emotions on your faces.<LINE>Or perhaps you do not share the same ignorance as the rest of your kind?"), 0));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("FP: That expression truly is something. I was unaware your kind could show such strong emotions on your faces.<LINE>Or perhaps you do not share the same ignorance as the rest of your kind?"), 0));
 
                         if (self.owner.oracle.room.game.IsStorySession &&
                             self.owner.oracle.room.game.GetStorySession.saveState.miscWorldSaveData.memoryArraysFrolicked)

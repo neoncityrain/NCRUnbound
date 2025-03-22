@@ -18,22 +18,26 @@ namespace Unbound
             {
                 try
                 {
-                    if (self.phase == VoidWorm.MainWormBehavior.Phase.Looking && self.timeInPhase > 600)
+                    if (self.phase == VoidWorm.MainWormBehavior.Phase.Looking && self.timeInPhase > 570)
                     {
                         self.SwitchPhase(VoidWorm.MainWormBehavior.Phase.SwimDown);
                         return;
                     }
+
                     if (self.phase == VoidWorm.MainWormBehavior.Phase.SwimDown)
                     {
-                        self.worm.lightDimmed = Custom.LerpAndTick(self.worm.lightDimmed, 0f, 0.003f, 0.011111111f);
-                        self.goalPos = self.worm.chunks[0].pos + new Vector2(0f, -100000f);
-                        self.swim = true;
-                        self.SuperSwim(-40f * Mathf.InverseLerp(0f, 200f, (float)self.timeInPhase));
-                        if (self.worm.chunks[0].pos.y < -35000f)
+                        for (int l = 0; l < self.voidSea.worms.Count; l++)
                         {
-                            self.voidSea.fadeOutLights = true;
+                            self.voidSea.worms[l].lightAlpha = Mathf.Max(0f, self.voidSea.worms[l].lightAlpha - 0.001f);
                         }
-                        return;
+                        for (int m = 0; m < self.voidSea.elements.Count; m++)
+                        {
+                            if (self.voidSea.elements[m] is DistantWormLight)
+                            {
+                                (self.voidSea.elements[m] as DistantWormLight).alpha = Mathf.Max(0f,
+                                    (self.voidSea.elements[m] as DistantWormLight).alpha - 0.001f);
+                            }
+                        }
                     }
                 }
                 catch (Exception e)
