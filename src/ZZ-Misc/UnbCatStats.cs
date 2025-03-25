@@ -8,7 +8,7 @@ namespace Unbound
         public static void Init()
         {
             On.SlugcatStats.getSlugcatName += UnbNameLogging;
-            On.SlugcatStats.HiddenOrUnplayableSlugcat += lockedCats;
+            //On.SlugcatStats.HiddenOrUnplayableSlugcat += lockedCats;
             On.SlugcatStats.AutoGrabBatflys += NoGrabby;
 
             On.SlugcatStats.SpearSpawnElectricRandomChance += ElectricSpear;

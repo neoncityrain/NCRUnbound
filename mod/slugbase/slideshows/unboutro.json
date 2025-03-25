@@ -1,0 +1,138 @@
+{
+  "id": "unboutro",
+  "slideshow_folder": "scenes/end/electricborealis-ending",
+  "next_process": "Statistics",
+  "music": {
+    "name": "RW_Outro_Theme"
+  },
+  "scenes": [
+    {
+      "name": "hesgone",
+	  "scene_folder": "scenes",
+      "fade_in_start": 0,
+	  "fade_in_end": 1,
+      "fade_out_start": 1,
+      "images": [
+        {"name": "hesgone", "pos": [0,0], "depth": 0, "shader": "Basic"}
+      ]
+    },
+    {
+      "name": "leftswim",
+	  "scene_folder": "scenes/end/electricborealis-ending/1",
+	  "fade_in_start": 1,
+      "fade_in_end": 5,
+	  "fade_out_start": 8,
+      "images": [
+		{"name": "Still", "pos": [0,0], "depth": 1.0, "flatmode": true},
+        {"name": "bg", "pos": [0,0], "depth": 4.0, "shader": "Basic"},
+        {"name": "slurts", "pos": [0,0], "depth": 2.0, "shader": "LightEdges"},
+        {"name": "unb", "pos": [0,0], "depth": 1.1, "shader": "Basic"},
+        {"name": "shine", "pos": [0,0], "depth": 1.0, "shader": "Lighten"}
+      ]
+    },
+    {
+      "name": "upswim",
+	  "scene_folder": "scenes/end/electricborealis-ending/2",
+      "fade_in_start": 11,
+	  "fade_in_end": 14,
+      "fade_out_start": 18,
+      "images": [
+		{"name": "Still", "pos": [0,0], "depth": 1.0, "shader": "Basic", "flatmode": true},
+		{"name": "bg", "pos": [0, 0], "depth": 5.0, "shader": "Basic"},
+        {"name": "backcats", "pos": [0, 0], "depth": 4.0, "shader": "LightEdges"},
+        {"name": "unb", "pos": [0, 0], "depth": 2.0, "shader": "Basic"},
+        {"name": "shiny", "pos": [0, 0], "depth": 3.0, "shader": "Lighten"},
+        {"name": "shadow", "pos": [0, 0], "depth": 1.0, "shader": "LightEdges"}
+      ]
+    },
+    {
+      "name": "see",
+	  "scene_folder": "scenes/end/electricborealis-ending/3",
+      "fade_in_start": 19,
+	  "fade_in_end": 20,
+      "fade_out_start": 24,
+      "images": [
+		{"name": "Still", "pos": [0,0], "depth": 1.0, "shader": "Basic", "flatmode": true},
+		{"name": "bg", "pos": [0, 0], "depth": 9.0, "shader": "Basic"},
+        {"name": "swimmers", "pos": [0, 0], "depth": 8.0, "shader": "Basic"},
+        {"name": "unb", "pos": [0, 0], "depth": 4.0, "shader": "Basic"},
+        {"name": "tech", "pos": [0, 0], "depth": 1.0, "shader": "Basic"}
+      ]
+    },
+    {
+      "name": "reach",
+	  "scene_folder": "scenes/end/electricborealis-ending/4",
+      "fade_in_start": 26,
+	  "fade_in_end": 28,
+      "fade_out_start": 30,
+      "images": [
+		{"name": "Still", "pos": [0,0], "depth": 1.0, "shader": "Basic", "flatmode": true},
+		{"name": "bg", "pos": [0, 0], "depth": 6.0, "shader": "Basic"},
+        {"name": "swimmers", "pos": [0, 0], "depth": 5.0, "shader": "Basic"},
+        {"name": "unb", "pos": [0, 0], "depth": 2.0, "shader": "Basic"},
+        {"name": "eyewatch", "pos": [0, 0], "depth": 1.2, "shader": "Basic"},
+        {"name": "tech", "pos": [0, 0], "depth": 1.0, "shader": "Basic"}
+      ]
+    },
+    {
+      "name": "grab",
+	  "scene_folder": "scenes/end/electricborealis-ending/5",
+      "fade_in_start": 32,
+	  "fade_in_end": 34,
+      "fade_out_start": 40,
+      "images": [
+		{"name": "Still", "pos": [0,0], "depth": 1.0, "shader": "Basic", "flatmode": true},
+		{"name": "bg", "pos": [0, 0], "depth": 6.0, "shader": "Basic"},
+        {"name": "swimmers", "pos": [0, 0], "depth": 5.0, "shader": "Basic"},
+        {"name": "unb", "pos": [0, 0], "depth": 2.0, "shader": "Basic"},
+        {"name": "eyewatch", "pos": [0, 0], "depth": 1.0, "shader": "Basic"},
+        {"name": "tech", "pos": [0, 0], "depth": 1.0, "shader": "Basic"}
+      ]
+    },
+    {
+      "name": "rip",
+	  "scene_folder": "scenes/end/electricborealis-ending/6",
+      "fade_in_start": 42,
+	  "fade_in_end": 45,
+      "fade_out_start": 46,
+      "images": [
+		{"name": "Still", "pos": [0,0], "depth": 1.0, "shader": "Basic", "flatmode": true},
+		{"name": "bg", "pos": [0, 0], "depth": 5.0, "shader": "Basic"},
+        {"name": "techeye", "pos": [0, 0], "depth": 3.5, "shader": "Basic"},
+        {"name": "techhead", "pos": [0, 0], "depth": 3.1, "shader": "Basic"},
+        {"name": "techbody", "pos": [0, 0], "depth": 3.0, "shader": "Basic"},
+        {"name": "unb", "pos": [0, 0], "depth": 2.0, "shader": "Basic"},
+        {"name": "blood", "pos": [0, 0], "depth": 1.9, "shader": "Basic"},
+        {"name": "techarms", "pos": [0, 0], "depth": 1.0, "shader": "Basic"}
+      ]
+    },
+    {
+      "name": "tear",
+	  "scene_folder": "scenes/end/electricborealis-ending/7",
+      "fade_in_start": 49,
+	  "fade_in_end": 52,
+      "fade_out_start": 55,
+      "images": [
+		{"name": "Still", "pos": [0,0], "depth": 1.0, "shader": "Basic", "flatmode": true},
+		{"name": "bg", "pos": [0, 0], "depth": 7.0, "shader": "Basic"},
+        {"name": "techeye", "pos": [0, 0], "depth": 5.0, "shader": "Basic"},
+        {"name": "techhead", "pos": [0, 0], "depth": 4.0, "shader": "Basic"},
+        {"name": "techbody", "pos": [0, 0], "depth": 3.5, "shader": "Basic"},
+        {"name": "techarmblood", "pos": [0, 0], "depth": 3.0, "shader": "Basic"},
+        {"name": "unb", "pos": [0, 0], "depth": 3.5, "shader": "Basic"},
+        {"name": "blood", "pos": [0, 0], "depth": 2.0, "shader": "Basic"},
+        {"name": "techarmhold", "pos": [0, 0], "depth": 1.0, "shader": "Basic"}
+      ]
+    },
+	{
+      "name": "hesgonetwo",
+	  "scene_folder": "scenes",
+      "fade_in_start": 59,
+	  "fade_in_end": 59,
+      "fade_out_start": 60,
+      "images": [
+        {"name": "hesgone", "pos": [0,0], "depth": 0, "shader": "Basic"}
+      ]
+    }
+  ]
+}

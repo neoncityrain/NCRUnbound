@@ -27,9 +27,6 @@
         <Reference Include="BuiltinBuffs">
           <HintPath>..\lib\BuiltinBuffs.dll</HintPath>
         </Reference>
-        <Reference Include="FakeAchievements">
-          <HintPath>..\lib\FakeAchievements.dll</HintPath>
-        </Reference>
         <Reference Include="HOOKS-Assembly-CSharp">
           <HintPath>..\lib\HOOKS-Assembly-CSharp.dll</HintPath>
         </Reference>
@@ -38,6 +35,9 @@
         </Reference>
         <Reference Include="Assembly-CSharp">
           <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Rain World\BepInEx\utils\PUBLIC-Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="MonoMod.Utils">
+          <HintPath>..\lib\MonoMod.Utils.dll</HintPath>
         </Reference>
         <Reference Include="Pom">
           <HintPath>..\lib\Pom.dll</HintPath>

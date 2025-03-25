@@ -26,6 +26,7 @@ internal class HooksOnly
         On.PlayerGraphics.Update += UnbMisc.UpdateTheGlow; // glow can change colour
         On.SSOracleSwarmer.DrawSprites += UnbMisc.NeuronColourShift; // when in a room with a neuron, rings change to be the neuron colour
         On.JellyFish.Collide += UnbMisc.shockMeLess; // reduces stun time upon jellyfish hit
+        //On.SeedCob.Update += UnbMisc.noSeeds; // prevent unbound eating seedcob
 
         // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup;// setup and intro
@@ -62,6 +63,10 @@ internal class HooksOnly
         // TUTORIALS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // TutorialroomKill.Init(); // leave this in case it is needed later
 
+        // BLOODMOON =============================================================================================
+        Tmsbb.Init();
+
+        // ECT =============================================================================================
         Scenes.Init();
         // gamma
         Pearl.Init();

@@ -1,15 +1,14 @@
 {
 	"id": "unbghost",
-	"scene_folder": "scenes/unblowkarma menu",
+	"scene_folder": "scenes/select/unbghost",
 	"images": [
-		{ "name": "bottomredbubbles", "pos": [0, 0], "depth": 3.7, "shader": "Basic" },
-		{ "name": "backrings",    "pos": [0, 0], "depth": 3.6, "shader": "Basic" },
-		{ "name": "blackbubbles",    "pos": [0, 0], "depth": 3.5, "shader": "Basic" },
-		{ "name": "wisp1",    "pos": [0, 0], "depth": 3.3, "shader": "Basic" },
-		{ "name": "taill",    "pos": [0, 0], "depth": 3.0, "shader": "Basic" },
-		{ "name": "frontrings",    "pos": [0, 0], "depth": 2.7, "shader": "Basic" },
-		{ "name": "body",    "pos": [0, 0], "depth": 2.0, "shader": "Basic" },
-		{ "name": "topredbubbles",    "pos": [0, 0], "depth": 1.4, "shader": "Basic" }
+		{ "name": "flat", "pos": [300, 175], "depth": 1.0, "shader": "Basic", "flatmode": true },
+		{ "name": "6-lilbubble", "pos": [0, 150], "depth": 3.0, "shader": "Basic" },
+		{ "name": "5-glow", "pos": [0, 150], "depth": 1.7, "shader": "Basic" },
+		{ "name": "4-tendrils", "pos": [0, 150], "depth": 2.0, "shader": "Basic" },
+		{ "name": "3-frill", "pos": [0, 150], "depth": 1.7, "shader": "Basic" },
+		{ "name": "2-wetrat", "pos": [0, 150], "depth": 1.5, "shader": "Basic" },
+		{ "name": "1-topbubble", "pos": [0, 155], "depth": 1.0, "shader": "Basic" }
 	],
 	"idle_depths": [ 2.0 ],
 	"glow_pos": [-1000, -1000],

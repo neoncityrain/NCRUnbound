@@ -52,32 +52,39 @@ namespace Unbound
         {
             if (self?.originalPlayer?.slugcatStats?.name?.value == "NCRunbound")
             {
-                Vector2 pos = self.originalPlayer.mainBodyChunk.pos + Custom.RNV() * 2000f;
-                // sets random location for the ghost
-
-                AbstractCreature abstractCreature = new AbstractCreature(self.voidSea.room.world, 
-                    StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Slugcat), 
-                    null, self.voidSea.room.GetWorldCoordinate(pos), new EntityID(-1, -1));
-
-                abstractCreature.state = new PlayerState(abstractCreature, self.originalPlayer.playerState.playerNumber,
-                        SlugcatStats.Name.White, true); // force the voidsea cats to be survivor, rather than unbound
-                (abstractCreature.state as PlayerState).isGhost = true;
-
-                PlayerState ghoststate = abstractCreature.state as PlayerState;
-                if (ghoststate.isPup)
+                try
                 {
-                    ghoststate.isPup = false; // ghosts should NEVER be pups, even if player is
-                }
+                    Vector2 pos = self.originalPlayer.mainBodyChunk.pos + Custom.RNV() * 2000f;
+                    // sets random location for the ghost
 
-                self.voidSea.room.abstractRoom.AddEntity(abstractCreature);
-                abstractCreature.RealizeInRoom();
-                for (int i = 0; i < abstractCreature.realizedCreature.bodyChunks.Length; i++)
+                    AbstractCreature abstractCreature = new AbstractCreature(self.voidSea.room.world,
+                        StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Slugcat),
+                        null, self.voidSea.room.GetWorldCoordinate(pos), new EntityID(-1, -1));
+
+                    abstractCreature.state = new PlayerState(abstractCreature, self.originalPlayer.playerState.playerNumber,
+                            SlugcatStats.Name.White, true); // force the voidsea cats to be survivor, rather than unbound
+                    (abstractCreature.state as PlayerState).isGhost = true;
+
+                    PlayerState ghoststate = abstractCreature.state as PlayerState;
+                    if (ghoststate.isPup)
+                    {
+                        ghoststate.isPup = false; // ghosts should NEVER be pups, even if player is
+                    }
+
+                    self.voidSea.room.abstractRoom.AddEntity(abstractCreature);
+                    abstractCreature.RealizeInRoom();
+                    for (int i = 0; i < abstractCreature.realizedCreature.bodyChunks.Length; i++)
+                    {
+                        abstractCreature.realizedCreature.bodyChunks[i].restrictInRoomRange = float.MaxValue;
+                    }
+
+                    abstractCreature.realizedCreature.CollideWithTerrain = false;
+                    self.ghosts.Add(new PlayerGhosts.Ghost(self, abstractCreature.realizedCreature as Player));
+                }
+                catch (Exception e)
                 {
-                    abstractCreature.realizedCreature.bodyChunks[i].restrictInRoomRange = float.MaxValue;
+                    NCRDebug.Log("Void sea error: " + e);
                 }
-
-                abstractCreature.realizedCreature.CollideWithTerrain = false;
-                self.ghosts.Add(new PlayerGhosts.Ghost(self, abstractCreature.realizedCreature as Player));
             }
             else
             {

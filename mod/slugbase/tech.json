@@ -47,7 +47,7 @@
 		"food_max": 10,
 		
 		
-		"start_room": [ "SL_UnbSTGfa" ],
+		"start_room": [ "FR_S08", "MF_S03", "LM_S03", "DS_S03", "SL_UnbSTGfa" ],
 		"world_state": ["NCRtech", "Spear", "Red" ],
 		"expedition_description": "Smile, for you are alive today.<LINE>A calmer experience than Unbound, but...",
 		

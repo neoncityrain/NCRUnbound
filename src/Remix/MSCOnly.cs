@@ -17,7 +17,7 @@ namespace Unbound
             On.MoreSlugcats.StowawayBugState.AwakeThisCycle += AwakenMyPsionicWarriors;
             // rerolls if a stowaway is awake or not. it should result in a bit over a 1/3 chance that it will be awake each cycle
 
-            On.SeedCob.HitByWeapon += SeedAllergy;
+            // On.SeedCob.HitByWeapon += SeedAllergy;
             // SEED COB ALLERGYYYYYY
 
         }

@@ -3,20 +3,17 @@
 	"scene_folder": "scenes/select/unbselect",
 	"images": [
 		{ "name": "flat", "pos": [200, 200], "depth": 5, "shader": "Basic", "flatmode": true },
-		{ "name": "0-hatch", "pos": [200, 200], "depth": 3.8, "shader": "Basic" },
-		{ "name": "1-iterator", "pos": [200, 200], "depth": 3.7, "shader": "Basic" },
-		{ "name": "2-gamma",    "pos": [200, 200], "depth": 2.5, "shader": "Basic" },
-		{ "name": "3-tail",    "pos": [200, 200], "depth": 2, "shader": "Basic" },
-		{ "name": "4-legs",    "pos": [200, 200], "depth": 1.8, "shader": "Basic" },
-		{ "name": "5-spear",    "pos": [200, 200], "depth": 1.6, "shader": "Basic" },
-		{ "name": "6-eyeback",    "pos": [200, 200], "depth": 1.6, "shader": "Basic" },
-		{ "name": "7-pupil",    "pos": [200, 200], "depth": 1.5, "shader": "Basic" },
-		{ "name": "8-head",    "pos": [200, 200], "depth": 1.4, "shader": "Basic" },
-		{ "name": "9-puff",    "pos": [200, 200], "depth": 1, "shader": "Basic" }
+		{ "name": "0- the rain", "pos": [200, 200], "depth": 3.8, "shader": "Basic" },
+		{ "name": "1- the wall", "pos": [200, 200], "depth": 3.5, "shader": "Basic" },
+		{ "name": "4- the bubbles",    "pos": [200, 200], "depth": 3.4, "shader": "Basic" },
+		{ "name": "3- the lizard",    "pos": [200, 200], "depth": 3.3, "shader": "Basic" },
+		{ "name": "2- the pole",    "pos": [-40, 120], "depth": 3.0, "shader": "Basic" },
+		{ "name": "5- the jump",    "pos": [200, 200], "depth": 2.6, "shader": "Basic" },
+		{ "name": "6- the unbound",    "pos": [190, 190], "depth": 1.4, "shader": "Basic" }
 	],
 	"idle_depths": [ 2 ],
 	"glow_pos": [-1000, -1000],
 	"mark_pos": [-1000, -1000],
 	"select_menu_pos": [0, 0],
-	"slugcat_depth": 1.5
+	"slugcat_depth": 2.8
 }

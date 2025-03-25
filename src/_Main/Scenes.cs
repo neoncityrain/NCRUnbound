@@ -38,6 +38,11 @@ namespace Unbound
                     self.menu.manager.rainWorld.GetNCRModSaveData().IsGammaInMyShelter.ToString());
                     BuildUnboundSleepScreen(self);
                 }
+                else if (self.sceneID == MenuScene.SceneID.NewDeath)
+                {
+                    NCRDebug.Log("Unbound newdeath scene!");
+                    BuildUnboundDeathScreen(self);
+                }
                 else
                 {
                     orig(self); // backup, to prevent crashes when ascending / dying / ect
@@ -46,6 +51,56 @@ namespace Unbound
             else
             {
                 orig(self);
+            }
+        }
+
+        public static void BuildUnboundDeathScreen(MenuScene self)
+        {
+            self.sceneFolder = "Scenes" + Path.DirectorySeparatorChar.ToString() + "dead" + Path.DirectorySeparatorChar.ToString() + "unbdead";
+            SlugcatStats.Name a;
+            if (self.menu.manager.currentMainLoop is RainWorldGame)
+            {
+                a = (self.menu.manager.currentMainLoop as RainWorldGame).StoryCharacter;
+            }
+            else
+            {
+                a = self.menu.manager.rainWorld.progression.PlayingAsSlugcat;
+            }
+            if (self.flatMode)
+            {
+                self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder,
+                    "New Death - Flat", new Vector2(683f, 384f), false, true));
+                self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, 
+                    "New Death Flower - Flat", new Vector2(683f, 384f), false, true));
+            }
+            else
+            {
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "New Death - 6", new Vector2(0f, 0f), 3.6f, MenuDepthIllustration.MenuShader.Normal));
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "New Death - 55", new Vector2(0f, 0f), 3.4f, MenuDepthIllustration.MenuShader.Normal));
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "New Death - 5", new Vector2(0f, 0f), 3.2f, MenuDepthIllustration.MenuShader.Normal));
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "New Death - 4", new Vector2(0f, 0f), 2.7f, MenuDepthIllustration.MenuShader.Lighten));
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "New Death - 3", new Vector2(0f, 0f), 3f, MenuDepthIllustration.MenuShader.Normal));
+                
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder,
+                    "unbdeath", new Vector2(0f, 0f), 2.4f, MenuDepthIllustration.MenuShader.Normal));
+                
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "New Death - 1", new Vector2(0f, 0f), 1.6f, MenuDepthIllustration.MenuShader.Normal));
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "FlowerA", new Vector2(0f, 0f), 2.6f, MenuDepthIllustration.MenuShader.Normal));
+                self.depthIllustrations[self.depthIllustrations.Count - 1].setAlpha = new float?(0f);
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "FlowerA2", new Vector2(0f, 0f), 2.6f, MenuDepthIllustration.MenuShader.Lighten));
+                self.depthIllustrations[self.depthIllustrations.Count - 1].setAlpha = new float?(0f);
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "FlowerB", new Vector2(0f, 0f), 2.6f, MenuDepthIllustration.MenuShader.Normal));
+                self.depthIllustrations[self.depthIllustrations.Count - 1].setAlpha = new float?(0f);
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "FlowerB2", new Vector2(0f, 0f), 2.6f, MenuDepthIllustration.MenuShader.Lighten));
+                self.depthIllustrations[self.depthIllustrations.Count - 1].setAlpha = new float?(0f);
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "FlowerC", new Vector2(0f, 0f), 2.6f, MenuDepthIllustration.MenuShader.Normal));
+                self.depthIllustrations[self.depthIllustrations.Count - 1].setAlpha = new float?(0f);
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "FlowerC2", new Vector2(0f, 0f), 2.6f, MenuDepthIllustration.MenuShader.Lighten));
+                self.depthIllustrations[self.depthIllustrations.Count - 1].setAlpha = new float?(0f);
+                (self as InteractiveMenuScene).idleDepths.Add(2.6f);
+                (self as InteractiveMenuScene).idleDepths.Add(2.5f);
+                (self as InteractiveMenuScene).idleDepths.Add(3.6f);
+                (self as InteractiveMenuScene).idleDepths.Add(1.5f);
             }
         }
 

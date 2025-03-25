@@ -37,6 +37,8 @@
 		"select_menu_scene": "unbselect",
 		"select_menu_scene_ascended": "unbghost",
 		"title_card": "introroll-unbound",
+		"outro_slideshow": "unboutro",
+		
 		"world_state": ["NCRunbound", "NCRflicker", "Red", "Artificer" ],
 		"cycle_length_min": 5.5,
 		"cycle_length_max": 12,
@@ -69,6 +71,8 @@
 				"PureCrystal": 1.5,
 				"LizardEgg": 1.5,
 				
+				"BigNeedleWorm": 1,
+				
 				"Batfly": 0.5,
 				"Seedbat": 0.5,
 				"Fly": 0.5,
@@ -88,7 +92,6 @@
 				"GooieDuck": -1,
 				"LillyPuck": -1,
 				"BubbleFruit": -1,
-				"SeedCob": -1,
 				"Seed": -1,
 				"WaterNut": -1,
 				"DandelionPeach": -1,

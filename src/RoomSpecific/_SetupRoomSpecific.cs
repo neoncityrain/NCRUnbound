@@ -102,6 +102,11 @@ namespace Unbound
                             }
                         }
 
+                        if (self.dontEatExternalFoodSourceCounter <= 5)
+                        {
+                            self.dontEatExternalFoodSourceCounter = 9999;
+                        }
+
                         if (self?.room?.game?.GetStorySession?.saveState?.miscWorldSaveData != null)
                         {
                             if (self.room.game.GetStorySession?.saveState?.miscWorldSaveData != null &&
