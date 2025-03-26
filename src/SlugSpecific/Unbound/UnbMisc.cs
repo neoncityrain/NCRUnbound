@@ -8,58 +8,6 @@ namespace Unbound
 {
     public class UnbMisc
     {
-        public static void noSeeds(On.SeedCob.orig_Update orig, SeedCob self, bool eu)
-        {
-            if (self != null &&
-                self?.AbstractCob != null && self != null && self.room != null &&
-                self.room.game?.Players != null &&
-                !self.AbstractCob.dead && self.open > 0.8f
-                )
-            {
-                try
-                {
-                    int k = 0;
-                    while (k < self.room.game.Players.Count)
-                    {
-                        Player player = null;
-                        if (ModManager.MSC)
-                        {
-                            Creature realizedCreature = self.room.abstractRoom.creatures[k].realizedCreature;
-                            if (realizedCreature != null && realizedCreature is Player)
-                            {
-                                player = (realizedCreature as Player);
-                            }
-                        }
-                        else if (self.room.game.Players[k].realizedCreature != null)
-                        {
-                            player = (self.room.game.Players[k].realizedCreature as Player);
-                        }
-
-                        if (player != null && player.GetNCRunbound().IsUnbound)
-                        {
-                            // should skip unbound in getting food
-                            return;
-                        }
-                    }
-                }
-                catch (Exception e) 
-                {
-                    NCRDebug.Log("Popcorn Unbound error: " + e);
-                }
-            }
-
-
-
-            try
-            {
-                orig(self, eu);
-            }
-            catch (Exception e)
-            {
-                NCRDebug.Log("Error with vanilla or modded popcorn update code?: " + e);
-            }
-        }
-
         public static void shockMeLess(On.JellyFish.orig_Collide orig, JellyFish self, PhysicalObject otherObject, int myChunk, int otherChunk)
         {
             if (self != null && otherObject != null &&
