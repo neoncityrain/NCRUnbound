@@ -1,5 +1,6 @@
 Template: NONE
 DangerType: AerieBlizzard
+RumbleIntensity: 0
 WaveSpeed: 0.5
 WaveLength: 0.75
 WaveAmplitude: 0.04999999
@@ -7,6 +8,8 @@ SecondWaveLength: 0.1666667
 SecondWaveAmplitude: 0
 Clouds: 0.7114586
 BkgDroneVolume: 0
+RandomItemDensity: 0
+RandomItemSpearChance: 0
 Palette: 5
 EffectColorA: 0
 EffectColorB: 7

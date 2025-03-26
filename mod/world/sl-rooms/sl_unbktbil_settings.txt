@@ -1,6 +1,7 @@
 Template: NONE
 DangerType: AerieBlizzard
 CeilingDrips: 0.75
+RumbleIntensity: 0
 WaveSpeed: 0.5
 WaveLength: 0.75
 WaveAmplitude: 0.04999999
@@ -9,6 +10,8 @@ SecondWaveAmplitude: 0
 Clouds: 0.5955505
 Grime: 0.2989356
 BkgDroneVolume: 0
+RandomItemDensity: 0
+RandomItemSpearChance: 0
 Palette: 33
 EffectColorA: 8
 Effects: GreenSparks-0.5232-293.951-14.35556, ElectricDeath-0.2010641-42.76663-89.68893, HeatWave-0.1778647-302.4489-127.3778, LightRain-0.9434554-20-20, Darkness-0.5567936-39.24896-106.0889, Lightning-0.510394-30-30, 

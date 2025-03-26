@@ -1,7 +1,9 @@
+OFFSCREEN : 0-Miros Vulture-1, 0-Vulture-3, 0-Vulture-{AlternateForm}
+// offscreen HAD 13 scavs. however, as their ai continuously fucks up rn, theyve been removed for the time being
+
 MS_UNBFARSIDE : 5-Jetfish, 7-Jetfish, 4-CyanLizard, 6-Centiwing
 MS_DMU04 : 16-Yellow, 17-Yellow, 15-Yellow-2, 8-Lantern Mouse, 18-PoleMimic, 13-SmallCentipede, 11-SmallCentipede, 5-Centiwing
 MS_DMU02 : 7-Lantern Mouse, 5-Spider-8, 6-BigSpider-1, 9-Lantern Mouse, 13-Lantern Mouse-2, 10-Spider, 8-Spider, 11-BigSpider
-OFFSCREEN : 0-Scavenger-13, 0-Miros Vulture-1, 0-Vulture-3, 0-Vulture-{AlternateForm}
 MS_MEMENTRANCE : 3-White-1
 MS_MEM04 : 5-Tentacle Plant
 MS_MEM05 : 2-Snail-1, 3-Spider-4, 6-BigSpider-2
