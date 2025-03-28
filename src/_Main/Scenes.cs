@@ -13,39 +13,63 @@ namespace Unbound
         private static void SetUpCustomScenes(On.Menu.MenuScene.orig_BuildScene orig, MenuScene self)
         {
             SlugcatStats.Name slugcatBeingPlayed = SlugcatStats.Name.White;
-            if (self.menu.manager.currentMainLoop is RainWorldGame)
+            if (self?.menu?.manager?.currentMainLoop != null &&
+                self.menu.manager.currentMainLoop is RainWorldGame)
             {
                 slugcatBeingPlayed = (self.menu.manager.currentMainLoop as RainWorldGame).StoryCharacter;
             }
-            else
+            else if (self?.menu?.manager?.rainWorld?.progression != null)
             {
                 slugcatBeingPlayed = self.menu.manager.rainWorld.progression.PlayingAsSlugcat;
             }
 
             if (self != null && self.sceneID != null && self.sceneFolder != "" &&
-                !(self.sceneID == MenuScene.SceneID.Empty) &&
-                (slugcatBeingPlayed == UnboundEnums.NCRUnbound || slugcatBeingPlayed.value == "NCRunbound"))
+                !(self.sceneID == MenuScene.SceneID.Empty))
             {
-                if (self is InteractiveMenuScene)
+                if (slugcatBeingPlayed == UnboundEnums.NCRUnbound || slugcatBeingPlayed.value == "NCRunbound")
                 {
-                    (self as InteractiveMenuScene).idleDepths = new List<float>();
-                }
-                Vector2 vector = new Vector2(0f, 0f);
+                    if (self is InteractiveMenuScene)
+                    {
+                        (self as InteractiveMenuScene).idleDepths = new List<float>();
+                    }
 
-                if (self.sceneID == MenuScene.SceneID.SleepScreen)
-                {
-                    NCRDebug.Log("Unbound save! Building his sleep screen. Is Gamma in shelter? " +
-                    self.menu.manager.rainWorld.GetNCRModSaveData().IsGammaInMyShelter.ToString());
-                    BuildUnboundSleepScreen(self);
+                    if (self.sceneID == MenuScene.SceneID.SleepScreen)
+                    {
+                        NCRDebug.Log("Unbound save! Building his sleep screen. Is Gamma in shelter? " +
+                        self.menu.manager.rainWorld.GetNCRModSaveData().IsGammaInMyShelter.ToString());
+                        BuildUnboundSleepScreen(self);
+                    }
+                    else if (self.sceneID == MenuScene.SceneID.NewDeath)
+                    {
+                        NCRDebug.Log("Unbound newdeath scene!");
+                        BuildUnboundDeathScreen(self);
+                    }
+                    else
+                    {
+                        orig(self); // backup, to prevent crashes when ascending / dying / ect
+                    }
                 }
-                else if (self.sceneID == MenuScene.SceneID.NewDeath)
+                else if (slugcatBeingPlayed == UnboundEnums.NCRTechnician ||
+                    slugcatBeingPlayed.value == "NCRtech")
                 {
-                    NCRDebug.Log("Unbound newdeath scene!");
-                    BuildUnboundDeathScreen(self);
+                    if (self is InteractiveMenuScene)
+                    {
+                        (self as InteractiveMenuScene).idleDepths = new List<float>();
+                    }
+
+                    if (self.sceneID == MenuScene.SceneID.NewDeath)
+                    {
+                        NCRDebug.Log("Technician newdeath scene!");
+                        BuildUnboundDeathScreen(self);
+                    }
+                    else
+                    {
+                        orig(self); // backup, to prevent crashes when ascending / dying / ect
+                    }
                 }
                 else
                 {
-                    orig(self); // backup, to prevent crashes when ascending / dying / ect
+                    orig(self);
                 }
             }
             else

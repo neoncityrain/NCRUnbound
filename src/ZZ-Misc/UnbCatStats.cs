@@ -1,7 +1,4 @@
-﻿using System;
-using JollyCoop;
-
-namespace Unbound
+﻿namespace Unbound
 {
     internal static class UnbCatStats
     {
@@ -15,6 +12,101 @@ namespace Unbound
             On.SlugcatStats.SpearSpawnExplosiveRandomChance += ExplosiveSpear;
             On.SlugcatStats.SpearSpawnModifier += SpawnMod;
             // changes spear chances to be between arti and hunter
+
+            On.Player.ThrownSpear += SpearthrowTweaks;
+        }
+
+        private static void SpearthrowTweaks(On.Player.orig_ThrownSpear orig, Player self, Spear spear)
+        {
+            #region my cringefail son
+            if (self?.slugcatStats != null &&
+                self.slugcatStats.name.value == "NCRunbound")
+            {
+                if (self.animation == Player.AnimationIndex.RocketJump && !self.GetNCRunbound().DidTripleCyanJump)
+                {
+                    // should work during a standard rocket jump as well
+
+                    spear.throwModeFrames = 20; // throws longer
+                    spear.spearDamageBonus = 0.7f + 0.3f * Mathf.Pow(UnityEngine.Random.value, 4f);
+                    BodyChunk spearChunk = spear.firstChunk;
+                    spearChunk.vel.x = spearChunk.vel.x * 0.8f;
+
+                    self.animation = Player.AnimationIndex.Flip;
+                }
+                else if (self.GetNCRunbound().didLongjump && !self.GetNCRunbound().DidTripleCyanJump &&
+                    self.canJump == 0
+                    )
+                {
+                    // the double jump code takes priority over this
+                    spear.throwModeFrames = 20; // throws longer
+                    spear.spearDamageBonus = 0.7f + 0.3f * Mathf.Pow(UnityEngine.Random.value, 4f);
+
+                    self.animation = Player.AnimationIndex.Flip;
+                }
+                else if (self.animation == Player.AnimationIndex.Flip && self.GetNCRunbound().DidTripleCyanJump &&
+                    // if in the flip animation and did a triple jump
+                    self.bodyMode != Player.BodyModeIndex.ZeroG &&
+                    // to prevent any weird 0g glitches i may have mysteriously missed
+                    self.GetNCRunbound().didLongjump
+                    // to prevent simply backflipping and getting the boost
+                    )
+                {
+                    if (ModManager.MMF && MMF.cfgUpwardsSpearThrow.Value && spear.setRotation.Value.y == 1f)
+                    {
+                        // if spear is thrown upwards somehow, uuuh.......... sure ? why not.
+                        BodyChunk firstChunk2 = spear.firstChunk;
+                        firstChunk2.vel.y = firstChunk2.vel.y * 0.87f;
+                    }
+                    else
+                    {
+                        spear.throwModeFrames = 22; // throws even longer
+                        spear.spearDamageBonus += 0.3f * Mathf.Pow(UnityEngine.Random.value, 4f);
+                        // greater than survival throw
+                        BodyChunk spearChunk = spear.firstChunk;
+                        spearChunk.vel.y = spearChunk.vel.y * 1.1f; // go faster boy!
+
+
+                        self.room.AddObject(new UnbJumplight(spearChunk.pos, 0.4f, self));
+                        self.room.AddObject(new ShockWave(spearChunk.pos, 50f, 0.07f, 3, false));
+                        self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, spearChunk);
+                        self.room.InGameNoise(new InGameNoise(spearChunk.pos, 500f, self, 3f));
+
+                        self.animation = Player.AnimationIndex.RocketJump;
+                        // set him to rocket jump instead, as the animation index after triplejump is a flip.
+                        // this shoooould prevent anybody trying to repeatedly throw spears in the air
+                        self.GetNCRunbound().UnbCyanjumpCountdown += (int)self.GetNCRunbound().CyJump1Maximum / 3;
+                    }
+                }
+                else if (self.animation == Player.AnimationIndex.RocketJump && self.GetNCRunbound().DidTripleCyanJump)
+                {
+                    // as above, for the folks trying to cheese for the boost-
+
+                    spear.throwModeFrames = 5; // good fucking luck
+                }
+                else
+                {
+                    if (self.canJump != 0) // if not jumping / is on the ground
+                    {
+                        spear.throwModeFrames = 17; // shorter than monk, but not by much
+                        spear.spearDamageBonus = 0.4f + 0.3f * Mathf.Pow(UnityEngine.Random.value, 3f); // does less damage than monk
+                        BodyChunk spearChunk = spear.firstChunk;
+                        spearChunk.vel.x = spearChunk.vel.x * 0.75f; // less velocity than monk
+                    }
+                    else
+                    {
+                        spear.throwModeFrames = 18; // standard monk distance
+                        spear.spearDamageBonus = 0.5f + 0.3f * Mathf.Pow(UnityEngine.Random.value, 3f);
+                        // does less damage than monk, but LESS badly than above, as he is in the air
+                        BodyChunk spearChunk = spear.firstChunk;
+                        spearChunk.vel.x = spearChunk.vel.x * 0.76f; // also less velocity than monk, but again- not as bad
+                    }
+                }
+            }
+            #endregion
+            else
+            {
+                orig(self, spear);
+            }
         }
 
         private static bool NoGrabby(On.SlugcatStats.orig_AutoGrabBatflys orig, SlugcatStats.Name slugcatNum)
@@ -34,6 +126,10 @@ namespace Unbound
                 if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
                 {
                     return Mathf.Pow(originalSpearChance, 0.825f);
+                }
+                if (index == UnboundEnums.NCROracle || index.value == "NCRoracle")
+                {
+                    return Mathf.Pow(originalSpearChance, 0.83f);
                 }
                 if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
                 {

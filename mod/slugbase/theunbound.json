@@ -28,8 +28,8 @@
 		
 		"expedition_enabled": true,
 		"can_maul": true,
-		"maul_blacklist": [ "SlugNPC", "CyanLizard" ],
-		"maul_damage": 3,
+		"maul_blacklist": [ "SlugNPC", "CyanLizard", "HunterDaddy" ],
+		"maul_damage": 5,
 		"karma": 2,
 		"karma_cap": 2,
 		"guide_overseer": 2,
@@ -58,6 +58,7 @@
 				
 				"Scutigera": 3,
 				"Teuthicada": 3,
+				"Firebug": 3,
 				
 				"Purplewing": 2,
 				"Centipede": 2,
@@ -85,6 +86,7 @@
 				
 				"Honeycomb": 0,
 				
+				"HunterDaddy": -1,
 				"GlowWeed": -1,
 				"Slugcat": -1,
 				"SlugNPC": -1,
@@ -114,7 +116,6 @@
 		"climb_speed": [ 1.5, 1 ],
 		"walk_speed": [ 1.5 ],
 		"crouch_stealth": 1,
-		"throw_skill": 0,
 		"loudness": [ 1, 0.7 ],
 		"food_min": 6,
 		"food_max": 7,

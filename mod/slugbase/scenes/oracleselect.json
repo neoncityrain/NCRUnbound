@@ -1,0 +1,12 @@
+{
+	"id": "flikselect",
+	"scene_folder": "scenes/select/oracleselect",
+	"images": [
+		{ "name": "whos this gayass", "pos": [400, 250], "depth": 2, "shader": "Basic" }
+	],
+	"idle_depths": [ 1 ],
+	"glow_pos": [-1000, -1000],
+	"mark_pos": [-1000, -1000],
+	"select_menu_pos": [0, 0],
+	"slugcat_depth": 1
+}

@@ -23,7 +23,7 @@ namespace Unbound
                 self != null && self.player != null && self.player.room != null &&
                 self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle)
             {
-                var rev = self.player.GetNCRunbound().Reverb;
+                var rev = self.player.GetNCRunbound().IsReverb;
                 Color effectcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.24f, 0.14f, 0.05f) :
                     (rev ? new Color(0.72f, 0.6f, 0.6f) : new Color(0.87f, 0.39f, 0.33f));
                 Color eyecol = self.player.GetNCRunbound().IsTechnician ? new Color(0.42f, 0.21f, 0.18f) :

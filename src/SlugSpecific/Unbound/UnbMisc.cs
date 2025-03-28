@@ -429,15 +429,31 @@ namespace Unbound
                 // should still allow making friends with it
                 )
             {
-                if (self.LikeOfPlayer(dRelation.trackerRep) > 0.95f)
+                if ((dRelation.trackerRep.representedCreature.realizedCreature as Player).GetNCRunbound().IsTechnician)
                 {
-                    return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Pack, self.LikeOfPlayer(dRelation.trackerRep));
+                    if (self.LikeOfPlayer(dRelation.trackerRep) > 0.8f)
+                    {
+                        return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Pack, self.LikeOfPlayer(dRelation.trackerRep));
+                    }
+                    else if (self.LikeOfPlayer(dRelation.trackerRep) < -0.95f)
+                    {
+                        return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Attacks, -(self.LikeOfPlayer(dRelation.trackerRep)));
+                    }
+                    return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.AgressiveRival, 1f - (self.LikeOfPlayer(dRelation.trackerRep)));
                 }
-                else if (self.LikeOfPlayer(dRelation.trackerRep) < -0.95f)
+                else
                 {
-                    return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Attacks, -(self.LikeOfPlayer(dRelation.trackerRep)));
+                    // is tha loser !!!!!!!!
+                    if (self.LikeOfPlayer(dRelation.trackerRep) > 0.90f)
+                    {
+                        return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Pack, self.LikeOfPlayer(dRelation.trackerRep));
+                    }
+                    else if (self.LikeOfPlayer(dRelation.trackerRep) < -0.95f)
+                    {
+                        return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Attacks, -(self.LikeOfPlayer(dRelation.trackerRep)));
+                    }
+                    return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.AgressiveRival, 1f - (self.LikeOfPlayer(dRelation.trackerRep)));
                 }
-                return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.AgressiveRival, 1f - (self.LikeOfPlayer(dRelation.trackerRep)));
             }
             return orig(self, dRelation);
         }
@@ -463,7 +479,12 @@ namespace Unbound
                 !self.GetNCRunbound().Unpicky &&
                 self.GetNCRunbound().IsUnbound)
             {
-                if (testObj is DataPearl && (testObj as DataPearl).AbstractPearl.dataPearlType == UnboundEnums.unboundKarmaPearl)
+                if (testObj is DataPearl &&
+                    ((testObj as DataPearl).AbstractPearl.dataPearlType == UnboundEnums.unboundKarmaPearl ||
+                    (testObj as DataPearl).AbstractPearl.dataPearlType == MoreSlugcatsEnums.DataPearlType.Spearmasterpearl ||
+                    (testObj as DataPearl).AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Red_stomach ||
+                    (testObj as DataPearl).AbstractPearl.dataPearlType == MoreSlugcatsEnums.DataPearlType.Rivulet_stomach
+                    ))
                 {
                     return true;
                 }

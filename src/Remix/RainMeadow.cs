@@ -23,17 +23,42 @@ namespace Unbound.Remix
                 NCRDebug.Log("NCR Unbound world detected!");
                 return UnboundEnums.NCRUnbound;
             }
-
+            if (game?.StoryCharacter != null &&
+                (game.StoryCharacter == UnboundEnums.NCRTechnician ||
+                game.StoryCharacter.value == "NCRtech"))
+            {
+                NCRDebug.Log("NCR Technician world detected!");
+                return UnboundEnums.NCRTechnician;
+            }
+            if (game?.StoryCharacter != null &&
+                (game.StoryCharacter == UnboundEnums.NCRReverb ||
+                game.StoryCharacter.value == "NCRreverb"))
+            {
+                NCRDebug.Log("NCR Reverberation world detected!");
+                return UnboundEnums.NCRReverb;
+            }
+            if (game?.StoryCharacter != null &&
+                (game.StoryCharacter == UnboundEnums.NCROracle ||
+                game.StoryCharacter.value == "NCRoracle"))
+            {
+                NCRDebug.Log("NCR Oracle world detected!");
+                return UnboundEnums.NCROracle;
+            }
             return orig(self, game);
         }
 
         private static void setFoodOnline(On.SlugcatStats.orig_ctor orig, SlugcatStats self, SlugcatStats.Name slugcat, bool malnourished)
         {
             orig(self, slugcat, malnourished);
-            if (slugcat != null && (slugcat == UnboundEnums.NCRUnbound || slugcat.value == "NCRunbound") &&
+            if (slugcat != null && 
+                (slugcat == UnboundEnums.NCRUnbound || slugcat.value == "NCRunbound" ||
+                slugcat == UnboundEnums.NCRTechnician || slugcat.value == "NCRtech" ||
+                slugcat == UnboundEnums.NCRReverb || slugcat.value == "NCRreverb" ||
+                slugcat == UnboundEnums.NCROracle || slugcat.value == "NCRoracle"
+                ) &&
                 RainMeadow.RainMeadow.isStoryMode(out var storyGameMode))
             {
-                NCRDebug.Log("Unbound Meadow detected! Fixed Slugstats for Rain Meadow");
+                NCRDebug.Log("Unbound Meadow detected! Fixed Slugstats for Rain Meadow.");
                 self.maxFood = SlugcatStats.SlugcatFoodMeter(storyGameMode.currentCampaign).x;
                 self.foodToHibernate = SlugcatStats.SlugcatFoodMeter(storyGameMode.currentCampaign).y;
             }

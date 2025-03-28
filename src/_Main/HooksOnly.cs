@@ -6,10 +6,11 @@ internal class HooksOnly
 {
     public static void HookIn()
     {
-        // UNB JUMPS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // UNB MOVEMENT -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.MovementUpdate += UnbMovement.SetupJumps; // base +1f increase
         On.Player.WallJump += UnbMovement.SetupWalljumps; // walljumping gets faster and more efficient the more it's done
         On.Player.Update += UnbMovement.UnboundCyanJumps; // cyan jump code
+        //On.Player.TerrainImpact += UnbMovement.UnbImpact;
 
         // UNB MISC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.Jump += UnbMisc.MadHopsBro; // increases unbounds base jump by 1f
@@ -26,7 +27,6 @@ internal class HooksOnly
         On.PlayerGraphics.Update += UnbMisc.UpdateTheGlow; // glow can change colour
         On.SSOracleSwarmer.DrawSprites += UnbMisc.NeuronColourShift; // when in a room with a neuron, rings change to be the neuron colour
         On.JellyFish.Collide += UnbMisc.shockMeLess; // reduces stun time upon jellyfish hit
-        //On.SeedCob.Update += UnbMisc.noSeeds; // prevent unbound eating seedcob
 
         // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup;// setup and intro

@@ -1,4 +1,5 @@
-﻿using Music;
+﻿using DevInterface;
+using Music;
 using System.IO;
 using System.Linq;
 
@@ -102,11 +103,6 @@ namespace Unbound
                             }
                         }
 
-                        if (self.dontEatExternalFoodSourceCounter <= 5)
-                        {
-                            self.dontEatExternalFoodSourceCounter = 9999;
-                        }
-
                         if (self?.room?.game?.GetStorySession?.saveState?.miscWorldSaveData != null)
                         {
                             if (self.room.game.GetStorySession?.saveState?.miscWorldSaveData != null &&
@@ -175,6 +171,17 @@ namespace Unbound
             try
             {
                 if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                    (self.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Slugpup) &&
+                    self.room.game.session.characterStats.name.value == "NCRunbound" &&
+                    self.isNPC)
+                {
+                    // if its an unbound save, set slugpup to reverb!
+                    self.slugcatStats.name = UnboundEnums.NCRReverb;
+                    self.npcStats.Dark = false;
+                    self.npcStats.H = UnityEngine.Random.value;
+                    self.npcStats.L = 0.95f;
+                }
+                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
                     (self.slugcatStats.name.value == "NCRunbound" || self.slugcatStats.name == UnboundEnums.NCRUnbound))
                 {
                     self.GetNCRunbound().IsUnbound = true;
@@ -197,7 +204,7 @@ namespace Unbound
                     {
                         self.setPupStatus(true);
                     }
-                    self.GetNCRunbound().Reverb = true;
+                    self.GetNCRunbound().IsReverb = true;
                     self.GetNCRunbound().IsNCRUnbModcat = true;
                     if (self.slugcatStats.name != UnboundEnums.NCRReverb) { self.slugcatStats.name = UnboundEnums.NCRReverb; }
                     if (self.slugcatStats.name.value != "NCRreverb") { self.slugcatStats.name.value = "NCRreverb"; }

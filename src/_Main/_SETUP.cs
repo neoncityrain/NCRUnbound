@@ -3,7 +3,7 @@ using Unbound.Remix;
 
 namespace Unbound
 {
-    [BepInPlugin("NCR.theunbound", "unbound", "2.4.0")]
+    [BepInPlugin("NCR.theunbound", "unbound", "2.4.1")]
 
     [BepInDependency("moreslugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]

@@ -2,6 +2,30 @@
 {
     internal class UnbMovement
     {
+        public static void UnbImpact(On.Player.orig_TerrainImpact orig, Player self, int chunk, IntVector2 direction, float speed, bool firstContact)
+        {
+            orig(self, chunk, direction, speed, firstContact);
+
+            if (self != null &&
+                self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician // these two should operate nearly or exactly the same
+                )
+            {
+                if (self.animation == Player.AnimationIndex.Roll && firstContact)
+                {
+
+                }
+                if (self.rocketJumpFromBellySlide)
+                {
+
+                }
+            }
+            if (self != null &&
+                self.GetNCRunbound().IsReverb)
+            {
+
+            }
+        }
+
         public static void UnboundCyanJumps(On.Player.orig_Update orig, Player self, bool eu)
         {
             if (self?.room != null &&
@@ -66,7 +90,7 @@
                     if (!self.GetNCRunbound().holdingJumpkey)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Medium_Jump, self.mainBodyChunk);
-                        self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 500f, self, 1f));
+                        self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 500f, self, 2f));
                     }
                     self.room.AddObject(new UnbJumplight(self.bodyChunks[1].pos, 0.4f, self));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
@@ -211,7 +235,7 @@
                     if (!self.GetNCRunbound().holdingJumpkey)
                     {
                         self.room.PlaySound(SoundID.Cyan_Lizard_Powerful_Jump, self.mainBodyChunk);
-                        self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 2000f, self, 1f));
+                        self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 2000f, self, 5f));
                     }
                     self.room.AddObject(new UnbJumplight(self.bodyChunks[1].pos, 0.4f, self));
                     self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
@@ -323,7 +347,8 @@
             orig(self, eu);
 
             if (self?.room != null &&
-                (self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician))
+                (self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician ||
+                self.GetNCRunbound().IsReverb))
             {
                 #region Init Variables
                 if (self.lowerBodyFramesOnGround > 1 || self.submerged)
@@ -343,7 +368,8 @@
                 #endregion
                 #region Long Jump
                 // LONG JUMP ==========================================================================
-                if (!self.GetNCRunbound().LostTail && !self.GetNCRunbound().DidTripleCyanJump &&
+                if (!self.GetNCRunbound().IsReverb && // reverb is not included in the longjump club. shes baby!
+                    !self.GetNCRunbound().LostTail && !self.GetNCRunbound().DidTripleCyanJump &&
                     self.simulateHoldJumpButton > 0 && !self.GetNCRunbound().holdingJumpkey &&
                     self.goIntoCorridorClimb <= 0 && self.room.gravity != 0f)
                 {
@@ -407,6 +433,8 @@
                     // is awake, not dead, cannot wall jump, not jumpstunned
                     !self.submerged && self.goIntoCorridorClimb <= 0 &&
                     // is not underwater and not climbing through a pipe
+                    !self.corridorDrop &&
+                    // not dropping from a corridor, which is apparently different than just being in one or smth
                     self.animation != Player.AnimationIndex.VineGrab &&
                     self.animation != Player.AnimationIndex.CorridorTurn &&
                     self.animation != Player.AnimationIndex.LedgeCrawl &&
@@ -414,6 +442,7 @@
                     self.animation != Player.AnimationIndex.DeepSwim &&
                     self.animation != Player.AnimationIndex.AntlerClimb &&
                     // animation indexes
+                    self.bodyMode != Player.BodyModeIndex.ClimbIntoShortCut &&
                     self.bodyMode != Player.BodyModeIndex.CorridorClimb &&
                     self.bodyMode != Player.BodyModeIndex.Crawl &&
                     self.bodyMode != Player.BodyModeIndex.WallClimb &&
@@ -427,7 +456,9 @@
                     self.animation != Player.AnimationIndex.AntlerClimb &&
                     self.animation != Player.AnimationIndex.HangUnderVerticalBeam &&
                     self.animation != Player.AnimationIndex.BeamTip &&
-                    self.animation != Player.AnimationIndex.GetUpToBeamTip)
+                    self.animation != Player.AnimationIndex.GetUpToBeamTip
+                    // animation indexes. stop with the pole shit unbound! cmon!!!!
+                    )
                 {
                     if (self.GetNCRunbound().UnbCyanjumpCountdown <= 0)
                     {
@@ -449,8 +480,10 @@
                         (self.EffectiveRoomGravity >= 0.2f || self.gravity >= 0.2f) &&
                         // prevents usage in 0g
 
-                        !self.GetNCRunbound().LostTail
+                        !self.GetNCRunbound().LostTail &&
                         // can only triple jump if he has a tail (random buffs)
+
+                        !self.GetNCRunbound().IsReverb // reverb cant triple jump. ever
                         )
                     {
                         self.GetNCRunbound().CanTripleCyanJump = true;

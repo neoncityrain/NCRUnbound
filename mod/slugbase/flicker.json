@@ -1,7 +1,7 @@
 {
 	"id": "NCRoracle",
 	"name": "The Oracle",
-	"description": "gay ppl say what",
+	"description": "An apex predator designed with love and violence.<LINE>You could conquer this world with an iron claw. Or...?",
 	"features": {
 		"custom_colors": [
 			{
@@ -11,6 +11,10 @@
 			{
 				"name": "Eyes",
 				"story": "743517"
+			},
+			{
+				"name": "Gilding",
+				"story": "E5B366"
 			}
 		],
 		
@@ -23,8 +27,8 @@
 		
 		
 		"expedition_enabled": false,
-		"food_min": 10,
-		"food_max": 15,
+		"food_min": 15,
+		"food_max": 20,
 		"auto_grab_batflies": false,
 		"the_mark": true,
 		"the_glow": true,
@@ -32,18 +36,18 @@
 		"weight": 1.2,
 		"tunnel_speed": [ 1, 1 ],
 		"climb_speed": [ 1, 1 ],
-		"walk_speed": [ 0.8, 0.7 ],
+		"walk_speed": [ 0.9, 0.8 ],
 		"crouch_stealth": 1,
 		"throw_skill": 2,
 		"loudness": 1.2,
 		"lung_capacity": 1.4,
 		
 		"select_menu_scene": "flikselect",
-		"select_menu_scene_ascended": "flikghost",
-		"sleep_scene": "fliksleep",
+		"select_menu_scene_ascended": "",
+		"sleep_scene": "unbsleepflik",
 		"world_state": ["NCRflicker", "NCRunbound", "Red"],
 		"cycle_length_min": 9,
 		"cycle_length_max": 16,
-		"start_room": [ "SI_A07" ]
+		"start_room": [ "BY_S03", "FR_S03", "SB_S06" ]
 	}
 }

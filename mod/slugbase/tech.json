@@ -27,7 +27,7 @@
 
 		"select_menu_scene": "techselect",
 		"select_menu_scene_ascended": "",
-		"sleep_scene": "",
+		"sleep_scene": "unbsleeptech",
 		
 		"weight": 1.2,
 		"tunnel_speed": 1,
@@ -53,38 +53,45 @@
 		
 		"diet": {
 			"base": "White",
-			"corpses": 0.5,
+			"corpses": 0.25,
 			"overrides": {
 				"SSOracleSwarmer": 2,
 				"DendriticNeuron": 2,
 				
-				"RedCentipede": 4,
-				"RedHorror": 4,
+				"RedCentipede": 2.5,
+				"RedHorror": 2.5,
 				
-				"Scutigera": 3,
-				"Teuthicada": 3,
+				"Scutigera": 2,
+				"Teuthicada": 2,
+				"FireBug": 2,
 				
-				"Purplewing": 2,
-				"Centipede": 2,
-				"Centiwing": 2,
-				"Aquapede": 2,
-				"VultureGrub": 2,
-				"JellyFish": 2,
-				"OverseerCarcass": 2,
+				"Purplewing": 1.5,
+				"Centipede": 1.5,
+				"Centiwing": 1.5,
+				"Aquapede": 1.5,
+				"JellyFish": 1.5,
 				
-				"SmallCentipede": 1.5,
-				"PureCrystal": 1.5,
-				"LizardEgg": 1.5,
+				"SmallCentipede": 1,
+				"PureCrystal": 1,
+				"LizardEgg": 1,
+				"VultureGrub": 1,
+				"MirosVulture": 1,
 				
-				"Batfly": 0.5,
-				"Seedbat": 0.5,
-				"Fly": 0.5,
-				"LanternMouse": 0.5,
+				"MirosBird": 0.75,
+				"LanternMouse": 0.75,
+				"EggBug": 0.75,
+				"DropBug": 0.75,
+				"BigNeedleWorm": 0.75,
+				
+				"DangleFruit": 0.5,
+				"Hazer": 0.5,
+				"SmallNeedleWorm": 0.5,
 				
 				"EggBugEgg": 0.25,
-				"Scavenger": 0.25,
-				"Sporantula": 0.25,
 				"SlimeMold": 0.25,
+				"Fly": 0.25,
+				"Batfly": 0.25,
+				"Seedbat": 0.25,
 				
 				"Honeycomb": 0,
 				

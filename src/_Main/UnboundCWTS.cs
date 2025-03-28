@@ -13,7 +13,7 @@ namespace Unbound
             public bool IsUnbound;
             public bool IsOracle;
             public bool IsNCRUnbModcat;
-            public bool Reverb;
+            public bool IsReverb;
             public bool holdingJumpkey;
             public bool didLongjump;
             public bool CanDoubleCyanJump;

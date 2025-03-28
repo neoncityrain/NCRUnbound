@@ -91,17 +91,19 @@ namespace Unbound
                     bodytohips += Custom.DirVec(hipstobody, bodytohips) * Mathf.Lerp(-1f, 1f, breathaltered) *
                         Mathf.InverseLerp(0.5f, 1f, self.player.aerobicLevel) * 0.5f;
                 }
-                bool rev = self.player.GetNCRunbound().Reverb; // check if reverb is being played or not
+                bool rev = self.player.GetNCRunbound().IsReverb; // check if reverb is being played or not
                 float bodyhipscenterish = Mathf.InverseLerp(0.3f, 0.5f, Mathf.Abs(Custom.DirVec(hipstobody, bodytohips).y));
                 #endregion
 
                 if (self.player.GetNCRunbound().IsOracle)
                 {
                     //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
-                    sLeaser.sprites[1].scaleX = 1.4f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
+                    sLeaser.sprites[1].scaleX = 1.5f + self.player.sleepCurlUp * 0.2f + 0.05f * breathaltered - 0.05f * self.malnourished;
                     sLeaser.sprites[0].scaleX = 1.3f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) *
                         bodyhipscenterish, 0.15f, self.player.sleepCurlUp);
                     // makes oracle fatter. love and light on planet rain world
+
+                    sLeaser.sprites[1].scaleY = 1.1f + self.player.sleepCurlUp * 0.2f;
                 }
                 else
                 {
@@ -745,7 +747,7 @@ namespace Unbound
                 (!self.player.playerState.isGhost ||
                 self.player.playerState.isGhost && self.player.slugcatStats.name == UnboundEnums.NCRTechnician))
             {
-                if (self.player.GetNCRunbound().Reverb)
+                if (self.player.GetNCRunbound().IsReverb)
                 {
                     // owner, rad, connectionrad, connectedsegment, surfacefriction, airfriction, affectprevious, pullinpreviousposition
                     self.tail[0] = new TailSegment(self, 8f, 2f, null, 0.85f, 0.98f, 1f, true);
@@ -755,16 +757,17 @@ namespace Unbound
                 }
                 else if (self.player.GetNCRunbound().IsOracle)
                 {
-                    // owner, rad, connectionrad, connectedsegment, surfacefriction, airfriction, affectprevious, pullinpreviousposition
+                    // owner, radius, connectionrad, connectedsegment, surfacefriction, airfriction, affectprevious, pullinpreviousposition
                     self.tail = new TailSegment[5];
-                    self.tail[0] = new TailSegment(self, 6f, 5f, null, 0.85f, 1f, 1f, true);
-                    self.tail[1] = new TailSegment(self, 4f, 8f, self.tail[0], 0.85f, 1f, 0.7f, true);
-                    self.tail[2] = new TailSegment(self, 2.5f, 8f, self.tail[1], 0.85f, 1f, 0.6f, true);
-                    self.tail[3] = new TailSegment(self, 1f, 8f, self.tail[2], 0.85f, 1f, 0.5f, true);
-                    self.tail[4] = new TailSegment(self, 1f, 6f, self.tail[3], 0.80f, 0.4f, 0.8f, true);
+                    self.tail[0] = new TailSegment(self, 8f, 2f, null, 0.8f, 1f, 1f, true);
+                    self.tail[1] = new TailSegment(self, 7f, 4f, self.tail[0], 0.75f, 1f, 0.7f, true);
+                    self.tail[2] = new TailSegment(self, 5f, 6f, self.tail[1], 0.75f, 0.98f, 0.6f, true);
+                    self.tail[3] = new TailSegment(self, 3f, 7f, self.tail[2], 0.75f, 0.95f, 0.5f, true);
+                    self.tail[4] = new TailSegment(self, 1.5f, 8f, self.tail[3], 0.70f, 0.9f, 0.1f, true);
                 }
                 else
                 {
+                    // if unbound or technician
                     // owner, rad, connectionrad, connectedsegment, surfacefriction, airfriction, affectprevious, pullinpreviousposition
                     // affectprevious is reversed, so higher numbers affect less... i think?
                     if (self.player.playerState.isPup)
