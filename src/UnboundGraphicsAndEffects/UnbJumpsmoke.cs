@@ -6,11 +6,10 @@ namespace Unbound
     public class UnbJumpsmoke : SmokeSystem
     {
         public Player player;
-        public static SmokeType UnboundSmoke = new SmokeType("UnboundSmoke", true);
         public static Color color;
         public static float time;
 
-        public UnbJumpsmoke(Room room, Player player) : base(UnboundSmoke, room, 2, 0f)
+        public UnbJumpsmoke(Room room, Player player) : base(UnboundEnums.UnboundSmoke, room, 2, 0f)
         {
             this.player = player;
         }
@@ -51,15 +50,18 @@ namespace Unbound
                 base.Update(eu);
                 if (resting)
                 {
+                    // if particles "exist" but are not visible
                     return;
                 }
+
+
                 if (player.GetNCRunbound().RGBRings)
                 {
+                    // rgbring only
                     float num = Mathf.Lerp(lastLife, life, time);
                     if (big)
                     {
                         color = Color.Lerp(player.GetNCRunbound().effectColour, fadeColor, Mathf.InverseLerp(1f, 0.25f, num));
-                        // end big
                     }
                     else
                     {
@@ -67,11 +69,12 @@ namespace Unbound
                         color = Color.Lerp(player.GetNCRunbound().effectColour, fadeColor, Mathf.InverseLerp(1f, 0.25f, num) * 0.5f);
                     }
                 }
+
                 vel *= 0.7f + 0.3f / Mathf.Pow(vel.magnitude, 0.5f);
                 moveDir += Mathf.Lerp(-1f, 1f, UnityEngine.Random.value) * 50f;
                 if (room.PointSubmerged(pos))
                 {
-                    pos.y = room.FloatWaterLevel(pos.x);
+                    pos.y = room.FloatWaterLevel(pos);
                 }
                 counter++;
                 if (room.GetTile(pos).Solid && !room.GetTile(lastPos).Solid)
@@ -152,7 +155,6 @@ namespace Unbound
                 if (big)
                 {
                     color = Color.Lerp(player.GetNCRunbound().effectColour, fadeColor, Mathf.InverseLerp(1f, 0.25f, num));
-                    // end big
                 }
                 else
                 {

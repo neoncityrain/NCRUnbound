@@ -230,7 +230,7 @@ namespace Unbound
                 CreatureTemplate.Type frienddraggedin = self.CheckStrayCreatureInRoom();
                 if (frienddraggedin == CreatureTemplate.Type.Vulture || frienddraggedin == CreatureTemplate.Type.KingVulture ||
                     frienddraggedin == CreatureTemplate.Type.BigEel || frienddraggedin == CreatureTemplate.Type.MirosBird ||
-                    (ModManager.MSC && frienddraggedin == MoreSlugcatsEnums.CreatureTemplateType.MirosVulture) ||
+                    (ModManager.MSC && frienddraggedin == DLCSharedEnums.CreatureTemplateType.MirosVulture) ||
                     frienddraggedin == CreatureTemplate.Type.RedCentipede)
                 {
                     self.dialogBox.NewMessage(self.Translate("FP: How did you fit them inside here anyhow?"), 10);
@@ -243,7 +243,7 @@ namespace Unbound
                 }
                 if (frienddraggedin == CreatureTemplate.Type.DaddyLongLegs ||
                     frienddraggedin == CreatureTemplate.Type.BrotherLongLegs ||
-                    (ModManager.MSC && frienddraggedin == MoreSlugcatsEnums.CreatureTemplateType.TerrorLongLegs))
+                    (ModManager.MSC && frienddraggedin == DLCSharedEnums.CreatureTemplateType.TerrorLongLegs))
                 {
                     self.dialogBox.NewMessage(self.Translate("FP: Take your friend with you. Please. I beg you."), 10);
                 }

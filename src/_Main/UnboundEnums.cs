@@ -1,4 +1,4 @@
-﻿using Menu;
+﻿using Smoke;
 
 namespace Unbound
 {
@@ -27,6 +27,8 @@ namespace Unbound
         public static Region stgRegion;
         public static Region ktbRegion;
         // regions
+        public static SmokeSystem.SmokeType UnboundSmoke;
+        // smoke
 
         public static void RegisterValues()
         {
@@ -37,8 +39,8 @@ namespace Unbound
             NCRReverb = new SlugcatStats.Name("NCRreverb", false);
             NCROracle = new SlugcatStats.Name("NCRoracle", false);
             // slugcats
-            NCRKTB = new("NCRKTB", true);
-            NCRSTG = new("NCRSTG", true);
+            //NCRKTB = new("NCRKTB", true);
+            //NCRSTG = new("NCRSTG", true);
             // iterators
             unbKarmaPearlConv = new Conversation.ID("unbKarmaPearlConv", true);
             unbSlumberConv = new Conversation.ID("unbSlumberConv", true);
@@ -50,6 +52,7 @@ namespace Unbound
             // behaviours
             decipheredPearlsUnboundSession = new List<DataPearl.AbstractDataPearl.DataPearlType>();
             // list dephiphered pearls
+            UnboundSmoke = new SmokeSystem.SmokeType("UnboundSmoke", true);
         }
 
         public static void FullUnregister()
@@ -63,6 +66,7 @@ namespace Unbound
             if (UnbSlumberPartySub != null) { UnbSlumberPartySub.Unregister(); UnbSlumberPartySub = null; }
             if (NCRKTB != null) { NCRKTB.Unregister(); NCRKTB = null; }
             if (NCRSTG != null) { NCRSTG.Unregister(); NCRSTG = null; }
+            if (UnboundSmoke != null) { UnboundSmoke.Unregister(); UnboundSmoke = null; }
         }
 
         public static void ModoffUnregister()

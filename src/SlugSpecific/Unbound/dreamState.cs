@@ -1,5 +1,4 @@
 ﻿using Menu;
-using SlugBase;
 
 namespace Unbound
 {

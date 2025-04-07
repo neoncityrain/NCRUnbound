@@ -168,241 +168,6 @@ namespace Unbound
             return orig(self, testTile);
         }
 
-        public static void GammaAIUpdate(On.OverseerAI.orig_Update orig, OverseerAI self)
-        {
-            if (self?.overseer != null &&
-                self.overseer.PlayerGuide &&
-                self.overseer.room.game.session.characterStats.name.value == "NCRunbound")
-            {
-                #region Base.Update
-                self.timeInRoom++;
-                for (int i = 0; i < self.modules.Count; i++)
-                {
-                    self.modules[i].Update();
-                }
-                if (ModManager.Expedition && self.creature.world.game.rainWorld.ExpeditionMode && 
-                    ExpeditionGame.activeUnlocks.Contains("bur-hunted") && self.creature.world.rainCycle.CycleProgression > 0.05f &&
-                    self.tracker != null && self.creature.world.game.Players != null)
-                {
-                    int j = 0;
-                    while (j < self.creature.world.game.Players.Count)
-                    {
-                        if (self.creature.world.game.Players[j].realizedCreature != null && !(self.creature.world.game.Players[j].realizedCreature as Player).dead)
-                        {
-                            if (self.creature.Room != self.creature.world.game.Players[j].Room)
-                            {
-                                self.tracker.SeeCreature(self.creature.world.game.Players[j]);
-                                return;
-                            }
-                            break;
-                        }
-                        else
-                        {
-                            j++;
-                        }
-                    }
-                }
-                #endregion
-
-                self.scaredDistance = 100f;
-
-                self.slowLookAt = Vector2.Lerp(Custom.MoveTowards(self.slowLookAt, self.lookAt, 60f), self.lookAt, 0.02f);
-                if (UnityEngine.Random.value < 0.015f) // slightly more likely than usual to swap casual interests
-                {
-                    self.casualInterestBonus = Mathf.Pow(UnityEngine.Random.value, 3f) * 2f * ((UnityEngine.Random.value < 0.5f) ? -1f : 1f);
-                }
-                if (self.overseer.hologram != null)
-                {
-                    self.lookAt = self.overseer.hologram.lookAt;
-                }
-                else if (self.overseer.SandboxOverseer && !self.overseer.editCursor.menuMode)
-                {
-                    self.lookAt = self.overseer.editCursor.pos;
-                }
-                else
-                {
-                    bool watchingCreature = self.casualInterestCreature != null && self.casualInterestCreature.realizedCreature != null && 
-                        self.casualInterestCreature.pos.room == self.overseer.room.abstractRoom.index && self.tutorialBehavior == null;
-
-                    if (watchingCreature)
-                    {
-                        if (self.targetCreature?.realizedCreature?.room == self.overseer.room)
-                        {
-                            watchingCreature = (self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) + self.casualInterestBonus > 
-                                self.RealizedCreatureInterest(self.targetCreature.realizedCreature));
-                        }
-                        else
-                        {
-                            watchingCreature = (self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) + self.casualInterestBonus > 0f);
-                        }
-                    }
-                    if (self.lookAtFlyingWeapon != null)
-                    {
-                        self.lookAt = self.lookAtFlyingWeapon.firstChunk.pos;
-                        if (self.lookAtFlyingWeapon.slatedForDeletetion || self.lookAtFlyingWeapon.mode != Weapon.Mode.Thrown)
-                        {
-                            self.lookAtFlyingWeapon = null;
-                        }
-                    }
-                    else if (watchingCreature)
-                    {
-                        self.lookAt = self.casualInterestCreature.realizedCreature.DangerPos;
-                        self.LensUpdate(self.casualInterestCreature.realizedCreature);
-                    }
-                    else if (self.targetCreature != null && self.targetCreature.realizedCreature != null && 
-                        self.targetCreature.realizedCreature.room == self.overseer.room)
-                    {
-                        self.lookAt = self.targetCreature.realizedCreature.DangerPos;
-                        self.LensUpdate(self.targetCreature.realizedCreature);
-                    }
-                    else
-                    {
-                        self.targetStationary = Mathf.Max(0f, self.targetStationary - 0.008333334f);
-                        Vector2 testPos;
-                        if (UnityEngine.Random.value < 0.1f)
-                        {
-                            testPos = self.overseer.mainBodyChunk.pos + Custom.RNV() * UnityEngine.Random.value * 600f;
-                        }
-                        else
-                        {
-                            testPos = self.lookAt + Custom.RNV() * Mathf.Pow(UnityEngine.Random.value, 3f) * 600f;
-                        }
-                        if (self.LookAtAirPosScore(testPos) > self.LookAtAirPosScore(self.lookAt))
-                        {
-                            self.lookAt = testPos;
-                            self.lookAtSameAirPosCounter = UnityEngine.Random.Range(30, 130);
-                        }
-                        else
-                        {
-                            self.lookAtSameAirPosCounter--;
-                            if (self.lookAtSameAirPosCounter < 1)
-                            {
-                                self.lastLookAtAirPositions.Insert(0, self.lookAt);
-                                if (self.lastLookAtAirPositions.Count > 10)
-                                {
-                                    self.lastLookAtAirPositions.RemoveAt(self.lastLookAtAirPositions.Count - 1);
-                                }
-                                self.lookAtSameAirPosCounter = UnityEngine.Random.Range(30, 130);
-                            }
-                        }
-                    }
-                }
-                if (UnityEngine.Random.value < 0.027f)
-                {
-                    self.lookAtAdd = Custom.RNV() * UnityEngine.Random.value;
-                }
-                self.UpdateZipMatrix();
-                self.UpdateTempHoverPosition();
-                if (self.overseer.mode == Overseer.Mode.Watching || self.overseer.mode == Overseer.Mode.Projecting)
-                {
-                    if (self.overseer.room.abstractRoom.creatures.Count == 0)
-                    {
-                        return;
-                    }
-                    AbstractCreature abstractCreature = self.overseer.room.abstractRoom.creatures[UnityEngine.Random.Range(0, 
-                        self.overseer.room.abstractRoom.creatures.Count)];
-                    if (abstractCreature?.realizedCreature != null)
-                    {
-                        if (abstractCreature.creatureTemplate.type != CreatureTemplate.Type.Overseer)
-                        {
-                            if (!abstractCreature.creatureTemplate.smallCreature &&
-                                // not a small thang
-                                ((abstractCreature.realizedCreature is Player &&
-                                !((abstractCreature.realizedCreature as Player).GetNCRunbound().IsUnbound ||
-                                (abstractCreature.realizedCreature as Player).slugcatStats.name.value == "NCRunbound" ||
-                                (abstractCreature.realizedCreature as Player).slugcatStats.name == UnboundEnums.NCRUnbound)) ||
-                                // if its IS a player, but it ISNT unbound
-                                !(abstractCreature.realizedCreature is Player)) &&
-                                // or if its not a player
-                                !abstractCreature.realizedCreature.dead && 
-                                // not dead
-                                Custom.DistLess(self.overseer.rootPos, abstractCreature.realizedCreature.DangerPos, self.scaredDistance))
-                                // is inside the fear distance
-                            {
-                                self.casualInterestCreature = abstractCreature;
-                                self.overseer.afterWithdrawMode = Overseer.Mode.SittingInWall;
-                                self.overseer.SwitchModes(Overseer.Mode.Withdrawing);
-                            }
-                            else if (abstractCreature.realizedCreature is Player && (abstractCreature.realizedCreature as Player).GetNCRunbound().IsUnbound  &&
-                                !abstractCreature.realizedCreature.dead)
-                            {
-                                self.casualInterestCreature = abstractCreature;
-                            }
-                            else if (self.targetCreature != abstractCreature && (self.casualInterestCreature == null || 
-                                self.RealizedCreatureInterest(abstractCreature.realizedCreature) > 
-                                self.RealizedCreatureInterest(self.casualInterestCreature.realizedCreature) + 0.1f || 
-                                self.targetCreature == self.casualInterestCreature) && 
-                                self.overseer.room.VisualContact(self.overseer.mainBodyChunk.pos, abstractCreature.realizedCreature.mainBodyChunk.pos))
-                            {
-                                self.casualInterestCreature = abstractCreature;
-                            }
-                        }
-                        else if (abstractCreature.creatureTemplate.type == CreatureTemplate.Type.Scavenger && 
-                            ((self.creature.abstractAI as OverseerAbstractAI).goToPlayer || UnityEngine.Random.value < 0.006))
-                        {
-                            (self.creature.abstractAI as OverseerAbstractAI).PlayerGuideGoAway(UnityEngine.Random.Range(200, 1200));
-                            if ((abstractCreature.realizedCreature as Player).GetNCRunbound().MoreDebug) { NCRDebug.Log("Gamma left because of Scavs!"); }
-                        }
-                        else if (self.overseer.mode != Overseer.Mode.Projecting && self.overseer.conversationDelay == 0)
-                        {
-                            Overseer overseer = abstractCreature.realizedCreature as Overseer;
-
-                            if (Custom.DistLess(self.overseer.rootPos, overseer.rootPos, 70f * self.overseer.size + 70f + overseer.size) && 
-                                overseer.mode == Overseer.Mode.Watching && overseer.conversationPartner == null && 
-                                overseer.conversationDelay == 0 && self.overseer.lastConversationPartner != overseer)
-                            {
-                                self.overseer.conversationPartner = overseer;
-                                overseer.conversationPartner = self.overseer;
-                                self.overseer.SwitchModes(Overseer.Mode.Conversing);
-                                overseer.SwitchModes(Overseer.Mode.Conversing);
-                                self.overseer.conversationDelay = UnityEngine.Random.Range(30, 190);
-                                overseer.conversationDelay = UnityEngine.Random.Range(30, 190);
-                            }
-                        }
-                    }
-                }
-                else if (self.overseer.mode == Overseer.Mode.SittingInWall)
-                {
-                    bool flag2 = false;
-                    int num = 0;
-                    while (num < self.overseer.room.abstractRoom.creatures.Count && !flag2)
-                    {
-                        if (self.overseer.room.abstractRoom.creatures[num].realizedCreature != null && 
-                            self.overseer.room.abstractRoom.creatures[num].creatureTemplate.type != CreatureTemplate.Type.Overseer && 
-                            !self.overseer.room.abstractRoom.creatures[num].creatureTemplate.smallCreature && 
-                            !self.overseer.room.abstractRoom.creatures[num].realizedCreature.dead && 
-                            Custom.DistLess(self.overseer.rootPos, self.overseer.room.abstractRoom.creatures[num].realizedCreature.DangerPos, 200f))
-                        {
-                            flag2 = true;
-                        }
-                        num++;
-                    }
-                    if (!flag2)
-                    {
-                        self.overseer.SwitchModes(Overseer.Mode.Emerging);
-                    }
-                }
-                else if (self.overseer.mode == Overseer.Mode.Conversing)
-                {
-                    if (self.overseer.conversationPartner == null || self.overseer.conversationPartner.room != self.overseer.room || 
-                        self.overseer.conversationPartner.mode != Overseer.Mode.Conversing || 
-                        self.overseer.conversationPartner.conversationPartner != self.overseer)
-                    {
-                        self.overseer.SwitchModes(Overseer.Mode.Watching);
-                    }
-                    else
-                    {
-                        self.lookAt = self.overseer.conversationPartner.mainBodyChunk.pos;
-                    }
-                }
-                self.creature.abstractAI.AbstractBehavior(1);
-            }
-            else
-            {
-                orig(self);
-            }
-        }
-
         public static float InterestInUnbound(On.OverseerAbstractAI.orig_HowInterestingIsCreature orig, OverseerAbstractAI self, 
             AbstractCreature testCrit)
         {
@@ -479,8 +244,8 @@ namespace Unbound
                     num = 0.4f;
                 }
                 else if ((ModManager.MSC &&
-                    (testCrit.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.EelLizard ||
-                    testCrit.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SpitLizard)))
+                    (testCrit.creatureTemplate.type == DLCSharedEnums.CreatureTemplateType.EelLizard ||
+                    testCrit.creatureTemplate.type == DLCSharedEnums.CreatureTemplateType.SpitLizard)))
                 {
                     num = 0.5f;
                 }
@@ -501,8 +266,8 @@ namespace Unbound
                     num = 0.8f;
                 }
                 else if (testCrit.creatureTemplate.type == CreatureTemplate.Type.RedLizard ||
-                    (ModManager.MSC && (testCrit.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.StowawayBug ||
-                    testCrit.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.MirosVulture)))
+                    (ModManager.MSC && (testCrit.creatureTemplate.type == DLCSharedEnums.CreatureTemplateType.StowawayBug ||
+                    testCrit.creatureTemplate.type == DLCSharedEnums.CreatureTemplateType.MirosVulture)))
                 {
                     num = 0.85f;
                 }
@@ -515,7 +280,7 @@ namespace Unbound
                 {
                     num = 1f;
                 }
-                else if (ModManager.MSC && testCrit.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.ScavengerElite ||
+                else if (ModManager.MSC && testCrit.creatureTemplate.type == DLCSharedEnums.CreatureTemplateType.ScavengerElite ||
                     testCrit.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.ScavengerKing)
                 {
                     num = 2f;
@@ -546,7 +311,8 @@ namespace Unbound
         public static float StopLeadingToFoodUnboundCantEat(On.OverseerCommunicationModule.orig_FoodDelicousScore orig, 
             OverseerCommunicationModule self, AbstractPhysicalObject foodObject, Player player)
         {
-            if (self?.overseerAI?.overseer?.room != null &&
+            if (self != null && self.overseerAI != null && self.overseerAI.overseer != null &&
+                self?.overseerAI?.overseer?.room != null &&
                 (self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" ||
                 self.overseerAI.overseer.room.world.game.session.characterStats.name.value == "NCRtech"))
             {
@@ -593,7 +359,7 @@ namespace Unbound
 
         public static bool RoomAllowed(On.OverseerAbstractAI.orig_RoomAllowed orig, OverseerAbstractAI self, int room)
         {
-            if (self?.world != null && self.RelevantPlayer != null &&
+            if (self != null && self?.world != null && self.RelevantPlayer != null &&
                 self.world.game.session.characterStats.name.value == "NCRunbound" && self.playerGuide)
             {
                 if (room < self.world.firstRoomIndex || room >= self.world.firstRoomIndex + self.world.NumberOfRooms)
@@ -626,12 +392,12 @@ namespace Unbound
         public static void HologramTweaks(On.Overseer.orig_TryAddHologram orig, Overseer self, OverseerHologram.Message message, 
             Creature communicateWith, float importance)
         {
-            if (self?.room?.abstractRoom != null && !self.dead &&
+            if (self != null && self.room != null && self?.room?.abstractRoom != null && !self.dead &&
                 (self.room.game.session.characterStats.name.value == "NCRunbound" ||
                 self.room.game.session.characterStats.name.value == "NCRtech") && self.PlayerGuide &&
                 !self.room.abstractRoom.name.StartsWith("SL_UnbKTB"))
             {
-                if (self.room != null && self.room.abstractRoom.name == "SS_AI")
+                if (self.room.abstractRoom.name == "SS_AI")
                 {
                     return;
                     // dont show holograms when in pebbles' chamber. this is initially only for MSC- should not trigger for UB either,

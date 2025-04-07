@@ -70,7 +70,10 @@ namespace Unbound
         public static void MaintainRoomSpecific(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-            if (self?.abstractCreature != null && world?.region?.name != null && 
+            if (self != null && self.slugcatStats != null && world != null && world.region != null &&
+                self.room != null && self.room.game != null &&
+                self?.abstractCreature != null && world?.region?.name != null && self?.slugcatStats != null &&
+                self?.slugcatStats?.name != null && self.slugcatStats.name.value != null &&
                 abstractCreature != null &&
                 (self?.room?.game?.session?.characterStats?.name.value == "NCRunbound" ||
                 self?.room?.game?.session?.characterStats?.name.value == "NCRtech") &&
@@ -159,6 +162,11 @@ namespace Unbound
                             }
                         }
                     }
+
+                    if (self.dontEatExternalFoodSourceCounter <= 5)
+                    {
+                        self.dontEatExternalFoodSourceCounter = 9999;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -170,54 +178,65 @@ namespace Unbound
             // misc
             try
             {
-                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
-                    (self.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Slugpup) &&
-                    self.room.game.session.characterStats.name.value == "NCRunbound" &&
-                    self.isNPC)
+                try
                 {
-                    // if its an unbound save, set slugpup to reverb!
-                    self.slugcatStats.name = UnboundEnums.NCRReverb;
-                    self.npcStats.Dark = false;
-                    self.npcStats.H = UnityEngine.Random.value;
-                    self.npcStats.L = 0.95f;
-                }
-                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
-                    (self.slugcatStats.name.value == "NCRunbound" || self.slugcatStats.name == UnboundEnums.NCRUnbound))
-                {
-                    self.GetNCRunbound().IsUnbound = true;
-                    self.GetNCRunbound().IsNCRUnbModcat = true;
-                    if (self.slugcatStats.name != UnboundEnums.NCRUnbound) { self.slugcatStats.name = UnboundEnums.NCRUnbound; }
-                    if (self.slugcatStats.name.value != "NCRunbound") { self.slugcatStats.name.value = "NCRunbound"; }
-                }
-                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
-                    (self.slugcatStats.name.value == "NCRoracle" || self.slugcatStats.name == UnboundEnums.NCROracle))
-                {
-                    self.GetNCRunbound().IsOracle = true;
-                    self.GetNCRunbound().IsNCRUnbModcat = true;
-                    if (self.slugcatStats.name != UnboundEnums.NCROracle) { self.slugcatStats.name = UnboundEnums.NCROracle; }
-                    if (self.slugcatStats.name.value != "NCRoracle") { self.slugcatStats.name.value = "NCRoracle"; }
-                }
-                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
-                    (self.slugcatStats.name.value == "NCRreverb" || self.slugcatStats.name == UnboundEnums.NCRReverb))
-                {
-                    if (!self.playerState.isPup)
+                    if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                        self.slugcatStats.name.value != null &&
+                        (self.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Slugpup) &&
+                        self.room.game.session.characterStats.name.value == "NCRunbound" &&
+                        self.isNPC)
                     {
-                        self.setPupStatus(true);
+                        // if its an unbound save, set slugpup to reverb!
+                        self.slugcatStats.name = UnboundEnums.NCRReverb;
+                        self.npcStats.Dark = false;
+                        self.npcStats.H = UnityEngine.Random.value;
+                        self.npcStats.L = 0.95f;
                     }
-                    self.GetNCRunbound().IsReverb = true;
-                    self.GetNCRunbound().IsNCRUnbModcat = true;
-                    if (self.slugcatStats.name != UnboundEnums.NCRReverb) { self.slugcatStats.name = UnboundEnums.NCRReverb; }
-                    if (self.slugcatStats.name.value != "NCRreverb") { self.slugcatStats.name.value = "NCRreverb"; }
                 }
-                if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
-                    (self.slugcatStats.name.value == "NCRtech" || self.slugcatStats.name == UnboundEnums.NCRTechnician))
+                catch (Exception e)
                 {
-                    self.GetNCRunbound().IsTechnician = true;
-                    self.GetNCRunbound().IsNCRUnbModcat = true;
-                    if (self.slugcatStats.name != UnboundEnums.NCRTechnician) { self.slugcatStats.name = UnboundEnums.NCRTechnician; }
-                    if (self.slugcatStats.name.value != "NCRtech") { self.slugcatStats.name.value = "NCRtech"; }
+                    NCRDebug.Log("Error setting up reverbpup: " + e);
                 }
-
+                
+                if (self != null && self.slugcatStats != null && world != null && world.region != null &&
+                self.room != null && self.room.game != null && self?.room != null && self.abstractCreature != null &&
+                self.slugcatStats?.name != null && self.slugcatStats.name.value != null)
+                {
+                    if (self.slugcatStats.name.value == "NCRunbound" || self.slugcatStats.name == UnboundEnums.NCRUnbound)
+                    {
+                        try
+                        {
+                            self.GetNCRunbound().IsUnbound = true;
+                            self.GetNCRunbound().IsNCRUnbModcat = true;
+                        }
+                        catch (Exception e)
+                        {
+                            NCRDebug.Log("Error within Unbound name setup: " + e);
+                        }
+                    }
+                    if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                        (self.slugcatStats.name.value == "NCRoracle" || self.slugcatStats.name == UnboundEnums.NCROracle))
+                    {
+                        self.GetNCRunbound().IsOracle = true;
+                        self.GetNCRunbound().IsNCRUnbModcat = true;
+                    }
+                    if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                        (self.slugcatStats.name.value == "NCRreverb" || self.slugcatStats.name == UnboundEnums.NCRReverb))
+                    {
+                        if (!self.playerState.isPup)
+                        {
+                            self.setPupStatus(true);
+                        }
+                        self.GetNCRunbound().IsReverb = true;
+                        self.GetNCRunbound().IsNCRUnbModcat = true;
+                    }
+                    if (self?.room != null && self.abstractCreature != null && self.slugcatStats?.name != null &&
+                        (self.slugcatStats.name.value == "NCRtech" || self.slugcatStats.name == UnboundEnums.NCRTechnician))
+                    {
+                        self.GetNCRunbound().IsTechnician = true;
+                        self.GetNCRunbound().IsNCRUnbModcat = true;
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -470,7 +489,7 @@ namespace Unbound
             }
         }
 
-        public static void updateGravity(On.AntiGravity.BrokenAntiGravity.orig_Update orig, AntiGravity.BrokenAntiGravity self)
+        public static void UpdateGravity(On.AntiGravity.BrokenAntiGravity.orig_Update orig, AntiGravity.BrokenAntiGravity self)
         {
             if (self?.game?.world != null && self.game.session != null &&
                 self.game.session.characterStats.name.value == "NCRtech" &&

@@ -5,13 +5,8 @@
         public static void Init()
         {
             On.SlugcatStats.getSlugcatName += UnbNameLogging;
-            //On.SlugcatStats.HiddenOrUnplayableSlugcat += lockedCats;
+            On.SlugcatStats.HiddenOrUnplayableSlugcat += lockedCats;
             On.SlugcatStats.AutoGrabBatflys += NoGrabby;
-
-            On.SlugcatStats.SpearSpawnElectricRandomChance += ElectricSpear;
-            On.SlugcatStats.SpearSpawnExplosiveRandomChance += ExplosiveSpear;
-            On.SlugcatStats.SpearSpawnModifier += SpawnMod;
-            // changes spear chances to be between arti and hunter
 
             On.Player.ThrownSpear += SpearthrowTweaks;
         }
@@ -117,61 +112,6 @@
                 return false;
             }
             return orig(slugcatNum);
-        }
-
-        private static float SpawnMod(On.SlugcatStats.orig_SpearSpawnModifier orig, SlugcatStats.Name index, float originalSpearChance)
-        {
-            if (index != null)
-            {
-                if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
-                {
-                    return Mathf.Pow(originalSpearChance, 0.825f);
-                }
-                if (index == UnboundEnums.NCROracle || index.value == "NCRoracle")
-                {
-                    return Mathf.Pow(originalSpearChance, 0.83f);
-                }
-                if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
-                {
-                    return Mathf.Pow(originalSpearChance, 0.9f);
-                }
-            }
-            
-            return orig(index, originalSpearChance);
-        }
-
-        private static float ExplosiveSpear(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance orig, SlugcatStats.Name index)
-        {
-            if (index != null)
-            {
-                if (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound")
-                {
-                    return 0.011f;
-                }
-                if (index == UnboundEnums.NCRTechnician || index.value == "NCRtech")
-                {
-                    return 0.013f;
-                }
-            }
-            
-            return orig(index);
-        }
-
-        private static float ElectricSpear(On.SlugcatStats.orig_SpearSpawnElectricRandomChance orig, SlugcatStats.Name index)
-        {
-            if (index != null)
-            {
-                if (ModManager.MSC && (index == UnboundEnums.NCRUnbound || index.value == "NCRunbound"))
-                {
-                    return 0.011f;
-                }
-                else if (ModManager.MSC && (index == UnboundEnums.NCRTechnician || index.value == "NCRtech"))
-                {
-                    return 0.09f;
-                }
-            }
-            
-            return orig(index);
         }
 
         private static bool lockedCats(On.SlugcatStats.orig_HiddenOrUnplayableSlugcat orig, SlugcatStats.Name i)

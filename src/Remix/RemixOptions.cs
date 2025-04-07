@@ -5,16 +5,20 @@
         private void PlayerRemix(On.Player.orig_ctor orig, Player self, AbstractCreature abstractcreature, World world)
         {
             orig(self, abstractcreature, world);
-            self.GetNCRunbound().MoreDebug = UnbOptions.MoreDebugLogs.Value; // more debug
 
-            self.GetNCRunbound().CyJump1Maximum = UnbOptions.CyJumpCharge.Value; // cyan jump 1
-            self.GetNCRunbound().CyJump2Maximum = UnbOptions.CyJump2Charge.Value; // cyan jump 2
+            var getUnb = self.GetNCRunbound();
+            getUnb.MoreDebug = UnbOptions.MoreDebugLogs.Value; // more debug
 
-            self.GetNCRunbound().GraphicsDisabled = UnbOptions.UnbGraphicsDisabled.Value; // disable/enable general graphics
-            self.GetNCRunbound().RingsDisabled = UnbOptions.UnbRingsDisabled.Value; // enable/disable rings
-            self.GetNCRunbound().Unpicky = UnbOptions.UnbUnpicky.Value; // enable/disable swallowing
+            getUnb.CyJump1Maximum = UnbOptions.CyJumpCharge.Value; // cyan jump 1
+            getUnb.CyJump2Maximum = UnbOptions.CyJump2Charge.Value; // cyan jump 2
 
-            self.GetNCRunbound().RGBRings = UnbOptions.RGBRings.Value; // party button
+            getUnb.GraphicsDisabled = UnbOptions.UnbGraphicsDisabled.Value; // disable/enable general graphics
+            getUnb.RingsDisabled = UnbOptions.UnbRingsDisabled.Value; // enable/disable rings
+            getUnb.WingscalesDisabled = UnbOptions.UnbWingsDisabled.Value;  // enable/disable wings
+
+            getUnb.Unpicky = UnbOptions.UnbUnpicky.Value; // enable/disable swallowing
+
+            getUnb.RGBRings = UnbOptions.RGBRings.Value; // party button
         }
 
         public void OverseerRemix(On.Overseer.orig_ctor orig, Overseer self, AbstractCreature abstractCreature, World world)

@@ -7,7 +7,8 @@
             orig(self, chunk, direction, speed, firstContact);
 
             if (self != null &&
-                self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician // these two should operate nearly or exactly the same
+                self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician
+                // these two should operate nearly or exactly the same
                 )
             {
                 if (self.animation == Player.AnimationIndex.Roll && firstContact)

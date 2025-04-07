@@ -20,7 +20,7 @@ namespace Unbound
                 room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.BigEel, false);
                 room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.Vulture, false);
                 room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", CreatureTemplate.Type.KingVulture, false);
-                room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", MoreSlugcatsEnums.CreatureTemplateType.MirosVulture, false);
+                room.world.ToggleCreatureAccessFromCutscene("MS_FARSIDE", DLCSharedEnums.CreatureTemplateType.MirosVulture, false);
             }
             catch (Exception e)
             {

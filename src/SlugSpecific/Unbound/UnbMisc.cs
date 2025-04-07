@@ -1,5 +1,4 @@
 ﻿using System;
-using SlugBase;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using DressMySlugcat;
@@ -421,10 +420,14 @@ namespace Unbound
                 dRelation?.trackerRep?.representedCreature?.realizedCreature != null && dRelation.state != null &&
                 // making sure things arent null
                 self.creature.creatureTemplate.type == CreatureTemplate.Type.CyanLizard &&
+                (((self.creature.realizedCreature as Lizard).rotModule == null) ||
+                (self.creature.state as LizardState).rotType == LizardState.RotType.None ||
+                (self.creature.state as LizardState).rotType == LizardState.RotType.Slight) &&
+                // if cyan and not (too!) rotted. heavily rotted cyans still target him as normal
                 dRelation.trackerRep.representedCreature.realizedCreature is Player &&
                 ((dRelation.trackerRep.representedCreature.realizedCreature as Player).GetNCRunbound().IsUnbound ||
                 (dRelation.trackerRep.representedCreature.realizedCreature as Player).GetNCRunbound().IsTechnician) &&
-                // if cyan, if unbound OR tech
+                // if unbound OR tech
                 self.friendTracker.friend != dRelation.trackerRep.representedCreature.realizedCreature
                 // should still allow making friends with it
                 )

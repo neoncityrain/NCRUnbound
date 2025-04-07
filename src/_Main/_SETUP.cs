@@ -1,9 +1,8 @@
 ﻿using System.Linq;
-using Unbound.Remix;
 
 namespace Unbound
 {
-    [BepInPlugin("NCR.theunbound", "unbound", "2.4.1")]
+    [BepInPlugin("NCR.theunbound", "unbound", "3.0.0")]
 
     [BepInDependency("moreslugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
@@ -12,7 +11,6 @@ namespace Unbound
     [BepInDependency("expedition", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("DetailedIcon", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("henpemaz.rainmeadow", BepInDependency.DependencyFlags.SoftDependency)]
-    // [BepInDependency("fakeachievements", BepInDependency.DependencyFlags.SoftDependency)]
 
 
     public partial class UnbSetupThings : BaseUnityPlugin
@@ -28,24 +26,13 @@ namespace Unbound
             // remix triggers, makes sure all values effect something else in the code
 
             HooksOnly.HookIn(); // redirecting to the main hooks (HooksOnly)
-            NCRFrigid.Init(); // sets up effects
 
             On.RainWorldGame.ShutDownProcess += RainWorldGameOnShutDownProcess;
             On.GameSession.ctor += GameSessionOnctor;
             // clean up enums
 
             On.RainWorld.PostModsInit += CheckOnMods;  // check for other mods, in the cases of dms or similar
-            On.RainWorld.OnModsInit += RainMeadowCheck; // apply rain meadow support
             On.RainWorld.OnModsInit += UnbExtras.WrapInit(LoadResources); // load resources, such as graphics
-        }
-
-        private void RainMeadowCheck(On.RainWorld.orig_OnModsInit orig, RainWorld self)
-        {
-            if (ModManager.ActiveMods.Any(mod => mod.id == "henpemaz_rainmeadow"))
-            {
-                unbRainMeadow.Init();
-            }
-            orig(self);
         }
 
         private void CheckOnMods(On.RainWorld.orig_PostModsInit orig, RainWorld self)
@@ -54,30 +41,18 @@ namespace Unbound
             {
                 SecondaryCommit = true;
 
-                if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "randombuff"))
+                if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat"))
                 {
-                    NCRDebug.Log("Random Buffs enabled, disabling Unbound graphics");
-
-                    On.Player.ctor += RandomBuffThings.TailTracking; // track the tail, for tail-related buffs
-                    On.PlayerGraphics.DrawSprites += RandomBuffThings.SetUpRGBForRB; // party mode, because apparently thats important
-                }
-                else if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat") ||
-                        ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "DressMySlugcat")) // checks both just in case
-                {
-                    NCRDebug.Log("DMS enabled, proceeding to load DMS Unbound graphics");
-                    DMSUnboundTime.Init(); // initialise graphics and set up DMS menu options
-                    DMSUnboundTime.DMSHooks(); // DMS-exclusive hooks
+                    NCRDebug.Log("DMS detected! All Unbound graphics have been disabled. (For now!)");
                 }
                 else
                 {
-                    NCRDebug.Log("DMS and Random Buffs not enabled, proceeding to load normal Unbound graphics");
                     UnbGraphics.Init(); // initialise graphics
                     UnbGraphics.GraphicsHooks(); // non-DMS exclusive hooks
                 }
             }
             orig(self);
         }
-
 
         private void LoadResources(RainWorld rainWorld)
         {

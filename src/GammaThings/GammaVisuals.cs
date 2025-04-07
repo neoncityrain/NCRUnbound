@@ -149,7 +149,8 @@
 
         public static Color GetGammaCol(orig_OverseerMainColor orig, global::OverseerGraphics self)
         {
-            if (self?.owner?.room != null &&
+            if (self != null && self.owner != null && self?.owner?.room != null &&
+                self.overseer.room.world.game.session.characterStats.name.value != null &&
                 self.overseer.room.world.game.session.characterStats.name.value == "NCRunbound" &&
                 self.overseer.PlayerGuide)
             {
@@ -159,7 +160,8 @@
                 }
                 return new Color(0.29f, 0.59f, 0.87f);
             }
-            else if(self?.owner?.room != null &&
+            else if (self != null && self.owner != null && self?.owner?.room != null &&
+                self.overseer.room.world.game.session.characterStats.name.value != null &&
                 self.overseer.room.world.game.session.characterStats.name.value == "NCRtech" &&
                 self.overseer.PlayerGuide)
             {

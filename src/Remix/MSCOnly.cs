@@ -19,7 +19,6 @@ namespace Unbound
 
             // On.SeedCob.HitByWeapon += SeedAllergy;
             // SEED COB ALLERGYYYYYY
-
         }
 
         private static bool AwakenMyPsionicWarriors(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig,
@@ -51,9 +50,9 @@ namespace Unbound
         {
             if (self != null &&
                 !(weapon == null || self.room == null || self.room.roomSettings == null) &&
-                self.room.game.session.characterStats.name.value == "NCRunbound" && ModManager.MSC)
+                self.room.game.session.characterStats.name.value == "NCRunbound" && (ModManager.MSC || ModManager.Watcher))
             {
-                if (self.room.roomSettings.DangerType == MoreSlugcatsEnums.RoomRainDangerType.Blizzard &&
+                if (self.room.roomSettings.DangerType == DLCSharedEnums.RoomRainDangerType.Blizzard &&
                     weapon.firstChunk.vel.magnitude < 20f)
                 {
                     if (UnityEngine.Random.Range(0.5f, 0.8f) < self.freezingCounter)

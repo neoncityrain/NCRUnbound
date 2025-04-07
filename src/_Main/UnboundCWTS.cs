@@ -8,12 +8,19 @@ namespace Unbound
         {
             public UnbJumpsmoke unbsmoke;
             public UnbJumpsmoke damagesmoke;
+            public UnboundWingScales wingscales;
+            public int TailPatternInt;
+            public int UnboundJumpringStartSprite;
+            public int GeneralGraphicStartSprite;
+            // graphics things
 
+            public bool IsNCRUnbModcat;
             public bool IsTechnician;
             public bool IsUnbound;
             public bool IsOracle;
-            public bool IsNCRUnbModcat;
             public bool IsReverb;
+            // modcat check
+
             public bool holdingJumpkey;
             public bool didLongjump;
             public bool CanDoubleCyanJump;
@@ -39,11 +46,12 @@ namespace Unbound
             public bool MoreDebug;
             public bool WingscalesDisabled;
             public bool RGBRings;
+            public bool TailDisabled;
             // end remix values
 
             public UnboundCat()
             {
-
+                TailDisabled = true;
             }
         }
 

@@ -54,14 +54,14 @@ namespace Unbound
                         sLeaser.sprites[self.PhoneSprite(k, 2)].color = self.armJointGraphics[0].HighLightColor(default(Vector2));
                     }
                     sLeaser.sprites[self.HandSprite(k, 0)].color = color;
-                    if (self.gown != null)
+                    if (self.gowns != null)
                     {
                         for (int l = 0; l < 7; l++)
                         {
-                            (sLeaser.sprites[self.HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4] = self.gown.Color(0.4f);
-                            (sLeaser.sprites[self.HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 1] = self.gown.Color(0f);
-                            (sLeaser.sprites[self.HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 2] = self.gown.Color(0.4f);
-                            (sLeaser.sprites[self.HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 3] = self.gown.Color(0f);
+                            (sLeaser.sprites[self.HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4] = self.gowns[0].Color(0.4f);
+                            (sLeaser.sprites[self.HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 1] = self.gowns[0].Color(0f);
+                            (sLeaser.sprites[self.HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 2] = self.gowns[0].Color(0.4f);
+                            (sLeaser.sprites[self.HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 3] = self.gowns[0].Color(0f);
                         }
                     }
                     else

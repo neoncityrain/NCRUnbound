@@ -33,7 +33,7 @@ internal class HooksOnly
         On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
         On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenGravUpdate; // antigravity scripts
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
-        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.updateGravity; // as above
+        On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.UpdateGravity; // as above
         On.Player.ctor += SetupRoomSpecific.MaintainRoomSpecific; // continues to seek room specific code
         On.RoomSpecificScript.AddRoomSpecificScript += SetupRoomSpecific.KTBIntroSetup; // ktb room intro
         // On.Player.Update += SetupRoomSpecific.IsGammaInMyShelter;
@@ -44,7 +44,7 @@ internal class HooksOnly
         On.OverseerAbstractAI.RoomAllowed += GammaAITweaks.RoomAllowed; // allows gamma into shelters
         On.OverseerCommunicationModule.FoodDelicousScore += GammaAITweaks.StopLeadingToFoodUnboundCantEat; // notes unbounds diet, rather than leading him to anything
         On.OverseerAbstractAI.HowInterestingIsCreature += GammaAITweaks.InterestInUnbound; // unbound is always interesting
-        On.OverseerAI.Update += GammaAITweaks.GammaAIUpdate; // update gamma ai
+        // On.OverseerAI.Update += GammaAITweaks.GammaAIUpdate; // update gamma ai
         On.OverseerAI.HoverScoreOfTile += GammaAITweaks.HoverScore; // changes gammas hoverscore on tiles
         On.Overseer.Die += GammaAITweaks.DontRespawnImmediately; // gamma does not revive when killed by non-slugcat creatures
 

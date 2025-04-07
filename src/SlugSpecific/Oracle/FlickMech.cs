@@ -83,7 +83,7 @@ namespace Unbound
                     }
                 }
                 else if (self.creature.creatureTemplate.type == CreatureTemplate.Type.BlueLizard || (ModManager.MSC &&
-                    self.creature.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.ZoopLizard))
+                    self.creature.creatureTemplate.type == DLCSharedEnums.CreatureTemplateType.ZoopLizard))
                 {
                     if (self.LikeOfPlayer(dRelation.trackerRep) < 0.8f)
                     {

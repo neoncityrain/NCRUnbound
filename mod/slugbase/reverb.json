@@ -33,7 +33,7 @@
 		"world_state": [ "NCRreverb", "Rivulet", "Red" ],
 		"cycle_length_min": 10,
 		"cycle_length_max": 16,
-		"start_room": [ "SH_E04RIV", "SL_LMS06" ],
+		"start_room": [ "OE_S03", "SH_E04RIV", "CC_S01" ],
 		"timeline_before": "Saint",
 		"timeline_after": "Rivulet",
 		
@@ -41,10 +41,14 @@
 			"base": "White",
 			"corpses": 1,
 			"overrides": {
-				"SSOracleSwarmer": 4,
+				"RedCentipede": 4,
+				"RedHorror": 4,
 				
-				"RedCentipede": 3,
+				"Scutigera": 3,
+				"Teuthicada": 3,
+				"Firebug": 3,
 				
+				"Purplewing": 2,
 				"Centipede": 2,
 				"Centiwing": 2,
 				"Aquapede": 2,
@@ -53,22 +57,45 @@
 				"OverseerCarcass": 2,
 				
 				"SmallCentipede": 1.5,
+				"PureCrystal": 1.5,
+				"LizardEgg": 1.5,
 				
-				"Danglefruit": 0.25,
+				"BigNeedleWorm": 1,
+				"Batfly": 1,
+				"Fly": 1,
+				"LanternMouse": 1,
 				
-				"LanternMouse": 0.25,
+				"Seedbat": 0.5,
+				
 				"EggBugEgg": 0.25,
+				"Scavenger": 0.25,
+				"Sporantula": 0.25,
+				"SlimeMold": 0.25,
 				
+				"Honeycomb": 0,
+				
+				"HunterDaddy": -1,
+				"GlowWeed": -1,
 				"Slugcat": -1,
 				"SlugNPC": -1,
 				"CyanLizard": -1,
-				"Scavenger": -1,
 				"GooieDuck": -1,
 				"LillyPuck": -1,
 				"BubbleFruit": -1,
-				"SeedCob": -1,
 				"Seed": -1,
-				"WaterNut": -1
+				"WaterNut": -1,
+				"DandelionPeach": -1,
+				"WaterBlob": -1,
+				"BlobPiece": -1,
+				"Pumpkin": -1,
+				"CaneSpear": -1,
+				"BouncingMelon": -1,
+				"ThornyStrawberry": -1,
+				"StarLemon": -1,
+				"GummyAnther": -1,
+				"Physalis": -1,
+				"MarineEye": -1,
+				"LittleBalloon": -1
 				}
 			},
 
