@@ -16,9 +16,6 @@ namespace Unbound
 
             On.MoreSlugcats.StowawayBugState.AwakeThisCycle += AwakenMyPsionicWarriors;
             // rerolls if a stowaway is awake or not. it should result in a bit over a 1/3 chance that it will be awake each cycle
-
-            // On.SeedCob.HitByWeapon += SeedAllergy;
-            // SEED COB ALLERGYYYYYY
         }
 
         private static bool AwakenMyPsionicWarriors(On.MoreSlugcats.StowawayBugState.orig_AwakeThisCycle orig,
@@ -44,36 +41,6 @@ namespace Unbound
                 }
             }
             else return orig(self, cycle);
-        }
-
-        private static void SeedAllergy(On.SeedCob.orig_HitByWeapon orig, SeedCob self, Weapon weapon)
-        {
-            if (self != null &&
-                !(weapon == null || self.room == null || self.room.roomSettings == null) &&
-                self.room.game.session.characterStats.name.value == "NCRunbound" && (ModManager.MSC || ModManager.Watcher))
-            {
-                if (self.room.roomSettings.DangerType == DLCSharedEnums.RoomRainDangerType.Blizzard &&
-                    weapon.firstChunk.vel.magnitude < 20f)
-                {
-                    if (UnityEngine.Random.Range(0.5f, 0.8f) < self.freezingCounter)
-                    {
-                        self.spawnUtilityFoods();
-                    }
-                    return;
-                }
-                if (weapon.thrownBy != null && weapon.thrownBy is Player && ((weapon.thrownBy as Player).slugcatStats.name ==
-                    MoreSlugcatsEnums.SlugcatStatsName.Spear || (weapon.thrownBy as Player).SlugCatClass ==
-                    MoreSlugcatsEnums.SlugcatStatsName.Saint))
-                {
-                    return;
-                }
-                self.spawnUtilityFoods();
-                return;
-            }
-            else
-            {
-                orig(self, weapon);
-            }
         }
 
         private static int PearlToFile(On.MoreSlugcats.CollectionsMenu.orig_DataPearlToFileID orig, DataPearl.AbstractDataPearl.DataPearlType type)

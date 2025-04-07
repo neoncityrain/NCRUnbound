@@ -29,6 +29,7 @@ namespace Unbound
         // regions
         public static SmokeSystem.SmokeType UnboundSmoke;
         // smoke
+        public static SlugcatStats.Timeline UnboundTimeline;
 
         public static void RegisterValues()
         {

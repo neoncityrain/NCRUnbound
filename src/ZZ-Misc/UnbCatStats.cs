@@ -4,11 +4,106 @@
     {
         public static void Init()
         {
-            On.SlugcatStats.getSlugcatName += UnbNameLogging;
             On.SlugcatStats.HiddenOrUnplayableSlugcat += lockedCats;
-            On.SlugcatStats.AutoGrabBatflys += NoGrabby;
-
+            // hide certain slurts
             On.Player.ThrownSpear += SpearthrowTweaks;
+            // unbound spearthrow variables
+
+            On.SlugcatStats.AutoGrabBatflys += NoGrabby;
+            On.SlugcatStats.getSlugcatName += UnbNameLogging;
+            On.SlugcatStats.SlugcatCanMaul += AllowForMauling;
+            On.SlugcatStats.SlugcatFoodMeter += UnbFoodMeter;
+            On.SlugcatStats.SlugcatStartingKarma += UnbStartKarma;
+            // the "standard" slugbase variables
+
+            On.SlugcatStats.SpearSpawnModifier_Timeline_float += UnbSpearSpawn;
+            On.SlugcatStats.SpearSpawnExplosiveRandomChance_Timeline += Explosive;
+            On.SlugcatStats.SpearSpawnElectricRandomChance_Timeline += Electric;
+            // spear modifiers
+        }
+
+        private static float Electric(On.SlugcatStats.orig_SpearSpawnElectricRandomChance_Timeline orig, SlugcatStats.Timeline index)
+        {
+            if (index != null)
+            {
+                if (ModManager.MSC && (index == UnboundEnums.UnboundTimeline || index.value == "NCRunbound"))
+                {
+                    return 0.011f;
+                }
+                else if (ModManager.MSC && (index.value == "NCRtech"))
+                {
+                    return 0.09f;
+                }
+            }
+
+            return orig(index);
+        }
+
+        private static float Explosive(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance_Timeline orig, SlugcatStats.Timeline index)
+        {
+            if (index != null)
+            {
+                if (index == UnboundEnums.UnboundTimeline || index.value == "NCRunbound")
+                {
+                    return 0.011f;
+                }
+                if (index.value == "NCRtech")
+                {
+                    return 0.013f;
+                }
+            }
+
+            return orig(index);
+        }
+
+        private static float UnbSpearSpawn(On.SlugcatStats.orig_SpearSpawnModifier_Timeline_float orig, SlugcatStats.Timeline index, float originalSpearChance)
+        {
+            if (index != null)
+            {
+                if (index == UnboundEnums.UnboundTimeline || index.value == "NCRunbound")
+                {
+                    return Mathf.Pow(originalSpearChance, 0.825f);
+                }
+                if (index.value == "NCRoracle")
+                {
+                    return Mathf.Pow(originalSpearChance, 0.83f);
+                }
+                if (index.value == "NCRtech")
+                {
+                    return Mathf.Pow(originalSpearChance, 0.9f);
+                }
+            }
+
+            return orig(index, originalSpearChance);
+        }
+
+        private static int UnbStartKarma(On.SlugcatStats.orig_SlugcatStartingKarma orig, SlugcatStats.Name slugcatNum)
+        {
+            if (slugcatNum == UnboundEnums.NCRUnbound || slugcatNum.value == "NCRunbound")
+            {
+                return 2; // the friend karma.
+            }
+            return orig(slugcatNum);
+        }
+
+        private static IntVector2 UnbFoodMeter(On.SlugcatStats.orig_SlugcatFoodMeter orig, SlugcatStats.Name slugcat)
+        {
+            if (slugcat == UnboundEnums.NCRUnbound || slugcat.value == "NCRunbound")
+            {
+                return new IntVector2(7, 6);
+                // in order, goes "max, min"
+                // ideally, this number would change over time...
+            }
+            return orig(slugcat);
+        }
+
+        private static bool AllowForMauling(On.SlugcatStats.orig_SlugcatCanMaul orig, SlugcatStats.Name slugcatNum)
+        {
+            if (slugcatNum == UnboundEnums.NCRUnbound || slugcatNum.value == "NCRunbound")
+            {
+                return true;
+            }
+            return orig(slugcatNum);
         }
 
         private static void SpearthrowTweaks(On.Player.orig_ThrownSpear orig, Player self, Spear spear)
