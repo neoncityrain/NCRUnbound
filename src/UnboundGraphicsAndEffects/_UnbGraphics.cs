@@ -42,10 +42,8 @@
         {
             orig(self, sLeaser, rCam, palette);
 
-            if (self?.player?.room?.game != null && // checks if ANY value of those are null. if so, cancel
-                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician)
-                // unbound or technician
-                )
+            if (self?.player?.room?.game != null &&
+                (self.player.GetNCRunbound().IsTechnician || (self.player.GetNCRunbound().IsUnbound && !self.player.playerState.isGhost)))
             {
                 try
                 {
@@ -199,11 +197,13 @@
             {
                 NCRDebug.Log("Orig palette error: " + e);
             }
+
             try
             {
                 if (self?.player?.room?.game != null &&
                 self.player.GetNCRunbound().wingscales != null &&
-                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
+                ((self.player.GetNCRunbound().IsUnbound && !self.player.playerState.isGhost) || self.player.GetNCRunbound().IsTechnician)
+                )
                 {
                     #region Colours
                     // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -280,17 +280,13 @@
         private static void InitiateUnboundGraphics(On.PlayerGraphics.orig_InitiateSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             if (self?.player?.room != null && sLeaser != null && rCam != null &&
-                !self.owner.room.game.DEBUGMODE && // how would this even be active?
-                // here for the just in case ig
                 !(self.player.GetNCRunbound().GraphicsDisabled && self.player.GetNCRunbound().RingsDisabled &&
                 self.player.GetNCRunbound().WingscalesDisabled) &&
                 // if NOT all graphics are disabled
                 self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle &&
                 // modcat who isnt oracle (ie unbound, reverb, technician)
-                (self.player.slugcatStats.name.value != "NCRunbound" ||
-                // either not unbound
-                (!self.player.playerState.isGhost && self.player.slugcatStats.name.value == "NCRunbound"))
-                // or NOT a ghost who IS unbound
+                (!self.player.GetNCRunbound().IsUnbound || (self.player.GetNCRunbound().IsUnbound && !self.player.playerState.isGhost))
+                // either not unbound, or IS unbound but ISNT a ghost
                 )
             {
                 // bluhhhh im gonna throw upppppppppppp. what the fuck ever
@@ -530,8 +526,15 @@
         private static void AddUnboundGraphicsToContainer(On.PlayerGraphics.orig_AddToContainer orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
             if (self != null && self.player != null && self.player.room != null && rCam != null && sLeaser != null &&
-                !(self.player.GetNCRunbound().RingsDisabled) &&
-                (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician))
+                // standard nullchecks as usual
+                !(self.player.GetNCRunbound().RingsDisabled && self.player.GetNCRunbound().WingscalesDisabled &&
+                self.player.GetNCRunbound().GraphicsDisabled) &&
+                // not all graphics are disabled
+                self.player.GetNCRunbound().IsNCRUnbModcat && !self.player.GetNCRunbound().IsOracle &&
+                // not oracle
+                (!self.player.GetNCRunbound().IsUnbound || (self.player.GetNCRunbound().IsUnbound && !self.player.playerState.isGhost))
+                // isnt playerghost
+                )
             {
                 var getUnb = self.player.GetNCRunbound(); 
 
@@ -678,7 +681,10 @@
             if (!(self.player.GetNCRunbound().RingsDisabled && self.player.GetNCRunbound().GraphicsDisabled &&
                 self.player.GetNCRunbound().WingscalesDisabled) &&
                 self != null && self.player != null && self.player.room != null &&
-                self.player.GetNCRunbound().IsNCRUnbModcat)
+                self.player.GetNCRunbound().IsNCRUnbModcat &&
+
+                (!self.player.GetNCRunbound().IsUnbound || (self.player.GetNCRunbound().IsUnbound && !self.player.playerState.isGhost))
+                )
             {
                 var unbGet = self.player.GetNCRunbound();
                 var graphicsStart = unbGet.GeneralGraphicStartSprite;
@@ -951,7 +957,7 @@
                 Color bodycol = isTechnician ? new Color(0.91f, 0.8f, 0.53f) :
                     (isReverb ? new Color(0.95f, 0.91f, 0.91f) : new Color(0.89f, 0.79f, 0.6f));
                 Color pupilcol = isTechnician ? new Color(0.1f, 0.04f, 0.03f) :
-                    new Color(1f, 0f, 0f);
+                    (unbGet.IsReverb ? new Color(0.95f, 0.9f, 0.5f) : new Color(1f, 0f, 0f));
 
                 if (self.player.room.game.IsArenaSession && !isTechnician)
                 {
@@ -1108,8 +1114,18 @@
                         {
                             // for rev only
 
-                            sLeaser.sprites[jumpringOne].color = effectcol;
-                            sLeaser.sprites[jumpringTwo].color = effectcol;
+                            if (unbGet.RevCryCooldown <= 0)
+                            {
+                                sLeaser.sprites[jumpringOne].color = effectcol;
+                                sLeaser.sprites[jumpringTwo].color = effectcol;
+                            }
+                            else
+                            {
+                                sLeaser.sprites[jumpringOne].color = Color.Lerp(effectcol, pupilcol,
+                                        (unbGet.RevCryCooldown / 100f));
+                                sLeaser.sprites[jumpringTwo].color = Color.Lerp(effectcol, pupilcol,
+                                    (unbGet.RevCryCooldown / 100f));
+                            }
                         }
                     }
                     if (!unbGet.GraphicsDisabled)
@@ -1161,7 +1177,6 @@
             orig(self, ow);
             if (self?.owner != null && self.player?.room != null &&
                 self.player.GetNCRunbound().IsNCRUnbModcat && self.tail != null &&
-
                 (self.player.slugcatStats.name.value != "NCRunbound" ||
                 // either not unbound
                 (!self.player.playerState.isGhost && self.player.slugcatStats.name.value == "NCRunbound"))

@@ -18,10 +18,15 @@
 				"name": "Patterns",
 				"story": "B89898",
 				"arena": [ "B89898", "1CBC95", "D5154D", "DB3BEC" ]
+			},
+			{
+				"name": "Gilding",
+				"story": "E5B366",
+				"arena": [ "E5B366", "1CBC95", "D5154D", "DB3BEC" ]
 			}
 		],
 		
-		"expedition_enabled": true,
+		"expedition_enabled": false,
 		"can_maul": true,
 		"maul_blacklist": [ "SlugNPC", "CyanLizard" ],
 		"maul_damage": 1,

@@ -1,0 +1,5 @@
+{
+  "id": "NCRunbound",
+  "base": [ "Artificer", "Red" ],
+  "insert_before": "Red"
+}

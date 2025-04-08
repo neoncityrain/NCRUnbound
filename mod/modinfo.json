@@ -1,10 +1,10 @@
 ﻿{
 	"id": "NCR.theunbound",
 	"name": "The Unbound Slugcat",
-	"version": "2.4.1",
+	"version": "3.0.0",
 	"authors": "NeonCityRain",
 	"description": "A Cyan Lizard Slugcat with a mission! ...Of sorts. Well, it's not really a cool or impressive one, but it's a mission. Debatably. Okay, well, it's a goal. One that's mediocre, and- are you gonna play or not?",
-	"requirements": [ "slugbase", "crs", "regionkit" ],
+	"requirements": [ "slime-cubed.slugbase", "crs", "regionkit" ],
 	"requirements_names": [ "Slugbase", "Custom Region Support", "Regionkit" ],
-	"tags" : [ "Campaigns", "Custom Slugcat" ]
+	"tags" : [ "Campaigns", "Custom Slugcat", "Base", "Downpour", "Watcher" ]
 }

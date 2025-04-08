@@ -11,10 +11,10 @@ namespace Unbound
             On.FlareBomb.Update += FlarebombStun; // stunned by flashing
             // On.Water.InitiateSprites += NormalHRWater;
 
-            On.Player.CanBeSwallowed += NoSwallow;
-            On.Player.Update += RockSwallow;
-            On.Player.Regurgitate += CallForHelp;
-            // sets up her crying for help using regurgitation
+            // On.Player.Regurgitate += CallForHelp;
+            // old code thatd use regurgitation to cry for help.
+
+            On.Player.Update += reverbCry;
 
             On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += LizardPack;
             On.Player.Grabbed += LizardAnger;
@@ -22,6 +22,59 @@ namespace Unbound
 
             On.Player.Update += reverbHops;
             // double jump pop
+        }
+
+        private static void reverbCry(On.Player.orig_Update orig, Player self, bool eu)
+        {
+            orig(self, eu);
+
+            if (self?.room?.game != null && self.GetNCRunbound().RevCryCooldown >= 0)
+            {
+                self.GetNCRunbound().RevCryCooldown--;
+            }
+            if (self?.room?.game != null &&
+                self.GetNCRunbound().IsReverb && self.GetNCRunbound().RevCryCooldown <= 0 &&
+                !self.submerged && self.Consious &&
+                // not submerged, awake / non-stunned
+                self.input[0].spec && !self.input[1].spec)
+            {
+                self.room.PlaySound(ModManager.MMF ? MMFEnums.MMFSoundID.Lizard_Voice_Yellow_A : SoundID.Lizard_Voice_Pink_E,
+                    self.mainBodyChunk, false, 0.8f,
+                    ModManager.MMF ? UnityEngine.Random.Range(2f, 2.8f) :
+                    UnityEngine.Random.Range(1.8f, 2f));
+                self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 500f, self, 1f));
+                self.GetNCRunbound().RevCryCooldown += 190;
+                self.eyesClosedTime = 190;
+                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Reverb cried for help!"); }
+                self.room.AddObject(new DisciplePing(self, self.mainBodyChunk.pos, 0f, 0.2f, 0.2f, 20));
+
+                for (int i = 0; i < self.room.abstractRoom.creatures.Count; i++)
+                {
+                    if (self.room.abstractRoom.creatures[i].creatureTemplate.type == CreatureTemplate.Type.YellowLizard &&
+                        self.room.abstractRoom.creatures[i].realizedCreature != null &&
+                        self.room.abstractRoom.creatures[i].realizedCreature.deaf == 0 &&
+                        self.room.abstractRoom.creatures[i].realizedCreature.Consious)
+                    {
+                        var lizard = self.room.abstractRoom.creatures[i].realizedCreature as Lizard;
+                        lizard.AI.excitement = 1f;
+                        if (lizard.abstractCreature.creatureTemplate.type == CreatureTemplate.Type.YellowLizard)
+                        {
+                            lizard.AI.yellowAI.communicating = 14;
+                        }
+                        lizard.abstractCreature.abstractAI.SetDestination(self.room.GetWorldCoordinate(self.mainBodyChunk.pos));
+
+                        if (lizard.AI.friendTracker.friend == null)
+                        {
+                            lizard.AI.LizardPlayerRelationChange(1f, self.abstractCreature);
+                        }
+                        self.room.AddObject(new DisciplePing(self, lizard.mainBodyChunk.pos, 0f, 0.2f, 0.2f, 20));
+
+                        lizard.voice.MakeSound(LizardVoice.Emotion.Curious);
+
+                        if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Reverb pinged a lizard!"); }
+                    }
+                }
+            }
         }
 
         private static void LizardAnger(On.Player.orig_Grabbed orig, Player self, Creature.Grasp grasp)
@@ -127,16 +180,6 @@ namespace Unbound
             return orig(self, dRelation);
         }
 
-        private static void RockSwallow(On.Player.orig_Update orig, Player self, bool eu)
-        {
-            if (self != null && self.room != null && self.GetNCRunbound().IsReverb && self.objectInStomach == null)
-            {
-                self.objectInStomach = new AbstractPhysicalObject(self.room.world, AbstractPhysicalObject.AbstractObjectType.Rock, null, 
-                    self.room.GetWorldCoordinate(self.mainBodyChunk.pos), self.room.game.GetNewID());
-            }
-            orig(self, eu);
-        }
-
         private static void CallForHelp(On.Player.orig_Regurgitate orig, Player self)
         {
             if (self != null && self.room != null && self.abstractCreature != null &&
@@ -176,16 +219,6 @@ namespace Unbound
             {
                 orig(self);
             }
-        }
-
-        private static bool NoSwallow(On.Player.orig_CanBeSwallowed orig, Player self, PhysicalObject testObj)
-        {
-            if (self != null && self.room != null && testObj != null &&
-                self.GetNCRunbound().IsReverb)
-            {
-                return false;
-            }
-            return orig(self, testObj);
         }
 
         private static void FlarebombStun(On.FlareBomb.orig_Update orig, FlareBomb self, bool eu)

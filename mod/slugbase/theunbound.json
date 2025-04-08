@@ -115,7 +115,7 @@
 		"weight": 0.5,
 		"tunnel_speed": [ 2, 1.9 ],
 		"climb_speed": [ 1.5, 1 ],
-		"walk_speed": [ 1.5 ],
+		"walk_speed": [ 1.4 ],
 		"crouch_stealth": 1,
 		"loudness": [ 1, 0.7 ],
 		"food_min": 6,
@@ -129,7 +129,10 @@
 			"Scavengers": { "like": -0.5 },
 			"Cicadas": { "like": -1 },
 			"Jetfish": { "like": -1 }
-		}
+		},
+		
+		
+		"story_regions": ["MS", "SL", "-LM", "UW", "SS"]
 
 	}
 }

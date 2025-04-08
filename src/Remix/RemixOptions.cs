@@ -17,7 +17,6 @@
             getUnb.WingscalesDisabled = UnbOptions.UnbWingsDisabled.Value;  // enable/disable wings
 
             getUnb.Unpicky = UnbOptions.UnbUnpicky.Value; // enable/disable swallowing
-
             getUnb.RGBRings = UnbOptions.RGBRings.Value; // party button
         }
 

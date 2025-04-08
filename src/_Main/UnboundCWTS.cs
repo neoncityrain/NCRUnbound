@@ -49,6 +49,9 @@ namespace Unbound
             public bool TailDisabled;
             // end remix values
 
+            public int RevCryCooldown;
+            // reverb exclusive
+
             public UnboundCat()
             {
                 TailDisabled = true;

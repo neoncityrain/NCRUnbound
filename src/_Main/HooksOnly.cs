@@ -82,7 +82,7 @@ internal class HooksOnly
         FlickSpearMechanics.Init();
         UnbCatStats.Init();
         EndUnb.Init();
-        // Techgen.Init(); // breaks the game
+        Techgen.Init();
         // slugcatstats exclusive things
 
         // MOD EXCLUSIVE =============================================================================================
