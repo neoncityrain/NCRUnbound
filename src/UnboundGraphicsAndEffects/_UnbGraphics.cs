@@ -759,6 +759,23 @@
                     
                 }
                 #endregion
+                #region KarmaMark
+                if (!unbGet.GraphicsDisabled && unbGet.IsUnbound)
+                {
+                    if (!self.player.playerState.isGhost)
+                    {
+                        sLeaser.sprites[11].element = Futile.atlasManager.GetElementWithName("smallKarma2");
+                        sLeaser.sprites[11].scale = 0.4f;
+                        // sets sprite 11 to be the a small version of karma 3 (friend)
+                    }
+                    else
+                    {
+                        // if a playerghost
+                        sLeaser.sprites[11].alpha = 0f;
+                        sLeaser.sprites[11].alpha = 0f;
+                    }
+                }
+                #endregion
                 #region Misc Graphics
                 if (!unbGet.GraphicsDisabled)
                 {
@@ -908,8 +925,8 @@
                         sLeaser.sprites[0].scaleX = 0.8f + Mathf.Lerp(Mathf.Lerp(Mathf.Lerp(-0.05f, -0.15f, self.malnourished), 0.05f, breathaltered) *
                             bodyhipscenterish, 0.15f, self.player.sleepCurlUp);
                         // makes unbound thinner
-                        sLeaser.sprites[10].alpha = 0f;
-                        sLeaser.sprites[11].alpha = 0f;
+                        
+
                         // removes the mark and the marks glow
                         if (self.player.stun > 0)
                         {
@@ -1132,6 +1149,7 @@
                     {
                         var unbPupils = graphicsStart + 5;
 
+                        //0-body, 1-hips, 2-tail, 3-head, 4-legs, 5-left arm, 6-right arm, 7-left hand, 8-right hand, 9-face, 10-glow, 11-pixel/mark
                         // 0-socks, 1-freckles, 2-ears, 3-leftarm, 4-rightarm, 5-pupils
                         sLeaser.sprites[graphicsStart + 1].color = isTechnician ? eyecol : effectcol; // freckles
                         sLeaser.sprites[graphicsStart + 2].color = isTechnician ? eyecol : effectcol; // ears
@@ -1139,7 +1157,12 @@
                         sLeaser.sprites[graphicsStart + 4].color = effectcol; // arm
                         sLeaser.sprites[graphicsStart].color = effectcol; // legs
 
+                        // vanilla object tweaks!
+                        sLeaser.sprites[7].color = effectcol;
+                        sLeaser.sprites[8].color = effectcol;
+
                         // animated colour ------------------------------
+                        #region Pupils
                         if (unbGet.UnbCyanjumpCountdown == 0)
                         {
                             sLeaser.sprites[unbPupils].color = pupilcol;
@@ -1161,6 +1184,20 @@
                             // simply hides the pupils, to avoid issues
                             sLeaser.sprites[unbPupils].alpha = 0f;
                         }
+                        #endregion
+                        #region Mark
+                        if (self.player.objectInStomach != null && self.player.objectInStomach is DataPearl.AbstractDataPearl &&
+                            (self.player.objectInStomach as DataPearl.AbstractDataPearl).dataPearlType == UnboundEnums.unboundKarmaPearl)
+                        {
+                            sLeaser.sprites[11].color = pupilcol; // mark
+                            sLeaser.sprites[10].color = pupilcol; // mark glow
+                        }
+                        else
+                        {
+                            sLeaser.sprites[11].color = effectcol; // mark
+                            sLeaser.sprites[10].color = effectcol; // mark glow
+                        }
+                        #endregion
                     }
                     if (!unbGet.TailDisabled)
                     {

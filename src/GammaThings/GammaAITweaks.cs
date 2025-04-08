@@ -374,16 +374,18 @@ namespace Unbound
                     }
                 }
                 return (self.world.region.name == "SS" || self.world.GetAbstractRoom(room).gate ||
-                    // can always show up in Five Pebbles, can enter gate rooms
-                    !(self.world.GetAbstractRoom(room).AttractionForCreature(self.parent.creatureTemplate.type) ==
-                    AbstractRoom.CreatureRoomAttraction.Forbidden) ||
+                    // can always show up in Five Pebbles
+                    (!(self.world.GetAbstractRoom(room).AttractionForCreature(self.parent.creatureTemplate.type) ==
+                    AbstractRoom.CreatureRoomAttraction.Forbidden) &&
                     // if the room is not forbidden
-                    !self.world.GetAbstractRoom(room).scavengerOutpost || !self.world.GetAbstractRoom(room).scavengerTrader) ||
-                    // if the room is not a scav outpost / scav trader
+                    (!self.world.GetAbstractRoom(room).scavengerOutpost || !self.world.GetAbstractRoom(room).scavengerTrader)) ||
+                    // OR room is not a scav outpost / scav trader
                     self.world.GetAbstractRoom(room).shelter ||
                     // or if the room IS a shelter (enabling the guide to come inside the shelter with the player)
-                    self.world.GetAbstractRoom(room).name == "SB_L01"
-                    // gamma can appear in the voidsea room
+                    self.world.GetAbstractRoom(room).name.Equals("SB_A14") ||
+                    self.world.GetAbstractRoom(room).name.Equals("SB_E05") ||
+                    self.world.GetAbstractRoom(room).name.Equals("SB_D06"))
+                    // gamma can appear in some subterr rooms
                     ;
             }
             return orig(self, room);
@@ -395,7 +397,9 @@ namespace Unbound
             if (self != null && self.room != null && self?.room?.abstractRoom != null && !self.dead &&
                 (self.room.game.session.characterStats.name.value == "NCRunbound" ||
                 self.room.game.session.characterStats.name.value == "NCRtech") && self.PlayerGuide &&
-                !self.room.abstractRoom.name.StartsWith("SL_UnbKTB"))
+
+                !(self.room.abstractRoom.name.StartsWith("SL_UnbKTB") || self.room.abstractRoom.name.StartsWith("SB_A14") ||
+                self.room.abstractRoom.name.StartsWith("SB_E05") || self.room.abstractRoom.name.StartsWith("SB_D06")))
             {
                 if (self.room.abstractRoom.name == "SS_AI")
                 {
@@ -425,7 +429,7 @@ namespace Unbound
 
                 // ordinarily the tutorial holograms are here. this mod goes with the assumption that the player knows how to play,
                 // so those are removed
-
+                
                 if (message == OverseerHologram.Message.Angry)
                 {
                     self.hologram = new AngryHologram(self, message, communicateWith, importance);

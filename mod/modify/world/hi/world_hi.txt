@@ -1,0 +1,33 @@
+[MERGE]
+CONDITIONAL LINKS
+{#watcher}NCRunbound : HI_B04 : GATE_SU_HI : DISCONNECTED
+{#watcher}NCRunbound : HI_B04 : HI_S03 : DISCONNECTED
+{#watcher}NCRunbound : HI_B04 : HI_A07 : DISCONNECTED
+{#watcher}NCRunbound : HI_B04 : HI_B12 : DISCONNECTED
+{#watcher}NCRunbound : GATE_SU_HI : HI_B04 : HI_B04W
+{#watcher}NCRunbound : HI_S03 : HI_B04 : HI_B04W
+{#watcher}NCRunbound : HI_A07 : HI_B04 : HI_B04W
+{#watcher}NCRunbound : HI_B12 : HI_B04 : HI_B04W
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_B04W
+{#watcher}NCRunbound : HIDEROOM : HI_B04
+
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W01
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W02
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W03
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W04
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W05
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W06
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W07
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W09
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W11
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W12
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W13
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W14
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W15
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W16
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W17
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W18
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_W19
+{#watcher}NCRunbound : EXCLUSIVEROOM : HI_WS01
+END CONDITIONAL LINKS
+[ENDMERGE]

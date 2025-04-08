@@ -7,6 +7,40 @@ namespace Unbound
 {
     public class UnbMisc
     {
+        public static void CycleTick(On.CreatureCommunities.orig_CycleTick orig, CreatureCommunities self, int cycle, SlugcatStats.Name saveStateNumber)
+        {
+            if (saveStateNumber != null && saveStateNumber.value == "NCRunbound")
+            {
+                NCRDebug.Log("Unbound save cycletick!");
+                if (cycle > 10 && self.scavengerShyness > 0f)
+                {
+                    self.scavengerShyness = Mathf.Max(0f, self.scavengerShyness - 0.02f);
+                    // functionally, scavs are slower to stop being shy
+                }
+
+                for (int l = 0; l < self.playerOpinions.GetLength(0); l++)
+                {
+                    for (int m = 0; m < self.playerOpinions.GetLength(1); m++)
+                    {
+                        for (int n = 0; n < self.playerOpinions.GetLength(2); n++)
+                        {
+                            if (self.playerOpinions[l, m, n] < 0.85f)
+                            {
+                                self.playerOpinions[l, m, n] = Mathf.Min(0.25f, self.playerOpinions[l, m, n] - 0.001f);
+                            }
+                        }
+                    }
+                }
+                return;
+            }
+            if (saveStateNumber != null && saveStateNumber.value == "NCRoracle")
+            {
+                if (self.scavengerShyness > 0f) { self.scavengerShyness = 0f; }
+                return;
+            }
+            orig(self, cycle, saveStateNumber);
+        }
+
         public static void shockMeLess(On.JellyFish.orig_Collide orig, JellyFish self, PhysicalObject otherObject, int myChunk, int otherChunk)
         {
             if (self != null && otherObject != null &&

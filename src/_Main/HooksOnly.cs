@@ -27,9 +27,10 @@ internal class HooksOnly
         On.PlayerGraphics.Update += UnbMisc.UpdateTheGlow; // glow can change colour
         On.SSOracleSwarmer.DrawSprites += UnbMisc.NeuronColourShift; // when in a room with a neuron, rings change to be the neuron colour
         On.JellyFish.Collide += UnbMisc.shockMeLess; // reduces stun time upon jellyfish hit
+        On.CreatureCommunities.CycleTick += UnbMisc.CycleTick; // reduces the cycletick creature community buff
 
         // SETUP ROOM SPECIFIC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup;// setup and intro
+        On.Player.ctor += SetupRoomSpecific.UnboundFirstBootup; // setup and intro
         On.RegionGate.customKarmaGateRequirements += SetupRoomSpecific.CustomKarmaGates; // custom gate tweaks- allows for exiting MS
         On.AntiGravity.BrokenAntiGravity.Update += SetupRoomSpecific.BrokenGravUpdate; // antigravity scripts
         On.AntiGravity.BrokenAntiGravity.ctor += SetupRoomSpecific.BrokenAntiGravityctor; // allow for broken gravity in ms
@@ -76,6 +77,7 @@ internal class HooksOnly
         GeneralOracleThings.Init();
         // iterators
         STGKTB.Init();
+        KarmaGateLock.Init();
         // room specific
         Revgen.HookThatThang();
         FlickMech.MakeFlickerReal();
