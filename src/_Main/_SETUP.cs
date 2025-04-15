@@ -1,11 +1,14 @@
 ﻿using System.Linq;
+using System.IO;
+using BepInEx;
 
 namespace Unbound
 {
-    [BepInPlugin("NCR.theunbound", "unbound", "3.0.0")]
+    [BepInPlugin("NCR.theunbound", "unbound", "3.0.2")]
 
     [BepInDependency("moreslugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("watcher", BepInDependency.DependencyFlags.SoftDependency)]
+
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("dressmyslugcat", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("randombuff", BepInDependency.DependencyFlags.SoftDependency)]

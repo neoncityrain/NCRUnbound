@@ -13,6 +13,7 @@ Subregion: Broken Voice
 Subregion: Arteries
 Subregion: The City
 
+Broken Shelters: NCRunbound : MS_S04
 Room Setting Templates: Deep, Artery, Array, Vents, Sewers, Aerie
 
 Room_Attr: MS_DMS02: LanternMouse-Avoid,BigSpider-Forbidden,SpitterSpider-Forbidden,MotherSpider-Forbidden,

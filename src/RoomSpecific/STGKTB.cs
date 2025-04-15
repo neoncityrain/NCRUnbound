@@ -14,21 +14,56 @@ namespace Unbound
             On.ZapCoil.InitiateSprites += RedZap;
             On.ZapCoilLight.ctor += RedLight;
             On.ZapCoil.DrawSprites += DrawRedzap;
+            On.ZapCoil.ZapFlash.InitiateSprites += FlashCol;
+            On.ZapCoil.ZapFlash.Update += UpdateGlowCol;
 
             Hook inspectorColourChange = new Hook(typeof(global::MoreSlugcats.Inspector).GetProperty("TrueColor", BindingFlags.Instance |
                 BindingFlags.Public).GetGetMethod(), new Func<orig_InspectorTrueColor,
                 Inspector, Color>(InspektaCheka));
         }
 
+        private static void UpdateGlowCol(On.ZapCoil.ZapFlash.orig_Update orig, ZapCoil.ZapFlash self, bool eu)
+        {
+            orig(self, eu);
+            if (self != null && self.room != null && self.room.world != null && !self.slatedForDeletetion &&
+                self.room.abstractRoom.name.StartsWith("KTB"))
+            {
+                if (self.room.abstractRoom.name.StartsWith("KTB_STG"))
+                {
+                    self.lightsource.color = new Color(1f, 0f, 0f);
+                }
+                else
+                {
+                    self.lightsource.color = new Color(0.7f, 0.7f, 0.7f);
+                }
+            }
+        }
+
+        private static void FlashCol(On.ZapCoil.ZapFlash.orig_InitiateSprites orig, ZapCoil.ZapFlash self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        {
+            orig(self, sLeaser, rCam);
+            if (self != null && self.room != null && self.room.world != null && !self.slatedForDeletetion &&
+                self.room == rCam.room && self.room.abstractRoom.name.StartsWith("KTB"))
+            {
+                if (self.room.abstractRoom.name.StartsWith("KTB_STG"))
+                {
+                    sLeaser.sprites[0].color = new Color(1f, 0f, 0f);
+                }
+                else
+                {
+                    sLeaser.sprites[0].color = new Color(0.8f, 0.8f, 0.8f);
+                }
+            }
+        }
 
         public static Color InspektaCheka(orig_InspectorTrueColor orig, global::MoreSlugcats.Inspector self)
         {
             if (self?.room?.abstractRoom != null)
             {
                 string name = self.room.abstractRoom.name;
-                if (name.StartsWith("SL_UnbSTG") || name.StartsWith("SL_UnbKTB"))
+                if (name.StartsWith("KTB"))
                 {
-                    bool stg = name.StartsWith("SL_UnbSTG");
+                    bool stg = name.StartsWith("KTB_STG");
                     Vector3 iteratorColour = Custom.RGB2HSL(stg ? new Color(0.87f, 0.39f, 0.33f) : new Color(0.29f, 0.39f, 0.47f));
                     HSLColor hslcolor = new HSLColor(iteratorColour.x, iteratorColour.y, iteratorColour.z);
                     hslcolor.saturation = 0.9f;
@@ -41,12 +76,10 @@ namespace Unbound
 
         private static void DrawRedzap(On.ZapCoil.orig_DrawSprites orig, ZapCoil self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
-            if (self != null && self.room != null && self.room.world != null && !self.slatedForDeletetion && self.room == rCam.room &&
-                self.room.game.session.characterStats.name.value == "NCRunbound")
+            if (self != null && self.room != null && self.room.world != null && !self.slatedForDeletetion &&
+                self.room == rCam.room && self.room.abstractRoom.name.StartsWith("KTB"))
             {
-                string name = self.room.abstractRoom.name;
-
-                if (name.StartsWith("SL_UnbSTG"))
+                if (self.room.abstractRoom.name.StartsWith("KTB_STG"))
                 {
                     float num = Mathf.Lerp(self.lastTurnedOn, self.turnedOn, timeStacker);
                     sLeaser.sprites[0].alpha = num;
@@ -99,7 +132,7 @@ namespace Unbound
                     sLeaser.sprites[0].color = new Color(1f, Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num, Mathf.InverseLerp(0f, 0.5f, self.zapLit) * num);
                     return;
                 }
-                if (name.StartsWith("SL_UnbKTB"))
+                else
                 {
                     float num = Mathf.Lerp(self.lastTurnedOn, self.turnedOn, timeStacker);
                     sLeaser.sprites[0].alpha = num;
@@ -164,7 +197,7 @@ namespace Unbound
             {
                 string name = self.room.abstractRoom.name;
 
-                if (name.StartsWith("SL_UnbSTG"))
+                if (name.StartsWith("KTB_STG"))
                 {
                     self.lightSource = new LightSource(placedObject.pos, false, new Color(1f, 0f, 0f), self);
                     placedInRoom.AddObject(self.lightSource);
@@ -173,7 +206,7 @@ namespace Unbound
                     self.lightSource.affectedByPaletteDarkness = 0.5f;
                     return;
                 }
-                else if (name.StartsWith("SL_UnbKTB"))
+                else if (name.StartsWith("KTB_"))
                 {
                     self.lightSource = new LightSource(placedObject.pos, false, new Color(0f, 0.75f, 1f), self);
                     placedInRoom.AddObject(self.lightSource);
@@ -203,7 +236,7 @@ namespace Unbound
             {
                 string name = self.room.abstractRoom.name;
 
-                if (name.StartsWith("SL_UnbSTG"))
+                if (name.StartsWith("KTB_STG"))
                 {
                     TriangleMesh.Triangle[] array = new TriangleMesh.Triangle[6];
                     for (int i = 0; i < 6; i++)
@@ -227,7 +260,7 @@ namespace Unbound
                     self.AddToContainer(sLeaser, rCam, null);
                     return;
                 }
-                if (name.StartsWith("SL_UnbKTB"))
+                if (name.StartsWith("KTB_"))
                 {
                     TriangleMesh.Triangle[] array = new TriangleMesh.Triangle[6];
                     for (int i = 0; i < 6; i++)

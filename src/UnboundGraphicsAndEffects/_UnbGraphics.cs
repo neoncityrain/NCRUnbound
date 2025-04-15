@@ -268,7 +268,7 @@
                     #endregion
 
                     self.player.GetNCRunbound().wingscales.SetWingColors(bodycol, effectcol);
-                    self.player.GetNCRunbound().wingscales.ApplyPalette(sLeaser, rCam, palette);
+                    self.player.GetNCRunbound().wingscales.ApplyPalette(sLeaser, rCam);
                 }
             }
             catch (Exception e)
@@ -301,8 +301,18 @@
                     try
                     {
                         int spriteNumber;
-                        spriteNumber = 13 + (!wingscalesDisabled ? getUnb.wingscales.numberOfSprites : 0);
-                        self.gownIndex = spriteNumber - 1;
+                        spriteNumber = 12;
+
+                        if (!wingscalesDisabled)
+                        {
+                            spriteNumber += getUnb.wingscales.numberOfSprites;
+                        }
+
+                        if (ModManager.MSC)
+                        {
+                            spriteNumber += 1;
+                            self.gownIndex = spriteNumber - 1;
+                        }
 
                         if (!ringsDisabled)
                         {
@@ -553,7 +563,8 @@
                     }
                     NCRDebug.Log("Player base sprite number is 24, with all DLC.");
                     NCRDebug.Log("The game expects Unbound to have this number of sprites: " +
-                        (13 + (getUnb.WingscalesDisabled ? 0 : getUnb.wingscales.numberOfSprites) +
+                        (12 + (ModManager.MSC ? 1 : 0) +
+                        (getUnb.WingscalesDisabled ? 0 : getUnb.wingscales.numberOfSprites) +
                         (getUnb.GraphicsDisabled ? 0 : 7) +
                         (getUnb.RingsDisabled ? 0 : 2) +
                         self.mudSpriteCount
@@ -1023,7 +1034,7 @@
                             break;
                     }
                 }
-                else if (self.useJollyColor)
+                else if (ModManager.JollyCoop && self.useJollyColor)
                 {
                     effectcol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 2);
                     eyecol = PlayerGraphics.JollyColor(self.player.playerState.playerNumber, 1);
@@ -1199,9 +1210,16 @@
                         }
                         #endregion
                     }
+                    #region Pupils
+                    if (!unbGet.WingscalesDisabled)
+                    {
+                        self.player.GetNCRunbound().wingscales.SetWingColors(bodycol, effectcol);
+                        self.player.GetNCRunbound().wingscales.ApplyPalette(sLeaser, rCam);
+                    }
+                    #endregion
                     if (!unbGet.TailDisabled)
                     {
-                        sLeaser.sprites[unbGet.TailPatternInt].color = effectcol; // tail
+                        // sLeaser.sprites[unbGet.TailPatternInt].color = effectcol; // tail
                     }
                 }
                 #endregion
@@ -1268,7 +1286,7 @@
                     try
                     {
                         // wingscales set
-                        var wingscaleStart = ModManager.MSC ? 12 : 11;
+                        var wingscaleStart = 12;
                         // as msc adds the gown to the player container, the number at which wingscales start should change
                         self.player.GetNCRunbound().wingscales = new UnboundWingScales(self, wingscaleStart);
                     }

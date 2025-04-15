@@ -1,0 +1,4 @@
+DangerType: Blizzard
+Grime: 0
+WaterReflectionAlpha: 1
+Palette: 40

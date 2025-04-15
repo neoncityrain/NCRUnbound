@@ -5,7 +5,7 @@ NCRunbound : REPLACEROOM : MS_FARSIDE : MS_UNBFARSIDE
 NCRunbound : REPLACEROOM : MS_aeriestart : MS_unbaeriestart
 NCRunbound : REPLACEROOM : MS_AI : MS_unbAI
 NCRunbound : REPLACEROOM : MS_CORTEX : MS_UNBCORTEX
-// NCRunbound : REPLACEROOM : MS_HEART : MS_UNBHEART
+NCRunbound : REPLACEROOM : MS_HEART : MS_UNBHEART
 NCRunbound : REPLACEROOM : MS_ARTERY12 : MS_UNBARTERY12
 NCRunbound : REPLACEROOM : MS_ARTERY11 : MS_UNBARTERY11
 NCRunbound : REPLACEROOM : MS_bitteraccess : MS_unbbitteraccess
@@ -44,6 +44,7 @@ NCRunbound : MS_UNBI06 : 2 : MS_VENT03
 NCRunbound : MS_UNBI06 : 3 : MS_I13
 NCRunbound : MS_MEM04 : MS_I06 : MS_UNBI06
 NCRunbound : MS_VENT03 : MS_AIR01 : MS_UNBI06
+NCRunbound : MS_AIR01 : MS_VENT03 : DISCONNECTED
 NCRunbound : MS_I13 : MS_I06 : MS_UNBI06
 
 NCRunbound : MS_UNBI07 : 1 : MS_S03
@@ -84,9 +85,9 @@ NCRunbound : MS_I08 : MS_VENT16 : MS_UNBDMI09
 // ----------------------------------------------------------------------------------------------------------------------
 // msheart fix
 NCRunbound : MS_HEART : MS_CORE : DISCONNECTED
-// NCRunbound : MS_HEART : 2 : MS_unbbitterstart
+NCRunbound : MS_HEART : 2 : MS_unbbitterstart
 NCRunbound : MS_HEART : 3 : MS_UNBCORE
-// NCRunbound : MS_unbbitterstart : 1 : MS_HEART
+NCRunbound : MS_unbbitterstart : 1 : MS_HEART
 
 // ----------------------------------------------------------------------------------------------------------------------
 NCRunbound : MS_VENT01 : MS_I03 : DISCONNECTED
@@ -111,6 +112,9 @@ NCRunbound : MS_DMU04 : 4 : MS_AIR02
 // connecting unbound rooms to vanilla because room connections are little bastards
 // ----------------------------------------------------------------------------------------------------------------------
 
+NCRunbound : MS_CAPI01 : MS_ARTERY01 : DISCONNECTED
+NCRunbound : MS_ARTERY01 : MS_CAPI01 : DISCONNECTED
+
 NCRunbound : MS_O03 : 1 : MS_DMO01
 NCRunbound : MS_DMO01 : 2 : MS_O03
 
@@ -118,6 +122,7 @@ NCRunbound : HIDEROOM : MS_VENT01
 NCRunbound : HIDEROOM : MS_AIR01
 NCRunbound : HIDEROOM : MS_I06
 NCRunbound : HIDEROOM : MS_VENT04
+NCRunbound : HIDEROOM : MS_CAPI01
 END CONDITIONAL LINKS
 
 

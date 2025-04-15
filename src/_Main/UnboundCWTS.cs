@@ -12,6 +12,7 @@ namespace Unbound
             public int TailPatternInt;
             public int UnboundJumpringStartSprite;
             public int GeneralGraphicStartSprite;
+            public int UnboundWingscaleStartSprite;
             // graphics things
 
             public bool IsNCRUnbModcat;

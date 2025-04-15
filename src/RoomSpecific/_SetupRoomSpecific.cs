@@ -9,7 +9,7 @@ namespace Unbound
     {
         public static void KTBIntroSetup(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
         {
-            if (room?.abstractRoom?.name != null && room.abstractRoom.name == "SL_UnbKTBfall")
+            if (room?.abstractRoom?.name != null && room.abstractRoom.name == "KTB_fall")
             {
                 room.AddObject(new KTBIntro(room));
             }
@@ -273,7 +273,8 @@ namespace Unbound
                 self.room.game.AllPlayersRealized && !self.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
                 self.room.game.Players.Count > 0
                 )
-            {
+                {
+                    #region Old Intro
                     if (!ModManager.Expedition || !Custom.rainWorld.ExpeditionMode)
                     {
                         if (world.region.name == "MS" && ModManager.MSC)
@@ -281,7 +282,7 @@ namespace Unbound
                             NCRDebug.Log("Unbound's MS start detected, triggering secondary intro!");
                             self.room.AddObject(new UnboundIntro());
                         }
-                        else if (self.room.abstractRoom.name == "SL_UnbKTBS")
+                        else if (self.room.abstractRoom.name == "KTB_S01")
                         {
                             NCRDebug.Log("Unbound in KTB Shelter!");
                         }
@@ -296,11 +297,8 @@ namespace Unbound
                         else
                         {
                             NCRDebug.Log("Non-standard Unbound start detected?");
-                            self.objectInStomach = new DataPearl.AbstractDataPearl(self.room.world,
-                                AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
-                                new WorldCoordinate(self.room.abstractRoom.index, -1, -1, 0), self.room.game.GetNewID(), -1, -1, null,
-                                UnboundEnums.unboundKarmaPearl);
                         }
+                        #endregion
                     }
                     else
                     {

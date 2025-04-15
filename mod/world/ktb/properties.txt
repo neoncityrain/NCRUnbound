@@ -1,0 +1,5 @@
+Palette: 10
+Subregion: Knowledge That Binds
+Subregion: The Guts
+Room Setting Templates: Knowledge, Star, Snow
+Broken Shelters: NCRunbound: KTB_S01

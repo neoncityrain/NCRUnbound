@@ -223,9 +223,8 @@ public class UnboundWingScales
         this.effectColor = effectCol;
     }
 
-    public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+    public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
     {
-        this.palette = palette;
         for (int i = this.startSprite + this.scalesPositions.Length - 1; i >= this.startSprite; i--)
         {
             sLeaser.sprites[i].color = this.baseColor;
@@ -251,7 +250,6 @@ public class UnboundWingScales
     public PlayerGraphics pGraphics;
     public int numberOfSprites;
     public int startSprite;
-    public RoomPalette palette;
     public SpritesOverlap[] spritesOverlap;
     public Color baseColor;
     public Color effectColor;

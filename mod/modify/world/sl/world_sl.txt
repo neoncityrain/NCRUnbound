@@ -37,6 +37,15 @@ NCRunbound : EXCLUSIVEROOM : SL_LMBRIDGE02
 NCRunbound : EXCLUSIVEROOM : SL_LMBRIDGE04 // this is the artificer bridge and thus only has the tower14 connection
 // connecting base SL to SLLM
 
+NCRunbound : HIDEROOM : SL_A02
+NCRunbound : HIDEROOM : SL_B02
+{MSC}NCRunbound : HIDEROOM : SL_B04
+NCRunbound : HIDEROOM : SL_C01
+{MSC}NCRunbound : HIDEROOM : SL_C03
+{MSC}NCRunbound : HIDEROOM : BRIDGE01
+{MSC}NCRunbound : HIDEROOM : SL_WALL06
+// hiding unused rooms
+
 {MSC}NCRunbound : SL_A11 : SL_C03 : SL_LMC03
 NCRunbound : SL_A13 : SL_C01 : SL_LMC01
 NCRunbound : SL_A14 : SL_B02 : SL_LMB02
@@ -46,7 +55,6 @@ NCRunbound : SL_C11 : SL_B02 : SL_LMB02
 {MSC}NCRunbound : SL_E01 : SL_C03 : SL_LMC03
 {MSC}NCRunbound : SL_E01 : SL_B04 : SL_LMB04
 {MSC}NCRunbound : SL_BRIDGEEND : SL_BRIDGE01 : SL_LMBRIDGE01
-// disconnecting vanilla rooms
 
 {MSC}NCRunbound : SL_BRIDGE01 : SL_BRIDGEEND : DISCONNECTED
 NCRunbound : SL_A02 : SL_C01 : DISCONNECTED
@@ -60,6 +68,8 @@ NCRunbound : SL_C01 : SL_B01 : DISCONNECTED
 {MSC}NCRunbound : SL_C03 : SL_B04 : DISCONNECTED
 {MSC}NCRunbound : SL_C03 : SL_A11 : DISCONNECTED
 {MSC}NCRunbound : SL_C03 : SL_E01 : DISCONNECTED
+// disconnecting vanilla rooms
+
 // ----------------------------------------------------------------------------------------------------------------------
 
 NCRunbound : SL_LMA02 : 1 : SL_A17
@@ -134,22 +144,5 @@ SL_LMS06 : SL_LMTOWER09 : SHELTER
 SL_UNBWALL06 : DISCONNECTED, DISCONNECTED
 SL_UNBWALL04 : DISCONNECTED, DISCONNECTED, SL_UNBWALL02
 SL_UNBWALL02 : SL_UNBWALL04, DISCONNECTED, DISCONNECTED
-
-// KTB-specific rooms
-SL_UnbKTBou : SL_UnbKTBS, DISCONNECTED, SL_UnbKTBil
-// "ou", outer leg
-SL_UnbKTBS : SL_UnbKTBou : SHELTER
-// "s", shelter
-SL_UnbKTBil : SL_UnbKTBLab, SL_UnbKTBfall, SL_UnbKTBou
-// "il", inner leg
-SL_UnbKTBLab : SL_UnbKTBil : SWARMROOM
-// broken lab
-SL_UnbKTBfall : SL_UnbKTBil, DISCONNECTED
-
-// STG-specific rooms
-SL_UnbSTGch : DISCONNECTED, SL_UnbSTGfa, DISCONNECTED
-// "ch", chamber
-SL_UnbSTGfa : SL_UnbSTGch, DISCONNECTED
-// "fa", fake ai
 END ROOMS
 [ENDMERGE]

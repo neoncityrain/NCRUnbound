@@ -45,7 +45,6 @@ internal class HooksOnly
         On.OverseerAbstractAI.RoomAllowed += GammaAITweaks.RoomAllowed; // allows gamma into shelters
         On.OverseerCommunicationModule.FoodDelicousScore += GammaAITweaks.StopLeadingToFoodUnboundCantEat; // notes unbounds diet, rather than leading him to anything
         On.OverseerAbstractAI.HowInterestingIsCreature += GammaAITweaks.InterestInUnbound; // unbound is always interesting
-        // On.OverseerAI.Update += GammaAITweaks.GammaAIUpdate; // update gamma ai
         On.OverseerAI.HoverScoreOfTile += GammaAITweaks.HoverScore; // changes gammas hoverscore on tiles
         On.Overseer.Die += GammaAITweaks.DontRespawnImmediately; // gamma does not revive when killed by non-slugcat creatures
 

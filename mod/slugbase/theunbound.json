@@ -42,7 +42,7 @@
 		"world_state": ["NCRunbound", "NCRflicker", "Red", "Artificer" ],
 		"cycle_length_min": 5.5,
 		"cycle_length_max": 12,
-		"start_room": [ "SL_UnbKTBS", "SL_A06" ],
+		"start_room": [ "KTB_S01", "SL_A06" ],
 		"timeline_before": "Red",
 		"timeline_after": "Artificer",
 		

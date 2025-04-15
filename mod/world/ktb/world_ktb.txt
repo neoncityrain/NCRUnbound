@@ -1,0 +1,37 @@
+ROOMS
+KTB_S01 : KTB_ou : SHELTER
+// shelters
+
+// KTB-specific rooms =========================================================================
+KTB_ou : KTB_S01, DISCONNECTED, KTB_il
+// "ou", outer leg
+KTB_il : KTB_Lab01, KTB_fall, KTB_ou
+// "il", inner leg
+KTB_Lab01 : KTB_il : SWARMROOM
+KTB_fall : KTB_il, DISCONNECTED
+
+// STG-specific rooms =========================================================================
+KTB_STGch : KTB_STGshaft, KTB_STGfa, DISCONNECTED, DISCONNECTED
+// "ch", chamber
+KTB_STGfa : KTB_STGch, KTB_STGA01
+// "fa", fake ai
+KTB_STGA01 : DISCONNECTED, KTB_STGfa
+KTB_STGshaft : KTB_STGk5, KTB_STGch
+
+
+KTB_STGk5 : KTB_STGk4, KTB_STGshaft
+KTB_STGk4 : KTB_STGk3, KTB_STGk5
+KTB_STGk3 : KTB_STGk2, KTB_STGS01, KTB_STGk4
+KTB_STGk2 : DISCONNECTED, KTB_STGk3
+
+KTB_STGS01 : KTB_STGk3 : SHELTER
+// karma rooms
+END ROOMS
+
+CREATURES
+// ============================================================================================================
+
+KTB_Lab01 : 2-Inspector
+
+// ============================================================================================================
+END CREATURES

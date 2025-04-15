@@ -10,7 +10,7 @@ pupSpawnChance: 0.03
 Broken Shelters: NCRunbound: SL_S11
 Room Setting Templates: Fog, Sewer
 Subregion: Putrescine Reservoir
-Subregion: Rigir Mortis
+Subregion: Rigor Mortis
 Subregion: The Quiet
 Room_Attr: LM_A02: Scavenger-Like,ScavengerElite-Like,
 Room_Attr: LM_B02: Vulture-Avoid,Scavenger-Avoid,Overseer-Like,KingVulture-Avoid,ScavengerElite-Avoid,
