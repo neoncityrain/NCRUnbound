@@ -1,0 +1,7 @@
+Template: ms_settingstemplate_artery
+RumbleIntensity: 0.5217391
+RandomItemDensity: 0
+EffectColorA: 21
+Effects: WaterDepth-0-273-21, BrokenZeroG-0.6086956-272-77, ElectricDeath-0.3369565-30-30, WaterFluxMinLevel-0.3043478-20-20, WaterFluxMaxLevel-0.3043478-40-40, 
+PlacedObjects: LightFixture><233.913><95.18013><RedSubmersible~17.32051~-10~0, LightFixture><880.2285><322.8105><RedSubmersible~47.19618~-332.7199~0, LightFixture><1166.359><581.3323><RedLight~-104.6795~27~0, LightFixture><1357.576><280.6553><RedSubmersible~21.3205~3~0, LightFixture><2134.004><408.1447><RedSubmersible~17.32051~-10~0, LightFixture><2726.205><647.9722><RedLight~17.32051~-10~0, LightSource><479.5742><255.368><0.326087~EffectColor1~896~599~78~-260.3975~0~0~None~0~0, 
+FadePalette: 27, 0.1630435, 0.1630435, 0.1521739

@@ -51,6 +51,7 @@ namespace Unbound
                 }
                 else
                 {
+                    NCRDebug.Log("Unbound load! Pls don't be an asshole this time you stupid little rat");
                     UnbGraphics.Init(); // initialise graphics
                     UnbGraphics.GraphicsHooks(); // non-DMS exclusive hooks
                 }

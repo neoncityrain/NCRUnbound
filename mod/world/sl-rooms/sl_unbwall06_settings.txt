@@ -1,16 +1,18 @@
-Template: NONE
 RainIntensity: 1
 RumbleIntensity: 1
-WaveSpeed: 0.5876575
-WaveLength: 0.7061713
-WaveAmplitude: 0.04999996
+WaveSpeed: 0.5001882
+WaveLength: 0.9999059
+WaveAmplitude: 0.04049996
 SecondWaveLength: 0.1666667
 SecondWaveAmplitude: 0
-Clouds: 0.4565217
+Clouds: 1
 Grime: 0.3804348
+BkgDroneVolume: 0.0391305
 RandomItemDensity: 0.3913043
 Palette: 13
 EffectColorA: 12
 EffectColorB: 6
+Effects: Fog-0.6956522-20-20, 
 PlacedObjects: DangleFruit><1187.839><5116.369><0~0~2~3, DangleFruit><1268.209><5050.304><0~0~2~3, 
-FadePalette: 10, 0.6956522, 0.6956522, 0.6956522, 0.7173913, 0.6956522, 0.7065217, 0.7065217, 0.7173913
+AmbientSounds: OMNI><AM_WAT-Sea01.ogg><654.1245><638.5935><0><1, OMNI><AM_WIN-HowlingWnd.ogg><758.5643><553.8242><0.1956522><0.8043478, OMNI><AM_WIN-StrongWnd2.ogg><737.6849><504.8109><0.4456522><0.9413043, 
+FadePalette: 10, 0.7188519, 0.6956522, 0.6956522, 0.7173913, 0.6956522, 0.7065217, 0.7065217, 0.7251245

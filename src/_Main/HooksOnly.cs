@@ -79,8 +79,8 @@ internal class HooksOnly
         KarmaGateLock.Init();
         // room specific
         Revgen.HookThatThang();
-        FlickMech.MakeFlickerReal();
-        FlickSpearMechanics.Init();
+        //FlickMech.MakeFlickerReal();
+        //FlickSpearMechanics.Init();
         UnbCatStats.Init();
         EndUnb.Init();
         Techgen.Init();
