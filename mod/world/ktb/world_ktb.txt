@@ -1,3 +1,21 @@
+CONDITIONAL LINKS
+Spear,NCRtech : EXCLUSIVEROOM : KTB_STGai
+Spear,NCRtech : HIDEROOM : KTB_STGfa
+
+Spear,NCRtech : KTB_STGfa : KTB_STGch : DISCONNECTED
+// to chamber disconnect
+Spear,NCRtech : KTB_STGfa : KTB_STGA01 : DISCONNECTED
+// to a01 disconnect
+Spear,NCRtech : KTB_STGai : 2 : KTB_STGA01
+// to a01 connect
+Spear,NCRtech : KTB_STGai : 1 : KTB_STGch
+// to chamber connect
+Spear,NCRtech : KTB_STGch : KTB_STGfa : KTB_STGai
+// chamber to ai
+Spear,NCRtech : KTB_STGA01 : KTB_STGfa : KTB_STGai
+// a01 to ai
+END CONDITIONAL LINKS
+
 ROOMS
 KTB_S01 : KTB_ou : SHELTER
 // shelters
@@ -17,15 +35,19 @@ KTB_STGfa : KTB_STGch, KTB_STGA01
 // "fa", fake ai
 KTB_STGA01 : DISCONNECTED, KTB_STGfa
 KTB_STGshaft : KTB_STGk5, KTB_STGch
+KTB_STGH01 : KTB_STGk1, DISCONNECTED
 
 
 KTB_STGk5 : KTB_STGk4, KTB_STGshaft
 KTB_STGk4 : KTB_STGk3, KTB_STGk5
 KTB_STGk3 : KTB_STGk2, KTB_STGS01, KTB_STGk4
-KTB_STGk2 : DISCONNECTED, KTB_STGk3
-
+KTB_STGk2 : KTB_STGk1, KTB_STGk3
+KTB_STGk1 : KTB_STGH01, DISCONNECTED, KTB_STGk2
+//  karma rooms
 KTB_STGS01 : KTB_STGk3 : SHELTER
-// karma rooms
+
+// technician/spearm rooms =========================================================================
+KTB_STGai : DISCONNECTED, DISCONNECTED
 END ROOMS
 
 CREATURES

@@ -23,13 +23,13 @@ namespace Unbound
         // pebbssubbehaviors
         public static Oracle.OracleID NCRKTB;
         public static Oracle.OracleID NCRSTG;
+        public static Oracle.OracleID NCRARK;
         // oracles
-        public static Region stgRegion;
-        public static Region ktbRegion;
-        // regions
         public static SmokeSystem.SmokeType UnboundSmoke;
         // smoke
         public static SlugcatStats.Timeline UnboundTimeline;
+
+
 
         public static void RegisterValues()
         {
@@ -40,8 +40,9 @@ namespace Unbound
             NCRReverb = new SlugcatStats.Name("NCRreverb", false);
             NCROracle = new SlugcatStats.Name("NCRoracle", false);
             // slugcats
-            //NCRKTB = new("NCRKTB", true);
-            //NCRSTG = new("NCRSTG", true);
+            NCRKTB = new Oracle.OracleID("NCRKTB", true);
+            NCRSTG = new Oracle.OracleID("NCRSTG", true);
+            NCRARK = new Oracle.OracleID("NCRARK", true);
             // iterators
             unbKarmaPearlConv = new Conversation.ID("unbKarmaPearlConv", true);
             unbSlumberConv = new Conversation.ID("unbSlumberConv", true);
@@ -65,8 +66,6 @@ namespace Unbound
             if (unbKarmaPearlConv != null) { unbKarmaPearlConv.Unregister(); unbKarmaPearlConv = null; }
             if (UnbSlumberParty != null) { UnbSlumberParty.Unregister(); UnbSlumberParty = null; }
             if (UnbSlumberPartySub != null) { UnbSlumberPartySub.Unregister(); UnbSlumberPartySub = null; }
-            if (NCRKTB != null) { NCRKTB.Unregister(); NCRKTB = null; }
-            if (NCRSTG != null) { NCRSTG.Unregister(); NCRSTG = null; }
             if (UnboundSmoke != null) { UnboundSmoke.Unregister(); UnboundSmoke = null; }
         }
 
@@ -75,7 +74,9 @@ namespace Unbound
             // for items, creatures, ect that may break the game if unregistered during actual gameplay
             if (unboundKarmaPearl != null) { unboundKarmaPearl.Unregister(); unboundKarmaPearl = null; }
             if (MSCOnly.UnbPebbles != null) { MSCOnly.UnbPebbles.Unregister(); MSCOnly.UnbPebbles = null; }
-            if (stgRegion != null) { stgRegion = null; }
+            if (NCRKTB != null) { NCRKTB.Unregister(); NCRKTB = null; }
+            if (NCRSTG != null) { NCRSTG.Unregister(); NCRSTG = null; }
+            if (NCRARK != null) { NCRARK.Unregister(); NCRARK = null; }
         }
 
         // end enums

@@ -1,0 +1,19 @@
+Template: NONE
+DangerType: None
+CeilingDrips: 0
+WaveSpeed: 0.5263417
+WaveLength: 0.9868292
+WaveAmplitude: 1.198955E-17
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0
+Grime: 0
+BkgDroneVolume: 0
+RandomItemDensity: 0
+Palette: 1431802
+EffectColorA: 18
+EffectColorB: 21
+Effects: SunBlock-1-14-118, Darkness-0-23-66, 
+PlacedObjects: LightSource><251.8286><590.934><0.3478261~EffectColor1~490~-491~-391~-20.39746~0~0~None~0~0, LightSource><747.3002><92.24152><0.4347826~EffectColor1~-497~521~-74~-88.39747~0~0~None~0~0, LightSource><233.0621><104.3183><0.2934783~EffectColor1~515~512~50~86.60254~0~0~None~0~0, LightSource><757.9443><591.9521><0.2608696~EffectColor1~-520~-512~107~16.60254~0~0~None~0~0, DeepProcessing><-57.76349><-30.94954><-170~756~1223~757~1188~-56~159~360~0.2065217~0.2608696~0.4347826, LightSource><155><677><0.2391304~Environment~161~-438~-329~-192.3975~0~0~None~0~0, LightSource><777><649><0.2391304~Environment~161~-438~-329~-192.3975~0~0~None~0~0, LightSource><799><71><0.2391304~Environment~161~-438~-329~-192.3975~0~0~None~0~0, DeepProcessing><-50><3><-170~756~1223~757~1188~-56~159~360~0.7826087~0.9782609~0.04347826, 
+AmbientSounds: OMNI><AM_IND-SuperStructure.ogg><828.1998><653.0092><0.4349982><0.6380841, OMNI><AM_WIN-StrongWnd2.ogg><649.244><654.55><0.3695652><1, OMNI><SO_SFX-DataTrans2.ogg><828.8108><578.3148><0.2608696><0.8434783, SPOT><SO_SFX-Heartbeat2.ogg><730.1763><262.5641><0.5543478><0.5695652><523.1763><-2.435913><50.64465><29.64465><0><0.7086958, SPOT><SO_SFX-Heartbeat1.ogg><647.1083><92.85889><0.6413044><0.55><530.1083><2.858887><-290.3553><154.6447><0><1, 
+FadePalette: 10, 0.6086956

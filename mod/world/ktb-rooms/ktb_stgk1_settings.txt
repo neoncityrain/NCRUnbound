@@ -1,0 +1,14 @@
+Template: ktb_settingstemplate_star
+DangerType: Blizzard
+RainIntensity: 0.7411118
+RumbleIntensity: 0
+WaveSpeed: 0.4870842
+WaveLength: 0.9935421
+WaveAmplitude: 1.209937E-08
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.7887908
+EffectColorA: 18
+Effects: Coldness-0-40-40, SkyBloom-0.07608695-50-50, Fog-0.7608696-60-60, Darkness-0.3557291-70-70, WaterDepth-0.1005322-80-80, 
+PlacedObjects: CustomDecal><416.9863><174.6334><-5.039612~268.7778~291.1927~271.6444~288.3469~-3.288879~-263.2396~33.42224~0~0.1725431~0~unq - plate1~0.6082658~0.1546647~0.6082658~0.1546647~0.6082658~0.1546647~0.6082658~0.1546647, CustomDecal><103.884><99.77774><-22.76672~470.9333~915.9197~481.6222~922.9197~0.7111053~-151.026~158.7334~0.2969994~0.6521739~0.3271174~pink survivalmuralcolour~0.3933653~0.1348164~0.3933653~0.1348164~0.3933653~0.1348164~0.3933653~0.1348164, LanternOnStick><267.1454><192.5795><-8~-62, LanternOnStick><205.1115><233.8943><24~-86, LanternOnStick><775.1136><198.6463><-20~-65, LightFixture><1624.424><174.3779><RedLight~17.32051~-10~71, LightFixture><1911.406><470.187><RedLight~17.32051~-10~14, LightFixture><1705.02><499.689><RedLight~17.32051~-10~59, 
+FadePalette: 4, 0.1521739, 0.3043478

@@ -494,7 +494,14 @@ namespace Unbound
                 (self.game.world.name == "DM" || self.game.world.name == "LM" || self.game.world.name == "SS"))
             {
                 self.on = true;
-                self.counter = 0;
+            }
+            else if (self?.game?.world != null && self.game.session != null &&
+                (self.game.session.characterStats.name.value == "NCRtech" ||
+                self.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Spear) &&
+                (self.game.world.name == "KTB"))
+            {
+                // broken gravity for ktb / stg is not broken, instead is fully functional
+                self.on = true;
             }
             else
             {

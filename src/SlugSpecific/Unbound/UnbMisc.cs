@@ -123,7 +123,9 @@ namespace Unbound
                 !self.player.room.game.IsArenaSession && self.player.room.game.IsStorySession &&
                 self.player.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon &&
                 (self.player.GetNCRunbound().IsUnbound || self.player.GetNCRunbound().IsTechnician) &&
-                !self.player.DreamState)
+                !self.player.DreamState &&
+                 self.player.room.world.name != "KTB"
+                )
             {
                 if (self.lightSource != null)
                 {

@@ -66,16 +66,20 @@ internal class HooksOnly
         // BLOODMOON =============================================================================================
         Tmsbb.Init();
 
-        // ECT =============================================================================================
-        Scenes.Init();
-        // gamma
-        Pearl.Init();
-        PearlConversations.Init();
+        // SAVE UTILS =============================================================================================
         PebblesDialogue.Init();
         PebblesCode.Init();
         GeneralOracleThings.Init();
         // iterators
         STGKTB.Init();
+        stgsstweak.Init();
+
+        // ECT =============================================================================================
+        Scenes.Init();
+        // gamma
+        Pearl.Init();
+        PearlConversations.Init();
+        // pearls
         KarmaGateLock.Init();
         // room specific
         Revgen.HookThatThang();
@@ -85,6 +89,9 @@ internal class HooksOnly
         EndUnb.Init();
         Techgen.Init();
         // slugcatstats exclusive things
+
+        // SAVE UTILS =============================================================================================
+        unboundSaveUtils.Init();
 
         // MOD EXCLUSIVE =============================================================================================
         // MORE SLUGCATS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------

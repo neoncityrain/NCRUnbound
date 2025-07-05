@@ -36,6 +36,9 @@
         <Reference Include="MonoMod.Utils">
           <HintPath>..\lib\MonoMod.Utils.dll</HintPath>
         </Reference>
+        <Reference Include="Rain Meadow">
+          <HintPath>..\lib\Rain Meadow.dll</HintPath>
+        </Reference>
         <Reference Include="RandomBuff">
           <HintPath>..\lib\RandomBuff.dll</HintPath>
         </Reference>

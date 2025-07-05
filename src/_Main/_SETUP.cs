@@ -4,7 +4,7 @@ using BepInEx;
 
 namespace Unbound
 {
-    [BepInPlugin("NCR.theunbound", "unbound", "3.0.2")]
+    [BepInPlugin("NCR.theunbound", "unbound", "3.0.3")]
 
     [BepInDependency("moreslugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("watcher", BepInDependency.DependencyFlags.SoftDependency)]
@@ -35,8 +35,18 @@ namespace Unbound
             On.GameSession.ctor += GameSessionOnctor;
             // clean up enums
 
+            On.RainWorld.OnModsInit += RainMeadowCheck; // apply rain meadow support
             On.RainWorld.PostModsInit += CheckOnMods;  // check for other mods, in the cases of dms or similar
             On.RainWorld.OnModsInit += UnbExtras.WrapInit(LoadResources); // load resources, such as graphics
+        }
+
+        private void RainMeadowCheck(On.RainWorld.orig_OnModsInit orig, RainWorld self)
+        {
+            if (ModManager.ActiveMods.Any(mod => mod.id == "henpemaz_rainmeadow"))
+            {
+                unbRainMeadow.Init();
+            }
+            orig(self);
         }
 
         private void CheckOnMods(On.RainWorld.orig_PostModsInit orig, RainWorld self)
