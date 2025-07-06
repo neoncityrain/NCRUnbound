@@ -1,0 +1,11 @@
+Template: ktb_settingstemplate_star
+DangerType: None
+WaveSpeed: 0.5
+WaveLength: 1
+WaveAmplitude: 0
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+EffectColorB: 5
+Effects: BrokenZeroG-0.8043478-40-40, 
+PlacedObjects: LightSource><37.85843><278.8319><0.7065216~EffectColor1~132~68~50~86.60254~0~0~None~0~0, LightSource><743.3706><442.0905><0.7065217~EffectColor1~-136~15~50~86.60254~0~0~None~0~0, WallMycelia><227.3731><170.0924><179~5, WallMycelia><560><169><179~5, WallMycelia><166><558><179~5, WallMycelia><654><541><179~5, WallMycelia><429><563><179~5, Mushroom><180.0268><148.5518><-345~64~12~16, Mushroom><201.07><142.8373><-347~78~2~3, OEsphere><392.0117><341.8004><33~32~50~86.60254~11~0.4782609, LightFixture><392.9486><624.2271><RedLight~17.32051~-10~67, LightFixture><93.33212><554.1088><RedLight~17.32051~-10~54, LightFixture><678.6292><550.9094><RedLight~-175.6795~-122~92, DangleFruit><209.965><544.3031><0~0~0~3, DangleFruit><229.9071><531.1771><0~0~0~3, DangleFruit><180.338><519.1174><0~0~0~3, FlareBomb><429.4267><132.3139><-321~-24~0~3, DangleFruit><600.604><557.8633><0~0~0~3, DangleFruit><582.5579><579.1941><0~0~0~3, SlimeMold><557.1869><128.929><0~0~0~3, SlimeMold><542.641><130.6082><-365~-81~0~3, JellyFish><463.1614><136.868><0~0~0~3, 
+FadePalette: 10, 0.3804348

@@ -21,11 +21,38 @@
         <Reference Include="..\lib\UnityEngine.dll">
           <Private>false</Private>
         </Reference>
+        <Reference Include="0Harmony">
+          <HintPath>..\lib\0Harmony.dll</HintPath>
+        </Reference>
+        <Reference Include="0Harmony20">
+          <HintPath>..\lib\0Harmony20.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp-firstpass">
+          <HintPath>..\lib\Assembly-CSharp-firstpass.dll</HintPath>
+        </Reference>
+        <Reference Include="BepInEx.Harmony">
+          <HintPath>..\lib\BepInEx.Harmony.dll</HintPath>
+        </Reference>
+        <Reference Include="BepInEx.Preloader">
+          <HintPath>..\lib\BepInEx.Preloader.dll</HintPath>
+        </Reference>
         <Reference Include="BuiltinBuffs">
           <HintPath>..\lib\BuiltinBuffs.dll</HintPath>
         </Reference>
+        <Reference Include="HarmonyXInterop">
+          <HintPath>..\lib\HarmonyXInterop.dll</HintPath>
+        </Reference>
         <Reference Include="HOOKS-Assembly-CSharp">
           <HintPath>..\lib\HOOKS-Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Mono.Cecil.Mdb">
+          <HintPath>..\lib\Mono.Cecil.Mdb.dll</HintPath>
+        </Reference>
+        <Reference Include="Mono.Cecil.Pdb">
+          <HintPath>..\lib\Mono.Cecil.Pdb.dll</HintPath>
+        </Reference>
+        <Reference Include="Mono.Cecil.Rocks">
+          <HintPath>..\lib\Mono.Cecil.Rocks.dll</HintPath>
         </Reference>
         <Reference Include="MonoMod.RuntimeDetour">
           <HintPath>..\lib\MonoMod.RuntimeDetour.dll</HintPath>
@@ -41,6 +68,9 @@
         </Reference>
         <Reference Include="RandomBuff">
           <HintPath>..\lib\RandomBuff.dll</HintPath>
+        </Reference>
+        <Reference Include="RegionKit">
+          <HintPath>..\lib\RegionKit.dll</HintPath>
         </Reference>
         <Reference Include="Unity.Mathematics">
           <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Rain World\RainWorld_Data\Managed\Unity.Mathematics.dll</HintPath>

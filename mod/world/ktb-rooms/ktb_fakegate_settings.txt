@@ -1,0 +1,15 @@
+Template: NONE
+DangerType: Blizzard
+RainIntensity: 0.01546677
+RumbleIntensity: 0
+WaveSpeed: 0.5000018
+WaveLength: 0.999999
+WaveAmplitude: 9.670226E-09
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.2783969
+Grime: 0.3685349
+Palette: 1431801
+EffectColorA: 8
+Effects: WaterDepth-0.03093288-20-20, FakeGate-1-27.86563-57.73334, Coldness-0-30-30, 
+FadePalette: 1431802, 0.5413269

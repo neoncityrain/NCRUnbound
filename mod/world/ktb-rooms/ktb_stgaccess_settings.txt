@@ -1,0 +1,16 @@
+DangerType: Blizzard
+RainIntensity: 0.1648102
+RumbleIntensity: 0
+WaveSpeed: 0.4999708
+WaveLength: 0.9999854
+WaveAmplitude: 8.864026E-09
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.7887908
+Grime: 0.2061366
+Palette: 1431801
+EffectColorA: 8
+EffectColorB: 18
+Effects: WaterDepth-0.0618661-20-20, Coldness-0-30-30, 
+PlacedObjects: LightSource><226.2374><230.3627><0.303362~EffectColor1~71.14584~171.8222~50~86.60254~0~0~Fade~0.1195652~0, LightSource><304><252><0.1511881~EffectColor1~133.1458~44.8222~50~86.60254~0~0~Fade~0.5543478~0, LightSource><775><275><0.1946663~EffectColor2~-91.85416~81.8222~50~86.60254~0~0~Fade~0.07608695~0, DangleFruit><774.9374><236.4302><0~0~2~3, DangleFruit><735.9243><255.0649><0~0~2~3, DangleFruit><694.1853><247.5752><0~0~2~3, 
+FadePalette: 1431802, 0.6365376

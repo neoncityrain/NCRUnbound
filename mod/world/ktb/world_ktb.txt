@@ -16,6 +16,7 @@ Spear,NCRtech : KTB_STGA01 : KTB_STGfa : KTB_STGai
 // a01 to ai
 END CONDITIONAL LINKS
 
+
 ROOMS
 KTB_S01 : KTB_ou : SHELTER
 // shelters
@@ -27,15 +28,27 @@ KTB_il : KTB_Lab01, KTB_fall, KTB_ou
 // "il", inner leg
 KTB_Lab01 : KTB_il : SWARMROOM
 KTB_fall : KTB_il, DISCONNECTED
+KTB_FAKEGATE : KTB_STGAccess, KTB_I01
+
+KTB_I01 : DISCONNECTED, DISCONNECTED, KTB_FAKEGATE
+KTB_B01 : DISCONNECTED, DISCONNECTED, DISCONNECTED
+
+KTB_fa : KTB_knowledgechamber, DISCONNECTED
+KTB_knowledgechamber : DISCONNECTED, KTB_fa
+
+// between =========================================================================
+KTB_STGAccess : KTB_FAKEGATE, KTB_STGH01, DISCONNECTED, KTB_S02
+KTB_S02 : KTB_STGAccess : SHELTER
 
 // STG-specific rooms =========================================================================
 KTB_STGch : KTB_STGshaft, KTB_STGfa, DISCONNECTED, DISCONNECTED
 // "ch", chamber
 KTB_STGfa : KTB_STGch, KTB_STGA01
 // "fa", fake ai
-KTB_STGA01 : DISCONNECTED, KTB_STGfa
+KTB_STGA01 : KTB_STGS02, KTB_STGfa
 KTB_STGshaft : KTB_STGk5, KTB_STGch
-KTB_STGH01 : KTB_STGk1, DISCONNECTED
+KTB_STGH01 : KTB_STGk1, KTB_STGAccess
+KTB_STGS02 : KTB_STGA01 : SHELTER
 
 
 KTB_STGk5 : KTB_STGk4, KTB_STGshaft
@@ -54,6 +67,7 @@ CREATURES
 // ============================================================================================================
 
 KTB_Lab01 : 2-Inspector
+KTB_STGS02 : 1-Inspector
 
 // ============================================================================================================
 END CREATURES

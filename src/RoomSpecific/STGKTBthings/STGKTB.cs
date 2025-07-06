@@ -1,5 +1,4 @@
 ﻿using System;
-using static Unbound.GammaVisuals;
 
 namespace Unbound
 {

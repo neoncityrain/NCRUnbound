@@ -1,0 +1,13 @@
+DangerType: Blizzard
+RainIntensity: 0.0326087
+RumbleIntensity: 0
+WaveSpeed: 0.4999871
+WaveLength: 0.9999936
+WaveAmplitude: 3.303749E-08
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.8804348
+Grime: 0.3043478
+Palette: 1431801
+PlacedObjects: LanternOnStick><520.9181><241.1416><-12~-100, CustomDecal><266.4092><37.67819><-116~503~619~549~580~-115~-353~122~0.3043478~1~0.2173913~pink violencemuralcolour~1~0.2282609~1~0.2282609~1~0.2282609~1~0.2282609, Lantern><594.1115><171.6058><0~0~0~9, FirecrackerPlant><599.8469><177.6287><0~0~0~3, 
+FadePalette: 1431804, 0.1086956
