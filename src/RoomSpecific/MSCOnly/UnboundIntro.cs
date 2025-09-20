@@ -1,14 +1,13 @@
 ﻿
-
 namespace Unbound
 {
     internal class UnboundIntro : UpdatableAndDeletable
     {
-        int unboundstarttimer;
+        int unboundStartTimer;
 
         public UnboundIntro()
         {
-
+            // this is important for some reason
         }
 
         public override void Update(bool eu)
@@ -30,7 +29,7 @@ namespace Unbound
 
             if (room.game.AllPlayersRealized)
             {
-                if (unboundstarttimer == 1)
+                if (unboundStartTimer == 1)
                 {
                     try
                     {
@@ -46,7 +45,7 @@ namespace Unbound
                     }
                 }
 
-                if (unboundstarttimer < 150)
+                if (unboundStartTimer < 150)
                 {
                     for (int i = 0; i < room.game.Players.Count; i++)
                     {
@@ -61,7 +60,7 @@ namespace Unbound
                         }
                     }
                 }
-                if (unboundstarttimer == 150)
+                if (unboundStartTimer == 150)
                 {
                     for (int i = 0; i < room.game.Players.Count; i++)
                     {
@@ -77,9 +76,9 @@ namespace Unbound
                     }
                 }
 
-                if (unboundstarttimer < 290)
+                if (unboundStartTimer < 290)
                 {
-                    unboundstarttimer++;
+                    unboundStartTimer++;
                     for (int i = 0; i < room.game.Players.Count; i++)
                     {
                         (room.game.Players[i].realizedCreature as Player).aerobicLevel = 1f;
@@ -91,7 +90,7 @@ namespace Unbound
                     }
                 }
 
-                if (unboundstarttimer == 290)
+                if (unboundStartTimer == 290)
                 {
                     for (int i = 0; i < room.game.Players.Count; i++)
                     {

@@ -1,14 +1,9 @@
-﻿using System;
-
-namespace Unbound
+﻿namespace Unbound
 {
     internal class unboundSaveUtils
     {
         public static void Init()
         {
-
         }
-
-
     }
 }

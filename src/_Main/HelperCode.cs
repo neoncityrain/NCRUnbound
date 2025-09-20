@@ -7,6 +7,7 @@ namespace Unbound
 
         public static void GamebreakingError(Exception e)
         {
+            #region UnityEngine.Log
             NCRDebug.LogException(e);
 
             NCRDebug.Log("Unbound has run into a potentially gamebreaking error. Error code: " + e);
@@ -33,8 +34,10 @@ namespace Unbound
             NCRDebug.Log("The more information you give, the better. Please be descriptive in your issue.");
             NCRDebug.Log("Github issue tracker: https://github.com/neoncityrain/NCRUnbound/issues");
             NCRDebug.Log("Steam issue tracker: https://steamcommunity.com/workshop/filedetails/discussion/3262661679/4343239957177356958/");
+            NCRDebug.Log("You may also reach out to me on Discord at NeonCityRain. I am in the Rain World server.");
 
             NCRDebug.Log("Standard error dialogue for the problem will now run. This will help to pinpoint the exact location that's running into problems, so please do not leave it out if reporting the error.");
+            #endregion
         }
     }
 }

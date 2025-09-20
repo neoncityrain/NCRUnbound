@@ -4,23 +4,30 @@ using BepInEx;
 
 namespace Unbound
 {
-    [BepInPlugin("NCR.theunbound", "unbound", "3.0.4")]
+    [BepInPlugin("NCR.theunbound", "unbound", "3.0.5")]
+    // good fuckin lerd. this started in feb 2023, for the record
 
     [BepInDependency("moreslugcats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("watcher", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("expedition", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("jollycoop", BepInDependency.DependencyFlags.SoftDependency)]
+    // rain world dlcs should always be soft dependencies that load prior to unbound.
+    // however i want to keep this mod open for non-dlc-owners
+    // expedition and jolly are both part of msc
 
     [BepInDependency("pushtomeow", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("dressmyslugcat", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("randombuff", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("expedition", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("DetailedIcon", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("henpemaz.rainmeadow", BepInDependency.DependencyFlags.SoftDependency)]
+    // non-dlc soft dependencies. often mods that simply cannot work with this one, without some
+    // kind of change on one of our ends.
 
 
-    public partial class UnbSetupThings : BaseUnityPlugin
+    public partial class setupUnboundRemix : BaseUnityPlugin
     {
-        public bool InitialCommit;
-        public bool SecondaryCommit;
+        public bool loadResources;
+        public bool checkForGraphicsLoading;
         private readonly UnbRemInterface UnbOptions;
 
         public void OnEnable()
@@ -44,6 +51,7 @@ namespace Unbound
         {
             if (ModManager.ActiveMods.Any(mod => mod.id == "henpemaz_rainmeadow"))
             {
+                NCRDebug.Log("Rain Meadow is present! Initiating Rain Meadow tweaks to allow Unbound to be playable.");
                 unbRainMeadow.Init();
             }
             orig(self);
@@ -51,9 +59,9 @@ namespace Unbound
 
         private void CheckOnMods(On.RainWorld.orig_PostModsInit orig, RainWorld self)
         {
-            if (!SecondaryCommit)
+            if (!checkForGraphicsLoading)
             {
-                SecondaryCommit = true;
+                checkForGraphicsLoading = true;
 
                 if (ModManager.ActiveMods.Any((ModManager.Mod mod) => mod.id == "dressmyslugcat"))
                 {
@@ -75,7 +83,7 @@ namespace Unbound
             // ^ the above is for loading any images within the game, usually used in _UnbGraphics.
             try
             {
-                if (!InitialCommit)
+                if (!loadResources)
                 {
                     UnboundEnums.RegisterValues(); // registers all enums linked to unbound
                     MachineConnector.SetRegisteredOI("NCR.theunbound", UnbOptions); // register remix menu
@@ -83,7 +91,7 @@ namespace Unbound
                     Futile.atlasManager.LoadAtlas("atlases/icons/Kill_Slugcat_NCRunbound"); // for detailed icons
                     Futile.atlasManager.LoadAtlas("atlases/icons/Multiplayer_Death_NCRunbound"); // as above
 
-                    InitialCommit = true;
+                    loadResources = true;
                 }
             }
             catch (Exception e)
@@ -94,6 +102,7 @@ namespace Unbound
 
         }
 
+        #region Remove Unnecessary Enums
         private void RainWorldGameOnShutDownProcess(On.RainWorldGame.orig_ShutDownProcess orig, RainWorldGame self)
         {
             orig(self);
@@ -102,17 +111,19 @@ namespace Unbound
         private void GameSessionOnctor(On.GameSession.orig_ctor orig, GameSession self, RainWorldGame game)
         {
             orig(self, game);
-            UnboundEnums.FullUnregister(); // as above
+            UnboundEnums.FullUnregister(); // as above, so below
         }
+        #endregion
 
-        public UnbSetupThings()
+        public setupUnboundRemix()
         {
             try
             {
-                UnbOptions = new UnbRemInterface(this, Logger);
+                UnbOptions = new UnbRemInterface(this, Logger); // to code in remix/remixinterface
             }
             catch (Exception ex)
             {
+                UnbHelperCode.GamebreakingError(ex);
                 Logger.LogError(ex);
                 NCRDebug.Log("Error with Unbound's remix interface: " + ex);
                 throw;

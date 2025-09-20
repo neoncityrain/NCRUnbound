@@ -12,9 +12,13 @@ namespace Unbound
                 (self.room.game.session.characterStats.name.value == "NCRunbound" ||
                 self.room.game.session.characterStats.name.value == "NCRtech"))
             {
-                // should ONLY respawn in the next cycle
+                // gamma and kochab should ONLY respawn in the next cycle.
+                // in basegame, being killed by a non-player allows the overseer to respawn
+                // however, unbound is meant to project onto and bond with the overseer, so.
+                // if theyre killed by a miros bird, too bad! theyre gone til next cycle
                 if (self.hologram != null)
                 {
+                    // be sure any lingering holograms are destroyed
                     self.hologram.Destroy();
                     self.hologram = null;
                 }
@@ -40,6 +44,7 @@ namespace Unbound
                 self.LoseAllGrasps();
                 self.abstractCreature.Die();
                 #endregion
+                // because the game crashes if i dont add this. siiiigh
             }
             else
             {

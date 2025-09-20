@@ -3,16 +3,17 @@ using System.IO;
 
 namespace Unbound
 {
-    public class Scenes
+    public class UnboundScenes
     {
         public static void Init()
         {
-            On.Menu.MenuScene.BuildScene += SetUpCustomScenes;
+            // here in case any other code is added and i dont wanna use hooksonly
         }
 
-        private static void SetUpCustomScenes(On.Menu.MenuScene.orig_BuildScene orig, MenuScene self)
+        public static void SetUpCustomScenes(On.Menu.MenuScene.orig_BuildScene orig, MenuScene self)
         {
-            SlugcatStats.Name slugcatBeingPlayed = SlugcatStats.Name.White;
+            SlugcatStats.Name slugcatBeingPlayed = SlugcatStats.Name.White; // be sure its not null
+
             if (self?.menu?.manager?.currentMainLoop != null &&
                 self.menu.manager.currentMainLoop is RainWorldGame)
             {
@@ -28,15 +29,16 @@ namespace Unbound
             {
                 if (slugcatBeingPlayed == UnboundEnums.NCRUnbound || slugcatBeingPlayed.value == "NCRunbound")
                 {
+                    // if unbound
                     if (self is InteractiveMenuScene)
                     {
                         (self as InteractiveMenuScene).idleDepths = new List<float>();
+                        // this is set up in the respective screens
                     }
 
                     if (self.sceneID == MenuScene.SceneID.SleepScreen)
                     {
-                        NCRDebug.Log("Unbound save! Building his sleep screen. Is Gamma in shelter? " +
-                        self.menu.manager.rainWorld.GetNCRModSaveData().IsGammaInMyShelter.ToString());
+                        NCRDebug.Log("Unbound save! Building his sleep screen.");
                         BuildUnboundSleepScreen(self);
                     }
                     else if (self.sceneID == MenuScene.SceneID.NewDeath)
@@ -52,6 +54,7 @@ namespace Unbound
                 else if (slugcatBeingPlayed == UnboundEnums.NCRTechnician ||
                     slugcatBeingPlayed.value == "NCRtech")
                 {
+                    // if technician
                     if (self is InteractiveMenuScene)
                     {
                         (self as InteractiveMenuScene).idleDepths = new List<float>();
@@ -61,6 +64,7 @@ namespace Unbound
                     {
                         NCRDebug.Log("Technician newdeath scene!");
                         BuildUnboundDeathScreen(self);
+                        // unbound and technician have the same base visuals, so they use the same death screen
                     }
                     else
                     {
@@ -69,27 +73,19 @@ namespace Unbound
                 }
                 else
                 {
-                    orig(self);
+                    orig(self); // not a supported modcat
                 }
             }
             else
             {
-                orig(self);
+                orig(self); // something is null and that aint my issue, go back to the start boss
             }
         }
 
         public static void BuildUnboundDeathScreen(MenuScene self)
         {
             self.sceneFolder = "Scenes" + Path.DirectorySeparatorChar.ToString() + "dead" + Path.DirectorySeparatorChar.ToString() + "unbdead";
-            SlugcatStats.Name a;
-            if (self.menu.manager.currentMainLoop is RainWorldGame)
-            {
-                a = (self.menu.manager.currentMainLoop as RainWorldGame).StoryCharacter;
-            }
-            else
-            {
-                a = self.menu.manager.rainWorld.progression.PlayingAsSlugcat;
-            }
+
             if (self.flatMode)
             {
                 self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder,
@@ -133,8 +129,9 @@ namespace Unbound
             self.sceneFolder = "Scenes" + Path.DirectorySeparatorChar.ToString() + "sleep screen - ncrunbound";
             if (!self.flatMode)
             {
-                if (self.menu.manager.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
-                // gamma is logged as resting in the shelter with unbound
+                if (self == null
+                    // this should be if gamma is resting in the same shelter as unbound.
+                    )
                 {
                     NCRDebug.Log("Gamma in Unbound shelter, drawing Gamma!");
 
@@ -163,7 +160,9 @@ namespace Unbound
                     (self as InteractiveMenuScene).idleDepths.Add(1.2f); // dark foregrass
                     return;
                 }
-                else if (self.menu.manager.rainWorld.GetNCRModSaveData().sweetDream)
+                else if (self == null
+                    // this should be if unbound is having a nice dream for once in his miserable little life.
+                    )
                 {
                     self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "sleep - 6", new Vector2(672f, 236f), 3.5f,
                     MenuDepthIllustration.MenuShader.Normal)); // background symbol on shelter
@@ -190,6 +189,7 @@ namespace Unbound
                 }
                 else
                 {
+                    // generic sleep screen
                     self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "sleep - 6", new Vector2(672f, 236f), 3.5f,
                     MenuDepthIllustration.MenuShader.Normal)); // background symbol on shelter
                     self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "sleep - 5", new Vector2(674f, 138f), 2.8f,

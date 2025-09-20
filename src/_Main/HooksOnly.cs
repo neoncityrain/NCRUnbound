@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Unbound.WIP;
 using static Unbound.GammaVisuals;
 
 namespace Unbound;
@@ -75,8 +76,9 @@ internal class HooksOnly
         stgsstweak.Init();
 
         // ECT =============================================================================================
-        Scenes.Init();
-        // gamma
+        On.Menu.MenuScene.BuildScene += UnboundScenes.SetUpCustomScenes;
+        UnboundScenes.Init();
+        // custom scenes
         Pearl.Init();
         PearlConversations.Init();
         // pearls

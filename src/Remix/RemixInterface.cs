@@ -6,7 +6,7 @@ namespace Unbound
     {
         private readonly ManualLogSource Logger;
 
-        public UnbRemInterface(UnbSetupThings modInstance, ManualLogSource loggerSource)
+        public UnbRemInterface(setupUnboundRemix modInstance, ManualLogSource loggerSource)
         {
             Logger = loggerSource;
             CyJumpCharge = config.Bind("CyJumpCharge", 180f, new ConfigAcceptableRange<float>(5f, 500f));

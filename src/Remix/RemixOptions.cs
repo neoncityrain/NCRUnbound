@@ -1,6 +1,6 @@
 ﻿namespace Unbound
 {
-    public partial class UnbSetupThings
+    public partial class setupUnboundRemix
     {
         private void PlayerRemix(On.Player.orig_ctor orig, Player self, AbstractCreature abstractcreature, World world)
         {
