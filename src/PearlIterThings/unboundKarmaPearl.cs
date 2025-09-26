@@ -2,7 +2,7 @@
 
 namespace Unbound
 {
-    internal class Pearl
+    internal class unboundKarmaPearl
     {
         public static void Init()
         {

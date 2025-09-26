@@ -585,7 +585,8 @@ namespace Unbound
                                 node = 0;
                             }
                             WorldCoordinate worldCoordinate = self.oracle.room.LocalCoordinateOfNode(node);
-                            JollyCustom.MovePlayerWithItems(altplayer, altplayer.room, self.oracle.room.abstractRoom.name, worldCoordinate);
+                            JollyCustom.MovePlayerWithItems(altplayer, altplayer.room.abstractRoom.name,
+                                worldCoordinate);
                             Vector2 down = Vector2.down;
                             for (int i = 0; i < altplayer.bodyChunks.Length; i++)
                             {

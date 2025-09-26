@@ -27,6 +27,7 @@
 
 		"select_menu_scene": "techselect",
 		"select_menu_scene_ascended": "",
+		"title_card": "introroll-unbound2",
 		"sleep_scene": "unbsleeptech",
 		
 		"weight": 1.2,

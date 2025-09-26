@@ -74,7 +74,7 @@ namespace Unbound
             return orig(playerNumber, fallBack);
         }
 
-        private static SlugcatStats.Name DontSkipSmiley(On.JollyCoop.JollyMenu.JollySlidingMenu.orig_NextClass orig, JollyCoop.JollyMenu.JollySlidingMenu self, SlugcatStats.Name curClass)
+        private static SlugcatStats.Name DontSkipSmiley(On.JollyCoop.JollyMenu.JollySlidingMenu.orig_NextClass orig, JollyCoop.JollyMenu.JollySlidingMenu self, SlugcatStats.Name curClass, int playerIndex)
         {
             SlugcatStats.Name name;
             if (curClass == null)
@@ -85,7 +85,7 @@ namespace Unbound
             {
                 if (curClass.Index >= ExtEnum<SlugcatStats.Name>.values.Count - 1 || curClass.Index == -1)
                 {
-                    return self.NextClass(null);
+                    return self.NextClass(null, playerIndex);
                 }
                 name = new SlugcatStats.Name(ExtEnum<SlugcatStats.Name>.values.GetEntry(curClass.Index + 1), false);
             }
@@ -104,7 +104,7 @@ namespace Unbound
                     NCRDebug.Log(e);
                 }
             }
-            return orig(self, curClass);
+            return orig(self, curClass, playerIndex);
         }
     }
 }

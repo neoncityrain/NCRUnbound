@@ -291,55 +291,70 @@
 
         public static void SetupWalljumps(On.Player.orig_WallJump orig, Player self, int direction)
         {
-            orig(self, direction);
-            if (self?.room != null &&
+            try
+            {
+                orig(self, direction);
+            }
+            catch (Exception e)
+            {
+                NCRDebug.Log("Non-Unbound error with walljumps: " + e);
+            }
+            
+            try
+            {
+                if (self?.room != null &&
                 !self.GetNCRunbound().LostTail && // for randombuffs
                 (self.GetNCRunbound().IsUnbound || self.GetNCRunbound().IsTechnician))
-            {
-                self.GetNCRunbound().UnbChainjumpsCount += 1;
-                if (self.GetNCRunbound().UnbChainjumpsCount > 1 && !self.GetNCRunbound().DidTripleCyanJump)
                 {
-                    // only triggers if unbchainjumps is greater than 1, preventing a chainjump from triggering when bouncing off a wall normally
-                    // while this only triggers if he HASNT done a triple jump, this should still 
-                    self.GetNCRunbound().UnbCyanjumpCountdown += 10;
-                    // add to the countdown to prevent immediate re-triggering of the cyan jump and make walljumping smoother
+                    self.GetNCRunbound().UnbChainjumpsCount += 1;
+                    if (self.GetNCRunbound().UnbChainjumpsCount > 1 && !self.GetNCRunbound().DidTripleCyanJump)
+                    {
+                        // only triggers if unbchainjumps is greater than 1, preventing a chainjump from triggering when bouncing off a wall normally
+                        // while this only triggers if he HASNT done a triple jump, this should still 
+                        self.GetNCRunbound().UnbCyanjumpCountdown += 10;
+                        // add to the countdown to prevent immediate re-triggering of the cyan jump and make walljumping smoother
 
-                    for (int i = 0; i < 6; i++)
-                    {
-                        self.room.AddObject(new Spark(self.mainBodyChunk.pos, Custom.RNV(), self.GetNCRunbound().effectColour, null, 4, 8));
-                    }
-                    self.room.PlaySound(SoundID.Cyan_Lizard_Small_Jump, self.mainBodyChunk);
-                    self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 150f, self, 0.5f));
-                    self.room.AddObject(new UnbJumplight(self.bodyChunks[1].pos, 0.4f, self));
-                    self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
-                    // grants a cyan-like distortion effect and sparks
+                        for (int i = 0; i < 6; i++)
+                        {
+                            self.room.AddObject(new Spark(self.mainBodyChunk.pos, Custom.RNV(), self.GetNCRunbound().effectColour, null, 4, 8));
+                        }
+                        self.room.PlaySound(SoundID.Cyan_Lizard_Small_Jump, self.mainBodyChunk);
+                        self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 150f, self, 0.5f));
+                        self.room.AddObject(new UnbJumplight(self.bodyChunks[1].pos, 0.4f, self));
+                        self.room.AddObject(new ShockWave(self.firstChunk.pos, 50f, 0.07f, 3, false));
+                        // grants a cyan-like distortion effect and sparks
 
-                    if (self.GetNCRunbound().UnbChainjumpsCount < 15)
-                    {
-                        self.jumpBoost += self.GetNCRunbound().UnbChainjumpsCount;
-                        // jump boost raises with chained jumps
-                    }
-                    else
-                    {
-                        self.jumpBoost += 7f;
-                        // prevents jump boosts from going above 7. this should reset upon hitting the ground
-                    }
+                        if (self.GetNCRunbound().UnbChainjumpsCount < 15)
+                        {
+                            self.jumpBoost += self.GetNCRunbound().UnbChainjumpsCount;
+                            // jump boost raises with chained jumps
+                        }
+                        else
+                        {
+                            self.jumpBoost += 7f;
+                            // prevents jump boosts from going above 7. this should reset upon hitting the ground
+                        }
 
 
-                    if (self.GetNCRunbound().unbsmoke == null)
-                    {
-                        self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
-                        self.room.AddObject(self.GetNCRunbound().unbsmoke);
-                        if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Emitting smoke!"); }
+                        if (self.GetNCRunbound().unbsmoke == null)
+                        {
+                            self.GetNCRunbound().unbsmoke = new UnbJumpsmoke(self.room, self);
+                            self.room.AddObject(self.GetNCRunbound().unbsmoke);
+                            if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Emitting smoke!"); }
+                        }
+                        for (int k = 0; k < 7; k++)
+                        {
+                            self.GetNCRunbound().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
+                                Custom.DirVec(self.bodyChunks[0].pos, self.bodyChunks[1].pos) * 20f,
+                                self.bodyMode == Player.BodyModeIndex.ZeroG ? false : true, 35f);
+                        }
+                        // smoke effects for walljumps
                     }
-                    for (int k = 0; k < 7; k++)
-                    {
-                        self.GetNCRunbound().unbsmoke.EmitSmoke(self.bodyChunks[1].pos, self.bodyChunks[1].vel +
-                            Custom.DirVec(self.bodyChunks[0].pos, self.bodyChunks[1].pos) * 20f,
-                            self.bodyMode == Player.BodyModeIndex.ZeroG ? false : true, 35f);
-                    }
-                    // smoke effects for walljumps
                 }
+            }
+            catch (Exception e)
+            {
+                NCRDebug.Log("Error with Unbound's walljump: " + e);
             }
         }
 

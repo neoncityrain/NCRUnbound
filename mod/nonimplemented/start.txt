@@ -1,8 +1,0 @@
-[FIND]none
-[ADDAFTER]\n
-[FIND]Which direction to you head?
-[ADDAFTER]\n
-[FIND]North
-[ADDBEFORE_01]Stupidly high up\nunbup_1.txt\n
-[FIND]RW_42 - Kayava
-[ADDBEFORE_01]\n

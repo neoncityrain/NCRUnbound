@@ -14,7 +14,8 @@ namespace Unbound
         private static void PearlTalk(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig,
             SLOracleBehaviorHasMark.MoonConversation self)
         {
-            if (self.id == UnboundEnums.unbKarmaPearlConv)
+            if (self?.id != null &&
+                self.id == UnboundEnums.unbKarmaPearlConv)
             {
                 try
                 {
@@ -62,7 +63,7 @@ namespace Unbound
                     else
                     {
                         self.PearlIntro();
-                        self.LoadEventsFromFile(1431821);
+                        self.LoadEventsFromFile(1431800);
                         return;
                     }
                 }

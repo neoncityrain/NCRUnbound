@@ -43,7 +43,8 @@
             orig(self, sLeaser, rCam, palette);
 
             if (self?.player?.room?.game != null &&
-                (self.player.GetNCRunbound().IsTechnician || (self.player.GetNCRunbound().IsUnbound && !self.player.playerState.isGhost)))
+                (self.player.GetNCRunbound().IsTechnician || (self.player.GetNCRunbound().IsUnbound &&
+                !self.player.playerState.isGhost)))
             {
                 try
                 {
@@ -60,7 +61,7 @@
                         switch (self.player.playerState.playerNumber)
                         {
                             case 0:
-                                if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType != MoreSlugcatsEnums.GameTypeID.Challenge)
+                                if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType != DLCSharedEnums.GameTypeID.Challenge)
                                 {
                                     effectcol = new Color(0.42f, 0.31f, 0.78f);
                                     eyecol = new Color(0.22f, 0.05f, 0.09f);
@@ -219,7 +220,7 @@
                         {
                             case 0:
                                 if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType !=
-                                    MoreSlugcatsEnums.GameTypeID.Challenge)
+                                    DLCSharedEnums.GameTypeID.Challenge)
                                 {
                                     effectcol = new Color(0.42f, 0.31f, 0.78f);
                                     eyecol = new Color(0.22f, 0.05f, 0.09f);
@@ -329,10 +330,6 @@
                             spriteNumber += 1; // tail graphic
                             getUnb.TailPatternInt = spriteNumber;
                         }
-
-                        self.firstMudSprite = spriteNumber;
-                        spriteNumber = spriteNumber + self.mudSpriteCount;
-                        // mud things
 
 
 
@@ -476,9 +473,6 @@
                         }
                     }
 
-                    MudUtils.MakeMudSprites(sLeaser, rCam, self.firstMudSprite, new int[] { 0, 1, 2, 3, 4, 5, 6 });
-                    // 17(?)-24
-
 
                     self.AddToContainer(sLeaser, rCam, null);
 
@@ -509,8 +503,7 @@
                         (13 + (wingscalesDisabled ? 0 : getUnb.wingscales.numberOfSprites) +
                         (getUnb.GraphicsDisabled ? 0 : 6) +
                         (getUnb.RingsDisabled ? 0 : 2) +
-                        (getUnb.TailDisabled ? 0 : 1) +
-                        self.mudSpriteCount
+                        (getUnb.TailDisabled ? 0 : 1)
                         ));
 
                     NCRDebug.Log("Base graphics number is: " + (ModManager.MSC ? 13 : 12));
@@ -523,8 +516,6 @@
                             getUnb.wingscales.numberOfSprites));
                     }
                     if (ModManager.MSC) { NCRDebug.Log("Gown sprite is: " + self.gownIndex); }
-                    if (ModManager.Watcher) { NCRDebug.Log("Mud sprite is: " + self.firstMudSprite +
-                        " to " + (self.firstMudSprite + self.mudSpriteCount)); }
                 }
             }
             else
@@ -566,8 +557,7 @@
                         (12 + (ModManager.MSC ? 1 : 0) +
                         (getUnb.WingscalesDisabled ? 0 : getUnb.wingscales.numberOfSprites) +
                         (getUnb.GraphicsDisabled ? 0 : 7) +
-                        (getUnb.RingsDisabled ? 0 : 2) +
-                        self.mudSpriteCount
+                        (getUnb.RingsDisabled ? 0 : 2)
                         ));
 
                     NCRDebug.Log("Base graphics number is: " + (ModManager.MSC ? 13 : 12));
@@ -583,11 +573,6 @@
                             getUnb.wingscales.numberOfSprites));
                     }
                     if (ModManager.MSC) { NCRDebug.Log("Gown sprite is: " + self.gownIndex); }
-                    if (ModManager.Watcher)
-                    {
-                        NCRDebug.Log("Mud sprite is: " + self.firstMudSprite +
-                        " to " + (self.firstMudSprite + self.mudSpriteCount));
-                    }
                     NCRDebug.Log("This usually happens due to another mod adding to Unbound's graphics in some way.");
                     NCRDebug.Log("Please check if another mod adds to the container of every slugcat.");
                 }
@@ -994,7 +979,7 @@
                     {
                         case 0:
                             if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType !=
-                                MoreSlugcatsEnums.GameTypeID.Challenge)
+                                DLCSharedEnums.GameTypeID.Challenge)
                             {
                                 if (!isReverb)
                                 {

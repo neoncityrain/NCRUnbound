@@ -7,6 +7,11 @@ namespace Unbound
 {
     public class UnbMisc
     {
+        public static void Init()
+        {
+
+        }
+
         public static void CycleTick(On.CreatureCommunities.orig_CycleTick orig, CreatureCommunities self, int cycle, SlugcatStats.Name saveStateNumber)
         {
             if (saveStateNumber != null && saveStateNumber.value == "NCRunbound")

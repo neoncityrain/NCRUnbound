@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Unbound.WIP;
 using static Unbound.GammaVisuals;
 
 namespace Unbound;
@@ -14,6 +13,8 @@ internal class HooksOnly
         //On.Player.TerrainImpact += UnbMovement.UnbImpact;
 
         // UNB MISC -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        UnbMisc.Init();
+        
         On.Player.Jump += UnbMisc.MadHopsBro; // increases unbounds base jump by 1f
         On.Player.UpdateAnimation += UnbMisc.SwimspeedTweak; // swim speed
         On.GhostWorldPresence.SpawnGhost += UnbMisc.KarmaUnderThreeGhost; // fixes being unable to encounter echos under 5 karma
@@ -79,7 +80,7 @@ internal class HooksOnly
         On.Menu.MenuScene.BuildScene += UnboundScenes.SetUpCustomScenes;
         UnboundScenes.Init();
         // custom scenes
-        Pearl.Init();
+        unboundKarmaPearl.Init();
         PearlConversations.Init();
         // pearls
         KarmaGateLock.Init();

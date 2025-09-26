@@ -54,74 +54,97 @@ namespace Unbound
 
         public static float HoverScore(On.OverseerAI.orig_HoverScoreOfTile orig, OverseerAI self, IntVector2 testTile)
         {
-            if (!(testTile.x < 0 || testTile.y < 0 || testTile.x >= self.overseer.room.TileWidth || testTile.y >= self.overseer.room.TileHeight) &&
+            // does gamma want to stand here?
+            // gamma should be less afraid of unbound than the standard overseer.
+            // this should allow unbound to get closer to gamma than is standard, and forcing them to avoid water
+            // (at least more often... i hope........)
+            if (!(testTile.x < 0 || testTile.y < 0 || testTile.x >= self.overseer.room.TileWidth ||
+                testTile.y >= self.overseer.room.TileHeight) &&
                 self != null && self.overseer != null &&
                 self.overseer.PlayerGuide &&
                 self.overseer.room.game.session.characterStats.name.value == "NCRunbound")
             {
+                // gamma <3
                 if (self.overseer.room.GetTile(testTile).Solid)
                 {
-                    return float.MaxValue;
+                    // is the tile solid?
+                    return float.MaxValue; // then dont.
+                }
+                if (self.overseer.room.GetTile(testTile).AnyWater)
+                {
+                    // is the tile underwater
+                    return float.MaxValue; // dont you dare you lil shit.
+                    // 
                 }
                 if (self.overseer.room.aimap.getTerrainProximity(testTile) > (int)(6f * self.overseer.size))
                 {
-                    return float.MaxValue;
+                    // is the tile really far away?
+                    return float.MaxValue; // as above so below
                 }
-                float num = 0f;
-                if (self.overseer.hologram != null)
+
+                float hoverScore = 0f;
+
+                if (self.overseer.hologram != null) // if gamma is making a hologram
                 {
-                    num += Mathf.Abs(100f - Vector2.Distance(self.overseer.room.MiddleOfTile(testTile),
+                    hoverScore += Mathf.Abs(100f - Vector2.Distance(self.overseer.room.MiddleOfTile(testTile),
                         self.overseer.room.MiddleOfTile(self.overseer.hologram.displayTile))) * 2f;
                     if (Custom.DistLess(self.overseer.room.MiddleOfTile(testTile),
                         self.overseer.room.MiddleOfTile(self.overseer.hologram.displayTile), 500f))
                     {
                         if (self.overseer.room.VisualContact(testTile, self.overseer.hologram.displayTile))
                         {
-                            num -= 500f;
+                            hoverScore -= 500f;
                         }
                     }
                     else
                     {
-                        num += 1000f;
+                        hoverScore += 1000f;
                     }
-                    num = self.overseer.hologram.InfluenceHoverScoreOfTile(testTile, num);
+                    hoverScore = self.overseer.hologram.InfluenceHoverScoreOfTile(testTile, hoverScore);
                 }
                 else
                 {
-                    num += Mathf.Abs(300f - Vector2.Distance(self.overseer.room.MiddleOfTile(testTile), self.lookAt));
+                    // so no holograms?
+                    hoverScore += Mathf.Abs(300f - Vector2.Distance(self.overseer.room.MiddleOfTile(testTile), self.lookAt));
                     if (Custom.DistLess(self.overseer.room.MiddleOfTile(testTile), self.lookAt, 1000f) &&
                         self.overseer.room.VisualContact(testTile, self.overseer.room.GetTilePosition(self.lookAt)))
                     {
-                        num -= 100f;
+                        hoverScore -= 100f;
                     }
                     for (int i = 0; i < self.avoidPositions.Count; i++)
                     {
                         if (self.avoidPositions[i].FloatDist(testTile) < 15f)
                         {
-                            num += Custom.LerpMap(self.avoidPositions[i].FloatDist(testTile), 10f, 15f, 50f, 0f);
+                            hoverScore += Custom.LerpMap(self.avoidPositions[i].FloatDist(testTile), 10f, 15f, 50f, 0f);
                         }
                     }
                 }
-                for (int j = 0; j < self.overseer.room.abstractRoom.creatures.Count; j++)
+                for (int j = 0; j < self.overseer.room.abstractRoom.creatures.Count; j++) // for each critter in room
                 {
                     if (self.overseer.room.abstractRoom.creatures[j].realizedCreature != null &&
                         self.overseer.room.abstractRoom.creatures[j].realizedCreature.room == self.overseer.room)
                     {
                         if (self.overseer.room.abstractRoom.creatures[j].creatureTemplate.type != CreatureTemplate.Type.Overseer)
                         {
+                            // if it isnt an overseer
                             if ((self.overseer.room.abstractRoom.creatures[j].creatureTemplate.type != CreatureTemplate.Type.Slugcat ||
                                 // either not a slugcat
                                 (self.overseer.room.abstractRoom.creatures[j].realizedCreature is Player &&
                                 (self.overseer.room.abstractRoom.creatures[j].realizedCreature as Player).GetNCRunbound().IsUnbound)) &&
                                 // or just not unbound
                                 !self.overseer.room.abstractRoom.creatures[j].creatureTemplate.smallCreature &&
+                                // not small
                                 !self.overseer.room.abstractRoom.creatures[j].realizedCreature.dead &&
+                                // not dead
                                 Custom.DistLess(self.overseer.room.MiddleOfTile(testTile),
-                                self.overseer.room.abstractRoom.creatures[j].realizedCreature.DangerPos, self.scaredDistance + 10f))
+                                self.overseer.room.abstractRoom.creatures[j].realizedCreature.DangerPos, self.scaredDistance + 10f)
+                                // is it within the distance at which gamma gets scared?
+                                )
                             {
-                                return float.MaxValue;
+                                return float.MaxValue; // dont go there
                             }
-                            num += Custom.LerpMap(Vector2.Distance(self.overseer.room.MiddleOfTile(testTile),
+                            // add some score against it
+                            hoverScore += Custom.LerpMap(Vector2.Distance(self.overseer.room.MiddleOfTile(testTile),
                                 self.overseer.room.abstractRoom.creatures[j].realizedCreature.DangerPos),
                                 40f, Mathf.Clamp(self.overseer.room.abstractRoom.creatures[j].creatureTemplate.bodySize *
                                 600f, 60f, 800f), self.overseer.room.abstractRoom.creatures[j].creatureTemplate.bodySize * 100f, 0f);
@@ -129,25 +152,24 @@ namespace Unbound
                         else if (self.overseer.room.abstractRoom.creatures[j] != self.overseer.abstractCreature &&
                             !self.DoIWantToTalkToThisOverSeer(self.overseer.room.abstractRoom.creatures[j].realizedCreature as Overseer))
                         {
-                            num += Custom.LerpMap((self.overseer.room.abstractRoom.creatures[j].realizedCreature as Overseer).
+                            // if it IS an overseer, but gammas not interested in chatting
+                            hoverScore += Custom.LerpMap((self.overseer.room.abstractRoom.creatures[j].realizedCreature as Overseer).
                                 hoverTile.FloatDist(testTile), 0f, 3f, 250f, 0f);
-                            num += Custom.LerpMap((self.overseer.room.abstractRoom.creatures[j].realizedCreature as Overseer).
+                            hoverScore += Custom.LerpMap((self.overseer.room.abstractRoom.creatures[j].realizedCreature as Overseer).
                                 nextHoverTile.FloatDist(testTile), 0f, 3f, 250f, 0f);
                         }
                     }
                 }
                 if (self.overseer.room.aimap.getAItile(testTile).narrowSpace)
                 {
-                    num += 200f;
+                    hoverScore += 200f;
                 }
-                num -= (float)self.overseer.room.aimap.getTerrainProximity(testTile) * 10f;
-                if (testTile.y <= self.overseer.room.defaultWaterLevel)
-                {
-                    num += 10000f;
-                }
+                hoverScore -= (float)self.overseer.room.aimap.getTerrainProximity(testTile) * 10f;
+                // usually theres a check to see if the overseer is trying to go underwater. this is moot due to
+                // being prevented from going there at all.
                 if (self.overseer.SandboxOverseer && !self.overseer.editCursor.menuMode)
                 {
-                    num += Mathf.Max(0f, Vector2.Distance(self.overseer.room.MiddleOfTile(testTile), self.overseer.editCursor.pos) - 250f) * 30f;
+                    hoverScore += Mathf.Max(0f, Vector2.Distance(self.overseer.room.MiddleOfTile(testTile), self.overseer.editCursor.pos) - 250f) * 30f;
                 }
                 if (ModManager.MMF && self.overseer.PlayerGuide && (self.overseer.abstractCreature.abstractAI as OverseerAbstractAI).goToPlayer && 
                     self.overseer.AI.communication.GuideState.handHolding > 0.5f && self.overseer.AI.communication.player != null && 
@@ -162,13 +184,14 @@ namespace Unbound
                     {
                         num2 = self.overseer.room.cameraPositions.Length - 1;
                     }
-                    num = Mathf.Pow(Vector2.Distance(self.overseer.room.cameraPositions[num2], self.overseer.AI.communication.player.firstChunk.pos), 4f);
+                    hoverScore = Mathf.Pow(Vector2.Distance(self.overseer.room.cameraPositions[num2], self.overseer.AI.communication.player.firstChunk.pos), 4f);
                 }
                 if (self.tutorialBehavior != null)
                 {
-                    num = self.tutorialBehavior.InfluenceHoverScoreOfTile(testTile, num);
+                    // this pretty much doesnt happen outside of KTB. but just in case...
+                    hoverScore = self.tutorialBehavior.InfluenceHoverScoreOfTile(testTile, hoverScore);
                 }
-                return num;
+                return hoverScore;
             }
             return orig(self, testTile);
         }
@@ -194,7 +217,7 @@ namespace Unbound
                         {
                             if (testCrit.realizedCreature.dead)
                             { 
-                                num = 10f;
+                                num = 10f; // especially interested in unbound when hes dead. FREAK
                             }
                             else
                             { 
@@ -285,8 +308,9 @@ namespace Unbound
                 {
                     num = 1f;
                 }
-                else if (ModManager.MSC && testCrit.creatureTemplate.type == DLCSharedEnums.CreatureTemplateType.ScavengerElite ||
-                    testCrit.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.ScavengerKing)
+                else if (ModManager.MSC &&
+                    (testCrit.creatureTemplate.type == DLCSharedEnums.CreatureTemplateType.ScavengerElite ||
+                    testCrit.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.ScavengerKing))
                 {
                     num = 2f;
                 }
@@ -403,7 +427,7 @@ namespace Unbound
                 (self.room.game.session.characterStats.name.value == "NCRunbound" ||
                 self.room.game.session.characterStats.name.value == "NCRtech") && self.PlayerGuide &&
 
-                !(self.room.abstractRoom.name.StartsWith("SL_UnbKTB") || self.room.abstractRoom.name.StartsWith("SB_A14") ||
+                !(self.room.abstractRoom.name.StartsWith("KTB") || self.room.abstractRoom.name.StartsWith("SB_A14") ||
                 self.room.abstractRoom.name.StartsWith("SB_E05") || self.room.abstractRoom.name.StartsWith("SB_D06")))
             {
                 if (self.room.abstractRoom.name == "SS_AI")

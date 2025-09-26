@@ -37,7 +37,7 @@ namespace Unbound
                     switch (self.player.playerState.playerNumber)
                     {
                         case 0:
-                            if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType != MoreSlugcatsEnums.GameTypeID.Challenge)
+                            if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType != DLCSharedEnums.GameTypeID.Challenge)
                             {
                                 if (!rev)
                                 {

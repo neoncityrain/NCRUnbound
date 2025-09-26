@@ -16,57 +16,6 @@ namespace Unbound
             orig(room);
         }
 
-        public static void IsGammaInMyShelter(On.Player.orig_Update orig, Player self, bool eu)
-        {
-            orig(self, eu);
-            try
-            {
-                if (self?.abstractCreature != null &&
-                self.room?.abstractRoom?.creatures != null && self.room.abstractRoom.creatures.Count > 0 &&
-                self.room.abstractRoom.shelter &&
-                self.room.game?.session?.characterStats.name.value == "NCRunbound")
-                {
-                    List<AbstractCreature> overseersInRoom = new List<AbstractCreature>();
-                    if (self.room.abstractRoom.creatures.Count > 1)
-                    {
-                        for (int j = 0; j < self.room.abstractRoom.creatures.Count; j++)
-                        {
-                            if (self.room.abstractRoom.creatures[j].creatureTemplate.type == CreatureTemplate.Type.Overseer &&
-                                self.room.abstractRoom.creatures[j].Room == self.room.abstractRoom &&
-                                self.room.abstractRoom.creatures[j].creatureTemplate.type != CreatureTemplate.Type.Slugcat)
-                            {
-                                overseersInRoom.Add(self.room.abstractRoom.creatures[j]);
-                            }
-                        }
-                    }
-
-                    if (overseersInRoom.Count == 1 && !self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
-                    {
-                        if (self.GetNCRunbound().MoreDebug)
-                        {
-                            NCRDebug.Log("Gamma in shelter Unbound is in!");
-                        }
-                        self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter = true;
-                    }
-
-                    if (overseersInRoom.Count != 1 && self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter)
-                    {
-                        if (self.GetNCRunbound().MoreDebug)
-                        {
-                            NCRDebug.Log("Gamma no longer in shelter Unbound is in!");
-                        }
-                        self.room.world.game.rainWorld.GetNCRModSaveData().IsGammaInMyShelter = false;
-                    }
-
-                    overseersInRoom.Clear();
-                }
-            }
-            catch (Exception e)
-            {
-                NCRDebug.Log("Hi this is Unbound I love throwing tantrums: " + e);
-            }
-        }
-
         public static void MaintainRoomSpecific(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
