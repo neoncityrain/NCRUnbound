@@ -1,9 +1,8 @@
-﻿namespace Unbound
+﻿namespace Unbound;
+
+internal class unboundSaveUtils
 {
-    internal class unboundSaveUtils
+    public static void Init()
     {
-        public static void Init()
-        {
-        }
     }
 }

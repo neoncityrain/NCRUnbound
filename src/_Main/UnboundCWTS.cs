@@ -10,7 +10,7 @@ namespace Unbound
             #region Graphics
             public UnbJumpsmoke unbsmoke;
             public UnbJumpsmoke damagesmoke;
-            public UnboundWingScales wingscales;
+            // public UnboundWingScales wingscales;
             // the objects added by this mod. jumpsmoke and damaged smoke are considered two different
             // things, despite being functionally the same, allowing both effects to be present at the same time.
             public int TailPatternInt;
@@ -67,14 +67,19 @@ namespace Unbound
             public bool WingscalesDisabled; // are wingscales disabled?
             public bool TailDisabled; // are tail graphics disabled?
             #endregion
+            #region Pearl Things
+            public Watcher.PearlContent pearlBeingRead;
+            public DataPearl pearlInPaws;
+            #endregion
 
             public bool LostTail; // for random buffs
-            public int RevCryCooldown; // to prevent reverb from crying constantly
+            public int CryCooldown; // to prevent reverb from crying constantly
 
             public UnboundCat()
             {
                 TailDisabled = true; // currently keeping this as true, as the tail graphics arent ready.
                 // because they are hurting me. help.
+                WingscalesDisabled = true; // also disabling wingscales, as theyre being redone.
             }
         }
 

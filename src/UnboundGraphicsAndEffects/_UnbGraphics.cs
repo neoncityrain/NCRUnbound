@@ -176,10 +176,11 @@
             orig(self);
             try
             {
-                if (self?.player != null &&
-                self.player.GetNCRunbound().wingscales != null)
+                if (self?.player != null //&&
+                //self.player.GetNCRunbound().wingscales != null
+                )
                 {
-                    self.player.GetNCRunbound().wingscales.Update();
+                    //self.player.GetNCRunbound().wingscales.Update();
                 }
             }
             catch (Exception e)
@@ -202,7 +203,7 @@
             try
             {
                 if (self?.player?.room?.game != null &&
-                self.player.GetNCRunbound().wingscales != null &&
+                //self.player.GetNCRunbound().wingscales != null &&
                 ((self.player.GetNCRunbound().IsUnbound && !self.player.playerState.isGhost) || self.player.GetNCRunbound().IsTechnician)
                 )
                 {
@@ -259,7 +260,8 @@
 
                     if (self.player.GetNCRunbound().RGBRings)
                     {
-                        effectcol = new HSLColor(Mathf.Sin(self.player.GetNCRunbound().RGBCounter / 200f), 1f, 0.75f).rgb;
+                        effectcol = new HSLColor(
+                            Mathf.Sin(self.player.GetNCRunbound().RGBCounter / 200f), 1f, 0.75f).rgb;
                         pupilcol = effectcol;
                     }
                     if (self.player.GetNCRunbound().effectColour == null || self.player.GetNCRunbound().effectColour != effectcol)
@@ -268,8 +270,8 @@
                     }
                     #endregion
 
-                    self.player.GetNCRunbound().wingscales.SetWingColors(bodycol, effectcol);
-                    self.player.GetNCRunbound().wingscales.ApplyPalette(sLeaser, rCam);
+                    //self.player.GetNCRunbound().wingscales.SetWingColors(bodycol, effectcol);
+                    //self.player.GetNCRunbound().wingscales.ApplyPalette(sLeaser, rCam);
                 }
             }
             catch (Exception e)
@@ -294,7 +296,7 @@
                 var getUnb = self.player.GetNCRunbound();
 
                 bool ringsDisabled = getUnb.RingsDisabled;
-                bool wingscalesDisabled = getUnb.WingscalesDisabled;
+                bool wingscalesDisabled = true;
                 bool generalGraphicsDisabled = getUnb.GraphicsDisabled;
 
                 try
@@ -306,7 +308,7 @@
 
                         if (!wingscalesDisabled)
                         {
-                            spriteNumber += getUnb.wingscales.numberOfSprites;
+                            //spriteNumber += getUnb.wingscales.numberOfSprites;
                         }
 
                         if (ModManager.MSC)
@@ -380,7 +382,7 @@
 
                     if (!wingscalesDisabled)
                     {
-                        getUnb.wingscales.InitiateSprites(sLeaser, rCam, "UnboundWingbase", "UnboundWingfade");
+                        //getUnb.wingscales.InitiateSprites(sLeaser, rCam, "UnboundWingbase", "UnboundWingfade");
                     }
 
                     try
@@ -500,7 +502,7 @@
                     }
                     NCRDebug.Log("Player base sprite number is 24, with all DLC.");
                     NCRDebug.Log("The game expects Unbound to have this number of sprites: " +
-                        (13 + (wingscalesDisabled ? 0 : getUnb.wingscales.numberOfSprites) +
+                        (13 + //(wingscalesDisabled ? 0 : getUnb.wingscales.numberOfSprites) +
                         (getUnb.GraphicsDisabled ? 0 : 6) +
                         (getUnb.RingsDisabled ? 0 : 2) +
                         (getUnb.TailDisabled ? 0 : 1)
@@ -508,13 +510,13 @@
 
                     NCRDebug.Log("Base graphics number is: " + (ModManager.MSC ? 13 : 12));
                     if (!ringsDisabled) { NCRDebug.Log("Jumpring start sprite is: " + getUnb.UnboundJumpringStartSprite.ToString()); }
-                    if (!wingscalesDisabled) { NCRDebug.Log("Wingscale start sprite is: " +
-                        getUnb.wingscales.startSprite.ToString());
-                        NCRDebug.Log("Wingscale number of sprites: " +
-                            getUnb.wingscales.numberOfSprites.ToString());
-                        NCRDebug.Log("Wingscale end sprite is: " + (getUnb.wingscales.startSprite +
-                            getUnb.wingscales.numberOfSprites));
-                    }
+                    //if (!wingscalesDisabled) { NCRDebug.Log("Wingscale start sprite is: " +
+                        //getUnb.wingscales.startSprite.ToString());
+                        //NCRDebug.Log("Wingscale number of sprites: " +
+                            //getUnb.wingscales.numberOfSprites.ToString());
+                        //NCRDebug.Log("Wingscale end sprite is: " + (getUnb.wingscales.startSprite +
+                            //getUnb.wingscales.numberOfSprites));
+                    //}
                     if (ModManager.MSC) { NCRDebug.Log("Gown sprite is: " + self.gownIndex); }
                 }
             }
@@ -555,7 +557,7 @@
                     NCRDebug.Log("Player base sprite number is 24, with all DLC.");
                     NCRDebug.Log("The game expects Unbound to have this number of sprites: " +
                         (12 + (ModManager.MSC ? 1 : 0) +
-                        (getUnb.WingscalesDisabled ? 0 : getUnb.wingscales.numberOfSprites) +
+                        //(getUnb.WingscalesDisabled ? 0 : getUnb.wingscales.numberOfSprites) +
                         (getUnb.GraphicsDisabled ? 0 : 7) +
                         (getUnb.RingsDisabled ? 0 : 2)
                         ));
@@ -563,15 +565,15 @@
                     NCRDebug.Log("Base graphics number is: " + (ModManager.MSC ? 13 : 12));
                     if (!getUnb.RingsDisabled) { NCRDebug.Log("Jumpring start sprite is: " +
                         getUnb.UnboundJumpringStartSprite.ToString()); }
-                    if (!getUnb.WingscalesDisabled)
-                    {
-                        NCRDebug.Log("Wingscale start sprite is: " +
-                        getUnb.wingscales.startSprite.ToString());
-                        NCRDebug.Log("Wingscale number of sprites: " +
-                            getUnb.wingscales.numberOfSprites.ToString());
-                        NCRDebug.Log("Wingscale end sprite is: " + (getUnb.wingscales.startSprite +
-                            getUnb.wingscales.numberOfSprites));
-                    }
+                    //if (!getUnb.WingscalesDisabled)
+                    //{
+                        //NCRDebug.Log("Wingscale start sprite is: " +
+                        //getUnb.wingscales.startSprite.ToString());
+                        //NCRDebug.Log("Wingscale number of sprites: " +
+                            //getUnb.wingscales.numberOfSprites.ToString());
+                        //NCRDebug.Log("Wingscale end sprite is: " + (getUnb.wingscales.startSprite +
+                            //getUnb.wingscales.numberOfSprites));
+                    //}
                     if (ModManager.MSC) { NCRDebug.Log("Gown sprite is: " + self.gownIndex); }
                     NCRDebug.Log("This usually happens due to another mod adding to Unbound's graphics in some way.");
                     NCRDebug.Log("Please check if another mod adds to the container of every slugcat.");
@@ -651,7 +653,7 @@
                 {
                     try
                     {
-                        self.player.GetNCRunbound().wingscales.AddToContainer(sLeaser, rCam, rCam.ReturnFContainer("Midground"));
+                        //self.player.GetNCRunbound().wingscales.AddToContainer(sLeaser, rCam, rCam.ReturnFContainer("Midground"));
                     }
                     catch (Exception e)
                     {
@@ -738,7 +740,7 @@
                 {
                     try
                     {
-                        unbGet.wingscales.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+                        //unbGet.wingscales.DrawSprites(sLeaser, rCam, timeStacker, camPos);
                     }
                     catch (Exception e)
                     {
@@ -1127,7 +1129,7 @@
                         {
                             // for rev only
 
-                            if (unbGet.RevCryCooldown <= 0)
+                            if (unbGet.CryCooldown <= 0)
                             {
                                 sLeaser.sprites[jumpringOne].color = effectcol;
                                 sLeaser.sprites[jumpringTwo].color = effectcol;
@@ -1135,9 +1137,9 @@
                             else
                             {
                                 sLeaser.sprites[jumpringOne].color = Color.Lerp(effectcol, pupilcol,
-                                        (unbGet.RevCryCooldown / 100f));
+                                        (unbGet.CryCooldown / 100f));
                                 sLeaser.sprites[jumpringTwo].color = Color.Lerp(effectcol, pupilcol,
-                                    (unbGet.RevCryCooldown / 100f));
+                                    (unbGet.CryCooldown / 100f));
                             }
                         }
                     }
@@ -1198,8 +1200,8 @@
                     #region Pupils
                     if (!unbGet.WingscalesDisabled)
                     {
-                        self.player.GetNCRunbound().wingscales.SetWingColors(bodycol, effectcol);
-                        self.player.GetNCRunbound().wingscales.ApplyPalette(sLeaser, rCam);
+                        //self.player.GetNCRunbound().wingscales.SetWingColors(bodycol, effectcol);
+                        //self.player.GetNCRunbound().wingscales.ApplyPalette(sLeaser, rCam);
                     }
                     #endregion
                     if (!unbGet.TailDisabled)
@@ -1271,9 +1273,9 @@
                     try
                     {
                         // wingscales set
-                        var wingscaleStart = 12;
+                        //var wingscaleStart = 12;
                         // as msc adds the gown to the player container, the number at which wingscales start should change
-                        self.player.GetNCRunbound().wingscales = new UnboundWingScales(self, wingscaleStart);
+                        //self.player.GetNCRunbound().wingscales = new UnboundWingScales(self, wingscaleStart);
                     }
                     catch (Exception e)
                     {

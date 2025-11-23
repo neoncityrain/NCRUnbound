@@ -14,7 +14,7 @@
 
             getUnb.GraphicsDisabled = UnbOptions.UnbGraphicsDisabled.Value; // disable/enable general graphics
             getUnb.RingsDisabled = UnbOptions.UnbRingsDisabled.Value; // enable/disable rings
-            getUnb.WingscalesDisabled = UnbOptions.UnbWingsDisabled.Value;  // enable/disable wings
+            //getUnb.WingscalesDisabled = UnbOptions.UnbWingsDisabled.Value;  // enable/disable wings
 
             getUnb.Unpicky = UnbOptions.UnbUnpicky.Value; // enable/disable swallowing
             getUnb.RGBRings = UnbOptions.RGBRings.Value; // party button

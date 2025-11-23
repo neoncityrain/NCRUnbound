@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IL.Watcher;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -28,12 +29,12 @@ namespace Unbound
         {
             orig(self, eu);
 
-            if (self?.room?.game != null && self.GetNCRunbound().RevCryCooldown >= 0)
+            if (self?.room?.game != null && self.GetNCRunbound().CryCooldown >= 0)
             {
-                self.GetNCRunbound().RevCryCooldown--;
+                self.GetNCRunbound().CryCooldown--;
             }
             if (self?.room?.game != null &&
-                self.GetNCRunbound().IsReverb && self.GetNCRunbound().RevCryCooldown <= 0 &&
+                self.GetNCRunbound().IsReverb && self.GetNCRunbound().CryCooldown <= 0 &&
                 !self.submerged && self.Consious &&
                 // not submerged, awake / non-stunned
                 self.input[0].spec && !self.input[1].spec)
@@ -43,14 +44,17 @@ namespace Unbound
                     ModManager.MMF ? UnityEngine.Random.Range(2f, 2.8f) :
                     UnityEngine.Random.Range(1.8f, 2f));
                 self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 500f, self, 1f));
-                self.GetNCRunbound().RevCryCooldown += 190;
+                self.GetNCRunbound().CryCooldown += 190;
                 self.eyesClosedTime = 190;
                 if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Reverb cried for help!"); }
                 self.room.AddObject(new DisciplePing(self, self.mainBodyChunk.pos, 0f, 0.2f, 0.2f, 20));
 
                 for (int i = 0; i < self.room.abstractRoom.creatures.Count; i++)
                 {
-                    if (self.room.abstractRoom.creatures[i].creatureTemplate.type == CreatureTemplate.Type.YellowLizard &&
+                    if ((self.room.abstractRoom.creatures[i].creatureTemplate.type == CreatureTemplate.Type.YellowLizard ||
+                        self.room.abstractRoom.creatures[i].creatureTemplate.type == Watcher.WatcherEnums.CreatureTemplateType.PeachLizard)
+                        // is a yellow or peach lizard
+                        &&
                         self.room.abstractRoom.creatures[i].realizedCreature != null &&
                         self.room.abstractRoom.creatures[i].realizedCreature.deaf == 0 &&
                         self.room.abstractRoom.creatures[i].realizedCreature.Consious)

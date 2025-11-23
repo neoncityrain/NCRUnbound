@@ -3,17 +3,21 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HUD;
+using IL.Watcher;
 
 namespace Unbound
 {
     internal class UnbExpedition
     {
-        public static void Update(On.Expedition.PearlDeliveryChallenge.orig_Update orig, PearlDeliveryChallenge self)
+        public static void Update(On.Expedition.PearlDeliveryChallenge.orig_Update orig,
+            PearlDeliveryChallenge self)
         {
+            // makes it so pearls must be delivered to pebbles rather than moon
             try
             {
                 if (!(self.game == null || self.completed) && self != null &&
-                (ExpeditionData.slugcatPlayer == UnboundEnums.NCRUnbound || ExpeditionData.slugcatPlayer.value == "NCRunbound"))
+                (ExpeditionData.slugcatPlayer == UnboundEnums.NCRUnbound ||
+                ExpeditionData.slugcatPlayer.value == "NCRunbound"))
                 {
                     #region Base.Update
                     if (self.revealCheckDelay < 100)
@@ -97,6 +101,15 @@ namespace Unbound
                                         dictionary2[text].Add(array[i]);
                                     }
                                 }
+                                else if (ModManager.Watcher)
+                                {
+                                    if ((text == "WTDA" || text == "WVWB" || text == "WPGA") &&
+                                        ExpeditionGame.unlockedExpeditionSlugcats.Contains(
+                                            Watcher.WatcherEnums.SlugcatStatsName.Watcher))
+                                    {
+                                        dictionary2[text].Add(array[i]);
+                                    }
+                                }
                                 if (dictionary2[text].Contains(array[i]) && !dictionary.ContainsKey(text))
                                 {
                                     dictionary.Add(text, ExpeditionGame.GetRegionWeight(text));
@@ -123,7 +136,7 @@ namespace Unbound
                     int roomrand = UnityEngine.Random.Range(1, 100);
 
                     
-
+                    // MSC AND WATCHER
                     if (roomrand == 1) { text2 = "SU_A12"; }
                     else if (roomrand == 2) { text2 = "SU_A40"; }
                     else if (roomrand == 3) { text2 = "SU_S05"; }
@@ -135,14 +148,16 @@ namespace Unbound
                     else if (roomrand == 9) { text2 = "SL_LMBRIDE01"; }
                     else if (roomrand == 10) { text2 = "SL_LMC01"; }
                     else if (roomrand == 11 && ModManager.MSC) { text2 = "SL_WALL06"; }
+                    else if (roomrand == 12 && ModManager.Watcher) { text2 = "WTDA_S02"; }
+                    else if (roomrand == 13 && ModManager.Watcher) { text2 = "WVWB_S01"; }
+                    else if (roomrand == 14 && ModManager.Watcher) { text2 = "WPGA_SMILEY"; }
 
-                    // NO MSC
+                    // NO DLC MSC
                     else if (roomrand == 4 && !ModManager.MSC) { text2 = "SS_LAB13"; }
                     else if (roomrand == 5 && !ModManager.MSC) { text2 = "SS_S05"; }
                     else if (roomrand == 6 && !ModManager.MSC) { text2 = "LF_A03"; }
                     else if (roomrand == 7 && !ModManager.MSC) { text2 = "LF_A17"; }
                     else if (roomrand == 8 && !ModManager.MSC) { text2 = "UW_A05"; }
-                    else if (roomrand == 11 && !ModManager.MSC) { text2 = "SL_LMS06"; }
 
 
                     return text2;

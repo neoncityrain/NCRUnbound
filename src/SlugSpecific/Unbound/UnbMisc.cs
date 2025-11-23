@@ -9,7 +9,112 @@ namespace Unbound
     {
         public static void Init()
         {
+            On.Player.UpdateMSC += unboundSpecialButton;
+        }
 
+        public static void unboundSpecialButton(On.Player.orig_UpdateMSC orig, Player self)
+        {
+            orig(self);
+            if (self?.room?.game != null &&
+                !self.submerged && self.Consious &&
+                // not submerged, awake / non-stunned
+                self != null && self.room != null &&
+                self.GetNCRunbound().IsUnbound
+                )
+            {
+                if (ModManager.JollyCoop && self.playerState.playerNumber == 1 && self.room.game.session.characterStats.name == Watcher.WatcherEnums.SlugcatStatsName.Watcher)
+                {
+
+                }
+                #region NotInWatcherAbilities
+                if (ModManager.Watcher &&
+                    (self.input[0].spec && !self.input[1].spec) &&
+                    (!self.input[0].pckp && !self.input[0].jmp && !self.input[0].thrw) &&
+                    (self.input[0].x == 0 && self.input[0].y < 0) && // must be crouching
+                    self.room.abstractRoom.shelter && // only doable in shelters
+                    self.GetNCRunbound().pearlBeingRead == null &&
+                    (self.grasps[0].grabbed is DataPearl || self.grasps[1].grabbed is DataPearl)
+                    )
+                {
+                    if (self.grasps[0] != null && self.grasps[0].grabbed is DataPearl)
+                    {
+                        self.GetNCRunbound().pearlInPaws = (self.grasps[0].grabbed as DataPearl);
+                    }
+                    if (self.grasps[1] != null && self.grasps[1].grabbed is DataPearl)
+                    {
+                        self.GetNCRunbound().pearlInPaws = (self.grasps[1].grabbed as DataPearl);
+                    }
+                    self.GetNCRunbound().pearlBeingRead = Watcher.PearlContent.Load(self.GetNCRunbound().pearlInPaws.AbstractPearl);
+                    self.GetNCRunbound().pearlBeingRead.PlayInRoom(self.room, self.mainBodyChunk.pos);
+
+                    // this triggers once
+                }
+                else if (self.GetNCRunbound().pearlBeingRead != null)
+                {
+                    // this is checked multiple times
+                    if (!self.GetNCRunbound().pearlBeingRead.life.isFinished && !self.Stunned)
+                    {
+                        self.Stun(2);
+                    }
+                    else
+                    {
+                        self.GetNCRunbound().pearlBeingRead = null;
+                        self.GetNCRunbound().pearlInPaws = null;
+                    }
+                }
+            }
+            // watcher-exclusive special effect
+
+            if (self?.room?.game != null &&
+                self.GetNCRunbound().CryCooldown <= 0 &&
+                !self.submerged && self.Consious &&
+                // not submerged, awake / non-stunned
+                self != null && self.room != null &&
+                self.GetNCRunbound().IsUnbound &&
+                (self.input[0].spec && !self.input[1].spec)
+                )
+            {
+                int random = UnityEngine.Random.Range(1, 4);
+                self.room.PlaySound(ModManager.MMF ?
+                    (random == 1 ? MMFEnums.MMFSoundID.Lizard_Voice_Cyan_A : (
+                    random == 2 ? MMFEnums.MMFSoundID.Lizard_Voice_Cyan_B :
+                    MMFEnums.MMFSoundID.Lizard_Voice_Cyan_C)) :
+                    SoundID.Lizard_Voice_Green_A,
+                    self.mainBodyChunk, false, 0.8f,
+                    ModManager.MMF ? UnityEngine.Random.Range(2f, 2.8f) :
+                    UnityEngine.Random.Range(1.8f, 2f));
+                self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 100f, self, 0.5f));
+                self.GetNCRunbound().CryCooldown += 60;
+                self.eyesClosedTime = 60;
+                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Unbound call!"); }
+                self.room.AddObject(new DisciplePing(self, self.mainBodyChunk.pos, 0f, 0.2f, 0.2f, 20));
+
+                if (self?.room.world.overseersWorldAI != null &&
+                    self.room.world.overseersWorldAI.playerGuide != null &&
+                    self.room.world.overseersWorldAI.playerGuide.realizedCreature != null)
+                {
+                    AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
+                    if (!gammaoverseer.realizedCreature.dead)
+                    {
+                        (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(
+                            self.room.abstractRoom.index);
+                    }
+                }
+                for (int i = 0; i < self.room.abstractRoom.creatures.Count; i++)
+                {
+                    var critter = self.room.abstractRoom.creatures[i];
+                    if (critter.realizedCreature != null && critter.realizedCreature.deaf == 0 &&
+                        critter.realizedCreature.Consious)
+                    {
+                        if (ModManager.Watcher &&
+                        (critter.creatureTemplate.type == Watcher.WatcherEnums.CreatureTemplateType.FireSprite))
+                        {
+                            (critter.abstractAI.RealAI as Watcher.FireSpriteAI).pathFinder.SetDestination(self.coord);
+                        }
+                    }
+                }
+            }
+            #endregion
         }
 
         public static void CycleTick(On.CreatureCommunities.orig_CycleTick orig, CreatureCommunities self, int cycle, SlugcatStats.Name saveStateNumber)
@@ -191,8 +296,6 @@ namespace Unbound
 
         public static void DamageTracking(On.Player.orig_Update orig, Player self, bool eu)
         {
-            
-
             if (self?.room != null && self.abstractCreature != null &&
                 self.GetNCRunbound().RGBRings)
             {
@@ -475,6 +578,7 @@ namespace Unbound
             {
                 if ((dRelation.trackerRep.representedCreature.realizedCreature as Player).GetNCRunbound().IsTechnician)
                 {
+                    // technician
                     if (self.LikeOfPlayer(dRelation.trackerRep) > 0.8f)
                     {
                         return new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Pack, self.LikeOfPlayer(dRelation.trackerRep));
