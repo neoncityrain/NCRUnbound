@@ -51,17 +51,22 @@
                     #region Colours
                     // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
 
-                    Color effectcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.24f, 0.14f, 0.05f) : new Color(0.87f, 0.39f, 0.33f);
-                    Color eyecol = self.player.GetNCRunbound().IsTechnician ? new Color(0.42f, 0.21f, 0.18f) : new Color(0.07f, 0.2f, 0.31f);
-                    Color bodycol = self.player.GetNCRunbound().IsTechnician ? new Color(0.91f, 0.8f, 0.53f) : new Color(0.89f, 0.79f, 0.6f);
-                    Color pupilcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.26f, 0.09f, 0.08f) : effectcol;
+                    Color effectcol = self.player.GetNCRunbound().IsTechnician ?
+                        new Color(0.24f, 0.14f, 0.05f) : new Color(0.87f, 0.39f, 0.33f);
+                    Color eyecol = self.player.GetNCRunbound().IsTechnician ?
+                        new Color(0.42f, 0.21f, 0.18f) : new Color(0.07f, 0.2f, 0.31f);
+                    Color bodycol = self.player.GetNCRunbound().IsTechnician ?
+                        new Color(0.91f, 0.8f, 0.53f) : new Color(0.89f, 0.79f, 0.6f);
+                    Color pupilcol = self.player.GetNCRunbound().IsTechnician ?
+                        new Color(0.26f, 0.09f, 0.08f) : effectcol;
 
                     if (self.player.room.game.IsArenaSession && !self.player.GetNCRunbound().IsTechnician)
                     {
                         switch (self.player.playerState.playerNumber)
                         {
                             case 0:
-                                if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType != DLCSharedEnums.GameTypeID.Challenge)
+                                if (rCam.room.game.GetArenaGameSession.arenaSitting.gameTypeSetup.gameType !=
+                                    DLCSharedEnums.GameTypeID.Challenge)
                                 {
                                     effectcol = new Color(0.42f, 0.31f, 0.78f);
                                     eyecol = new Color(0.22f, 0.05f, 0.09f);
@@ -132,10 +137,14 @@
                         else if (self.player.GetNCRunbound().DidTripleCyanJump)
                         {
                             // if he did a triple jump
-                            sLeaser.sprites[jumpringOne].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
-                                self.player.GetNCRunbound().IsUnbound ? eyecol : pupilcol, (self.player.GetNCRunbound().UnbCyanjumpCountdown / 120f));
-                            sLeaser.sprites[jumpringTwo].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ? effectcol : eyecol,
-                                self.player.GetNCRunbound().IsUnbound ? eyecol : pupilcol, (self.player.GetNCRunbound().UnbCyanjumpCountdown / 130f));
+                            sLeaser.sprites[jumpringOne].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ?
+                                effectcol : eyecol,
+                                self.player.GetNCRunbound().IsUnbound ? eyecol : pupilcol,
+                                (self.player.GetNCRunbound().UnbCyanjumpCountdown / 120f));
+                            sLeaser.sprites[jumpringTwo].color = Color.Lerp(self.player.GetNCRunbound().IsUnbound ?
+                                effectcol : eyecol,
+                                self.player.GetNCRunbound().IsUnbound ? eyecol : pupilcol,
+                                (self.player.GetNCRunbound().UnbCyanjumpCountdown / 130f));
 
                             if (sLeaser.sprites[jumpringOne].shader == rCam.game.rainWorld.Shaders["Basic"])
                             {
@@ -210,10 +219,14 @@
                     #region Colours
                     // COLOUR THINGS ------------------------------------------------------------------------------------------------------------------------------------------------
 
-                    Color effectcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.24f, 0.14f, 0.05f) : new Color(0.87f, 0.39f, 0.33f);
-                    Color eyecol = self.player.GetNCRunbound().IsTechnician ? new Color(0.42f, 0.21f, 0.18f) : new Color(0.07f, 0.2f, 0.31f);
-                    Color bodycol = self.player.GetNCRunbound().IsTechnician ? new Color(0.91f, 0.8f, 0.53f) : new Color(0.89f, 0.79f, 0.6f);
-                    Color pupilcol = self.player.GetNCRunbound().IsTechnician ? new Color(0.26f, 0.09f, 0.08f) : effectcol;
+                    Color effectcol = self.player.GetNCRunbound().IsTechnician ? new
+                        Color(0.24f, 0.14f, 0.05f) : new Color(0.87f, 0.39f, 0.33f);
+                    Color eyecol = self.player.GetNCRunbound().IsTechnician ? new
+                        Color(0.42f, 0.21f, 0.18f) : new Color(0.07f, 0.2f, 0.31f);
+                    Color bodycol = self.player.GetNCRunbound().IsTechnician ? new
+                        Color(0.91f, 0.8f, 0.53f) : new Color(0.89f, 0.79f, 0.6f);
+                    Color pupilcol = self.player.GetNCRunbound().IsTechnician ?
+                        eyecol : effectcol;
 
                     if (self.player.room.game.IsArenaSession && !self.player.GetNCRunbound().IsTechnician)
                     {
@@ -971,7 +984,7 @@
                     (isReverb ? new Color(0.51f, 0.2f, 0.22f) : new Color(0.07f, 0.2f, 0.31f));
                 Color bodycol = isTechnician ? new Color(0.91f, 0.8f, 0.53f) :
                     (isReverb ? new Color(0.95f, 0.91f, 0.91f) : new Color(0.89f, 0.79f, 0.6f));
-                Color pupilcol = isTechnician ? new Color(0.1f, 0.04f, 0.03f) :
+                Color pupilcol = isTechnician ? eyecol :
                     (unbGet.IsReverb ? new Color(0.95f, 0.9f, 0.5f) : new Color(1f, 0f, 0f));
 
                 if (self.player.room.game.IsArenaSession && !isTechnician)
@@ -1156,8 +1169,8 @@
                         sLeaser.sprites[graphicsStart].color = effectcol; // legs
 
                         // vanilla object tweaks!
-                        sLeaser.sprites[7].color = effectcol;
-                        sLeaser.sprites[8].color = effectcol;
+                        sLeaser.sprites[7].color = isTechnician ? eyecol : effectcol;
+                        sLeaser.sprites[8].color = isTechnician ? eyecol : effectcol;
 
                         // animated colour ------------------------------
                         #region Pupils

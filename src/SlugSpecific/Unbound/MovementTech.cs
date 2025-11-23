@@ -34,7 +34,8 @@
             {
                 #region Setup and Nullify Unused
                 if (self.GetNCRunbound().unbsmoke != null &&
-                    (self.GetNCRunbound().unbsmoke.slatedForDeletetion || self.GetNCRunbound().unbsmoke.room != self.room))
+                    (self.GetNCRunbound().unbsmoke.slatedForDeletetion ||
+                    self.GetNCRunbound().unbsmoke.room != self.room))
                 {
                     self.GetNCRunbound().unbsmoke = null;
                 }

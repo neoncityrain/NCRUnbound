@@ -1,5 +1,7 @@
 Palette: 10
-Subregion: Knowledge That Binds
+Subregion: Ensnaring Knowledge of Decades
 Subregion: The Guts
+Subregion: Guiding North
+Subregion: Starpath
 Room Setting Templates: Knowledge, Star, Snow
 Broken Shelters: NCRunbound: KTB_S01

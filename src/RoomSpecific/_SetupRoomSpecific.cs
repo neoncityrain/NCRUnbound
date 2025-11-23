@@ -147,8 +147,8 @@ namespace Unbound
                     NCRDebug.Log("Error setting up reverbpup: " + e);
                 }
                 
-                if (self != null && self.slugcatStats != null && world != null && world.region != null &&
-                self.room != null && self.room.game != null && self?.room != null && self.abstractCreature != null &&
+                if (self != null && self.slugcatStats != null && world != null &&
+                self.room != null && self?.room != null && self.abstractCreature != null &&
                 self.slugcatStats?.name != null && self.slugcatStats.name.value != null)
                 {
                     if (self.slugcatStats.name.value == "NCRunbound" || self.slugcatStats.name == UnboundEnums.NCRUnbound)

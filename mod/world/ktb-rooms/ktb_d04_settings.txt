@@ -1,0 +1,12 @@
+DangerType: AerieBlizzard
+RainIntensity: 1
+RumbleIntensity: 0.3586957
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04999999
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.8152174
+EffectColorB: 10
+Effects: HeatWave-0.2173913-20-20, Coldness-0-27-68, Lightning-0.5543478-35-94, GreenSparks-0.326087-31-129, 
+FadePalette: 10, 0.326087, 0.326087, 0.3478261, 0.3804348

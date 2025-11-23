@@ -5,5 +5,6 @@ SecondWaveLength: 0.1666667
 SecondWaveAmplitude: 0
 Clouds: 1
 EffectColorA: 8
+Effects: BrokenZeroG-0.5978261-20-20, HeatWave-0.1521739-29-53, SSSwarmers-0.1630435-43-111, 
 PlacedObjects: ZapCoil><824.2361><92.05048><32~103, SuperStructureFuses><690.5635><1242.107><86~23, SuperStructureFuses><812.0245><982.6267><92~50, 
 FadePalette: 1431802, 0.3043478, 0.5217391

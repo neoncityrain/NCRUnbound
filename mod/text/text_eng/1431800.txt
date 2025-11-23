@@ -1,0 +1,12 @@
+0-1431800
+This is... where did you find this?
+
+This pearl contains a virus targeted toward iterators. Part of the pearl has been burned away,<LINE>suggesting it has not only been read already, but has met its mark.
+
+On first glance, it appears to be a simple ciphered letter from someone with the tag of<LINE>"Ensnaring Knowledge of Decades."
+
+Looking closer, scanning through the words and attempting to decipher them is meant to trip<LINE>certain vital lines of code - essentially leading to an effect not unlike hibernation.
+
+This is nothing but a sleep, however. It is not a method for crossing oneself out.
+
+I hope you haven't given this to any other iterators, <PlayerName>.

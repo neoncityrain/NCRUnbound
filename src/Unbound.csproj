@@ -84,7 +84,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Folder Include="RoomSpecific\Arkthings\" />
+      <Folder Include="Z-DoingLater\Arkthings\" />
     </ItemGroup>
     
     <Target Name="GenerateMod" AfterTargets="PostBuildEvent">

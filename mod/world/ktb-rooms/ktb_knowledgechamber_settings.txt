@@ -1,0 +1,9 @@
+WaveSpeed: 0.5098382
+WaveLength: 0.9950809
+WaveAmplitude: 0.03280499
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+EffectColorB: 3
+Effects: SunBlock-1-20-20, ProjectedScanLines-0.5108696-30-30, SuperStructureProjector-0.5326087-40-40, BrokenZeroG-0.8695652-50-50, HeatWave-0.3913043-60-60, SSSwarmers-0.4021739-71-103, 
+PlacedObjects: SuperStructureFuses><692.4452><1768.558><1677~39, SuperStructureFuses><930><1629><1197~43, EnergySwirl><1504.696><1400.712><EffectColor2~-1518~-1408~50~86.60254~0.9456522, SuperStructureFuses><691><411><1669~33, SuperStructureFuses><2029><531><214~32, SuperStructureFuses><2813><1529><97~244, SuperStructureFuses><-50><992.0002><18~198, SuperStructureFuses><-69><-81><50~102, DeepProcessing><1017.352><741.6676><0~733~908~733~910~-7~0~0~0.02173913~1~0.6739131, SuperStructureFuses><853><991><37~598, ZapCoil><2070.449><1096.764><52~39, ZapCoil><2252.585><1091.363><40~40, ZapCoil><2170.052><1171.693><42~414, 
+FadePalette: 10, 0.4021739, 0.3804348, 0.3695652, 0.3913043, 0.4130435, 0.4130435, 0.4021739, 0.3804348, 0.3913043

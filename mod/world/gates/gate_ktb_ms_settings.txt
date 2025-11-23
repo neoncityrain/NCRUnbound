@@ -1,0 +1,11 @@
+DangerType: Blizzard
+RainIntensity: 0
+RumbleIntensity: 0
+WaveSpeed: 0.5
+WaveLength: 1
+WaveAmplitude: 5.605194E-45
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.9565217
+Effects: Coldness-0-20-20, Fog-0.3586957-25-67, Darkness-0.3586957-9-120, 
+FadePalette: 35, 0.7608696

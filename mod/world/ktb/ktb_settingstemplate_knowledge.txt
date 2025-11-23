@@ -2,9 +2,9 @@ DangerType: None
 CeilingDrips: 0.5
 RainIntensity: 1
 RumbleIntensity: 1
-WaveSpeed: 0.5
-WaveLength: 0.75
-WaveAmplitude: 0.04999999
+WaveSpeed: 0.4917425
+WaveLength: 0.9958712
+WaveAmplitude: 0.04499999
 SecondWaveLength: 0.1666667
 SecondWaveAmplitude: 0
 Clouds: 0
@@ -16,4 +16,4 @@ RandomItemSpearChance: 0.2
 WaterReflectionAlpha: 1
 Palette: 1431801
 EffectColorA: 8
-EffectColorB: 0
+EffectColorB: 3

@@ -1,0 +1,14 @@
+Template: NONE
+DangerType: Flood
+WaveSpeed: 0.5031939
+WaveLength: 0.9984031
+WaveAmplitude: 6.972419E-18
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Grime: 0.1188859
+Palette: 40
+EffectColorA: 9
+EffectColorB: 13
+Effects: Fog-0.7401494-52.2813-21, FairyParticles-0.5611413-34.57501-112.088, 
+PlacedObjects: FairyParticleSettings><243.9019><131.8921><239.8125~-459.0731~0~1~1~0~1~1.448696~60~495.2173~40~100~5~30~0~360~0~0.1999999~0.1521739~0.2282609~0.05434782~0.1413043~1~0.1195652~7.790894~Pixel~LINEAR~SIN_IO~0~0~0, 
+FadePalette: 33, 0.7921196, 0.8094429, 0.8199728, 0.8199728

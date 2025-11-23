@@ -1,9 +1,9 @@
-WaveSpeed: 0.5
-WaveLength: 0.75
-WaveAmplitude: 0.04999999
+WaveSpeed: 0.5042464
+WaveLength: 0.9978768
+WaveAmplitude: 0.04499999
 SecondWaveLength: 0.1666667
 SecondWaveAmplitude: 0
-Clouds: 0
-Effects: WaterDepth-0.04347826-20-20, HeatWave-0.2934783-17-77, SuperStructureProjector-0.423913-249-90, ProjectedScanLines-0.0326087-184-122, SunBlock-1-28-115, BrokenZeroG-0.4565217-252-20, 
+Clouds: 0.8695652
+Effects: WaterDepth-0.04347826-20-20, HeatWave-1-17-77, SuperStructureProjector-0.2391304-249-90, SunBlock-1-28-115, BrokenZeroG-0.4565217-252-20, ProjectedScanLines-0.09782609-30-30, 
 PlacedObjects: WallSteamer><210.9139><234.8646><4~41, WallSteamer><795.1267><236.8452><-6~33, WallSteamer><148.0501><266.7559><-1~93, WallSteamer><111.396><238.8867><-3~60, WallSteamer><821.3138><239.0605><5~58, SteamPipe><222.6288><234.3409><0~64, SteamPipe><162.5927><262.8735><1~29, SteamPipe><107.314><239.8236><0~100, SteamPipe><809.6817><236.4164><0~42, SteamPipe><602.9047><230.1758><0~37, 
-FadePalette: 25, 0.4021739
+FadePalette: 25, 0.4782609

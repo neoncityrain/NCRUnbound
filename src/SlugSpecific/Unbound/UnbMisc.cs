@@ -1,7 +1,4 @@
-﻿using System;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using DressMySlugcat;
+﻿using Watcher;
 
 namespace Unbound
 {
@@ -15,17 +12,13 @@ namespace Unbound
         public static void unboundSpecialButton(On.Player.orig_UpdateMSC orig, Player self)
         {
             orig(self);
-            if (self?.room?.game != null &&
+            if (self?.room?.game != null && self.OutsideWatcherCampaign &&
                 !self.submerged && self.Consious &&
                 // not submerged, awake / non-stunned
                 self != null && self.room != null &&
                 self.GetNCRunbound().IsUnbound
                 )
             {
-                if (ModManager.JollyCoop && self.playerState.playerNumber == 1 && self.room.game.session.characterStats.name == Watcher.WatcherEnums.SlugcatStatsName.Watcher)
-                {
-
-                }
                 #region NotInWatcherAbilities
                 if (ModManager.Watcher &&
                     (self.input[0].spec && !self.input[1].spec) &&
@@ -62,59 +55,59 @@ namespace Unbound
                         self.GetNCRunbound().pearlInPaws = null;
                     }
                 }
-            }
-            // watcher-exclusive special effect
+                // watcher-exclusive special effect
 
-            if (self?.room?.game != null &&
-                self.GetNCRunbound().CryCooldown <= 0 &&
-                !self.submerged && self.Consious &&
-                // not submerged, awake / non-stunned
-                self != null && self.room != null &&
-                self.GetNCRunbound().IsUnbound &&
-                (self.input[0].spec && !self.input[1].spec)
-                )
-            {
-                int random = UnityEngine.Random.Range(1, 4);
-                self.room.PlaySound(ModManager.MMF ?
-                    (random == 1 ? MMFEnums.MMFSoundID.Lizard_Voice_Cyan_A : (
-                    random == 2 ? MMFEnums.MMFSoundID.Lizard_Voice_Cyan_B :
-                    MMFEnums.MMFSoundID.Lizard_Voice_Cyan_C)) :
-                    SoundID.Lizard_Voice_Green_A,
-                    self.mainBodyChunk, false, 0.8f,
-                    ModManager.MMF ? UnityEngine.Random.Range(2f, 2.8f) :
-                    UnityEngine.Random.Range(1.8f, 2f));
-                self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 100f, self, 0.5f));
-                self.GetNCRunbound().CryCooldown += 60;
-                self.eyesClosedTime = 60;
-                if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Unbound call!"); }
-                self.room.AddObject(new DisciplePing(self, self.mainBodyChunk.pos, 0f, 0.2f, 0.2f, 20));
+                if (self?.room?.game != null &&
+                    self.GetNCRunbound().CryCooldown <= 0 &&
+                    !self.submerged && self.Consious &&
+                    // not submerged, awake / non-stunned
+                    self != null && self.room != null &&
+                    self.GetNCRunbound().IsUnbound &&
+                    (self.input[0].spec && !self.input[1].spec)
+                    )
+                {
+                    int random = UnityEngine.Random.Range(1, 4);
+                    self.room.PlaySound(ModManager.MMF ?
+                        (random == 1 ? MMFEnums.MMFSoundID.Lizard_Voice_Cyan_A : (
+                        random == 2 ? MMFEnums.MMFSoundID.Lizard_Voice_Cyan_B :
+                        MMFEnums.MMFSoundID.Lizard_Voice_Cyan_C)) :
+                        SoundID.Lizard_Voice_Green_A,
+                        self.mainBodyChunk, false, 0.8f,
+                        ModManager.MMF ? UnityEngine.Random.Range(2f, 2.8f) :
+                        UnityEngine.Random.Range(1.8f, 2f));
+                    self.room.InGameNoise(new InGameNoise(self.mainBodyChunk.pos, 100f, self, 0.5f));
+                    self.GetNCRunbound().CryCooldown += 60;
+                    self.eyesClosedTime = 60;
+                    if (self.GetNCRunbound().MoreDebug) { NCRDebug.Log("Unbound call!"); }
+                    self.room.AddObject(new DisciplePing(self, self.mainBodyChunk.pos, 0f, 0.2f, 0.2f, 20));
 
-                if (self?.room.world.overseersWorldAI != null &&
-                    self.room.world.overseersWorldAI.playerGuide != null &&
-                    self.room.world.overseersWorldAI.playerGuide.realizedCreature != null)
-                {
-                    AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
-                    if (!gammaoverseer.realizedCreature.dead)
+                    if (self?.room.world.overseersWorldAI != null &&
+                        self.room.world.overseersWorldAI.playerGuide != null &&
+                        self.room.world.overseersWorldAI.playerGuide.realizedCreature != null)
                     {
-                        (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(
-                            self.room.abstractRoom.index);
-                    }
-                }
-                for (int i = 0; i < self.room.abstractRoom.creatures.Count; i++)
-                {
-                    var critter = self.room.abstractRoom.creatures[i];
-                    if (critter.realizedCreature != null && critter.realizedCreature.deaf == 0 &&
-                        critter.realizedCreature.Consious)
-                    {
-                        if (ModManager.Watcher &&
-                        (critter.creatureTemplate.type == Watcher.WatcherEnums.CreatureTemplateType.FireSprite))
+                        AbstractCreature gammaoverseer = self.room.world.overseersWorldAI.playerGuide;
+                        if (!gammaoverseer.realizedCreature.dead)
                         {
-                            (critter.abstractAI.RealAI as Watcher.FireSpriteAI).pathFinder.SetDestination(self.coord);
+                            (gammaoverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(
+                                self.room.abstractRoom.index);
+                        }
+                    }
+                    for (int i = 0; i < self.room.abstractRoom.creatures.Count; i++)
+                    {
+                        var critter = self.room.abstractRoom.creatures[i];
+                        if (critter.realizedCreature != null && critter.realizedCreature.deaf == 0 &&
+                            critter.realizedCreature.Consious)
+                        {
+                            if (ModManager.Watcher &&
+                            (critter.creatureTemplate.type == Watcher.WatcherEnums.CreatureTemplateType.FireSprite))
+                            {
+                                (critter.abstractAI.RealAI as Watcher.FireSpriteAI).pathFinder.SetDestination(self.coord);
+                            }
                         }
                     }
                 }
+                #endregion
             }
-            #endregion
         }
 
         public static void CycleTick(On.CreatureCommunities.orig_CycleTick orig, CreatureCommunities self, int cycle, SlugcatStats.Name saveStateNumber)
