@@ -223,7 +223,7 @@
                 }
                 if (i.value == "NCRreverb" || i == UnboundEnums.NCRReverb)
                 {
-                    return true;
+                    return false;
                 }
             }
             

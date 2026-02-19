@@ -63,7 +63,6 @@ namespace Unbound
             if (unbSSThrowFit != null) { unbSSThrowFit.Unregister(); unbSSThrowFit = null; }
             if (unbSlumberConv != null) { unbSlumberConv.Unregister(); unbSlumberConv = null; }
             if (SSMeetUnboundSub != null) { SSMeetUnboundSub.Unregister(); SSMeetUnboundSub = null; }
-            if (unbKarmaPearlConv != null) { unbKarmaPearlConv.Unregister(); unbKarmaPearlConv = null; }
             if (UnbSlumberParty != null) { UnbSlumberParty.Unregister(); UnbSlumberParty = null; }
             if (UnbSlumberPartySub != null) { UnbSlumberPartySub.Unregister(); UnbSlumberPartySub = null; }
             if (UnboundSmoke != null) { UnboundSmoke.Unregister(); UnboundSmoke = null; }
@@ -77,6 +76,7 @@ namespace Unbound
             if (NCRKTB != null) { NCRKTB.Unregister(); NCRKTB = null; }
             if (NCRSTG != null) { NCRSTG.Unregister(); NCRSTG = null; }
             if (NCRARK != null) { NCRARK.Unregister(); NCRARK = null; }
+            if (unbKarmaPearlConv != null) { unbKarmaPearlConv.Unregister(); unbKarmaPearlConv = null; }
         }
 
         // end enums

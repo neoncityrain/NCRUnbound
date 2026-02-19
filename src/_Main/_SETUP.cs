@@ -42,19 +42,8 @@ namespace Unbound
             On.GameSession.ctor += GameSessionOnctor;
             // clean up enums
 
-            On.RainWorld.OnModsInit += RainMeadowCheck; // apply rain meadow support
             On.RainWorld.PostModsInit += CheckOnMods;  // check for other mods, in the cases of dms or similar
             On.RainWorld.OnModsInit += UnbExtras.WrapInit(LoadResources); // load resources, such as graphics
-        }
-
-        private void RainMeadowCheck(On.RainWorld.orig_OnModsInit orig, RainWorld self)
-        {
-            if (ModManager.ActiveMods.Any(mod => mod.id == "henpemaz_rainmeadow"))
-            {
-                NCRDebug.Log("Rain Meadow is present! Initiating Rain Meadow tweaks to allow Unbound to be playable.");
-                unbRainMeadow.Init();
-            }
-            orig(self);
         }
 
         private void CheckOnMods(On.RainWorld.orig_PostModsInit orig, RainWorld self)
@@ -106,12 +95,12 @@ namespace Unbound
         private void RainWorldGameOnShutDownProcess(On.RainWorldGame.orig_ShutDownProcess orig, RainWorldGame self)
         {
             orig(self);
-            UnboundEnums.FullUnregister(); // unregisters all existing enums when the game shuts down
+            // UnboundEnums.FullUnregister(); // unregisters all existing enums when the game shuts down
         }
         private void GameSessionOnctor(On.GameSession.orig_ctor orig, GameSession self, RainWorldGame game)
         {
             orig(self, game);
-            UnboundEnums.FullUnregister(); // as above, so below
+            // UnboundEnums.FullUnregister(); // as above, so below
         }
         #endregion
 
