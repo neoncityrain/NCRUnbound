@@ -1,12 +1,13 @@
 {
 	"id": "unbsleeprev",
-	"scene_folder": "scenes/unbsleep",
+	"scene_folder": "scenes/sleep screen - ncrunbound",
 	"images": [
-		{"name": "sleep - 5", "pos": [672, 236], "depth": 5.5, "shader": "Basic"},
-		{"name": "sleep - 4", "pos": [685, 138], "depth": 4.8, "shader": "Basic"},
-		{"name": "sleep - 3", "pos": [740, 138], "depth": 4, "shader": "Basic"},
+		{"name": "sleep - 6", "pos": [740, 138], "depth": 4, "shader": "Normal"},
+		{"name": "sleep - 5", "pos": [672, 236], "depth": 5.5, "shader": "Normal"},
+		{"name": "sleep - 4", "pos": [685, 138], "depth": 4.8, "shader": "Normal"},
 		{"name": "unbsleeprev - 2", "pos": [830, 100], "depth": 3, "shader": "Basic"},
-		{"name": "sleep - 1", "pos": [498, -38], "depth": 1.8, "shader": "Basic"}
+		{"name": "sleep - 2", "pos": [830, 100], "depth": 3, "shader": "Normal"},
+		{"name": "sleep - 1", "pos": [498, -38], "depth": 1.8, "shader": "Normal"}
 	],
 	"idle_depths": [2.9],
 	"sleep scene_depth": 3.0
